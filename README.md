@@ -17,7 +17,12 @@
 
 ###  预览 / Preview
 
-<img width="1470" height="956" alt="Editor Screenshot" src="https://github.com/user-attachments/assets/e7818d69-7d63-4d36-a052-febe4f08cd11" />
+
+<img width="1470" height="956" alt="Screenshot 2026-02-19 at 11 19 26 AM" src="https://github.com/user-attachments/assets/65ed303f-bba0-481a-a2c1-f60cfa5c71f3" />
+
+---
+
+<img width="1470" height="956" alt="Screenshot 2026-02-19 at 11 23 00 AM" src="https://github.com/user-attachments/assets/7ebddcda-8616-4145-b978-a8d57f071b11" />
 
 ---
 
