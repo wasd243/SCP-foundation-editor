@@ -40,16 +40,18 @@
     * **终端样式#001**
     * **RAISA通知**
     * **O5议会命令等**
-    * 用户可以自行编辑内容，系统会根据其中内容生成对应代码
-    * <img width="1470" height="956" alt="Screenshot 2026-02-21 at 11 31 19 AM" src="https://github.com/user-attachments/assets/0bffabb4-2342-41ba-999b-9a49dfff51ab" />
+    * 用户可以自行编辑内容，系统会根据其中内容生成对应代码并渲染为类似的格式，用户可以直接编辑其中的内容
+     <img width="1470" height="956" alt="Screenshot 2026-02-21 at 11 31 19 AM" src="https://github.com/user-attachments/assets/0bffabb4-2342-41ba-999b-9a49dfff51ab" />
   * **脚注** 可以根据better footnote 自动适配脚注代码
   * **图片块** 两种图片块，支持自定义长宽
   * **Tabview选项卡** 自动生成并编辑Tabview选项卡内容。
   * **授权引用** 自动生成对应的授权引用模块代码，但是连接过长时无法反相解析并渲染，需要手动输入
   * **玄武岩版式专用代码**：
-    * <img width="1470" height="956" alt="Screenshot 2026-02-21 at 11 37 09 AM" src="https://github.com/user-attachments/assets/0b5a4001-2532-40d6-8d64-3609562f6340" />
-    * <img width="1470" height="956" alt="Screenshot 2026-02-21 at 11 37 15 AM" src="https://github.com/user-attachments/assets/5c613b22-e53e-421f-8c9f-d13fd3c01659" />
-* **一键清理** 可以一键清除所有代码
+     <img width="1470" height="956" alt="Screenshot 2026-02-21 at 11 37 09 AM" src="https://github.com/user-attachments/assets/0b5a4001-2532-40d6-8d64-3609562f6340" />
+     <img width="1470" height="956" alt="Screenshot 2026-02-21 at 11 37 15 AM" src="https://github.com/user-attachments/assets/5c613b22-e53e-421f-8c9f-d13fd3c01659" />
+  * **可折叠的模块** [[collapsible show="+ 打开折叠内容" hide="- 关闭折叠内容"]]在这里输入折叠内的内容...[[/collapsible]]
+  * **用户标签** 可点击或带头像的用户标签代码
+* **一键清理** 可一键清除所有代码
 * **更多功能待补充**
 
 
