@@ -5315,6 +5315,9 @@ content: "> ";
         # 此时需要转义 HTML 中的引号与换行，以便 JS 执行
         safe_html = html_content.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
         
+        # 【新增这一行】：提前处理掉反斜杠，不放在 f-string 里面
+        safe_css = extracted_css.replace('`', '\\`')
+        
         js = f"""
         document.getElementById('editor-root').innerHTML = "{safe_html}";
         
@@ -5325,7 +5328,7 @@ content: "> ";
             style.id = 'dynamic-terminal-style';
             document.head.appendChild(style);
         }}
-        style.textContent = `{extracted_css.replace('`', '\\`')}`; // Use backticks for multi-line support in JS if possible, or careful replace
+        style.textContent = `{safe_css}`; // 【修改这一行】：直接放变量进来
 
         // 重新绑定事件与刷新状态
         if(typeof refreshFootnotes === 'function') refreshFootnotes();
