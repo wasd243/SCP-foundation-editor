@@ -1,0 +1,50 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install -r requirements.txt
+
+      - name: Build Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          pyinstaller --noconsole --onefile --name "SCP-Editor-Win" wikidot_edit_alpha-1.py
+
+      - name: Build macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          pyinstaller --noconsole --name "SCP-Editor-Mac" wikidot_edit_alpha-1.py
+          cd dist
+          zip -r SCP-Editor-Mac.zip "SCP-Editor-Mac.app"
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/SCP-Editor-Win.exe
+            dist/SCP-Editor-Mac.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
