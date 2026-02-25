@@ -59,6 +59,28 @@
 
 ### ⚖️ 许可证与版权 / License & Copyright
 
+* **所引用css组件的作者**
+* **The authors of the CSS conponents**
+* **ACS** Woedenaz
+* URL: https://scp-wiki-cn.wikidot.com/anomaly-classification-system-guide
+* **AIM** Dr Moned
+* URL: https://scp-wiki.wikidot.com/component:advanced-information-methodology
+* **Basalt** Liryn and Placeholder McD
+* URL: https://scp-wiki.wikidot.com/theme:basalt
+* **Betterfootnote** EstrellaYoshte
+* URL: https://scp-wiki.wikidot.com/component:betterfootnotes
+* **ACS Animation** EstrellaYoshte
+* URL: https://scp-wiki.wikidot.com/component:acs-animation
+* **夜琉璃版式** Flea_ZER0
+* URL: https://scp-wiki-cn.wikidot.com/theme:shivering-night
+* **Black Highlighter** Woedenaz and Croquembouche
+* URL: https://scp-wiki.wikidot.com/theme:black-highlighter-theme
+* **Office** Woedenaz
+* URL: https://scp-wiki.wikidot.com/theme:scp-offices-theme
+* **CSS** aismallard Jerden Lt Flops EstrellaYoshte Deadly Bread Rounderhouse stormbreath Croquembouche Calibold and Dr Hormress
+* URL: https://scp-wiki.wikidot.com/scp-style-resource
+* 中文链接：https://scp-wiki-cn.wikidot.com/scp-style-resource
+
 **1. 软件代码协议 (GPL v3.0)**
 本项目程序代码基于 [GNU General Public License v3.0](LICENSE) 开源。
 您可以自由地使用、研究、修改和分发本软件。如果您修改并分发本项目，或者在本项目基础上开发新软件，您的项目也必须以 GPL v3.0 协议开源。
