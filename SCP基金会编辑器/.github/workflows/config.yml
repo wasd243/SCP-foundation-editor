@@ -24,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11' # 推荐使用 3.11，对 PyQt6 兼容性较好
+          python-version: '3.13' # 推荐使用 3.11，对 PyQt6 兼容性较好
 
       # 3. 安装依赖和 PyInstaller
       - name: Install Dependencies
