@@ -26,7 +26,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyinstaller
+          pip install --upgrade pyinstaller
           pip install -r requirements.txt
 
       - name: Build Windows
@@ -37,10 +37,10 @@ jobs:
       - name: Build macOS
         if: matrix.os == 'macos-latest'
         run: |
-          pyinstaller --noconsole --name "wikidot_editer_alpha-1_Mac_new_1" wikidot_edit_alpha-1_new.py
+          pyinstaller --noconsole --noconfirm --collect-all PyQt6 --name "wikidot_editer_alpha-1_Mac_new_1" wikidot_edit_alpha-1_new.py
+          codesign --force --deep --sign - "dist/wikidot_editer_alpha-1_Mac_new_1.app"
           cd dist
           zip -r wikidot_editer_alpha-1_Mac_new_1.zip "wikidot_editer_alpha-1_Mac_new_1.app"
-
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         with:
