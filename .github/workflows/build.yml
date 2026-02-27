@@ -32,14 +32,14 @@ jobs:
       - name: Build Windows
         if: matrix.os == 'windows-latest'
         run: |
-          pyinstaller --noconsole --onefile --name "SCP-Editor-Win" wikidot_edit_alpha-1.py
+          pyinstaller --noconsole --onefile --name "wikidot_edit_alpha-1_new_1" wikidot_edit_alpha-1_new.py
 
       - name: Build macOS
         if: matrix.os == 'macos-latest'
         run: |
-          pyinstaller --noconsole --name "SCP-Editor-Mac" wikidot_edit_alpha-1.py
+          pyinstaller --noconsole --name "wikidot_editer_alpha-1_Mac_new_1" wikidot_edit_alpha-1_new.py
           cd dist
-          zip -r SCP-Editor-Mac.zip "SCP-Editor-Mac.app"
+          zip -r wikidot_editer_alpha-1_Mac_new_1.zip "wikidot_editer_alpha-1_Mac_new_1.app"
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
