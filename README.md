@@ -5,6 +5,17 @@
 
 这是一个为了方便编写 SCP 基金会中文文档而制作的编辑器。本项目旨在简化编辑流程，提升写作体验。
 
+LICENSE will update to AGPL v3.0 after publish pre-release with ftml code.
+
+协议将会在引用ftml代码测试版发布后更新。
+
+# Projects import
+File/Folder name in code: rust_engine
+* **ftml** [By SCP Foundation community](https://github.com/scpwiki/ftml)
+
+# 引用的代码
+文件名或文件夹名：rust_engine
+* **ftml** [SCP 基金会](https://github.com/scpwiki/ftml)
 ---
 
 ###  警告 / Disclaimer
