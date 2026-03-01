@@ -1,4 +1,4 @@
-#  Copyright (C) 2026  [wasd243]
+#  Copyright (C) 2026  wasd243
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -65,21 +65,28 @@
 #  链接：https://scp-wiki.wikidot.com/scp-style-resource
 #  中文链接：https://scp-wiki-cn.wikidot.com/scp-style-resource 
 import sys
+import os
 from PyQt6.QtWidgets import QApplication
 
 # 从 controllers 包中导入业务主类
 # 确保你已经将原来的 SCPEditor 类移动到了 controllers/main_controller.py
-from controllers.main_controller import SCPEditor
+from controllers.MAIN_CONTROLLER import SCPEditor
+
+# 处理终端报错问题
+os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--log-level=3"
 
 if __name__ == "__main__":
     # 在启动 GUI 之前，在终端打印 GPL 法律通告及版权信息
     print("-" * 60)
-    print("SCP-foundation-editor  Copyright (C) 2026  [wasd243]")
+    print("SCP-foundation-editor  Copyright (C) 2026  wasd243")
     print("This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.")
     print("This is free software, and you are welcome to redistribute it")
     print("under certain conditions; type `show c' for details.")
     print("-" * 60)
     
+    print('To View the whole document, please visit https://github.com/wasd243/SCP-foundation-editor/')
+    print('For further information of this program, you can see at Main.py')
+    print('-' * 60)
     # 初始化应用
     app = QApplication(sys.argv)
     

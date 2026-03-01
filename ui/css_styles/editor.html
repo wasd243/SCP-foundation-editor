@@ -1,0 +1,2395 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: 'Verdana', sans-serif;
+            padding: 40px;
+            line-height: 1.4;
+            background: #fff;
+            position: relative;
+        }
+
+        #editor-root {
+            min-height: 400px;
+            outline: none;
+            padding-bottom: 50px;
+        }
+
+        a {
+            color: #b01;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .rate-module-box {
+            position: absolute;
+            top: 10px;
+            right: 40px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px;
+            font-size: 12px;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 100;
+            user-select: none;
+        }
+
+        .rate-module-box.hidden-rate {
+            opacity: 0.5;
+            filter: grayscale(100%);
+            text-decoration: line-through;
+        }
+
+        .rate-controls {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .rate-btn {
+            border: 1px solid #999;
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+        }
+
+        .rate-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .rate-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+
+        .rate-content {
+            font-weight: bold;
+            padding: 2px 5px;
+            text-align: center;
+            border: 1px dashed #bbb;
+            background: #fff;
+        }
+
+        .scp-component {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            background: #fdfdfd;
+            position: relative;
+            border-radius: 8px;
+            color: #444;
+            font-size: 14px;
+        }
+
+        /* Bounding Boxes & Tooltips */
+        .scp-component:hover,
+        .wikidot-table:hover {
+            outline: 2px solid #3498db;
+        }
+
+        .rate-module-box:hover {
+            outline: 2px solid #3498db;
+        }
+
+        #component-tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 10000;
+            display: none;
+        }
+
+        #footnote-preview-tooltip {
+            position: fixed;
+            background: #fff;
+            color: #333;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            max-width: 300px;
+            font-size: 13px;
+            z-index: 10001;
+            display: none;
+            pointer-events: none;
+            line-height: 1.4;
+        }
+
+        .scp-footnote {}
+
+        .scp-footnote:hover {
+            background: #e0f7fa;
+            border-top: 2px solid #00bcd4;
+        }
+
+
+
+        /* Bounding Boxes & Tooltips */
+        .scp-component:hover,
+        .wikidot-table:hover {
+            outline: 2px solid #3498db;
+        }
+
+        .rate-module-box:hover {
+            outline: 2px solid #3498db;
+        }
+
+        #component-tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 10000;
+            display: none;
+        }
+
+        #footnote-preview-tooltip {
+            position: fixed;
+            background: #fff;
+            color: #333;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            max-width: 300px;
+            font-size: 13px;
+            z-index: 10001;
+            display: none;
+            pointer-events: none;
+            line-height: 1.4;
+        }
+
+        .scp-footnote {}
+
+        .scp-footnote:hover {
+            background: #e0f7fa;
+            border-top: 2px solid #00bcd4;
+        }
+
+        /* --- AIM 渲染样式 --- */
+        .aim-box {
+            border: 1px solid #ddd;
+            background: #fff;
+            padding: 0;
+            margin: 20px 0;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            cursor: default;
+            /* 修复：全宽显示 */
+            width: 100%;
+            box-sizing: border-box;
+            clear: both;
+        }
+
+        .aim-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            border: none;
+            margin: 0;
+        }
+
+        .aim-table td {
+            border: 1px solid #eee;
+            padding: 8px 12px;
+            vertical-align: middle;
+        }
+
+        .aim-label {
+            color: #888;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .aim-value {
+            color: #333;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .aim-header-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .aim-footer {
+            text-align: center;
+            background: #f9f9f9;
+            padding: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #999;
+            border-top: 2px solid #901111;
+        }
+
+        /* --- Image Block 样式 --- */
+        .image-block-box {
+            max-width: 300px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            background: #f0f0f0;
+            padding: 0;
+            transition: all 0.3s;
+        }
+
+        .image-block-box[data-align="left"] {
+            float: left;
+            margin: 20px 20px 20px 0;
+        }
+
+        .image-block-box[data-align="right"] {
+            float: right;
+            margin: 20px 0 20px 20px;
+        }
+
+        .image-block-box[data-align="center"] {
+            float: none;
+            margin: 20px auto;
+            width: 100%;
+            max-width: none;
+        }
+
+        .image-block-box[data-align="center"] .img-preview {
+            width: 100%;
+        }
+
+        .image-block-content {
+            background: #fff;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .image-block-caption {
+            padding: 10px;
+            font-size: 0.9em;
+            background: #f9f9f9;
+        }
+
+        .img-align-controls {
+            background: #333;
+            padding: 5px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .img-align-btn {
+            background: #fff;
+            border: none;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+
+        .img-align-btn:hover {
+            background: #ddd;
+        }
+
+        .img-toggle-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border: 1px solid #aaa;
+            font-size: 14px;
+            z-index: 10;
+            opacity: 0.7;
+        }
+
+        .img-toggle-btn:hover {
+            opacity: 1;
+        }
+
+        .img-controls-hidden .img-controls-wrapper {
+            display: none;
+        }
+
+        [data-field="name"] {
+            word-break: break-all;
+            min-width: 50px;
+            display: inline-block;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        /* --- Table 样式 (修复) --- */
+        table.wikidot-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+            font-size: 14px;
+            border: 1px solid #333;
+            /* 显式边框颜色 */
+        }
+
+        table.wikidot-table th,
+        table.wikidot-table td {
+            border: 1px solid #333;
+            /* 单元格显式边框 */
+            padding: 8px;
+            min-width: 30px;
+            vertical-align: top;
+        }
+
+        table.wikidot-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        table.wikidot-table.no-border,
+        table.wikidot-table.no-border th,
+        table.wikidot-table.no-border td {
+            border: 1px dashed #ccc !important;
+            /* 虚线提示 */
+        }
+
+        /* --- Tab View 样式 --- */
+        .tabview-box {
+            border: 1px solid #ccc;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            clear: both;
+        }
+
+        .tab-header {
+            display: flex;
+            background: #f4f4f4;
+            border-bottom: 1px solid #ccc;
+            gap: 2px;
+            padding: 5px 5px 0 5px;
+        }
+
+        .tab-btn {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            background: #e8e8e8;
+            border-radius: 4px 4px 0 0;
+            font-size: 13px;
+            font-weight: bold;
+            color: #666;
+            outline: none;
+        }
+
+        .tab-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .tab-btn.active {
+            background: #fff;
+            border-bottom: 1px solid #fff;
+            margin-bottom: -1px;
+            color: #333;
+        }
+
+        .tab-add {
+            padding: 8px 12px;
+            color: #888;
+            font-weight: bold;
+        }
+
+        .tab-contents {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            min-height: 50px;
+        }
+
+        .tab-item {
+            display: none;
+        }
+
+        .tab-item.active {
+            display: block;
+        }
+
+        /* --- User Component 样式 --- */
+        .user-tag {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+        }
+
+        .user-icon {
+            width: 12px;
+            height: 12px;
+            background: #b01;
+            border-radius: 2px;
+        }
+
+        /* --- 标题样式 --- */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #901111;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+        }
+
+        h1 {
+            border-bottom: 2px solid #901111;
+            font-size: 1.8em;
+        }
+
+        h2 {
+            border-bottom: 1px solid #ccc;
+            font-size: 1.6em;
+        }
+
+        /* --- 引用块样式 --- */
+        blockquote {
+            border-left: 5px solid #ccc;
+            margin: 1.5em 10px;
+            padding: 0.5em 10px;
+            background-color: #f9f9f9;
+            color: #555;
+        }
+
+        /* --- 折叠块增强样式 --- */
+        .collapsible-box {
+            border: 1px solid #aaa;
+            background: #f9f9f9;
+            padding: 0;
+            margin: 15px 0;
+            border-radius: 4px;
+            overflow: hidden;
+            width: 100%;
+            box-sizing: border-box;
+            clear: both;
+        }
+
+        .collapsible-header {
+            display: flex;
+            gap: 15px;
+            background: #e0e0e0;
+            padding: 8px 15px;
+            font-size: 12px;
+            color: #333;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .title-label {
+            font-weight: bold;
+            color: #901111;
+        }
+
+        .title-input {
+            border-bottom: 1px dashed #666;
+            padding: 0 5px;
+            outline: none;
+            min-width: 60px;
+            color: #000;
+            background: #fff;
+        }
+
+        .collapsible-content-area {
+            padding: 15px;
+            background: #fff;
+            min-height: 40px;
+            display: none;
+        }
+
+        .collapsible-box.open .collapsible-content-area {
+            display: block;
+        }
+
+        /* --- 授权引用修复样式 --- */
+        .license-box {
+            border: 1px solid #901111;
+            padding: 0;
+            background: #fff;
+            font-size: 13px;
+            color: #333;
+            overflow: hidden;
+            width: 100%;
+            box-sizing: border-box;
+            clear: both;
+        }
+
+        .license-header {
+            color: #901111;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 15px;
+            background: #fdfdfd;
+        }
+
+        .license-header::after {
+            content: '▼';
+            font-size: 10px;
+            margin-left: 10px;
+        }
+
+        .license-box.open .license-header::after {
+            content: '▲';
+        }
+
+        .license-content {
+            display: none;
+            padding: 15px;
+            line-height: 1.8;
+        }
+
+        .license-box.open .license-content {
+            display: block;
+        }
+
+        .license-field-row {
+            margin-bottom: 4px;
+            border-bottom: 1px dotted #eee;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .license-link-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .license-link-row .editable-field {
+            width: 100%;
+            word-break: break-all;
+            margin-top: 2px;
+        }
+
+        .field-label {
+            font-weight: bold;
+            color: #666;
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .editable-field {
+            border-bottom: 1px dashed #ccc;
+            flex-grow: 1;
+            min-width: 0;
+            color: #333;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+
+        .editable-field:empty::before {
+            content: " (点击输入) ";
+            color: #ccc;
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        .editable-field:focus {
+            border-bottom: 1px solid #000;
+            outline: none;
+            background: #e8f0fe;
+        }
+
+        .extra-files-container {
+            border-top: 2px dashed #901111;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        .file-entry {
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .btn-add-file {
+            background: #901111;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            margin-top: 5px;
+            border-radius: 4px;
+        }
+
+        .btn-del-file {
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            color: red;
+            font-weight: bold;
+            border: none;
+            background: none;
+            font-size: 20px;
+        }
+
+        .btn-license-original {
+            background: #e8e8e8;
+            color: #333;
+            border: 1px solid #999;
+            padding: 4px 10px;
+            font-size: 12px;
+            margin-left: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+
+        .btn-license-original.active {
+            background: #2c7a2c;
+            color: white;
+            border-color: #1a5c1a;
+        }
+
+        .license-translator-row.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            text-decoration: line-through;
+        }
+
+        /* ACS 样式 */
+        .acs-box {
+            border-left: 12px solid var(--acs-color, #f1c40f);
+            text-align: left;
+            background: #f9f9f9;
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-family: 'Segoe UI', sans-serif;
+            transition: all 0.3s ease;
+            clear: both;
+        }
+
+        .acs-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .acs-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .acs-item-num {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #901111;
+            font-weight: bold;
+        }
+
+        .acs-anim-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .acs-shiver-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .acs-toggles {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .scp-component.acs-box,
+        .scp-component.aim-box,
+        .scp-component.tabview-box,
+        .scp-component.collapsible-box,
+        .scp-component.div-box,
+        .scp-component.css-box,
+        .scp-component.raisa-box,
+        .scp-component.class-warning-box,
+        .scp-component.o5-box,
+        .scp-component.page-note-box {
+            clear: both;
+        }
+
+        .scp-component {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 30px;
+            height: 16px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 16px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 12px;
+            width: 12px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #27ae60;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(14px);
+        }
+
+        .scp-footnote {
+            color: #B22222 !important;
+            font-weight: bold;
+            vertical-align: super;
+            font-size: 0.8em;
+            user-select: none;
+            margin: 0 1px;
+            padding: 0 1px;
+        }
+
+        #footnote-list-footer {
+            margin-top: 40px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .footnote-list-item {
+            margin-bottom: 5px;
+        }
+
+        .footnote-content {
+            outline: none;
+            border-bottom: 1px dashed transparent;
+        }
+
+        .footnote-content:focus {
+            border-bottom: 1px dashed #999;
+            background: #fffdf0;
+        }
+
+        .scp-hr {
+            height: 40px;
+            border: 1px dashed transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .scp-hr::after {
+            content: "";
+            width: 100%;
+            height: 2px;
+            background: #333;
+            display: block;
+        }
+
+        .scp-hr:hover {
+            border: 1px dashed #901111;
+            background: rgba(144, 17, 17, 0.05);
+        }
+
+        .size-span {
+            display: inline;
+        }
+
+        .forced-break {
+            margin: 0;
+            padding: 0;
+            min-height: 1em;
+        }
+
+        /* New: Return Symbol */
+        /* DIV Module */
+        .div-box {
+            border: 1px dashed #bbb;
+            margin: 10px 0;
+            padding: 5px;
+            background: #f9f9f9;
+            position: relative;
+            clear: both;
+        }
+
+        .div-header {
+            font-size: 0.8em;
+            color: #666;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 5px;
+            padding-bottom: 2px;
+        }
+
+        .div-content {
+            min-height: 20px;
+        }
+
+        /* CSS Module */
+        .css-box {
+            border: 1px solid #a0a0a0;
+            margin: 10px 0;
+            background: #f0f0f0;
+            position: relative;
+            clear: both;
+        }
+
+        .css-header {
+            background: #e0e0e0;
+            font-size: 0.8em;
+            padding: 2px 5px;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .css-content {
+            padding: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            min-height: 20px;
+            color: #222;
+        }
+
+        .css-hint {
+            font-size: 0.75em;
+            color: #666;
+            padding: 2px 5px;
+            background: #e8e8e8;
+            border-top: 1px solid #ccc;
+            font-style: italic;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* --- Basalt Special Modules --- */
+        .basalt-div {
+            border: none;
+            padding: 0;
+            background: transparent;
+            border-radius: 0;
+        }
+
+        .basalt-div .div-header {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 8px;
+            font-size: 10px;
+            color: #888;
+            border: none;
+        }
+
+        .basalt-blockquote-box {
+            background: #f2f2f2;
+            border: 1px solid #d0d0d0;
+        }
+
+        .basalt-notation-box {
+            background: #f2f2f2;
+            border: none;
+            border-left: 5px solid #888;
+            border-right: 5px solid #888;
+            margin: 10px 20px;
+        }
+
+        .basalt-jotting-box {
+            background: #f2f2f2;
+            border: 1px dashed #888;
+            margin: 10px 60px;
+        }
+
+        .basalt-modal-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 10px 20px;
+        }
+
+        .basalt-smallmodal-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin: 10px auto;
+        }
+
+        .basalt-papernote-box {
+            background: #e9e9f2;
+            border: none;
+            width: 60%;
+            margin: 10px auto;
+        }
+
+        .basalt-floatbox-box {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            width: 30%;
+            float: left;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            clear: both;
+            border-radius: 4px;
+        }
+
+        .basalt-floatbox-box.right {
+            float: right;
+            margin-right: 0;
+            margin-left: 20px;
+        }
+
+        /* --- Basalt Document Components --- */
+        /* --- Basalt Document Components --- */
+        #editor-root.basalt-theme {
+            padding-top: 80px !important;
+        }
+
+        .scp-component.basalt-doc-wrapper {
+            width: 48%;
+            /* Removed !important to make overrides easier */
+            min-height: 50px !important;
+            height: auto !important;
+            margin: 15px 1% !important;
+            clear: none !important;
+            transition: transform 0.3s;
+            display: block;
+            box-sizing: border-box;
+            /* Added to ensure padding doesn't affect width */
+        }
+
+        .basalt-document-box,
+        .basalt-darkdocument-box {
+            width: 100%;
+            height: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 1px;
+            overflow: visible;
+        }
+
+        .basalt-document-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        #editor-root.shivering-theme {
+            padding-top: 100px !important;
+        }
+
+        .basalt-darkdocument-box {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+        }
+
+        .basalt-darkdocument-box .div-content {
+            color: #fff;
+        }
+
+        /* Javascript driven Alternating Side-by-Side Layout */
+        .scp-component.basalt-doc-wrapper {
+            display: block;
+            box-sizing: border-box;
+            transition: transform 0.3s;
+        }
+
+        .scp-component.basalt-doc-wrapper.full-width {
+            width: 100% !important;
+            float: none !important;
+            margin: 15px 0 !important;
+        }
+
+        .scp-component.basalt-doc-wrapper.half-width {
+            width: 48% !important;
+            margin: 15px 1% !important;
+        }
+
+        .scp-component.basalt-doc-wrapper.half-width:nth-of-type(odd) {
+            float: left !important;
+            transform: rotate(-0.5deg);
+        }
+
+        .scp-component.basalt-doc-wrapper.half-width:nth-of-type(even) {
+            float: right !important;
+            transform: rotate(0.6deg);
+        }
+
+        /* Force clearing after a pair */
+        .scp-component.basalt-doc-wrapper.half-width+.basalt-doc-wrapper.half-width+* {
+            clear: both;
+        }
+
+        .basalt-doc-wrapper:hover {
+            transform: rotate(0deg) scale(1.01) !important;
+            z-index: 10;
+        }
+
+        transform: rotate(0deg) scale(1.01);
+        z-index: 10;
+        }
+
+        /* --- Basalt Memo Components --- */
+        .basalt-memo-box {
+            width: 100%;
+            margin: 20px 0;
+            padding: 40px 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            border-width: 1px;
+            border-style: solid;
+            position: relative;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clear: both;
+            box-sizing: border-box;
+            background-blend-mode: multiply;
+        }
+
+        .basalt-raisa_memo-box {
+            background-color: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+            background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/raisa_logo.png');
+        }
+
+        .basalt-classification_memo-box {
+            background-color: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+            background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/classification_logo.png');
+        }
+
+        .basalt-ettra_memo-box {
+            background-color: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+            background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/ettra_logo.png');
+        }
+
+        .basalt-ethics_memo-box {
+            background-color: #fff7ed;
+            border-color: #f97316;
+            color: #9a3412;
+            background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/ethics_logo.png');
+        }
+
+        .basalt-temporal_memo-box {
+            background-color: #f8fafc;
+            border-color: #64748b;
+            color: #334155;
+            background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/temporal_logo.png');
+        }
+
+        .basalt-overwatch_memo-box {
+            background-color: #f1f5f9;
+            border-color: #475569;
+            color: #1e293b;
+            background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/overwatch_logo.png');
+        }
+
+        .basalt-miscomm_memo-box {
+            background-color: #f5f3ff;
+            border-color: #8b5cf6;
+            color: #5b21b6;
+            background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/miscomm_logo.png');
+        }
+
+        .basalt-memo-box .div-header {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: transparent;
+            opacity: 0.6;
+        }
+
+        .basalt-memo-box .div-content {
+            width: 100%;
+            outline: none;
+        }
+
+        .basalt-div .div-content {
+            padding: 15px;
+        }
+
+        .bhl-theme {
+            --bhl-accent: #850005;
+            /* Rosewood */
+            --bhl-monochrome: #212121;
+            /* Dark Grey/Black */
+            --bhl-background: #ffffff;
+            --bhl-light-grey: #f4f4f4;
+            /* White Smoke */
+        }
+
+        .bhl-theme h1,
+        .bhl-theme h2,
+        .bhl-theme h3,
+        .bhl-theme h4,
+        .bhl-theme h5,
+        .bhl-theme h6 {
+            color: var(--bhl-accent) !important;
+            font-family: 'Oswald', sans-serif;
+            border-bottom: 2px solid var(--bhl-monochrome);
+            transition: color 0.3s;
+        }
+
+        .bhl-theme h1:hover {
+            color: #f00 !important;
+        }
+
+        .bhl-theme .tabview-box .tab-header {
+            background: var(--bhl-monochrome);
+            border-bottom: 3px solid var(--bhl-accent);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .bhl-theme .tabview-box .tab-btn {
+            background: #555;
+            color: #fff;
+            border: none;
+            margin-right: 2px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .bhl-theme .tabview-box .tab-btn:hover {
+            background: #777;
+            transform: translateY(-1px);
+        }
+
+        .bhl-theme .tabview-box .tab-btn.active {
+            background: var(--bhl-accent);
+            font-weight: bold;
+        }
+
+        .bhl-theme .wikidot-table th {
+            background: var(--bhl-monochrome);
+            color: #fff;
+            border: 1px solid #666;
+            padding: 8px;
+        }
+
+        .bhl-theme .wikidot-table td {
+            border: 1px solid var(--bhl-monochrome);
+            background: var(--bhl-light-grey);
+            padding: 8px;
+        }
+
+        #editor-root.bhl-theme {
+            background: #fff !important;
+            padding-top: 120px !important;
+        }
+    </style>
+    <script>
+        const COLOR_MAP = {
+            'safe': '#27ae60',
+            'euclid': '#f1c40f',
+            'keter': '#c0392b',
+            'neutralized': '#7f8c8d', // Gray
+            'pending': '#bdc3c7',     // Light Gray
+            'explained': '#95a5a6',   // Gray
+            'esoteric': '#595959'     // Dark Gray
+        };
+
+        const ACS_ICON_MAP = {
+            'apollyon': 'https://scp-wiki.wdfiles.com/local--files/component%3Aanomaly-class-bar/apollyon-icon.svg',
+            'archon': 'https://scp-wiki.wdfiles.com/local--files/component%3Aanomaly-class-bar/archon-icon.svg',
+            'hiemal': 'https://scp-wiki.wdfiles.com/local--files/component%3Aanomaly-class-bar/hiemal-icon.svg',
+            'tiamat': 'https://scp-wiki.wdfiles.com/local--files/component%3Aanomaly-class-bar/tiamat-icon.svg',
+            'ticonderoga': 'https://scp-wiki.wdfiles.com/local--files/component%3Aanomaly-class-bar/ticonderoga-icon.svg',
+            'thaumiel': 'https://scp-wiki.wdfiles.com/local--files/component%3Aanomaly-class-bar/thaumiel-icon.svg'
+        };
+
+        function updateBasaltDocLayout() {
+            var wrappers = document.querySelectorAll('.basalt-doc-wrapper');
+            for (var i = 0; i < wrappers.length; i++) {
+                var el = wrappers[i];
+                var isHalf = false;
+
+                var next = el.nextElementSibling;
+                if (next && next.classList.contains('basalt-doc-wrapper')) {
+                    isHalf = true;
+                }
+
+                var prev = el.previousElementSibling;
+                if (prev && prev.classList.contains('basalt-doc-wrapper')) {
+                    isHalf = true;
+                }
+
+                if (isHalf) {
+                    el.classList.add('half-width');
+                    el.classList.remove('full-width');
+                } else {
+                    el.classList.add('full-width');
+                    el.classList.remove('half-width');
+                }
+            }
+        }
+
+        var observer = new MutationObserver(function (mutations) {
+            var needsLayout = false;
+            mutations.forEach(function (mutation) {
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach(function (node) {
+                        if (node.nodeType === 1 && node.classList && node.classList.contains('basalt-doc-wrapper')) {
+                            needsLayout = true;
+                        }
+                    });
+                    mutation.removedNodes.forEach(function (node) {
+                        if (node.nodeType === 1 && node.classList && node.classList.contains('basalt-doc-wrapper')) {
+                            needsLayout = true;
+                        }
+                    });
+                }
+            });
+            if (needsLayout) {
+                updateBasaltDocLayout();
+            }
+        });
+
+        window.onload = function () {
+            var editor = document.getElementById('editor-root');
+            if (editor) {
+                observer.observe(editor, { childList: true, subtree: true });
+                updateBasaltDocLayout();
+            }
+        };
+
+        function toggleMonospace() {
+            document.execCommand('styleWithCSS', false, true);
+            const fontName = document.queryCommandValue('fontName');
+            if (fontName.includes('Courier') || fontName.includes('monospace')) {
+                document.execCommand('fontName', false, 'Verdana');
+            } else {
+                document.execCommand('fontName', false, 'Courier New');
+            }
+        }
+
+        function setImgAlign(btn, align) {
+            const box = btn.closest('.image-block-box');
+            if (box) {
+                box.setAttribute('data-align', align);
+                if (align === 'center') {
+                    const img = box.querySelector('.img-preview');
+                    if (img) img.style.width = '100%';
+                } else {
+                    // Optionally restore original width if needed, but refreshImg handles it
+                    refreshImg(box.querySelector('[data-field="name"]'));
+                }
+            }
+        }
+
+        function rateAction(action, btn) {
+            const box = btn.closest('.rate-module-box');
+            if (action === 'hide') {
+                if (box.classList.contains('hidden-rate')) {
+                    box.classList.remove('hidden-rate');
+                    box.setAttribute('data-hidden', 'false');
+                    btn.innerText = '隐藏';
+                } else {
+                    box.classList.add('hidden-rate');
+                    box.setAttribute('data-hidden', 'true');
+                    btn.innerText = '恢复';
+                }
+            } else if (action === 'left' || action === 'right') {
+                // Toggle logic: if already active, clear it? Or just switch.
+                // User request: "left, right ... click to cancel". 
+                // Actually prompt said: "Hide... click to cancel rendering... click again to restore". 
+                // For alignment: "left... right...".
+                // Let's implement radio-like behavior for alignment.
+
+                const currentAlign = box.getAttribute('data-align');
+                if (currentAlign === action) {
+                    box.removeAttribute('data-align');
+                    btn.classList.remove('active');
+                } else {
+                    box.setAttribute('data-align', action);
+                    box.querySelectorAll('.rate-align-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+            }
+        }
+
+        function toggleImgControls(btn) {
+            const box = btn.closest('.image-block-box');
+            box.classList.toggle('img-controls-hidden');
+        }
+
+        // Paste handler for cleaning links
+        document.addEventListener('paste', function (e) {
+            const target = e.target;
+            // Check for image link field OR secondary icon field OR license box fields
+            if (target.matches('.image-block-box [data-field="name"]') ||
+                target.closest('.image-block-box [data-field="name"]') ||
+                target.matches('.acs-box [data-field="secondary-icon"]') ||
+                target.closest('.acs-box [data-field="secondary-icon"]') ||
+                target.matches('.license-box [contenteditable="true"]') ||
+                target.closest('.license-box [contenteditable="true"]')) {
+
+                e.preventDefault();
+                const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+                document.execCommand('insertText', false, text);
+            }
+        });
+
+        function editImgLink(label) {
+            const box = label.closest('.image-block-box');
+            const nameSpan = box.querySelector('[data-field="name"]');
+            const oldUrl = nameSpan.innerText.trim();
+            const newUrl = window.prompt("请输入图片链接:", oldUrl);
+            if (newUrl !== null) {
+                nameSpan.innerText = newUrl;
+                refreshImg(nameSpan);
+            }
+        }
+
+        function refreshImg(span, force) {
+            const box = span.closest('.image-block-box');
+            const img = box.querySelector('.img-preview');
+            const placeholder = box.querySelector('.img-placeholder');
+            const nameField = box.querySelector('[data-field="name"]');
+            let url = nameField ? nameField.innerText.trim() : '';
+
+            if (url && (url.startsWith('http') || url.startsWith('//'))) {
+                if (force) {
+                    const sep = url.includes('?') ? '&' : '?';
+                    img.src = url + sep + "t=" + Date.now();
+                } else {
+                    img.src = url;
+                }
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+                img.onerror = function () {
+                    img.style.display = 'none';
+                    placeholder.style.display = 'block';
+                    placeholder.innerText = '[无效的图片链接]';
+                }
+            } else {
+                img.style.display = 'none';
+                placeholder.style.display = 'block';
+                placeholder.innerText = '[图片预览区域]';
+            }
+
+            const wSpan = box.querySelector('[data-field="width"]');
+            const hSpan = box.querySelector('[data-field="height"]');
+
+            if (wSpan) {
+                let w = wSpan.innerText.trim();
+                if (w && !isNaN(w)) w += "px";
+                img.style.width = w;
+            }
+
+            if (hSpan) {
+                let h = hSpan.innerText.trim();
+                if (h && !isNaN(h)) h += "px";
+                img.style.height = h;
+            }
+        }
+
+        // 定期刷新预览 (每 60 秒)
+        setInterval(() => {
+            document.querySelectorAll('.image-block-box [data-field="name"]').forEach(span => {
+                refreshImg(span, true);
+            });
+        }, 60000);
+
+        function selectTab(btn) {
+            const header = btn.parentElement;
+            const box = header.parentElement;
+            const index = Array.from(header.children).indexOf(btn);
+
+            Array.from(header.querySelectorAll('.tab-btn')).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const contents = box.querySelector('.tab-contents');
+            Array.from(contents.children).forEach((c, i) => {
+                c.classList.toggle('active', i === index);
+            });
+        }
+
+        function addTab(btn) {
+            const header = btn.parentElement;
+            const box = header.parentElement;
+            const contents = box.querySelector('.tab-contents');
+            const newBtn = document.createElement('span');
+            newBtn.className = 'tab-btn';
+            newBtn.setAttribute('contenteditable', 'true');
+            newBtn.onclick = function () { selectTab(this); };
+            newBtn.innerText = 'New Tab';
+            header.insertBefore(newBtn, btn);
+            const newContent = document.createElement('div');
+            newContent.className = 'tab-item';
+            newContent.setAttribute('contenteditable', 'true');
+            newContent.innerHTML = '<p>Tab Content...</p>';
+            contents.appendChild(newContent);
+            selectTab(newBtn);
+        }
+
+        function removeTab(btn) {
+            const header = btn.parentElement;
+            const box = header.closest('.tabview-box');
+            const index = Array.from(header.children).indexOf(btn);
+            const contents = box.querySelector('.tab-contents');
+            if (header.querySelectorAll('.tab-btn').length <= 1) {
+                alert('至少保留一个选项卡');
+                return;
+            }
+            btn.remove();
+            if (contents.children[index]) contents.children[index].remove();
+            const firstBtn = header.querySelector('.tab-btn');
+            if (firstBtn) selectTab(firstBtn);
+        }
+
+        function insertTable() {
+            const html = `
+                    <table border="1" class="wikidot-table">
+                        <tr><th contenteditable="true">~ 标题 1</th><th contenteditable="true">~ 标题 2</th><th contenteditable="true">~ 标题 3</th></tr>
+                        <tr><td contenteditable="true">内容 1</td><td contenteditable="true">内容 2</td><td contenteditable="true">内容 3</td></tr>
+                        <tr><td contenteditable="true">内容 4</td><td contenteditable="true">内容 5</td><td contenteditable="true">内容 6</td></tr>
+                    </table><p><br></p>`;
+            document.execCommand('insertHTML', false, html);
+        }
+
+        function insertLicenseBox() {
+            var editor = document.getElementById('editor-root');
+            var html = '<div class="scp-component license-box open" data-type="license" data-original="false" contenteditable="false"><div class="license-header">授权/引用信息 (点击展开/折叠)<button class="btn-license-original" onclick="toggleLicenseOriginal(this, event)" title="原创：生成|lang=CN，并取消|translator">原创</button></div><div class="license-content"><div class="license-field-row"><span class="field-label">作者：</span><span class="editable-field" data-field="author" contenteditable="true"></span></div><div class="license-field-row license-translator-row"><span class="field-label">译者：</span><span class="editable-field" data-field="translator" contenteditable="true"></span></div><hr><div class="extra-files-container"></div><button class="btn-add-file" onclick="addLicenseFile(this)">+ 新增文件</button></div></div>';
+            editor.insertAdjacentHTML('beforeend', html);
+        }
+
+        function toggleLicenseOriginal(btn, event) {
+            if (event) { event.stopPropagation(); event.preventDefault(); }
+            var box = btn.closest('.license-box');
+            var isOriginal = box.getAttribute('data-original') === 'true';
+            if (isOriginal) {
+                // 关闭原创模式
+                box.setAttribute('data-original', 'false');
+                btn.classList.remove('active');
+                var transRow = box.querySelector('.license-translator-row');
+                if (transRow) transRow.classList.remove('disabled');
+            } else {
+                // 开启原创模式
+                box.setAttribute('data-original', 'true');
+                btn.classList.add('active');
+                var transRow = box.querySelector('.license-translator-row');
+                if (transRow) {
+                    transRow.classList.add('disabled');
+                    var transField = transRow.querySelector('[data-field="translator"]');
+                    if (transField) transField.innerText = '';
+                }
+            }
+        }
+
+        function tableAction(action) {
+            const sel = window.getSelection();
+            if (!sel.rangeCount) return;
+            const cell = sel.anchorNode.nodeType === 3 ? sel.anchorNode.parentElement.closest('td, th') : sel.anchorNode.closest('td, th');
+            if (!cell) return;
+            const row = cell.parentElement;
+            const table = row.parentElement.closest('table');
+            const rows = Array.from(table.rows);
+            const rowIndex = row.rowIndex;
+            const colIndex = cell.cellIndex;
+
+            if (action === 'addRow') {
+                const newRow = table.insertRow(rowIndex + 1);
+                for (let i = 0; i < row.cells.length; i++) {
+                    const newCell = newRow.insertCell(i);
+                    newCell.innerText = '内容';
+                    newCell.setAttribute('contenteditable', 'true');
+                }
+            } else if (action === 'delRow') {
+                table.deleteRow(rowIndex);
+                if (table.rows.length === 0) table.remove();
+            } else if (action === 'addCol') {
+                for (let i = 0; i < rows.length; i++) {
+                    const newCell = rows[i].insertCell(colIndex + 1);
+                    newCell.innerText = '内容';
+                    newCell.setAttribute('contenteditable', 'true');
+                    if (rows[i].cells[colIndex].tagName === 'TH') {
+                        // Keep header styling if originally a header column, simplistic approach
+                    }
+                }
+            } else if (action === 'delCol') {
+                for (let i = 0; i < rows.length; i++) {
+                    if (rows[i].cells.length > colIndex) {
+                        rows[i].deleteCell(colIndex);
+                    }
+                }
+                if (table.rows[0] && table.rows[0].cells.length === 0) table.remove();
+            } else if (action === 'delTable') {
+                table.remove();
+            } else if (action === 'mergeRight') {
+                if (colIndex < row.cells.length - 1) {
+                    const nextCell = row.cells[colIndex + 1];
+                    const currentColSpan = parseInt(cell.getAttribute('colspan') || 1);
+                    const nextColSpan = parseInt(nextCell.getAttribute('colspan') || 1);
+                    cell.setAttribute('colspan', currentColSpan + nextColSpan);
+                    if (nextCell.innerText.trim()) cell.innerHTML += ' ' + nextCell.innerHTML;
+                    row.deleteCell(colIndex + 1);
+                }
+            } else if (action === 'toggleBorder') {
+                if (table.classList.contains('no-border')) {
+                    table.classList.remove('no-border');
+                    table.setAttribute('border', '1');
+                } else {
+                    table.classList.add('no-border');
+                    table.setAttribute('border', '0');
+                }
+            }
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Backspace') {
+                const sel = window.getSelection();
+                if (!sel.rangeCount || !sel.isCollapsed) return;
+
+                // Smart Backspace: Delete empty line between Component and Body Text
+                const smartNode = sel.anchorNode;
+                const smartBlock = smartNode.nodeType === 3 ? smartNode.parentElement : smartNode;
+
+                if (smartBlock && (smartBlock.tagName === 'P' || smartBlock.tagName === 'DIV') && smartBlock.innerText.replace(/\n/g, '').trim() === '') {
+                    const prev = smartBlock.previousElementSibling;
+                    const next = smartBlock.nextElementSibling;
+                    if (prev && next) {
+                        // Refined: Exclude Image Blocks (.image-block-box)
+                        const isComp = prev.matches && prev.matches('.scp-component, .acs-box, .rate-module-box, .tabview-box, .collapsible-box, .license-box, .wikidot-table, .div-box, .css-box');
+                        const isImage = prev.matches && prev.matches('.image-block-box');
+
+                        // Check if next is body text (has content)
+                        const hasContent = next.innerText && next.innerText.trim().length > 0;
+
+                        if (isComp && !isImage && hasContent) {
+                            e.preventDefault();
+                            smartBlock.remove();
+                            const newR = document.createRange();
+                            // Refined: set cursor AFTER the previous component (visually to its right/end)
+                            if (prev) newR.setStartAfter(prev);
+                            newR.collapse(true);
+                            sel.removeAllRanges();
+                            sel.addRange(newR);
+                            return;
+                        }
+                    }
+                }
+
+                // Fix: Prevent cursor disappearing when backspacing against a component
+                const range = sel.getRangeAt(0);
+                if (range.startOffset === 0) {
+                    let node = range.startContainer;
+                    if (node.nodeType === 3) {
+                        if (node.previousSibling && node.previousSibling.nodeType === 1 && node.previousSibling.classList.contains('scp-component')) {
+                            e.preventDefault(); return;
+                        }
+                        if (!node.previousSibling) node = node.parentNode;
+                    }
+                    if (node.nodeType === 1 && node.previousElementSibling && node.previousElementSibling.classList.contains('scp-component')) {
+                        e.preventDefault(); return;
+                    }
+                }
+
+                const anchor = sel.anchorNode;
+                const element = anchor.nodeType === 3 ? anchor.parentElement : anchor;
+                const blockquote = element.closest('blockquote');
+                if (blockquote) {
+                    const range = document.createRange();
+                    range.selectNodeContents(blockquote);
+                    range.setEnd(sel.anchorNode, sel.anchorOffset);
+                    if (range.toString().trim() === '') {
+                        document.execCommand('formatBlock', false, 'p');
+                    }
+                }
+                const li = element.closest('li');
+                if (li) {
+                    if (li.textContent.trim() === '') {
+                        document.execCommand('outdent');
+                        if (li.closest('ul, ol') && li.parentElement.children.length === 1) {
+                            document.execCommand('formatBlock', false, 'p');
+                        }
+                    }
+                }
+            }
+        });
+
+        function updateTerminalStyle() {
+            // Map DIV classes from Header to Box for Live Preview
+            var divBoxes = document.querySelectorAll('.div-box');
+            divBoxes.forEach(function (box) {
+                var header = box.querySelector('.div-header');
+                if (header) {
+                    var text = header.textContent || ""; // Use textContent for robustness
+                    // STRICT PARSING: Only check the first line (same line as DIV:...)
+                    var firstLine = text.split('\n')[0];
+                    // Ensure we are matching `class="..."` specifically
+                    var match = firstLine.match(/class="([^"]+)"/);
+                    if (match) {
+                        var clsList = match[1].split(' ');
+                        clsList.forEach(function (c) { if (c) box.classList.add(c); });
+                    }
+                }
+            });
+
+            var hasTerminal = false;
+            var hasTerminal001 = false;
+            var cssModules = document.querySelectorAll('.css-box .css-content');
+            var allCss = "";
+
+            cssModules.forEach(function (mod) {
+                var text = mod.textContent; // FIX: Use textContent to read hidden/collapsed CSS
+                allCss += text + "\n";
+                if (text.indexOf('.danke') !== -1 && text.indexOf('.agent') !== -1) {
+                    hasTerminal = true;
+                }
+                // Revert to looser detection to ensure it catches existing modules
+                if (text.indexOf('div.terminal') !== -1 || text.indexOf('.terminal') !== -1) {
+                    hasTerminal001 = true;
+                }
+            });
+
+            // PERMANENT RENDERING FIX:
+            // If Terminal #001 CSS exists, FIND all div-boxes that look like Terminal #001 (contain scanline)
+            // and FORCE the 'terminal' class on them.
+            if (hasTerminal001) {
+                divBoxes.forEach(function (box) {
+                    // Check for scanline child (Unique feature of Terminal #001)
+                    // Scanline is a nested div-box with "scanline" in its header
+                    var headers = box.querySelectorAll('.div-header');
+                    var isTerminal = false;
+                    for (var i = 0; i < headers.length; i++) {
+                        // Use textContent here as well
+                        if (headers[i].textContent.indexOf('scanline') !== -1) {
+                            isTerminal = true;
+                            break;
+                        }
+                    }
+
+                    if (isTerminal) {
+                        if (!box.classList.contains('terminal')) {
+                            box.classList.add('terminal');
+                        }
+                    }
+                });
+            }
+
+            var styleId = 'dynamic-terminal-style';
+            var style = document.getElementById(styleId);
+
+            // Build extra CSS
+            var extraInfo = "";
+
+            if (hasTerminal) {
+                extraInfo += `
+                        /* Force Terminal Style for all DIV modules in Editor View */
+                        .div-box {
+                            background-color: #000000 !important;
+                            border: 2px solid #55AA55 !important;
+                            color: #77CC77 !important;
+                            font-family: 'Courier New', monospace !important;
+                        }
+                        .div-header {
+                            background-color: #55AA55 !important;
+                            color: #002200 !important;
+                            border-bottom: 1px solid #002200 !important;
+                            font-weight: bold;
+                        }
+                        .div-content {
+                            background-color: #000000 !important;
+                            color: #77CC77 !important;
+                        }
+                        `;
+            }
+
+            if (hasTerminal001) {
+                extraInfo += `
+                         /* Fix for Terminal #001 Nested Divs */
+                         .div-box.terminal .div-box {
+                             background-color: #000000 !important;
+                             border: 1px dashed #333 !important; 
+                             box-shadow: none !important; 
+                         }
+                         /* Nested Content Black */
+                         .div-box.terminal .div-box .div-content {
+                             background-color: #000000 !important;
+                             color: #77CC77 !important;
+                         }
+                         /* Nested Headers - HIDE for Clean Preview */
+                         .div-box.terminal .div-box .div-header {
+                             display: none !important;
+                         }
+
+                         /* FORCE ALL DESCENDANTS BLACK BACKGROUND (except special text) */
+                         .div-box.terminal * {
+                             background-color: transparent; /* Default to transp so parent black shows, avoids white patches */
+                         }
+                         .div-box.terminal .div-content {
+                             background-color: #000000 !important; /* Ensure main container is black */
+                         }
+                         .div-box.terminal blockquote,
+                         .div-box.terminal blockquote * {
+                             background-color: #000000 !important;
+                             color: #77CC77 !important;
+                             border-color: #77CC77 !important; /* Ensure border color matches */
+                         }
+                         .div-box.terminal blockquote {
+                             border: 3px double #77CC77 !important;
+                         }
+
+                         /* EXCEPTION: Scanline - HIDDEN in Editor View */
+                         .div-box.terminal .div-box.scanline {
+                             display: none !important;
+                         }
+
+                         /* Fix for OUTER Terminal .div-box */
+                         .div-box.terminal {
+                             background-color: #000000 !important;
+                             border: 3px solid #BBBBBB !important;
+                             border-radius: 16px !important;
+                             box-shadow: inset 0 0 10em 1em rgba(0,0,0,0.5) !important;
+                         }
+                         /* Outer Content Transparent */
+                         .div-box.terminal > .div-content {
+                             background-color: transparent !important;
+                             color: #77CC77 !important;
+                             padding: 2px !important;
+                         }
+                         /* Outer Header - HIDE for Clean Preview */
+                         .div-box.terminal > .div-header {
+                              display: none !important;
+                         }
+                         `;
+            }
+
+            var editorText = document.getElementById('editor-root').innerText;
+            if (allCss.indexOf('black-highlighter-theme') !== -1 || editorText.indexOf('black-highlighter-theme') !== -1) {
+                document.getElementById('editor-root').classList.add('bhl-theme');
+            } else if (allCss.indexOf('shivering') !== -1 || editorText.indexOf('shivering') !== -1) {
+                document.getElementById('editor-root').classList.add('shivering-theme');
+            } else if (allCss.indexOf('basalt') !== -1 || editorText.indexOf('basalt') !== -1) {
+                document.getElementById('editor-root').classList.add('basalt-theme');
+            } else {
+                document.body.classList.remove('bhl-theme');
+                document.getElementById('editor-root').classList.remove('shivering-theme');
+            }
+
+            if (allCss.trim()) {
+                if (!style) {
+                    style = document.createElement('style');
+                    style.id = styleId;
+                    document.head.appendChild(style);
+                }
+                style.textContent = allCss + extraInfo;
+            } else if (style) {
+                style.textContent = "";
+            }
+        }
+
+        function setupObserver() {
+            const editor = document.getElementById('editor-root');
+            if (!editor) return; // Guard
+            const observer = new MutationObserver((mutations) => {
+                let needsRefresh = false;
+                let contentChanged = false;
+
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'characterData' || mutation.type === 'childList') {
+                        needsRefresh = true;
+                        contentChanged = true;
+                    }
+                });
+
+                if (contentChanged) {
+                    try {
+                        handleTitleMarkdown();
+                    } catch (e) {
+                        console.error("Markdown Error: ", e);
+                    }
+                    try {
+                        updateTerminalStyle(); // Check for CSS updates live
+                    } catch (e) {
+                        console.error("Style Update Error: ", e);
+                    }
+                }
+
+                if (needsRefresh && !document.activeElement.closest('#footnote-list-footer')) {
+                    try {
+                        refreshFootnotes();
+                    } catch (e) {
+                        console.error("Footnote Error: ", e);
+                    }
+                }
+            });
+            observer.observe(editor, { childList: true, characterData: true, subtree: true });
+            // Initial check
+            updateTerminalStyle();
+
+            document.addEventListener('selectionchange', syncToolbarState);
+            syncToolbarState();
+        }
+
+        let syncTimeout = null;
+        function syncToolbarState() {
+            clearTimeout(syncTimeout);
+            syncTimeout = setTimeout(() => {
+                const state = {
+                    bold: false,
+                    italic: false,
+                    underline: false,
+                    strike: false,
+                    sup: false,
+                    sub: false,
+                    ul: document.queryCommandState('insertUnorderedList'),
+                    ol: document.queryCommandState('insertOrderedList'),
+                    mono: false,
+                    color: false,
+                    heading: 0,
+                    align: 'left'
+                };
+
+                if (document.queryCommandState('justifyCenter')) state.align = 'center';
+                if (document.queryCommandState('justifyRight')) state.align = 'right';
+                if (document.queryCommandState('justifyFull')) state.align = 'justify';
+
+                const sel = window.getSelection();
+                if (sel.rangeCount > 0) {
+                    let node = sel.anchorNode;
+                    if (node && node.nodeType === 3) node = node.parentNode;
+                    let walk = node;
+                    while (walk && walk.id !== 'editor-root') {
+                        const tag = walk.tagName ? walk.tagName.toUpperCase() : '';
+
+                        // Tag checks
+                        if (tag === 'B' || tag === 'STRONG') state.bold = true;
+                        if (tag === 'I' || tag === 'EM') state.italic = true;
+                        if (tag === 'U') state.underline = true;
+                        if (tag === 'S' || tag === 'STRIKE' || tag === 'DEL') state.strike = true;
+                        if (tag === 'SUP') state.sup = true;
+                        if (tag === 'SUB') state.sub = true;
+                        if (tag === 'FONT' && walk.hasAttribute('color')) state.color = true;
+                        if (/^H[1-6]$/.test(tag)) {
+                            state.heading = parseInt(tag.substring(1));
+                        }
+
+                        // Inline style checks
+                        if (walk.style) {
+                            const fw = walk.style.fontWeight;
+                            if (fw === 'bold' || parseInt(fw) >= 700) state.bold = true;
+                            if (walk.style.fontStyle === 'italic') state.italic = true;
+                            if ((walk.style.textDecoration || "").includes('underline')) state.underline = true;
+                            if ((walk.style.textDecoration || "").includes('line-through')) state.strike = true;
+                            if ((walk.style.fontFamily || "").includes('Courier New')) state.mono = true;
+                            if (walk.style.color) state.color = true;
+                        }
+
+                        walk = walk.parentNode;
+                    }
+                }
+
+                console.log("SYNC_STATE:" + JSON.stringify(state));
+            }, 50); // 50ms debounce
+        }
+
+        function handleTitleMarkdown() {
+            const sel = window.getSelection();
+            if (!sel.rangeCount) return;
+            const range = sel.getRangeAt(0);
+            let node = range.startContainer;
+            let block = node;
+            while (block && block.parentNode && block.parentNode.id !== 'editor-root') block = block.parentNode;
+            if (block && block.nodeType === 1 && block.id !== 'editor-root') {
+                const text = block.innerText;
+                // Avoid unnecessary regex matches on empty lines or non-title lines
+                if (!text || !text.startsWith('+')) return;
+
+                const match = text.match(new RegExp("^([+]{1,6})\\\\s+(.*)"));
+                if (match) {
+                    const level = match[1].length;
+                    const content = match[2];
+                    const hTag = 'H' + level;
+                    if (block.tagName !== hTag) {
+                        const newH = document.createElement(hTag);
+                        newH.innerText = content;
+                        block.parentNode.replaceChild(newH, block);
+                        const newRange = document.createRange();
+                        newRange.selectNodeContents(newH);
+                        newRange.collapse(false);
+                        sel.removeAllRanges();
+                        sel.addRange(newRange);
+                    }
+                }
+            }
+        }
+
+
+        function refreshFootnotes() {
+            if (document.activeElement && document.activeElement.closest('#footnote-list-footer')) return;
+            const editor = document.getElementById('editor-root');
+            const footer = document.getElementById('footnote-list-footer');
+            const footnotes = editor.querySelectorAll('.scp-footnote');
+            if (footnotes.length === 0) { footer.innerHTML = ""; return; }
+            let html = "<b>脚注预览 (可编辑):</b><br>";
+            footnotes.forEach((fn, index) => {
+                const num = index + 1;
+                if (fn.innerText != num) fn.innerText = num;
+                const content = fn.getAttribute('data-content') || '待输入';
+                html += `<div class="footnote-list-item"><span style="color:#B22222;font-weight:bold;">${num}.</span> <span class="footnote-content" contenteditable="true" oninput="updateFootnoteFromPreview(${index}, this)">${content}</span></div>`;
+            });
+            if (footer.innerHTML !== html) footer.innerHTML = html;
+        }
+
+        function updateFootnoteFromPreview(index, el) {
+            const editor = document.getElementById('editor-root');
+            const footnotes = editor.querySelectorAll('.scp-footnote');
+            if (footnotes[index]) {
+                const txt = el.innerText;
+                footnotes[index].setAttribute('data-content', txt);
+                footnotes[index].setAttribute('title', txt);
+            }
+        }
+
+        function editLicenseLink(el) {
+            // Ensure element has an ID for targeting
+            if (!el.id) {
+                el.id = 'license-link-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            }
+            window.location.href = "edit-license-link://" + el.id;
+        }
+
+        function applyFontSize(sizeValue) {
+            const sel = window.getSelection();
+            if (!sel.rangeCount || sel.isCollapsed) return;
+            const range = sel.getRangeAt(0);
+            let targetNode = range.commonAncestorContainer;
+            if (targetNode.nodeType === 3) targetNode = targetNode.parentNode;
+            if (targetNode.classList.contains('size-span') && targetNode.innerText === sel.toString()) {
+                targetNode.style.fontSize = sizeValue;
+                const newRange = document.createRange();
+                newRange.selectNodeContents(targetNode);
+                sel.removeAllRanges(); sel.addRange(newRange);
+            } else {
+                const span = document.createElement('span');
+                span.className = 'size-span';
+                span.style.fontSize = sizeValue;
+                try {
+                    const content = range.extractContents();
+                    span.appendChild(content);
+                    range.insertNode(span);
+                    const newRange = document.createRange();
+                    newRange.selectNodeContents(span);
+                    sel.removeAllRanges(); sel.addRange(newRange);
+                } catch (e) { console.error(e); }
+            }
+        }
+
+        function applyAcsChange(element, className) {
+            const acsBox = element.closest('.acs-box');
+            if (!acsBox) return;
+            const val = className.toLowerCase();
+            if (COLOR_MAP[val]) {
+                acsBox.style.setProperty('--acs-color', COLOR_MAP[val]);
+                acsBox.setAttribute('data-container', val);
+                const label = acsBox.querySelector('[data-field="container"]');
+                if (label) label.innerText = className;
+
+                // Auto-cleanup Secondary if not Esoteric
+                if (val !== 'esoteric') {
+                    const secLabel = acsBox.querySelector('[data-field="secondary"]');
+                    const iconLabel = acsBox.querySelector('[data-field="secondary-icon"]');
+                    if (secLabel && secLabel.innerText.toLowerCase() !== 'none') {
+                        secLabel.innerText = 'none';
+                        if (iconLabel) iconLabel.innerText = '';
+                        // Update internal state/styles if needed, though secondary styling is minimal
+                    }
+                }
+            }
+        }
+
+        function applyAcsSecondary(element, className) {
+            const acsBox = element.closest('.acs-box');
+            if (!acsBox) return;
+            const label = acsBox.querySelector('[data-field="secondary"]');
+            if (label) label.innerText = className;
+
+            const val = className.toLowerCase();
+
+            // Auto-fill Icon
+            const iconLabel = acsBox.querySelector('[data-field="secondary-icon"]');
+            if (iconLabel) {
+                if (ACS_ICON_MAP[val]) {
+                    iconLabel.innerText = ACS_ICON_MAP[val];
+                } else if (val === 'none') {
+                    iconLabel.innerText = '';
+                }
+            }
+
+            // Auto switch to esoteric if secondary is present
+            if (className.toLowerCase() !== 'none') {
+                const containerLabel = acsBox.querySelector('[data-field="container"]');
+                if (containerLabel) {
+                    containerLabel.innerText = 'Esoteric';
+                    applyAcsChange(containerLabel, 'Esoteric');
+                }
+            }
+        }
+
+        function addLicenseFile(btn) {
+            const container = btn.previousElementSibling;
+            const div = document.createElement('div');
+            div.className = 'file-entry';
+            div.innerHTML = `<button class="btn-del-file" onclick="this.parentElement.remove()">×</button><div class="license-field-row"><span class="field-label">文件名：</span><span class="editable-field" data-field="file_name" contenteditable="true"></span></div><div class="license-field-row"><span class="field-label">图像名：</span><span class="editable-field" data-field="img_name" contenteditable="true"></span></div><div class="license-field-row"><span class="field-label">图像作者：</span><span class="editable-field" data-field="img_author" contenteditable="true"></span></div><div class="license-field-row"><span class="field-label">授权协议：</span><span class="editable-field" data-field="img_license" contenteditable="true"></span></div><div class="license-field-row license-link-row"><span class="field-label">来源链接：</span><span class="editable-field" data-field="source_link" contenteditable="false" onclick="editLicenseLink(this)"></span></div><div class="license-field-row"><span class="field-label">衍生自：</span><span class="editable-field" data-field="derived_from" contenteditable="true"></span></div><div class="license-field-row"><span class="field-label">备注：</span><span class="editable-field" data-field="note" contenteditable="true"></span></div>`;
+            container.appendChild(div);
+        }
+
+        document.addEventListener('click', function (e) {
+            const licHeader = e.target.closest('.license-header');
+            // 排除license-header内的按钮点击（如原创按钮），避免误折叠
+            if (licHeader && !e.target.closest('.btn-license-original')) {
+                licHeader.parentElement.classList.toggle('open');
+                return;
+            }
+            const colHeader = e.target.closest('.collapsible-header');
+            if (colHeader && !e.target.closest('.title-input')) { colHeader.parentElement.classList.toggle('open'); }
+
+            // Click-to-Insert-Newline on Right Side
+            const comp = e.target.closest('.scp-component, .acs-box, .rate-module-box, .tabview-box, .collapsible-box, .license-box, .wikidot-table, .div-box, .css-box');
+            if (comp && !comp.matches('.image-block-box')) {
+                // Prevent triggering on interactive elements or headers
+                if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'A' ||
+                    e.target.closest('.rate-controls') || e.target.closest('.license-header') || e.target.closest('.collapsible-header') || e.target.closest('.tab-header')) {
+                    return;
+                }
+
+                const rect = comp.getBoundingClientRect();
+                const isRightSide = (e.clientX >= rect.right - Math.max(30, rect.width * 0.1)); // Right 10% or 30px
+
+                if (isRightSide) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Check if next sibling is empty line
+                    let next = comp.nextElementSibling;
+                    if (!next || (next.tagName !== 'P' && next.tagName !== 'DIV') || next.innerText.trim() !== '') {
+                        const p = document.createElement('p');
+                        p.innerHTML = '<br>';
+                        comp.parentNode.insertBefore(p, next);
+                        next = p;
+                    }
+
+                    // Move cursor to the next line
+                    const range = document.createRange();
+                    range.selectNodeContents(next);
+                    range.collapse(true);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }
+        });
+
+        // ── 组件内可编辑字段换行隔离（带白名单）──
+        // 默认阻止 scp-component 内所有 contenteditable 子字段的 Enter 换行
+        // 白名单：内容区域（div/css模块、折叠块、tabview内容、表格单元格、脚注等）允许换行
+        document.addEventListener('keydown', function (e) {
+            if (e.key !== 'Enter') return;
+            const target = e.target;
+            if (!target) return;
+            if (!target.isContentEditable) return;
+            if (target.id === 'editor-root') return;
+            const inComp = target.closest('.scp-component');
+            if (!inComp) return;
+            // ── 白名单：允许回车的元素或其祖先类 ──
+            const ALLOW_SELECTORS = [
+                '.div-content',          // div模块正文区
+                '.css-content',          // css模块代码区
+                '.collapsible-content-area', // 折叠块内容区
+                '.tab-item',             // tabview 标签页内容
+                'td[contenteditable]',   // 表格单元格（wikidot-table）
+                'th[contenteditable]',   // 表格表头单元格
+                '.scp-footnote',         // 脚注组件
+                '.footnote-content',     // 脚注内容区
+                '.basalt-doc-wrapper .doc-content', // 玄武岩文档内容
+                '.basalt-content',       // 玄武岩内容区
+                '.memo-content',         // Basalt memo 内容区
+                '.acs-anim-checkbox',    // ACS 动画开关
+                '.acs-shiver-checkbox',  // ACS 夜琉璃开关
+            ];
+            const isWhitelisted = ALLOW_SELECTORS.some(function (sel) {
+                return target.closest(sel) !== null;
+            });
+            if (!isWhitelisted) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }, true);
+
+        document.addEventListener('input', function (e) {
+            // ACS Live Update
+            const acsContainer = e.target.closest('[data-field="container"]');
+            if (acsContainer && acsContainer.closest('.acs-box')) {
+                const val = acsContainer.innerText.trim();
+                applyAcsChange(acsContainer, val);
+            }
+            // Setup tooltips logic if not exists (lazy init or just init in onload)
+        });
+
+        document.addEventListener('change', function (e) {
+            // Sync checkbox state for persistence (attribute vs property)
+            if (e.target.matches('.acs-anim-checkbox, .acs-shiver-checkbox')) {
+                if (e.target.checked) {
+                    e.target.setAttribute('checked', 'checked');
+                } else {
+                    e.target.removeAttribute('checked');
+                }
+            }
+        });
+
+        let tooltip = null;
+        let fnTooltip = null;
+
+        function setupTooltips() {
+            tooltip = document.createElement('div');
+            tooltip.id = 'component-tooltip';
+            document.body.appendChild(tooltip);
+
+            fnTooltip = document.createElement('div');
+            fnTooltip.id = 'footnote-preview-tooltip';
+            document.body.appendChild(fnTooltip);
+
+            document.addEventListener('mouseover', (e) => {
+                // Component Tooltip
+                const comp = e.target.closest('.scp-component, .wikidot-table');
+                const isFooter = e.target.closest('#footnote-list-footer');
+
+                if (comp && !isFooter) {
+                    let type = comp.getAttribute('data-type') || 'Unknown Component';
+                    if (comp.classList.contains('wikidot-table')) type = "Table";
+                    if (comp.classList.contains('rate-module-box')) type = "Rate Module";
+                    // Specific names
+                    if (type === 'acs') type = "ACS Component";
+                    if (type === 'image-block') type = "Image Block";
+                    if (type === 'image-block-adv') type = "Adv Image";
+                    if (type === 'tabview') type = "Tab View";
+                    if (type === 'collapsible') type = "Collapsible";
+                    if (type === 'email-example') type = "电子邮件模版";
+
+                    if (type !== 'footnote') {
+                        tooltip.innerText = type;
+                        tooltip.style.display = 'block';
+
+                        // Position logic
+                        const rect = comp.getBoundingClientRect();
+                        tooltip.style.left = rect.left + 'px';
+                        tooltip.style.top = (rect.top - 25) + 'px';
+                    } else {
+                        tooltip.style.display = 'none';
+                    }
+                } else {
+
+                    tooltip.style.display = 'none';
+                }
+
+                // Footnote Hover
+                const fn = e.target.closest('.scp-footnote');
+                if (fn) {
+                    const content = fn.getAttribute('data-content') || '无内容';
+                    fnTooltip.innerText = content;
+                    fnTooltip.style.display = 'block';
+
+                    const rect = fn.getBoundingClientRect();
+                    fnTooltip.style.left = (rect.left + 20) + 'px';
+                    fnTooltip.style.top = (rect.top + 20) + 'px';
+                } else {
+                    fnTooltip.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                // Simple hide on mouseout of window/body? 
+                // Check relatedTarget
+                if (!e.relatedTarget) {
+                    tooltip.style.display = 'none';
+                    fnTooltip.style.display = 'none';
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                const fn = e.target.closest('.scp-footnote');
+                if (fn) {
+                    // Find index
+                    const allFn = Array.from(document.querySelectorAll('.scp-footnote'));
+                    const index = allFn.indexOf(fn);
+                    if (index !== -1) {
+                        window.location.href = "edit-footnote://" + index;
+                    }
+                }
+            });
+        }
+
+
+
+        // --- Helper Functions for Collapsible Modules ---
+        function toggleDiv(header) {
+            var content = header.nextElementSibling;
+            if (content) {
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    header.classList.remove('collapsed');
+                } else {
+                    content.style.display = 'none';
+                    header.classList.add('collapsed');
+                }
+            }
+        }
+
+        function toggleCss(header) {
+            // Find the css content div
+            var parent = header.parentElement;
+            var content = parent.querySelector('.css-content');
+            if (content) {
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    header.innerText = header.innerText.replace(' (点击展开)', ' (点击折叠)');
+                } else {
+                    content.style.display = 'none';
+                    header.innerText = header.innerText.replace(' (点击折叠)', ' (点击展开)');
+                    if (!header.innerText.includes(' (点击展开)')) header.innerText += ' (点击展开)';
+                }
+            }
+        }
+
+        // --- Smart Backspace Handler ---
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Backspace') {
+                var sel = window.getSelection();
+                if (sel.rangeCount > 0 && sel.isCollapsed) {
+                    var range = sel.getRangeAt(0);
+                    var node = range.startContainer;
+
+                    // Traverse up to find the block element if we are in a text node
+                    var block = node;
+                    while (block && block.nodeType === 3) block = block.parentNode;
+
+                    // Check for empty P or DIV with BR
+                    // If it's <p><br></p> or <div><br></div> and empty text
+                    if (block && (block.tagName === 'P' || block.tagName === 'DIV')) {
+                        if (block.innerText.trim() === '' || block.innerHTML === '<br>') {
+                            // Check Previous and Next Siblings
+                            var prev = block.previousElementSibling;
+                            var next = block.nextElementSibling;
+
+                            // Identify components
+                            var isComp = function (el) {
+                                return el && (el.classList.contains('scp-component') || el.classList.contains('div-box') || el.classList.contains('css-box') || el.hasAttribute('data-type'));
+                            };
+
+                            if (isComp(prev) && isComp(next)) {
+                                e.preventDefault();
+                                block.remove();
+                                // Optional: Move cursor to end of prev?
+                                // If we remove the line, cursor might be lost. 
+                                // Let's try to set cursor to end of prev.
+                                // But prev is contenteditable=false usually.
+                                // So let's just remove it. Browser usually handles focus.
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        window.onload = function () {
+            setupObserver();
+            setupTooltips();
+            refreshFootnotes();
+        };
+    </script>
+</head>
+
+<body>
+    <div id="basalt-logo-overlay" contenteditable="false"
+        style="display: none; position: absolute; top: 15px; left: 40px; z-index: 100; pointer-events: none; opacity: 0.9;">
+        <svg width="180" height="54" viewBox="0 0 180 54" xmlns="http://www.w3.org/2000/svg">
+            <g fill="#212121">
+                <polygon points="15,19 23,14 31,19 31,28 23,33 15,28"></polygon>
+                <polygon points="25,35 33,30 41,35 41,44 33,49 25,44"></polygon>
+                <polygon points="33,18 49,9 65,18 65,36 49,45 33,36"></polygon>
+                <text x="70" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="34" font-weight="900"
+                    letter-spacing="-1.5">Basalt</text>
+                <text x="106" y="52" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="900"
+                    letter-spacing="3">THEME</text>
+            </g>
+        </svg>
+    </div>
+    <div class="rate-module-box" contenteditable="false">
+        <div class="rate-controls">
+            <button class="rate-btn rate-align-btn" onclick="rateAction('left', this)">Left</button>
+            <button class="rate-btn" onclick="rateAction('hide', this)">隐藏</button>
+            <button class="rate-btn rate-align-btn" onclick="rateAction('right', this)">Right</button>
+        </div>
+        <div class="rate-content">[[module Rate]]</div>
+    </div>
+    <div id="editor-root" contenteditable="true"></div>
+    <div id="footnote-list-footer" contenteditable="false"></div>
+</body>
+
+</html>
