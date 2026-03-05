@@ -1,0 +1,40 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="css/editor.css">
+</head>
+
+<body>
+    <script src="js/table.js"></script>
+    <script src="js/image.js"></script>
+    <script src="js/TabView.js"></script>
+    <script src="js/WILL_DELETE/D_updateTerminalStyle.js"></script>
+    <script src="js/footnotes.js"></script>
+    <script src="js/editor.js"></script>
+    <div id="basalt-logo-overlay" contenteditable="false"
+        style="display: none; position: absolute; top: 15px; left: 40px; z-index: 100; pointer-events: none; opacity: 0.9;">
+        <svg width="180" height="54" viewBox="0 0 180 54" xmlns="http://www.w3.org/2000/svg">
+            <g fill="#212121">
+                <polygon points="15,19 23,14 31,19 31,28 23,33 15,28"></polygon>
+                <polygon points="25,35 33,30 41,35 41,44 33,49 25,44"></polygon>
+                <polygon points="33,18 49,9 65,18 65,36 49,45 33,36"></polygon>
+                <text x="70" y="38" font-family="'Segoe UI', Arial, sans-serif" font-size="34" font-weight="900"
+                    letter-spacing="-1.5">Basalt</text>
+                <text x="106" y="52" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="900"
+                    letter-spacing="3">THEME</text>
+            </g>
+        </svg>
+    </div>
+    <div class="rate-module-box" contenteditable="false">
+        <div class="rate-controls">
+            <button class="rate-btn rate-align-btn" onclick="rateAction('left', this)">Left</button>
+            <button class="rate-btn" onclick="rateAction('hide', this)">隐藏</button>
+            <button class="rate-btn rate-align-btn" onclick="rateAction('right', this)">Right</button>
+        </div>
+        <div class="rate-content">[[module Rate]]</div>
+    </div>
+    <div id="editor-root" contenteditable="true"></div>
+    <div id="footnote-list-footer" contenteditable="false"></div>
+</body>
+
+</html>
