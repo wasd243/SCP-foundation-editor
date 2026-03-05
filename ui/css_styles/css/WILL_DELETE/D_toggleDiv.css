@@ -1,0 +1,58 @@
+/* DIV Module */
+.div-box {
+    border: 1px dashed #bbb;
+    margin: 10px 0;
+    padding: 5px;
+    background: #f9f9f9;
+    position: relative;
+    clear: both;
+}
+
+.div-header {
+    font-size: 0.8em;
+    color: #666;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 5px;
+    padding-bottom: 2px;
+}
+
+.div-content {
+    min-height: 20px;
+}
+
+/* CSS Module */
+.css-box {
+    border: 1px solid #a0a0a0;
+    margin: 10px 0;
+    background: #f0f0f0;
+    position: relative;
+    clear: both;
+}
+
+.css-header {
+    background: #e0e0e0;
+    font-size: 0.8em;
+    padding: 2px 5px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #ccc;
+}
+
+.css-content {
+    padding: 5px;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    min-height: 20px;
+    color: #222;
+}
+
+.css-hint {
+    font-size: 0.75em;
+    color: #666;
+    padding: 2px 5px;
+    background: #e8e8e8;
+    border-top: 1px solid #ccc;
+    font-style: italic;
+    user-select: none;
+    pointer-events: none;
+}
