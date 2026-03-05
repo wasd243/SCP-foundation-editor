@@ -26,3 +26,19 @@ function toggleLicenseOriginal(btn, event) {
         }
     }
 }
+// 添加文件
+function addLicenseFile(btn) {
+    const container = btn.previousElementSibling;
+    const div = document.createElement('div');
+    div.className = 'file-entry';
+    div.innerHTML = `<button class="btn-del-file" onclick="this.parentElement.remove()">×</button><div class="license-field-row"><span class="field-label">文件名：</span><span class="editable-field" data-field="file_name" contenteditable="true"></span></div><div class="license-field-row"><span class="field-label">图像名：</span><span class="editable-field" data-field="img_name" contenteditable="true"></span></div><div class="license-field-row"><span class="field-label">图像作者：</span><span class="editable-field" data-field="img_author" contenteditable="true"></span></div><div class="license-field-row"><span class="field-label">授权协议：</span><span class="editable-field" data-field="img_license" contenteditable="true"></span></div><div class="license-field-row license-link-row"><span class="field-label">来源链接：</span><span class="editable-field" data-field="source_link" contenteditable="false" onclick="editLicenseLink(this)"></span></div><div class="license-field-row"><span class="field-label">衍生自：</span><span class="editable-field" data-field="derived_from" contenteditable="true"></span></div><div class="license-field-row"><span class="field-label">备注：</span><span class="editable-field" data-field="note" contenteditable="true"></span></div>`;
+    container.appendChild(div);
+}
+// 编辑授权链接
+function editLicenseLink(el) {
+    // Ensure element has an ID for targeting
+    if (!el.id) {
+        el.id = 'license-link-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+    }
+    window.location.href = "edit-license-link://" + el.id;
+}
