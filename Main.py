@@ -1,25 +1,17 @@
-#  Copyright (C) 2026  wasd243
+# ============================================================
+# SCP Foundation WYSIWYG Editor
 #
-#  This program is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  any later version.
+# Copyright (C) 2026 Zichen Wang
 #
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+# This program is free software: you can redistribute it and/or
+# modify it under the terms of the GNU Affero General Public
+# License as published by the Free Software Foundation, version 3.
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# This program is distributed WITHOUT ANY WARRANTY.
+#
+# https://www.gnu.org/licenses/agpl-3.0.html
+# ============================================================
 
-#  This program is based on the PyQt6 library, which is released under the
-#  GNU General Public License version 3.0.
-
-#  This program is based on the FTML library, which is released under the
-#  AGPL version 3.0.
-
-#
 #  特别说明：本项目涉及的 SCP 基金会相关组件及版式遵循 CC BY-SA 3.0 协议。
 #  版权信息声明：
 #  本项目涉及的 SCP 基金会相关组件及版式遵循 CC BY-SA 3.0 协议。
