@@ -1,0 +1,12 @@
+[all]
+
+all-features = true
+workspace = true
+exclude-files = [
+    "src/wasm/*",
+]
+
+[report]
+
+out = ["Html", "Xml"]
+output-dir = "target/coverage"
