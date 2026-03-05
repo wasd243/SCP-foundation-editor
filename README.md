@@ -1,7 +1,7 @@
 # SCP-foundation-editor
 ### SCP 基金会中文编辑器
 
-![License](https://img.shields.io/badge/license-GPL_3.0-blue) ![Status](https://img.shields.io/badge/status-Alpha-orange)
+![License](https://img.shields.io/badge/license-AGPL_3.0-blue) ![Status](https://img.shields.io/badge/status-Alpha-orange)
 
 这是一个为了方便编写 SCP 基金会中文文档而制作的编辑器。本项目旨在简化编辑流程，提升写作体验。
 
