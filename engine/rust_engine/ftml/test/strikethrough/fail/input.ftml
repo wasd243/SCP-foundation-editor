@@ -1,9 +1,0 @@
---Fail strikethrough (em dash)
-
---Fail strikethrough paragraph
-
-end--
-
-Empty strikethrough actually clear float ~~~~
-
-[[s]] not terminated
