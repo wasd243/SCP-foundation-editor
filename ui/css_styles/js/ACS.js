@@ -1,4 +1,13 @@
 //  ACS 异常分类系统
+const COLOR_MAP = {
+    'safe': '#27ae60',
+    'euclid': '#f1c40f',
+    'keter': '#c0392b',
+    'neutralized': '#7f8c8d', // Gray
+    'pending': '#bdc3c7',     // Light Gray
+    'explained': '#95a5a6',   // Gray
+    'esoteric': '#595959'     // Dark Gray
+};
 
 const ACS_ICON_MAP = {
     'apollyon': 'https://scp-wiki.wdfiles.com/local--files/component%3Aanomaly-class-bar/apollyon-icon.svg',
