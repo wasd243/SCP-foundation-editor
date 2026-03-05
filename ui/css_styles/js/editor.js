@@ -2,7 +2,7 @@
  * ============================================================
  * SCP Foundation WYSIWYG Editor
  *
- * Copyright (C) 2026 Zichen Wang
+ * Copyright (C) 2026 Zichen Wang (wasd243)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License v3.
