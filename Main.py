@@ -70,21 +70,17 @@ from PyQt6.QtWidgets import QApplication
 # 从 controllers 包中导入业务主类
 # 确保你已经将原来的 SCPEditor 类移动到了 controllers/main_controller.py
 from controllers.MAIN_CONTROLLER import SCPEditor
-
+from core.banner import print_startup_banner
+from core.logger import *
 # 处理终端报错问题
 os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--log-level=3"
 
-VERSION = "v2.0.0-alpha.1"
+print_startup_banner()
+log("INIT", "Application starting")
+log("QT", "Initializing PyQt6")
+log("ENGINE", "Loading FTML renderer")
+log_ok("Editor ready")
 
-print("=" * 60)
-print("SCP Foundation WYSIWYG Editor")
-print(f"Version : {VERSION}")
-print("License : GNU Affero General Public License v3 (AGPLv3)")
-print("Author  : Zichen Wang (wasd243)")
-print("Project : https://github.com/wasd243/SCP-foundation-editor")
-print("=" * 60)
-print("Initializing editor environment...")
-print()
 if __name__ == "__main__":
     # 初始化应用
     app = QApplication(sys.argv)
