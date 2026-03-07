@@ -1,31 +1,31 @@
 ## v2.0.0-alpha.2
-- DATE: March 6, 2026
+DATE: March 6, 2026
 
 ### Added
 - Completed the main code decomposition
 - Added the update log
-- Added the banner.py for the startup banner
-- Added the logger.py for the log system
-- Added the author real name: Zichen Wang
+- Added `banner.py` for the startup banner
+- Added `logger.py` for the logging system
+- Added the author's real name: Zichen Wang
 
 ### Fixed
-- Fixed the issue of the div styles not redered in the editor
-- Fixed the issue of the css styles not redered in the editor
-- Fixed the issue of the js styles not redered in the editor
+- Fixed an issue where div styles were not rendered in the editor
+- Fixed an issue where CSS styles were not rendered in the editor
+- Fixed an issue where JS scripts were not executed correctly in the editor
 
 ### ACS
-- Changed the ACS style to the new ACS style
-- Fixed the issue of the ACS botton could not render the user's click
+- Updated the ACS style to the new ACS layout
+- Fixed an issue where the ACS button could not respond to user clicks
 
 ### Image Block
-- Fixed the issue of the image block could not render the image link correctly.
+- Fixed an issue where image blocks could not render image links correctly
 
 ### Version
-- Changed the version to v2.0.0-alpha.2
-- Changed the license to GNU AGPLv3
-- Changed the author to Zichen Wang (wasd243)
+- Updated the version to `v2.0.0-alpha.2`
+- Updated the license to GNU AGPLv3
+- Updated the author information to **Zichen Wang (wasd243)**
 
-### Note
-- This version is the second pre-alpha version of the FTML engine.
-- The editor is not stable yet, some of the features are not implemented yet.
-- This version is supposed to be the version that record and fallback.
+### Notes
+- This version is the second pre-alpha release of the FTML engine
+- The editor is still unstable and several features are not yet implemented
+- This version mainly serves as a recovery and fallback checkpoint
