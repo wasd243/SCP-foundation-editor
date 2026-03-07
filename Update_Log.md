@@ -58,47 +58,42 @@
 
 ---
 
-## v2.0.0-alpha.4-March 8, 2026
+## v2.0.0-alpha.4 — March 8, 2026
 
 ### Added
-- Updated the css_styles/js
-- Updated the code refactoration of `parse_node.py`
-- Updated the code refactoration of `wikidot_exporter.py`
-- Updated the code refactoration of `CSS_INJECTOR.py`
 - Added `insert_html_at_point.js`
 - Added `parse_node.py`
-- Added `utils/templates/` in css and txt files:
-    - `class_warning.txt`
-    - `email_template.css`
-    - `email_template.txt`
-    - `foundation_background.css`
-    - `foundation_background.txt`
-    - `login_logout.css`
-    - `login_logout.txt`
-    - `o5_command.txt`
-    - `page_note.css`
-    - `page_note.txt`
-    - `raisa_notice.txt`
-    - `terminal_001.css`
-    - `terminal_001.txt`
-    - `terminal_shortcut.css`
-    - `terminal_shortcut.txt`
-    - `video_record.txt`
-    - `video_record2.txt`
-
-### Removed
-- Removed all files in `utils/js` except `insert_html_at_point`
-- Removed all files in `ui/css_styles/js/WILL_DELETE`
+- Added `utils/templates/` (css and txt templates):
+  - class_warning
+  - email_template
+  - foundation_background
+  - login_logout
+  - o5_command
+  - page_note
+  - raisa_notice
+  - terminal_001
+  - terminal_shortcut
+  - video_record
+  - video_record2
 
 ### Changed
-- Changed `editor.html` code about files in `ui/css_styles/js/WILL_DELETE`
+- Refactored `parse_node.py`
+- Refactored `wikidot_exporter.py`
+- Refactored `CSS_INJECTOR.py`
+- Updated files in `ui/css_styles/js`
+- Updated `editor.html` references to removed files
+
+### Removed
+- Removed all files in `utils/js` except `insert_html_at_point.js`
+- Removed deprecated files in `ui/css_styles/js/WILL_DELETE`
 
 ### Version
-- Updated the version to `v2.0.0-alpha.4`
-- LINCESE: AGPLv3
+- Version: `v2.0.0-alpha.4`
+- License: AGPLv3
 - Author: Zichen Wang (wasd243)
 
 ### Notes
 - This version is the fourth pre-alpha release of the FTML engine
 - The editor is still unstable and several features are not yet implemented
+- This version mainly serves as a recovery and fallback checkpointe editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
