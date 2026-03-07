@@ -63,8 +63,8 @@ function applyAcsSecondary(element, className) {
     if (className.toLowerCase() !== 'none') {
         const containerLabel = acsBox.querySelector('[data-field="container"]');
         if (containerLabel) {
-            containerLabel.innerText = '机密';
-            applyAcsChange(containerLabel, 'esoteric');
+            containerLabel.innerText = 'Esoteric';
+            applyAcsChange(containerLabel, 'Esoteric');
         }
     }
 }

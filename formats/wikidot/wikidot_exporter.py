@@ -11,6 +11,10 @@ def parse_node(node, state):
     """
     核心正向解析器 (已剥离 UI 和 self)
     将 HTML 节点递归转换为 Wikidot 语法
+    
+    :param node: BeautifulSoup 节点 (Tag 或 NavigableString)
+    :param state: 解析状态字典，用于跨层级记录上下文传递 (例如是否在粗体/斜体内部、是否开启了特殊选项)
+    :return: 转换后的 Wikidot 代码字符串
     """
     def safe_get(selector, attr='text'):
         el = node.select_one(selector)
@@ -71,6 +75,12 @@ def parse_node(node, state):
 
     if node.get('class') and 'scp-component' in node.get('class'):
         c_type = node.get('data-type')
+        
+        # ==========================================
+        # 🟢 本地自定义组件解析区 (SCP Component)
+        # 将被包装过的块级自定义组件还原为它本身的 Wikidot 语法。
+        # 每一种 c_type 对应一个拦截器生成的标记或者特殊的可视化节点。
+        # ==========================================
 
         if c_type == 'theme-basalt': return ""
 
@@ -290,6 +300,11 @@ def parse_node(node, state):
             css_code = safe_get('.css-content', 'text').strip()
             return f"\n[[module CSS]]\n{css_code}\n[[/module]]\n"
 
+    # ==========================================
+    # 🔵 标准 HTML 标签 / 原生文本 解析区
+    # 处理加粗、斜体、列表、引用框等基础标签
+    # ==========================================
+
     tag = node.name
     inner_state = state
     if tag in ['b', 'strong']:
@@ -413,11 +428,20 @@ def parse_node(node, state):
 
 def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     """
-    外部主入口：将包含编辑器界面的 HTML 以及当前的状态快照，转换为纯 Wikidot 代码。
+    外部主入口：将包含编辑器界面的 HTML 以及当前的快照状态，转换为纯 Wikidot 代码。
+    
+    :param html: 从编辑器传入的完整 HTML DOM 代码
+    :param snapshot: 当前界面的勾选框/主题状态 (如 basalt_on)
+    :return: 干净可用的 Wikidot 语法文本
     """
     soup = BeautifulSoup(html, 'html.parser')
     root = soup.find(id="editor-root")
     if not root: return ""
+
+    # ==========================================
+    # 步骤 1：梳理页面顶部级的组件 (Rate、主题CSS等)
+    # 根据页面的 snapshot 的全局设定，决定页面最上方插入哪些 Wikidot 组件或内联配置
+    # ==========================================
 
     rate_box = soup.select_one('.rate-module-box')
     rate_code = ""
@@ -514,6 +538,9 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
         license_code += parse_license_only(comp)
         comp.decompose()
 
+    # ==========================================
+    # 步骤 2：对主体节点进行依次递归遍历，调用 parse_node 转换为 Wikidot 语法
+    # ==========================================
     body_parts = []
     for c in root.contents:
         if isinstance(c, NavigableString):
@@ -522,6 +549,10 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     
     raw_body = "".join(body_parts)
 
+    # ==========================================
+    # 步骤 3：最终排版修正和换行符清理
+    # (对导出的一些边界情况如并排空行进行去重或补全)
+    # ==========================================
     body = raw_body.replace('\r\n', '\n').replace('\xa0', ' ')
     body = re.sub(r'\n[ \t]*\n[ \t]*(@@@@|@@ @@)', r'\n\1', body)
     body = re.sub(r'(@@@@|@@ @@)\n\s*\n+', r'\1\n', body)
