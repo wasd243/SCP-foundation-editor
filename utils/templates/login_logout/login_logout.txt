@@ -1,0 +1,26 @@
+[[div class="fakeprot"]]
+[[module MailForm to="aaaa (DUMMY)" button=""]]
+# name
+ * title: ID
+ * default: <你的ID>
+ * type: text
+ * rules:
+  * required: true
+  * maxLength:10
+  * minLength: 100
+[[/module]]
+[[div class="passw"]]
+[[module MailForm to="aaaa (DUMMY)" button=""]]
+# affiliation
+ * title: 密码
+ * default: ・・・・・・・・・
+ * rules:
+  * required: true
+  * maxLength:10
+  * minLength: 100
+[[/module]]
+[[/div]]
+[[/div]]
+[[collapsible show="登入" hide="登出"]]
+文字
+[[/collapsible]]

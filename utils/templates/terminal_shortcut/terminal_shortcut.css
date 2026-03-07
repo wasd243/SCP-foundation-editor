@@ -1,0 +1,18 @@
+.danke {
+    padding: 5px 5px 5px 15px;
+    margin-bottom: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+}
+
+.agent {
+    background-color: #000000;
+    border: 3px solid #55AA55;
+    color: #77CC77;
+}
+
+.site {
+    background-color: #222200;
+    border: 3px solid #AAAA55;
+    color: #DDDD77;
+}

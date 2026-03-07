@@ -1,0 +1,28 @@
+[[div class="email-example"]]
+[[=]]
+------
+[[collapsible show="访问SCiPNET邮件？一 (1) 封新邮件！" hide="回复：主题"]]
+[[<]]
+[[div class="email"]]
+[[div class="tofrom"]]
+**至：**收件人
+**自：**发件人
+**主题：**主题
+[[/div]]
+------
+文本
+[[/div]]
+@@ @@
+[[div class="email"]]
+[[div class="tofrom"]]
+**至：**收件人
+**自：**发件人
+**主题：**回复：主题
+[[/div]]
+------
+文本
+[[/div]]
+[[/<]]
+[[/collapsible]]
+[[/=]]
+[[/div]]
