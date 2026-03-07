@@ -43,6 +43,9 @@
 - Changed the user tag button
 - Changed the user advanced tag button
 
+### Fixed
+- Fixed an issue where the error message "Sorry, the page you are looking for does not exist" was displayed when the page restarted
+
 ### Version
 - Updated the version to `v2.0.0-alpha.3`
 - Updated the license to GNU AGPLv3
