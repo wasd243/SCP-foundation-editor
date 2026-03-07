@@ -9,10 +9,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
     import ftml_py
     HAS_FTML = True
-    print("✅ 成功加载 ftml_py 高性能 Rust 解析引擎！(精准外挂编辑模式已就绪)")
+    print("[OK] 成功加载 ftml_py")
 except ImportError:
     HAS_FTML = False
-    print("⚠️ 警告: 未找到 ftml_py，将回退到基础纯文本模式")
+    print("[WARNING] 警告: 未找到 ftml_py，回退到基础纯文本模式")
 
 try:
     from engine.process.interceptor.MAIN_INTERCEPTOR import ComponentInterceptor
