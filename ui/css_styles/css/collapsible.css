@@ -13,27 +13,46 @@
 
 .collapsible-header {
     display: flex;
-    gap: 15px;
     background: #e0e0e0;
     padding: 8px 15px;
-    font-size: 12px;
+    font-size: 13px;
     color: #333;
     align-items: center;
     border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    user-select: none;
 }
 
 .title-label {
-    font-weight: bold;
-    color: #901111;
+    color: #666;
+    margin-right: 5px;
 }
 
 .title-input {
-    border-bottom: 1px dashed #666;
-    padding: 0 5px;
-    outline: none;
-    min-width: 60px;
     color: #000;
-    background: #fff;
+    outline: none;
+    min-width: 40px;
+}
+
+.title-input:hover,
+.title-input:focus {
+    background: rgba(255, 255, 255, 0.5);
+    border-bottom: 1px dashed #999;
+}
+
+.collapsible-show-title,
+.collapsible-hide-title {
+    display: inline;
+}
+
+.collapsible-arrow {
+    margin-left: auto;
+    font-size: 10px;
+    transition: transform 0.2s;
+}
+
+.collapsible-box.open .collapsible-arrow {
+    transform: rotate(90deg);
 }
 
 .collapsible-content-area {

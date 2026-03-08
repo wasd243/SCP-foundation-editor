@@ -1,6 +1,11 @@
 import re
 from bs4 import BeautifulSoup, NavigableString
 
+from formats.wikidot.rgb.rgb_to_hex import handle_rgb_to_hex
+
+def rgb_to_hex(rgb_str):
+    return handle_rgb_to_hex(rgb_str)
+
 def handle_parse_node(node, state):
     """
     核心正向解析器 (已剥离 UI 和 self)
@@ -76,223 +81,11 @@ def handle_parse_node(node, state):
         # 每一种 c_type 对应一个拦截器生成的标记或者特殊的可视化节点。
         # ==========================================
 
-        if c_type == 'theme-basalt': return ""
-
-        if c_type == 'aim':
-            f = lambda d: safe_get(f'[data-field="{d}"]')
-            blocks = node.get('data-blocks', '')
-            code = "[[include :scp-wiki-cn:component:advanced-information-methodology\n"
-            if blocks: code += f"|blocks={blocks}\n"
-            code += "|lang=CN\n"
-            if blocks != '!': code += f"|XXXX={f('xxxx')}\n|lv={f('lv')}\n|cc={f('cc')}\n|dc={f('dc')}\n"
-            if blocks != '-': code += f"|site={f('site')}\n|dir={f('dir')}\n|head={f('head')}\n|mtf={f('mtf')}\n"
-            code += "]]\n"
-            return code
-
-        if c_type == 'html5player':
-            url = safe_get('.html5player-url', 'text')
-            return f"[[include :snippets:html5player\n|type=audio\n|url={url}]]\n"
-
-        if c_type == 'foundation-bg':
-            title_node = node.select_one('.foundation-title h1')
-            desc_h1_node = node.select_one('.foundation-desc h1')
-            desc_p_node = node.select_one('.foundation-desc p')
-            item_node = node.select_one('.foundation-itemno h1')
-            
-            title_text = "".join(handle_parse_node(c, state) for c in title_node.contents).strip() if title_node else "标题"
-            desc_h1_text = "".join(handle_parse_node(c, state) for c in desc_h1_node.contents).strip() if desc_h1_node else "副标题"
-            desc_p_text = "".join(handle_parse_node(c, state) for c in desc_p_node.contents).strip() if desc_p_node else "描述 " * 60
-            item_text = "".join(handle_parse_node(c, state) for c in item_node.contents).strip() if item_node else "XXXX"
-            
-            title_text = re.sub(r'[\n\r]+', '', title_text).replace('@@@@', '').replace('@@ @@', '').strip()
-            desc_h1_text = re.sub(r'[\n\r]+', '', desc_h1_text).replace('@@@@', '').replace('@@ @@', '').strip()
-            desc_p_text = re.sub(r'[\n\r]+', '', desc_p_text).replace('@@@@', '').replace('@@ @@', '').strip()
-            item_text = re.sub(r'[\n\r]+', '', item_text).replace('@@@@', '').replace('@@ @@', '').strip()
-            
-            css = "[[module CSS]]\n.orderwrapper {position: relative;width: auto;text-align: center;}.council1 {position: relative;top: 0;bottom: 0;left: 0;right: 0;width: 295px;height: 295px;margin: auto;background-image: url( \"http://kaktuskontainer.wdfiles.com/local--files/format-hell/scp_trans.png\" );background-size: 295px 295px;background-repeat: no-repeat;background-position: center;}.ordertitle {position: absolute;left: 0;right: 0;top: 38px;}.ordertitle h1 {font-size: 220%;color: #555;}.orderdescription {position: absolute;left: 0;right: 0;top: 85px;width: 100%;}.orderdescription p {font-size: 90%;color: #555;}.orderdescription h1 {font-size: 120%;color: #555;}.itemno {position: absolute;left: 0;right: 0;bottom: 27px;}.itemno h1 {font-size: 170%;color: #555;}\n[[/module]]"
-            
-            res = f"[[div class=\"orderwrapper\"]]\n[[div class=\"council1\"]]\n[[/div]]\n[[div class=\"ordertitle\"]]\n+* {title_text}\n[[/div]]\n[[div class=\"orderdescription\"]]\n _\n+* {desc_h1_text}\n{desc_p_text}\n[[/div]]\n[[div class=\"itemno\"]]\n+* {item_text}\n[[/div]]\n[[/div]]\n\n{css}\n"
-            return f"\n{res}\n"
-
-        if c_type == 'image-block':
-            name = safe_get('[data-field="name"]')
-            caption = safe_get('[data-field="caption"]')
-            align = node.get('data-align', 'right')
-            return f"\n[[include component:image-block name={name}\n|caption={caption}\n|align={align}]]\n"
-
-        if c_type == 'image-block-adv':
-            name = safe_get('[data-field="name"]')
-            caption = safe_get('[data-field="caption"]')
-            width = safe_get('[data-field="width"]')
-            height = safe_get('[data-field="height"]')
-            align = node.get('data-align', 'right')
-
-            res = f"\n[[include component:image-block\n|name={name}\n|caption={caption}"
-            if width:
-                width_val = width.lower().strip()
-                if width_val and not (width_val.endswith('px') or width_val.endswith('%')): width_val += "px"
-                res += f"\n|width={width_val}"
-            if height:
-                height_val = height.lower().strip()
-                if height_val and not (height_val.endswith('px') or height_val.endswith('%')): height_val += "px"
-                res += f"\n|height={height_val}"
-            res += f"\n|align={align}]]\n"
-            return res
-
-        if c_type == 'tabview':
-            buttons = node.select('.tab-header .tab-btn')
-            contents = node.select('.tab-contents .tab-item')
-            code = "\n[[tabview]]\n"
-            for i, btn in enumerate(buttons):
-                title = btn.get_text().strip()
-                if i < len(contents):
-                    tab_body = "".join(handle_parse_node(c, state) for c in contents[i].contents).strip()
-                    code += f"[[tab {title}]]\n{tab_body}\n[[/tab]]\n"
-            code += "[[/tabview]]\n"
-            return code
-
-        if c_type == 'user': return f"[[*user {safe_get('.user-name')}]]"
-        if c_type == 'user-adv': return f"[[*user {safe_get('.user-name')}]]"
-
-        if c_type == 'email-example':
-            show_title = node.select_one('.email-show-title').get_text(strip=True) if node.select_one('.email-show-title') else "访问SCiPNET邮件？一 (1) 封新邮件！"
-            hide_title = node.select_one('.email-hide-title').get_text(strip=True) if node.select_one('.email-hide-title') else "回复：主题"
-            to1 = node.select_one('.email-to1').get_text(strip=True) if node.select_one('.email-to1') else "收件人"
-            from1 = node.select_one('.email-from1').get_text(strip=True) if node.select_one('.email-from1') else "发件人"
-            subj1 = node.select_one('.email-subj1').get_text(strip=True) if node.select_one('.email-subj1') else "主题"
-            c1_node = node.select_one('.email-content1')
-            cont1 = "".join(handle_parse_node(c, state) for c in c1_node.contents).strip() if c1_node else "文本"
-
-            to2 = node.select_one('.email-to2').get_text(strip=True) if node.select_one('.email-to2') else "收件人"
-            from2 = node.select_one('.email-from2').get_text(strip=True) if node.select_one('.email-from2') else "发件人"
-            subj2 = node.select_one('.email-subj2').get_text(strip=True) if node.select_one('.email-subj2') else "回复：主题"
-            c2_node = node.select_one('.email-content2')
-            cont2 = "".join(handle_parse_node(c, state) for c in c2_node.contents).strip() if c2_node else "文本"
-
-            return f'\n[[div class="email-example"]]\n[[=]]\n------\n[[collapsible show="{show_title}" hide="{hide_title}"]]\n[[<]]\n[[div class="email"]]\n[[div class="tofrom"]]\n**至：**{to1}\n**自：**{from1}\n**主题：**{subj1}\n[[/div]]\n------\n{cont1}\n[[/div]]\n@@ @@\n[[div class="email"]]\n[[div class="tofrom"]]\n**至：**{to2}\n**自：**{from2}\n**主题：**{subj2}\n[[/div]]\n------\n{cont2}\n[[/div]]\n[[/<]]\n[[/collapsible]]\n[[/=]]\n[[/div]]\n'
-
-        if c_type == 'collapsible':
-            show_t = safe_get('[data-field="show"]')
-            hide_t = safe_get('[data-field="hide"]')
-            content_area = node.select_one('.collapsible-content-area') or node.select_one('.collapsible-content') or node
-            inner = "".join(handle_parse_node(c, state) for c in content_area.contents) if content_area else ""
-            return f'\n[[collapsible show="{show_t}" hide="{hide_t}"]]\n{inner.strip()}\n[[/collapsible]]\n'
-
-        if c_type == 'license': return ""
-
-        if c_type == 'acs':
-            item = safe_get('[data-field="item-number"]')
-            clr = (re.search(r'\d+', safe_get('[data-field="clearance"]')) or re.search(r'\d+', '1')).group()
-            sec = safe_get('[data-field="secondary"]').lower()
-            if sec == "none": sec = ""
-            cnt = '机密' if sec else safe_get('[data-field="container"]').lower()
-            dsr = safe_get('[data-field="disruption"]').lower()
-            rsk = safe_get('[data-field="risk"]').lower()
-
-            anim = ""
-            if node.select_one('.acs-anim-checkbox') and node.select_one('.acs-anim-checkbox').has_attr('checked'):
-                anim = "[[include :scp-wiki-cn:component:acs-animation]]\n"
-
-            sec_line = ""
-            if sec:
-                sec_line = f"|secondary-class={sec}\n"
-                sec_icon = safe_get('[data-field="secondary-icon"]')
-                if sec_icon: sec_line += f"|secondary-icon={sec_icon}\n"
-
-            res = f"[[include :scp-wiki-cn:component:anomaly-class-bar-source\n|lang=cn\n|item-number={item}\n|clearance={clr}\n|container-class={cnt}\n{sec_line}|disruption-class={dsr}\n|risk-class={rsk}\n]]"
-            
-            if node.select_one('.acs-shiver-checkbox') and node.select_one('.acs-shiver-checkbox').has_attr('checked'):
-                res = f'[[div class="Shivering-ACS"]]\n{res}\n[[/div]]'
-            return f"\n{anim}{res}\n"
-
-        if c_type == 'toc': return "\n[[toc]]\n"
-
-        if c_type == 'footnote':
-            content = node.get('data-content', '').strip()
-            if state.get('better_footnotes', False):
-                return f'[[span class="fnnum"]].[[/span]][[span class="fncon"]]{content}[[/span]]'
-            else:
-                return f"[[footnote]] {content} [[/footnote]]"
-
-        if c_type == 'hr': return "\n------\n"
-
-        if c_type == 'raisa-notice':
-            style = "border: 1px solid #FFC107; background: #FFFEE0; padding: 15px; margin: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 4px; color: #333; font-family: verdana, arial, helvetica, sans-serif; font-size: 14px; line-height: 1.5;"
-            inner = "".join(handle_parse_node(c, state) for c in node.select_one('.raisa-content').contents).strip()
-            return f"\n[[div style=\"{style}\"]]\n{inner}\n[[/div]]\n"
-
-        if c_type == 'class-warning':
-            style = "background: url(http://scp-wiki.wdfiles.com/local--files/the-great-hippo/scp_trans.png) bottom right no-repeat; border: solid 2px black; padding: 0 20px 20px 20px; margin: 10px auto; width: fit-content; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2);"
-            inner = "".join(handle_parse_node(c, state) for c in node.select_one('.class-warning-content > .class-warning-inner').contents)
-            inner = re.sub(r'[\n\r]+', '', inner).replace('@@@@', '').replace('@@ @@', '')
-            return f"\n[[=]]\n[[div style=\"{style}\"]]\n{inner}\n[[/div]]\n[[/=]]\n"
-
-        if c_type == 'o5-command':
-            style = "background: url(http://kaktuskontainer.wdfiles.com/local--files/format-hell/scp_trans.png) bottom center no-repeat; text-align: center; width: 600px; margin: 0 auto; font-size: 20px; padding: 0px;"
-            h2_node = node.select_one('.o5-h2')
-            p_node = node.select_one('.o5-p')
-            h1_node = node.select_one('.o5-h1')
-            
-            part1 = "".join(handle_parse_node(c, state) for c in h2_node.contents) if h2_node else ""
-            part2 = "".join(handle_parse_node(c, state) for c in p_node.contents) if p_node else ""
-            part3 = "".join(handle_parse_node(c, state) for c in h1_node.contents) if h1_node else ""
-            
-            part1 = re.sub(r'[\n\r]+', '', part1).replace('@@@@', '').replace('@@ @@', '').strip()
-            part2 = re.sub(r'[\n\r]+', '', part2).replace('@@@@', '').replace('@@ @@', '').strip()
-            part3 = re.sub(r'[\n\r]+', '', part3).replace('@@@@', '').replace('@@ @@', '').strip()
-            
-            res = f"\n[[div style=\"{style}\"]]\n@@@@\n@@@@\n@@@@\n@@@@\n[[=]]\n"
-            if part1: res += f"++* {part1}\n"
-            if part2: res += f"{part2}\n"
-            res += "[[/=]]\n"
-            if part3: res += f"= {part3}\n"
-            res += "@@@@\n@@@@\n[[/div]]\n"
-            return res
-
-        if c_type == 'page-note':
-            PAGE_CSS = '[[module CSS]]\n.page {\n    display: block;\n    overflow: hidden;\n    font-family: "Monotype Corsiva", "Bradley Hand ITC", sans-serif;\n    font-style: normal;\n\n    background-attachment: scroll;\n    background-clip: border-box;\n    background-color: transparent;\n    background-image: linear-gradient(to top ,rgb(202, 219, 228) 0%, rgb(231, 233, 220) 8%);\n    background-origin: padding-box;\n    background-position: 0px 8px;\n    background-repeat: repeat;\n    background-size: 100% 20px;\n\n    border: 1px solid #CCC;\n    border-radius: 10px;\n    padding: 10px 10px;\n    margin-bottom: 10px;\n\n    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2)\n    }\n.page p,\n.page ul {\n    line-height: 20px;\n    margin: 0;\n}\n[[/module]]'
-            content_node = node.select_one('.page-note-content')
-            inner = ''.join(handle_parse_node(c, state) for c in content_node.contents).strip() if content_node else ''
-            return f"\n{PAGE_CSS}\n[[div class=\"page\"]]\n{inner}\n[[/div]]\n"
-
-        if c_type == 'login-logout':
-            FAKEPROT_CSS = '[[module CSS]]\n.fakeprot .mailform-box .buttons{display:none;}\n.fakeprot + .collapsible-block .collapsible-block-link {padding: 0.1em 0.5em;text-decoration: none;background-color: #F4F4F4;border: 1px solid #AAA;color: #000;}\n.fakeprot + .collapsible-block .collapsible-block-link:hover {background-color: #DDD;color: #000;}\n.fakeprot + .collapsible-block .collapsible-block-link:active {background-color: #DDD;color: #000;}\n.fakeprot + .collapsible-block .collapsible-block-unfolded-link{margin:0.5em 0;text-align: center;}\n.fakeprot + .collapsible-block .collapsible-block-folded{margin:0.5em 0;text-align: center;}\n.fakeprot .passw input[type=text] {text-security:disc;-webkit-text-security:disc;-mox-text-security:disc;}\n.mailform-box td:first-child {width: 80px;}\n[[/module]]'
-            id_val_node = node.select_one('.login-id-value')
-            id_val = id_val_node.get_text().strip() if id_val_node else '你的ID'
-            coll_node = node.select_one('.login-collapsible-content')
-            coll_inner = ''.join(handle_parse_node(c, state) for c in coll_node.contents).strip() if coll_node else '文字'
-            fakeprot_block = f'[[div class="fakeprot"]]\n[[module MailForm to="aaaa (DUMMY)" button=""]]\n# name\n * title: ID\n * default: <{id_val}>\n * type: text\n * rules:\n  * required: true\n  * maxLength:10\n  * minLength: 100\n[[/module]]\n[[div class="passw"]]\n[[module MailForm to="aaaa (DUMMY)" button=""]]\n# affiliation\n * title: 密码\n * default: ・・・・・・・・・\n * rules:\n  * required: true\n  * maxLength:10\n  * minLength: 100\n[[/module]]\n[[/div]]\n[[/div]]\n[[collapsible show="登入" hide="登出"]]\n{coll_inner}\n[[/collapsible]]'
-            return f'\n{FAKEPROT_CSS}\n{fakeprot_block}\n'
-
-        if c_type == 'div-block':
-            header_node = node.select_one('.div-header')
-            content_node = node.select_one('.div-content')
-            
-            if header_node and content_node:
-                params = header_node.get_text().replace('DIV:', '').strip()
-                if params.startswith('[[div') and params.endswith(']]'):
-                    params = params[5:-2].strip()
-                inner = "".join(handle_parse_node(c, state) for c in content_node.contents).strip()
-            else:
-                source = node.get('data-source', '')
-                params = ''
-                if source.startswith('[[div'):
-                    m = re.search(r'^\[\[div\s+([^\]]+)\]\]', source, re.IGNORECASE)
-                    if m:
-                        params = m.group(1).strip()
-                if not params:
-                    # Fallback if source fails
-                    classes = [c for c in node.get('class', []) if c not in ['scp-component', 'div-block'] and not c.startswith('WDUUID_')]
-                    params = f'class="{" ".join(classes)}"' if classes else ''
-                
-                # Natively rendered ftml div - its children are its content
-                inner = "".join(handle_parse_node(c, state) for c in node.contents).strip()
-
-            return f"\n[[div {params}]]\n{inner}\n[[/div]]\n"
-
-        if c_type == 'css-module':
-            css_code = safe_get('.css-content', 'text').strip()
-            return f"\n[[module CSS]]\n{css_code}\n[[/module]]\n"
+        from .components import COMPONENT_PARSERS
+        
+        parser_func = COMPONENT_PARSERS.get(c_type)
+        if parser_func:
+            return parser_func(node, state, handle_parse_node)
 
     # ==========================================
     # 🔵 标准 HTML 标签 / 原生文本 解析区
@@ -401,14 +194,39 @@ def handle_parse_node(node, state):
         return val
 
     if tag == 'div':
-        if align_mark: return f"[[{align_mark}]]\n{content.strip()}\n[[/{align_mark}]]\n"
+        # Build parameters for class and style
+        params_list = []
         if node.has_attr('class'):
-            cls = " ".join(node['class'])
-            exclude_list = ['scp-component', 'div-content', 'div-header', 'basalt-theme', 'bhl-theme', 'shivering-theme']
-            if not any(x in cls for x in exclude_list):
-                return f"[[div class=\"{cls}\"]]\n{content}\n[[/div]]\n"
-            else:
-                return content
+            cls = " ".join(c for c in node['class'] if c not in ['scp-component', 'div-content', 'div-header', 'basalt-theme', 'bhl-theme', 'shivering-theme'])
+            if cls: params_list.append(f'class="{cls}"')
+            elif not node.has_attr('style'):
+                # If it only had excluded classes and no styling, return raw content
+                res = content
+                if align_mark: return f"[[{align_mark}]]\n{res.strip()}\n[[/{align_mark}]]\n"
+                return res
+                
+        if node.has_attr('style') and node['style'].strip():
+            # We must strip text-align out since align_mark will handle it
+            style_clean = re.sub(r'text-align:\s*(center|left|right);?', '', node['style'])
+            if style_clean.strip():
+                params_list.append(f'style="{style_clean.strip()}"')
+            
+        if params_list:
+            params_str = " ".join(params_list)
+            res = f"[[div {params_str}]]\n{content}\n[[/div]]\n"
+        else:
+            # Fallback to pure text cleaning if no useful attributes
+            clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
+            if not clean: return "\n@@@@\n"
+            def expand_soft_breaks(match):
+                return "\n" + ("@@@@\n" * (len(match.group(0)) - 1))
+            res = re.sub(r'\n{2,}', expand_soft_breaks, content) + "\n"
+
+        if align_mark: 
+            return f"[[{align_mark}]]\n{res.strip()}\n[[/{align_mark}]]\n"
+        return res
+            
+        # Fallback to pure text cleaning if no useful attributes
         clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
         if not clean: return "\n@@@@\n"
         def expand_soft_breaks(match):

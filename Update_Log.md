@@ -25,7 +25,7 @@
 - Updated the author information to **Zichen Wang (wasd243)**
 
 ### Notes
-- This version is the second pre-alpha release of the FTML engine
+- This version is the second alpha release of the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
 
@@ -52,7 +52,7 @@
 - Updated the author information to **Zichen Wang (wasd243)**
 
 ### Notes
-- This version is the third pre-alpha release of the FTML engine
+- This version is the third alpha release of the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
 
@@ -99,6 +99,50 @@
 - Author: Zichen Wang (wasd243)
 
 ### Notes
-- This version is the fourth pre-alpha release of the FTML engine
+- This version is the fourth alpha release of the FTML engine
+- The editor is still unstable and several features are not yet implemented
+- This version mainly serves as a recovery and fallback checkpoint
+
+## v2.0.0-alpha.5-March 8-9, 2026
+
+### Added
+- Added the `collapsible.py`
+- Updated the `banner.py` to alpha.5
+- Updated the `logger.py` to alpha.5
+- Updated the css_styles/js
+- Updated the `wikidot_parser.py`
+- Updated the `editor.html`
+- Updated the `componentEvents.js`
+- Updated the `CSS_INJECTOR.py`
+- Updated the `wikidot_exporter.py`
+
+### Changed
+- Changed the `terminal_shortcut` render form from `html` to `components`
+- Changed the `terminal_001` render form from `html` to `components`
+- Changed the `collapsible` render form from `html` to `components`
+- Changed the `email_example.py` render form from `html` to `components`
+- Changed the `componentEvents.js` code about files
+
+### Fixed
+- Fixed the issue that RAISA-notice code could not generate successful
+- Fixed the issue that the CSS modules could not generate on top
+- Fixed the issue that the O5_command could not generate successful
+- Fixed the issue that special CSS modules could not generate next to the div module
+- Fixed the issue that the collapsible could not generate successful
+- Fixed the issue that the email_example could not generate successful
+- Fixed the issue that the terminal_001 could not generate successful
+- Fixed the issue that the terminal_shortcut could not generate successful
+- Fixed the issue that the "@@-----@@" could not generate successful
+- Fixed the issue that the "@@-----@@" could not render successful
+- Fixed the issue that the "@@@@" could not generate successful
+- Fixed the issue that the "@@@@" could not render successful
+
+### Version
+- Updated the version to `v2.0.0-alpha.5`
+- LINCESE: AGPLv3
+- Author: Zichen Wang (wasd243)
+
+### Notes
+- This version is the fifth alpha release of the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint

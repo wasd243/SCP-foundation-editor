@@ -10,14 +10,15 @@ This program comes with ABSOLUTELY NO WARRANTY.
 
 import datetime
 
-VERSION = "v2.0.0-alpha.1"
+from formats.wikidot.wikidot_parser import HAS_FTML
+
+VERSION = "v2.0.0-alpha.5"
 ENGINE = "FTML + PyQt6"
 EDITOR = "SCP Wiki WYSIWYG Editor"
 
 
 def _timestamp():
     return datetime.datetime.now().strftime("%H:%M:%S")
-
 
 def log(stage, message):
     """

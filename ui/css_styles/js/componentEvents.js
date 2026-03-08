@@ -106,6 +106,8 @@ document.addEventListener('keydown', function (e) {
         '.memo-content',         // Basalt memo 内容区
         '.acs-anim-checkbox',    // ACS 动画开关
         '.acs-shiver-checkbox',  // ACS 夜琉璃开关
+        '.terminal-shortcut-box',// 终端样式快捷插入组件允许回车
+        '.terminal-001-box',     // 终端#001组件允许回车
     ];
     const isWhitelisted = ALLOW_SELECTORS.some(function (sel) {
         return target.closest(sel) !== null;

@@ -1,0 +1,8 @@
+def parse_login_logout(node, state, handle_parse_node_func):
+    FAKEPROT_CSS = '[[module CSS]]\n.fakeprot .mailform-box .buttons{display:none;}\n.fakeprot + .collapsible-block .collapsible-block-link {padding: 0.1em 0.5em;text-decoration: none;background-color: #F4F4F4;border: 1px solid #AAA;color: #000;}\n.fakeprot + .collapsible-block .collapsible-block-link:hover {background-color: #DDD;color: #000;}\n.fakeprot + .collapsible-block .collapsible-block-link:active {background-color: #DDD;color: #000;}\n.fakeprot + .collapsible-block .collapsible-block-unfolded-link{margin:0.5em 0;text-align: center;}\n.fakeprot + .collapsible-block .collapsible-block-folded{margin:0.5em 0;text-align: center;}\n.fakeprot .passw input[type=text] {text-security:disc;-webkit-text-security:disc;-mox-text-security:disc;}\n.mailform-box td:first-child {width: 80px;}\n[[/module]]'
+    id_val_node = node.select_one('.login-id-value')
+    id_val = id_val_node.get_text().strip() if id_val_node else '你的ID'
+    coll_node = node.select_one('.login-collapsible-content')
+    coll_inner = ''.join(handle_parse_node_func(c, state) for c in coll_node.contents).strip() if coll_node else '文字'
+    fakeprot_block = f'[[div class="fakeprot"]]\n[[module MailForm to="aaaa (DUMMY)" button=""]]\n# name\n * title: ID\n * default: <{id_val}>\n * type: text\n * rules:\n  * required: true\n  * maxLength:10\n  * minLength: 100\n[[/module]]\n[[div class="passw"]]\n[[module MailForm to="aaaa (DUMMY)" button=""]]\n# affiliation\n * title: 密码\n * default: ・・・・・・・・・\n * rules:\n  * required: true\n  * maxLength:10\n  * minLength: 100\n[[/module]]\n[[/div]]\n[[/div]]\n[[collapsible show="登入" hide="登出"]]\n{coll_inner}\n[[/collapsible]]'
+    return f'\n{FAKEPROT_CSS}\n{fakeprot_block}\n'

@@ -1,0 +1,5 @@
+def parse_page_note(node, state, handle_parse_node_func):
+    PAGE_CSS = '[[module CSS]]\n.page {\n    display: block;\n    overflow: hidden;\n    font-family: "Monotype Corsiva", "Bradley Hand ITC", sans-serif;\n    font-style: normal;\n\n    background-attachment: scroll;\n    background-clip: border-box;\n    background-color: transparent;\n    background-image: linear-gradient(to top ,rgb(202, 219, 228) 0%, rgb(231, 233, 220) 8%);\n    background-origin: padding-box;\n    background-position: 0px 8px;\n    background-repeat: repeat;\n    background-size: 100% 20px;\n\n    border: 1px solid #CCC;\n    border-radius: 10px;\n    padding: 10px 10px;\n    margin-bottom: 10px;\n\n    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2)\n    }\n.page p,\n.page ul {\n    line-height: 20px;\n    margin: 0;\n}\n[[/module]]'
+    content_node = node.select_one('.page-note-content')
+    inner = ''.join(handle_parse_node_func(c, state) for c in content_node.contents).strip() if content_node else ''
+    return f"\n{PAGE_CSS}\n[[div class=\"page\"]]\n{inner}\n[[/div]]\n"

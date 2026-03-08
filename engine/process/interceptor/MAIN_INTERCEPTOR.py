@@ -14,6 +14,7 @@ from engine.process.interceptor.Components.AIM import process_aim
 from engine.process.interceptor.Components.TabView import process_tabview
 from engine.process.interceptor.Components.user import process_user
 from engine.process.interceptor.Components.fakeprot import process_fakeprot
+from engine.process.interceptor.Components.collapsible import process_collapsible
 
 class ComponentStore:
     """组件金库：负责存储并分发所有被拦截的组件"""
@@ -74,12 +75,8 @@ class ComponentInterceptor:
         # 8-B. 登入登出 (Fakeprot) 
         processed_text = process_fakeprot(processed_text, self.store, inner_parser_cb, theme_type)
 
-        # 9. 折叠块 (Collapsible) - 暂时交给 ftml 原生解析，不注入 UUID
-        def process_collapsibles(txt):
-            # 暂时关闭检测用户输入的注入，交给 ftml 反向解析
-            pass
-            return txt
-        processed_text = process_collapsibles(processed_text)
+        # 9. 折叠块 (Collapsible) - 拦截解析，生成交互式 UI 外壳
+        processed_text = process_collapsible(processed_text, self.store, inner_parser_cb, theme_type)
 
         # 10. DIV 拦截与原生 UUID 注入 - 暂时交给 ftml 原生解析，不注入 UUID
         def process_divs(txt):

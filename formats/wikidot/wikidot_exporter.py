@@ -29,6 +29,20 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     soup = BeautifulSoup(html, 'html.parser')
     root = soup.find(id="editor-root")
     if not root: return ""
+    
+    # 提取所有 <style> 标签 (不论在 head 还是 body)，稍后在前面统一输出 (置顶 CSS 导出)
+    head_styles_code = ""
+    seen_css_blocks = set()
+    for style_tag in soup.find_all('style'):
+        # 这里调用已经有的 parse_node 能将 <style> 转换为 [[module CSS]]...
+        parsed = parse_node(style_tag, {})
+        # 如果解析结果包含 rate-module 那么多半是误读，或者是重复的 css，我们都要过滤
+        if parsed and parsed.strip() not in seen_css_blocks and '[[module Rate]]' not in parsed:
+            seen_css_blocks.add(parsed.strip())
+            head_styles_code += parsed
+        # 删除节点，防止稍后在 body 遍历中被重复导出
+        style_tag.decompose()
+
 
     # ==========================================
     # 步骤 1：梳理页面顶部级的组件 (Rate、主题CSS等)
@@ -154,4 +168,4 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     final_code += body
     final_code += license_code
     
-    return final_code
+    return head_styles_code + final_code

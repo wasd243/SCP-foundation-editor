@@ -1,6 +1,7 @@
 import re
 import sys
 import os
+import urllib.parse
 import html as _html_module
 
 # 注入项目根目录以允许导入 engine.process.interceptor
@@ -87,6 +88,21 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
     text = re.sub(r'<p>\s*<br\s*/?>\s*</p>', '\n', text, flags=re.IGNORECASE)
     text = re.sub(r'<br\s*/?>', '\n', text, flags=re.IGNORECASE)
     
+    # 【修复 1】：智能保护 @@...@@ 原生标签
+    # 仅保护内部有实际内容（非空、非纯空格）的 raw block (如 @@-----@@)。
+    # 对于纯空格或空的 block (如 @@@@, @@ @@)，保留原样交给 ftml 解析，以保证其作为强制换行符的渲染效果。
+    RAW_PROTECT_TOKEN_START = "WDKEY_RAW_START_TOKEN"
+    RAW_PROTECT_TOKEN_END = "WDKEY_RAW_END_TOKEN"
+
+    def raw_protect_cb(match):
+        inner = match.group(1)
+        if not inner.strip():
+            return match.group(0) # 保持 @@@@ 或 @@ @@ 不变
+        return f"{RAW_PROTECT_TOKEN_START}{inner}{RAW_PROTECT_TOKEN_END}"
+    
+    text = re.sub(r'@@(.*?)@@', raw_protect_cb, text, flags=re.DOTALL)
+
+    # 检测主题
     _has_basalt_in_source = (
         ":theme:basalt" in text.lower() or 
         "theme='basalt'" in text.lower() or 
@@ -233,6 +249,22 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
             html_output = html_output.replace('<table class="wiki-content-table">', '<table border="1" class="wikidot-table">')
             html_output = html_output.replace('<td', '<td contenteditable="true"')
             html_output = html_output.replace('<th', '<th contenteditable="true"')
+            # 将端标等识别为组件
+            def terminal_replacer(m):
+                # 为端标容器内的所有普通段落加上 contenteditable="true"
+                inner = m.group(1).replace('<p>', '<p contenteditable="true">')
+                return f'<div class="danke agent scp-component terminal-shortcut-box" data-type="div-block" contenteditable="false">{inner}</div>'
+            html_output = re.sub(r'<div class="danke agent">(.*?)</div>', terminal_replacer, html_output, flags=re.DOTALL)
+            
+            def terminal_001_replacer(m):
+                inner = m.group(1)
+                # 【修复 2】：同样放宽 text 的正则，并且用正则替换来覆盖掉它可能被污染的类名
+                inner = re.sub(r'<div[^>]*class="text[^"]*"[^>]*>', '<div class="text" contenteditable="true">', inner)
+                # 补偿原版逻辑中被正则吞掉的第二个 </div>，保证 HTML 结构绝对完整
+                return f'<div class="terminal scp-component terminal-001-box" data-type="div-block" contenteditable="false">{inner}</div></div>'
+            # 【修复 3】：放宽 terminal 的正则，防止 class="terminal scp-component" 导致匹配失败
+            html_output = re.sub(r'<div[^>]*class="terminal[^"]*"[^>]*>(.*?)</div>\s*</div>', terminal_001_replacer, html_output, flags=re.DOTALL)
+
         except Exception as e:
             print(f"❌ ftml 解析失败: {e}")
             html_output = _fallback_basic_parse(text)
@@ -250,9 +282,6 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
             elif comp['type'] == 'div-block':
                 # 先让 ftml 原生解析，不进行基于 marker 的注入
                 pass
-            elif comp['type'] == 'collapsible':
-                # 先让 ftml 原生解析，不进行基于 marker 的注入
-                pass
             else:
                 ph = f"WDKEY{comp_uuid}ENDWDKEY"
                 html_output = html_output.replace(f"<p>{ph}</p>", comp['html'])
@@ -262,7 +291,9 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
         html_output = html_output.replace(f"<p>{k}</p>", placeholders[k])
         html_output = html_output.replace(k, placeholders[k])
 
-    return html_output
+    # 【修复 1】：恢复 @@...@@ 原生标签
+    html_output = html_output.replace(RAW_PROTECT_TOKEN_START, '@@')
+    html_output = html_output.replace(RAW_PROTECT_TOKEN_END, '@@')
 
     return html_output
 

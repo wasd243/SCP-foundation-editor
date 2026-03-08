@@ -45,7 +45,8 @@ a:hover {
 
 /* Bounding Boxes & Tooltips */
 .scp-component:hover,
-.wikidot-table:hover {
+.wikidot-table:hover,
+.terminal-shortcut-box:hover {
     outline: 2px solid #3498db;
 }
 

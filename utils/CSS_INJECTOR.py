@@ -44,7 +44,24 @@ def inject_terminal_shortcut(page, x, y):
 {code_css}
 [[/module]]
 {code_body}"""
-    _inject_wikidot(page, x, y, code)
+    html_content = parse_wikidot_to_editor_html(code)
+    
+    import re
+    def terminal_replacer(m):
+        inner = m.group(1).replace('<p>', '<p contenteditable="true">')
+        return f'<div class="danke agent scp-component terminal-shortcut-box" data-type="div-block" contenteditable="false">{inner}</div>'
+    
+    html_content = re.sub(r'<div class="danke agent">(.*?)</div>', terminal_replacer, html_content, flags=re.DOTALL)
+    
+    safe_html = html_content.replace('\\', '\\\\').replace('`', '\\`')
+    js_path = os.path.join(CURRENT_DIR, 'js', 'insert_html_at_point.js')
+    try:
+        with open(js_path, 'r', encoding='utf-8') as f:
+            js_template = f.read()
+        final_js = js_template.replace('__POS_X__', str(x)).replace('__POS_Y__', str(y)).replace('__SAFE_HTML__', f"`{safe_html}`")
+        page.runJavaScript(final_js)
+    except Exception as e:
+        print(f"执行 HTML 注入脚本失败: {e}")
 
 # 终端#001
 def inject_terminal_001(page, x, y): 
@@ -54,7 +71,24 @@ def inject_terminal_001(page, x, y):
 {code_css}
 [[/module]]
 {code_body}"""
-    _inject_wikidot(page, x, y, code)
+    html_content = parse_wikidot_to_editor_html(code)
+    
+    import re
+    def terminal_001_replacer(m):
+        inner = m.group(1).replace('<div class="text">', '<div class="text" contenteditable="true">')
+        return f'<div class="terminal scp-component terminal-001-box" data-type="div-block" contenteditable="false">{inner}</div>'
+    
+    html_content = re.sub(r'<div class="terminal">(.*?)</div>\s*</div>', terminal_001_replacer, html_content, flags=re.DOTALL)
+    
+    safe_html = html_content.replace('\\', '\\\\').replace('`', '\\`')
+    js_path = os.path.join(CURRENT_DIR, 'js', 'insert_html_at_point.js')
+    try:
+        with open(js_path, 'r', encoding='utf-8') as f:
+            js_template = f.read()
+        final_js = js_template.replace('__POS_X__', str(x)).replace('__POS_Y__', str(y)).replace('__SAFE_HTML__', f"`{safe_html}`")
+        page.runJavaScript(final_js)
+    except Exception as e:
+        print(f"执行 HTML 注入脚本失败: {e}")
 
 # RAISA通知
 def inject_raisa_notice(page, x, y): 
@@ -73,10 +107,23 @@ def inject_foundation_background(page, x, y):
     code_css = _read_template("foundation_background/foundation_background.css")
     code_body = _read_template("foundation_background/foundation_background.txt")
     code = f"""{code_body}
-    [[module CSS]]
-    {code_css}
-    [[/module]]"""
-    _inject_wikidot(page, x, y, code)
+[[module CSS]]
+{code_css}
+[[/module]]"""
+    
+    # 因为基金会背景强制要求样式跟在元素下面（不置顶），在这里拦截并对生成的 HTML 注入 data-no-hoist 标记
+    html_content = parse_wikidot_to_editor_html(code)
+    html_content = html_content.replace("<style>", "<style data-no-hoist=\"true\">")
+    
+    safe_html = html_content.replace('\\', '\\\\').replace('`', '\\`')
+    js_path = os.path.join(CURRENT_DIR, 'js', 'insert_html_at_point.js')
+    try:
+        with open(js_path, 'r', encoding='utf-8') as f:
+            js_template = f.read()
+        final_js = js_template.replace('__POS_X__', str(x)).replace('__POS_Y__', str(y)).replace('__SAFE_HTML__', f"`{safe_html}`")
+        page.runJavaScript(final_js)
+    except Exception as e:
+        print(f"执行 HTML 注入脚本失败: {e}")
 
 # O5指令
 def inject_o5_command(page, x, y): 

@@ -15,6 +15,16 @@
 
     // 解析出来的可能包含多个顶级节点（比如一个 div 外加一个结尾的 <p><br></p>）
     var frag = template.content;
+
+    // 提取所有 <style> 标签并将它们移动到 <head> 中 (实现 CSS 置顶)
+    var styles = frag.querySelectorAll('style');
+    styles.forEach(function (styleTag) {
+        if (!styleTag.hasAttribute('data-no-hoist')) {
+            document.head.appendChild(styleTag);
+        }
+    });
+
+    // 提取之后剩余的 HTML 将被当做实体节点插入
     var lastInsertedNode = frag.lastElementChild || frag.lastChild;
 
     if (comp) {
