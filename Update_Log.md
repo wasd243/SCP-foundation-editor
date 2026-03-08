@@ -103,6 +103,8 @@
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
 
+---
+
 ## v2.0.0-alpha.5-March 8-9, 2026
 
 ### Added
