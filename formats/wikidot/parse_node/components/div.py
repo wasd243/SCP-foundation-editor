@@ -18,8 +18,20 @@ def parse_div_block(node, state, handle_parse_node_func):
                 params = m.group(1).strip()
         if not params:
             # Fallback if source fails
-            classes = [c for c in node.get('class', []) if c not in ['scp-component', 'div-block', 'terminal-shortcut-box'] and not c.startswith('WDUUID_')]
-            params = f'class="{" ".join(classes)}"' if classes else ''
+            classes = [c for c in node.get('class', []) if c not in ['scp-component', 'div-block', 'terminal-shortcut-box', 'terminal-001-box', 'raisa-box', 'class-warning-box', 'o5-box', 'foundation-bg-box', 'page-note-box'] and not c.startswith('WDUUID_')]
+            
+            p_list = []
+            if classes:
+                p_list.append(f'class="{" ".join(classes)}"')
+            
+            style_str = node.get('style', '')
+            if style_str:
+                # Clean up alignment styles if they somehow bleed inside, or just keep it
+                style_clean = style_str.strip()
+                if style_clean:
+                    p_list.append(f'style="{style_clean}"')
+                    
+            params = " ".join(p_list)
         
         # Natively rendered ftml div - its children are its content
         inner = "".join(handle_parse_node_func(c, state) for c in node.contents).strip()

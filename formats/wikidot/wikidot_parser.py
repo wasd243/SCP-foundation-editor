@@ -249,21 +249,87 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
             html_output = html_output.replace('<table class="wiki-content-table">', '<table border="1" class="wikidot-table">')
             html_output = html_output.replace('<td', '<td contenteditable="true"')
             html_output = html_output.replace('<th', '<th contenteditable="true"')
-            # 将端标等识别为组件
-            def terminal_replacer(m):
-                # 为端标容器内的所有普通段落加上 contenteditable="true"
-                inner = m.group(1).replace('<p>', '<p contenteditable="true">')
-                return f'<div class="danke agent scp-component terminal-shortcut-box" data-type="div-block" contenteditable="false">{inner}</div>'
-            html_output = re.sub(r'<div class="danke agent">(.*?)</div>', terminal_replacer, html_output, flags=re.DOTALL)
             
-            def terminal_001_replacer(m):
-                inner = m.group(1)
-                # 【修复 2】：同样放宽 text 的正则，并且用正则替换来覆盖掉它可能被污染的类名
-                inner = re.sub(r'<div[^>]*class="text[^"]*"[^>]*>', '<div class="text" contenteditable="true">', inner)
-                # 补偿原版逻辑中被正则吞掉的第二个 </div>，保证 HTML 结构绝对完整
-                return f'<div class="terminal scp-component terminal-001-box" data-type="div-block" contenteditable="false">{inner}</div></div>'
-            # 【修复 3】：放宽 terminal 的正则，防止 class="terminal scp-component" 导致匹配失败
-            html_output = re.sub(r'<div[^>]*class="terminal[^"]*"[^>]*>(.*?)</div>\s*</div>', terminal_001_replacer, html_output, flags=re.DOTALL)
+            # 使用 BS4 对特定格式组件的输出结构进行保护和注入 contenteditable
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(html_output, 'html.parser')
+
+            # Terminal Shortcut
+            for div in soup.find_all('div', class_=lambda c: c and 'danke' in c and 'agent' in c):
+                div['class'] = div.get('class', []) + ['scp-component', 'terminal-shortcut-box']
+                div['data-type'] = 'div-block'
+                div['contenteditable'] = 'false'
+                for p in div.find_all('p'): p['contenteditable'] = 'true'
+
+            # Terminal 001
+            for div in soup.find_all('div', class_=lambda c: c and 'terminal' in c and 'scp-component' not in c):
+                div['class'] = div.get('class', []) + ['scp-component', 'terminal-001-box']
+                div['data-type'] = 'div-block'
+                div['contenteditable'] = 'false'
+                for text_div in div.find_all('div', class_='text'):
+                    text_div['contenteditable'] = 'true'
+
+            # Raisa Notice
+            for div in soup.find_all('div', style=lambda s: s and 'border:solid 1px #999999' in s and 'background:#f2f2c2' in s):
+                div['class'] = div.get('class', []) + ['scp-component', 'raisa-box']
+                div['data-type'] = 'div-block'
+                div['contenteditable'] = 'false'
+                for p in div.find_all('p'):
+                    if p.text.strip(): p['contenteditable'] = 'true'
+
+            # Class Warning
+            for div in soup.find_all('div', style=lambda s: s and 'the-great-hippo/scp_trans.png' in s):
+                div['class'] = div.get('class', []) + ['scp-component', 'class-warning-box']
+                div['data-type'] = 'div-block'
+                div['contenteditable'] = 'false'
+                for p in div.find_all('p'):
+                    if p.text.strip(): p['contenteditable'] = 'true'
+
+            # O5 Command
+            for div in soup.find_all('div', style=lambda s: s and 'kaktuskontainer' in s and 'scp_trans.png' in s):
+                div['class'] = div.get('class', []) + ['scp-component', 'o5-box']
+                div['data-type'] = 'div-block'
+                div['contenteditable'] = 'false'
+                for child in div.find_all(['p', 'div'], recursive=False):
+                    if child.text.strip():
+                        # 把这层设置为可编辑，同时也把内部可能存在的层级设置，确保 span 没有阻挡点击
+                        child['contenteditable'] = 'true'
+                        for span in child.find_all('span'):
+                            if span.text.strip():
+                                span['contenteditable'] = 'true'
+                        for h in child.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong']):
+                            h['contenteditable'] = 'true'
+
+            # Foundation Background
+            for div in soup.find_all('div', class_='orderwrapper'):
+                div['class'] = div.get('class', []) + ['scp-component', 'foundation-bg-box']
+                div['data-type'] = 'div-block'
+                div['contenteditable'] = 'false'
+                
+                title_div = div.find('div', class_='ordertitle')
+                if title_div:
+                    title_div['contenteditable'] = 'true'
+                    for child in title_div.find_all(['h1', 'h2', 'span', 'strong']): child['contenteditable'] = 'true'
+                
+                desc_div = div.find('div', class_='orderdescription')
+                if desc_div:
+                    desc_div['contenteditable'] = 'true'
+                    for child in desc_div.find_all(['p', 'h1', 'h2', 'span', 'strong']): child['contenteditable'] = 'true'
+                        
+                itemno_div = div.find('div', class_='itemno')
+                if itemno_div:
+                    itemno_div['contenteditable'] = 'true'
+                    for child in itemno_div.find_all(['h1', 'h2', 'span', 'strong']): child['contenteditable'] = 'true'
+            
+            # Page Note (便签纸)
+            for div in soup.find_all('div', class_='page'):
+                div['class'] = div.get('class', []) + ['scp-component', 'page-note-box']
+                div['data-type'] = 'div-block'
+                div['contenteditable'] = 'true'
+                for child in div.find_all(['p', 'span', 'div', 'strong', 'em']):
+                    child['contenteditable'] = 'true'
+
+            html_output = str(soup)
 
         except Exception as e:
             print(f"❌ ftml 解析失败: {e}")

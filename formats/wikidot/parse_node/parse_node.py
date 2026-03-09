@@ -197,7 +197,7 @@ def handle_parse_node(node, state):
         # Build parameters for class and style
         params_list = []
         if node.has_attr('class'):
-            cls = " ".join(c for c in node['class'] if c not in ['scp-component', 'div-content', 'div-header', 'basalt-theme', 'bhl-theme', 'shivering-theme'])
+            cls = " ".join(c for c in node['class'] if c not in ['scp-component', 'div-content', 'div-header', 'basalt-theme', 'bhl-theme', 'shivering-theme', 'raisa-box', 'class-warning-box', 'terminal-001-box', 'terminal-shortcut-box', 'o5-box', 'foundation-bg-box', 'page-note-box'])
             if cls: params_list.append(f'class="{cls}"')
             elif not node.has_attr('style'):
                 # If it only had excluded classes and no styling, return raw content

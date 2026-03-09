@@ -80,7 +80,7 @@ class ComponentInterceptor:
 
         # 10. DIV 拦截与原生 UUID 注入 - 暂时交给 ftml 原生解析，不注入 UUID
         def process_divs(txt):
-            # 暂时关闭检测用户输入的注入，交给 ftml 反向解析
+            # 关闭检测用户输入的注入，交给 ftml 反向解析
             pass
             return txt
         processed_text = process_divs(processed_text)
@@ -88,7 +88,7 @@ class ComponentInterceptor:
         # 11. CSS 拦截与注入 - 暂时交给 ftml 原生解析，不注入 UUID
         def css_replacer(match):
             pass
-        # 暂时跳过正则表达式替换，保留原样
+        # 跳过正则表达式替换，保留原样
         # processed_text = re.sub(r'\[\[module CSS\]\](.*?)\[\[/module\]\]', css_replacer, processed_text, flags=re.DOTALL|re.IGNORECASE)
 
         return processed_text, self.store

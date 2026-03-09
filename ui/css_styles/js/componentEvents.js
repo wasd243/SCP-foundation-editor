@@ -108,6 +108,8 @@ document.addEventListener('keydown', function (e) {
         '.acs-shiver-checkbox',  // ACS 夜琉璃开关
         '.terminal-shortcut-box',// 终端样式快捷插入组件允许回车
         '.terminal-001-box',     // 终端#001组件允许回车
+        '.raisa-notice',         // RAISA通知组件
+        '.page-note-box'         // 便签纸组件允许回车
     ];
     const isWhitelisted = ALLOW_SELECTORS.some(function (sel) {
         return target.closest(sel) !== null;

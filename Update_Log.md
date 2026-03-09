@@ -148,3 +148,45 @@
 - This version is the fifth alpha release of the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
+
+---
+
+### v2.0.0-alpha.6-March 10, 2026
+
+### Added
+- Added the WYSIWYG injection for:
+    - `RAISA-notice`
+    - `Page Note`
+    - `O5-Command`
+    - `Class Warning`
+    - `Foundation Background`
+
+### Changed
+- Changed the `wikidot_parser.py` code about WYSIWYG injection
+- Changed the `div.py` code about WYSIWYG injection
+- Changed the `editor.html` code about WYSIWYG injection
+- Changed the `componentEvents.js` code about WYSIWYG injection
+- Changed the `CSS_INJECTOR.py` code about WYSIWYG injection
+- Changed the `wikidot_exporter.py` code about WYSIWYG injection
+- Changed the `banner.py` code about this version
+- Changed the `logger.py` code about this version
+
+### Removed
+- Removed all temporary files in this version
+
+### Fixed
+- Fixed the issue that the `RAISA-notice` could not render with WYSIWYG injection successfully
+- Fixed the issue that the `Page Note` could not render with WYSIWYG injection successfully
+- Fixed the issue that the `O5-Command` could not render with WYSIWYG injection successfully
+- Fixed the issue that the `Class Warning` could not render with WYSIWYG injection successfully
+- Fixed the issue that the `Foundation Background` could not render with WYSIWYG injection successfully
+
+### Version
+- Updated the version to `v2.0.0-alpha.6`
+- LINCESE: AGPLv3
+- Author: Zichen Wang (wasd243)
+
+### Notes
+- This version is the sixth alpha release of the FTML engine
+- The editor is still unstable and several features are not yet implemented
+- This version mainly serves as a recovery and fallback checkpoint
