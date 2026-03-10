@@ -56,7 +56,7 @@
 * **保存txt**：目前使用.txt格式保存生成的wikidot代码，根据左上角三个点图标保存
 
 <details>
-<summary> UI参考图片 </summary>
+<summary> <span style="color:#4aa3ff">UI参考图片</span> </summary>
    <img width="574" height="277" alt="Screenshot 2026-02-21 at 11 38 45 AM" src="https://github.com/user-attachments/assets/2c7ddad9-9c1e-483b-970c-2abad71f5a50" />
 </details>
 
@@ -72,7 +72,7 @@
     * 用户可以自行编辑内容，系统会根据其中内容生成对应代码并渲染为类似的格式，用户可以直接编辑其中的内容
    
    <details>
-   <summary> 快捷代码参考图片 </summary>
+   <summary> <span style="color:#4aa3ff">快捷代码参考图片</span> </summary>
    <img width="1470" height="956" alt="Screenshot 2026-02-21 at 11 31 19 AM" src="https://github.com/user-attachments/assets/0bffabb4-2342-41ba-999b-9a49dfff51ab" />
    </details>
    
@@ -83,7 +83,7 @@
   * **玄武岩版式专用代码**：
   
    <details>
-   <summary> 玄武岩版式专用代码参考图片 </summary>
+   <summary> <span style="color:#4aa3ff">玄武岩版式专用代码参考图片</span> </summary>
      <img width="1470" height="956" alt="Screenshot 2026-02-21 at 11 37 09 AM" src="https://github.com/user-attachments/assets/0b5a4001-2532-40d6-8d64-3609562f6340" />
      <img width="1470" height="956" alt="Screenshot 2026-02-21 at 11 37 15 AM" src="https://github.com/user-attachments/assets/5c613b22-e53e-421f-8c9f-d13fd3c01659" />
    </details>
