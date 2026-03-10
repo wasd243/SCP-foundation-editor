@@ -25,7 +25,7 @@
 - Updated the author information to **Zichen Wang (wasd243)**
 
 ### Notes
-- This version is the second alpha release of the FTML engine
+- This version is the second alpha release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
 
@@ -52,7 +52,7 @@
 - Updated the author information to **Zichen Wang (wasd243)**
 
 ### Notes
-- This version is the third alpha release of the FTML engine
+- This version is the third alpha release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
 
@@ -99,7 +99,7 @@
 - Author: Zichen Wang (wasd243)
 
 ### Notes
-- This version is the fourth alpha release of the FTML engine
+- This version is the fourth alpha release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
 
@@ -145,7 +145,7 @@
 - Author: Zichen Wang (wasd243)
 
 ### Notes
-- This version is the fifth alpha release of the FTML engine
+- This version is the fifth alpha release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
 
@@ -187,6 +187,6 @@
 - Author: Zichen Wang (wasd243)
 
 ### Notes
-- This version is the sixth alpha release of the FTML engine
+- This version is the sixth alpha release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
