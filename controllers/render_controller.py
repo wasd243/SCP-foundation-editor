@@ -81,7 +81,7 @@ def handle_render_to_editor(ui):
                     .replace('__RATE_ALIGN__', safe_rate_align))
 
         ui.browser.page().runJavaScript(final_js)
-        QMessageBox.information(ui, "渲染完成", "代码已还原到编辑器。(已恢复原版所有组件和渲染格式！)")
+        QMessageBox.information(ui, "渲染完成", "代码已还原到编辑器。（部分功能仍待完善）")
 
     except Exception as e:
         print(f"读取渲染 JS 模板失败 ({js_path}): {e}")

@@ -21,11 +21,23 @@ function tableAction(action) {
         if (table.rows.length === 0) table.remove();
     } else if (action === 'addCol') {
         for (let i = 0; i < rows.length; i++) {
-            const newCell = rows[i].insertCell(colIndex + 1);
+            let isHeader = false;
+            // Check if current cell at the same column index in this row is TH
+            if (rows[i].cells[colIndex] && rows[i].cells[colIndex].tagName === 'TH') {
+                isHeader = true;
+            }
+
+            // Generate the new cell right after the current column index
+            const newCell = document.createElement(isHeader ? 'th' : 'td');
             newCell.innerText = '内容';
             newCell.setAttribute('contenteditable', 'true');
-            if (rows[i].cells[colIndex].tagName === 'TH') {
-                // Keep header styling if originally a header column, simplistic approach
+
+            // Insert it
+            const refCell = rows[i].cells[colIndex];
+            if (refCell) {
+                refCell.insertAdjacentElement('afterend', newCell);
+            } else {
+                rows[i].appendChild(newCell);
             }
         }
     } else if (action === 'delCol') {

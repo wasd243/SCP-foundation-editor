@@ -34,13 +34,23 @@ function refreshImg(span, force) {
 
     if (wSpan) {
         let w = wSpan.textContent.trim();
-        if (w && !isNaN(w)) w += "px";
+        if (!w) {
+            w = "auto";
+            wSpan.textContent = "auto";
+        } else if (!isNaN(w)) {
+            w += "px";
+        }
         img.style.width = w;
     }
 
     if (hSpan) {
         let h = hSpan.textContent.trim();
-        if (h && !isNaN(h)) h += "px";
+        if (!h) {
+            h = "auto";
+            hSpan.textContent = "auto";
+        } else if (!isNaN(h)) {
+            h += "px";
+        }
         img.style.height = h;
     }
 }

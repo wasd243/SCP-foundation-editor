@@ -345,9 +345,6 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
             if comp['type'] == 'css-module':
                 # 先让 ftml 原生解析，不进行基于 marker 的注入
                 pass
-            elif comp['type'] == 'div-block':
-                # 先让 ftml 原生解析，不进行基于 marker 的注入
-                pass
             else:
                 ph = f"WDKEY{comp_uuid}ENDWDKEY"
                 html_output = html_output.replace(f"<p>{ph}</p>", comp['html'])

@@ -69,7 +69,7 @@ def _handle_show_menu(ui, pos, res):
                 act = sm.addAction(cls)
                 act.triggered.connect(lambda checked, c=cls: _handle_change_acs_secondary(ui, pos, c))
         
-        if c_type not in ['image-block', 'image-block-adv']:
+        if c_type not in ['image-block', 'image-block-adv'] and not in_table:
              menu.addSeparator()
              menu.addAction("在下面换行").triggered.connect(lambda: _handle_insert_newline(ui, pos))
 
@@ -88,6 +88,9 @@ def _handle_show_menu(ui, pos, res):
         menu.addAction("快捷代码：电子邮件模版").triggered.connect(lambda: inject_email_template(ui.browser.page(), pos.x(), pos.y()))
 
     if in_table:
+        menu.addSeparator()
+        menu.addAction("在下面换行").triggered.connect(lambda: _handle_insert_newline(ui, pos))
+        
         t_menu = menu.addMenu("表格操作")
         t_menu.addAction("增加行").triggered.connect(lambda: ui.browser.page().runJavaScript("tableAction('addRow')"))
         t_menu.addAction("删除行").triggered.connect(lambda: ui.browser.page().runJavaScript("tableAction('delRow')"))

@@ -143,7 +143,10 @@ def handle_parse_node(node, state):
             color_val = rgb_to_hex(color_match.group(1).strip())
             res = f"###{color_val[1:]}|{res}##" if color_val.startswith('#') else f"##{color_val}|{res}##"
         size_match = re.search(r'font-size:\s*([\w\.\-%]+)', style)
-        if size_match: res = f"[[size {size_match.group(1).strip()}]]{res}[[/size]]"
+        if size_match: 
+            size_val = size_match.group(1).strip()
+            if size_val.lower() not in ['medium', '1em']:
+                res = f"[[size {size_val}]]{res}[[/size]]"
         if 'underline' in style:
             match = re.fullmatch(r'(\s*)(.*?)(\s*)', res, flags=re.DOTALL)
             if match and match.group(2): res = f"{match.group(1)}__{match.group(2)}__{match.group(3)}"

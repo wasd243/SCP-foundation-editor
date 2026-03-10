@@ -165,7 +165,50 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     body = re.sub(r'([^\n])\s*(\[\[include component:image-block)', r'\1\n\2', body)
     body = re.sub(r'^[ \t]+(\[\[include component:image-block)', r'\1', body, flags=re.MULTILINE)
 
+    def remove_single_forced_break(match):
+        between = match.group(2)
+        if between.count('@@@@') <= 1:
+            return f"{match.group(1)}\n{match.group(3)}"
+        return match.group(0)
+
+    # 针对两个文件模板相邻的情况，清除它们之间单独的强制换行符 (<=1)
+    body = re.sub(
+        r'(\[\[/div\]\])([\s@]+)(\[\[div\s+class=["\'](?:dark)?document.*?\]\])', 
+        remove_single_forced_break, 
+        body
+    )
+
+    # 针对重复嵌套/未清理干净的字号代码进行合并（如字号中套字号，只保留最外层配置，内容扁平化）
+    # 比如：[[size xx-large]]测[[size xx-small]]试文[[/size]][[/size]] 应该变为 [[size xx-large]]测试文[[/size]]
+    def flatten_sizes(text):
+        # 此处使用简单的循环将内部嵌套的 size 提取并处理
+        while True:
+            # 找到内部包含 size 标签的外层 size 标签
+            new_text = re.sub(
+                r'(\[\[size\s+[^\]]+\]\])(.*?)\[\[size\s+[^\]]+\]\](.*?)\[\[/size\]\](.*?)(\[\[/size\]\])', 
+                r'\1\2\3\4\5', 
+                text, 
+                flags=re.DOTALL | re.IGNORECASE
+            )
+            # 处理左侧相邻但前一标签覆盖至后一标签的内容残留 (例如：[[size small]]测[[/size]][[size xx-small]]试文[[/size]])
+            # 如果两个相邻内容由于文本分离操作遗留了旧前缀。
+            new_text = re.sub(
+                r'\[\[size\s+[^\]]+\]\](.*?)\[\[/size\]\]\s*\[\[size\s+([^\]]+)\]\](.*?)\[\[/size\]\]',
+                r'[[size \2]]\1\3[[/size]]',
+                new_text,
+                flags=re.DOTALL | re.IGNORECASE
+            )
+            if new_text == text:
+                break
+            text = new_text
+        return text
+    
+    body = flatten_sizes(body)
+
     final_code += body
     final_code += license_code
     
+    # 清理顶部或可能生成的空 CSS 模块
+    final_code = re.sub(r'\[\[module CSS\]\]\s*\[\[/module\]\]\s*', '', final_code, flags=re.IGNORECASE)
+
     return head_styles_code + final_code

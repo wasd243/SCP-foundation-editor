@@ -1,3 +1,11 @@
+## TOC
+- [v2.0.0-alpha.2-March 6, 2026](#v200-alpha2-march-6-2026)
+- [v2.0.0-alpha.3-March 7, 2026](#v200-alpha3-march-7-2026)
+- [v2.0.0-alpha.4-March 8, 2026](#v200-alpha4-march-8-2026)
+- [v2.0.0-alpha.5-March 8-9, 2026](#v200-alpha5-march-8-9-2026)
+- [v2.0.0-alpha.6-March 10, 2026](#v200-alpha6-march-10-2026)
+- [v2.0.0-beta.1-March 11, 2026](#v200-beta1-march-11-2026)
+
 ## v2.0.0-alpha.2-March 6, 2026
 
 ### Changed
@@ -188,5 +196,39 @@
 
 ### Notes
 - This version is the sixth alpha release with the FTML engine
+- The editor is still unstable and several features are not yet implemented
+- This version mainly serves as a recovery and fallback checkpoint
+
+---
+
+### v2.0.0-beta.1-March 11, 2026
+
+### Added
+- Added the `auto format` for image block
+- Added the `collapsible` renderer for `ui`
+
+### Changed
+- Changed the `banner.py` code about this version
+- Changed the `banner.py` position from `core/` to `utils/`
+- Changed the `logger.py` code about this version
+- Changed the `logger.py` position from `core/` to `utils/`
+
+### Removed
+- Removed `core/` folder because it is not used
+
+### Fixed
+- Fixed the issue that the `ACS夜琉璃` style button could not render successfully
+- Fixed the issue that the `table` could not generate successfully
+- Fixed the issue that the `image` width and height could not set automatically
+- Fixed the issue that the `size` of text could not set successfully
+- Fixed the issue that the `basalt code` could not parse successfully
+
+### Version
+- Updated the version to `v2.0.0-beta.1`
+- LINCESE: AGPLv3
+- Author: Zichen Wang (wasd243)
+
+### Notes
+- This version is the first beta release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint

@@ -15,6 +15,7 @@
     // 刷新绑定事件
     if (typeof refreshFootnotes === 'function') refreshFootnotes();
     if (typeof setupObserver === 'function') setupObserver();
+    if (typeof updateBasaltDocLayout === 'function') updateBasaltDocLayout();
 
     // 3. 处理 Rate Module (评分模块) 状态
     const rateBox = document.querySelector('.rate-module-box');

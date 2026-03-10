@@ -102,7 +102,6 @@ def inject_class_warning(page, x, y):
     code = f"""{code_body}"""
     _inject_wikidot(page, x, y, code)
 
-
 # 基金会背景
 def inject_foundation_background(page, x, y): 
     code_css = _read_template("foundation_background/foundation_background.css")

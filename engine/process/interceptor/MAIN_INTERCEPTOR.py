@@ -15,6 +15,7 @@ from engine.process.interceptor.Components.TabView import process_tabview
 from engine.process.interceptor.Components.user import process_user
 from engine.process.interceptor.Components.fakeprot import process_fakeprot
 from engine.process.interceptor.Components.collapsible import process_collapsible
+from engine.process.interceptor.Components.basalt_divs import process_basalt_divs
 
 class ComponentStore:
     """组件金库：负责存储并分发所有被拦截的组件"""
@@ -78,12 +79,9 @@ class ComponentInterceptor:
         # 9. 折叠块 (Collapsible) - 拦截解析，生成交互式 UI 外壳
         processed_text = process_collapsible(processed_text, self.store, inner_parser_cb, theme_type)
 
-        # 10. DIV 拦截与原生 UUID 注入 - 暂时交给 ftml 原生解析，不注入 UUID
-        def process_divs(txt):
-            # 关闭检测用户输入的注入，交给 ftml 反向解析
-            pass
-            return txt
-        processed_text = process_divs(processed_text)
+        # 10. 玄武岩专用代码 拦截与解析（非玄武岩 div 交由 ftml 原生处理）
+        if theme_type == 'basalt' or 'theme:basalt' in text.lower():
+            processed_text = process_basalt_divs(processed_text, self.store, inner_parser_cb, theme_type)
 
         # 11. CSS 拦截与注入 - 暂时交给 ftml 原生解析，不注入 UUID
         def css_replacer(match):

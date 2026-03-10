@@ -26,9 +26,13 @@ def process_acs(text: str, store) -> str:
     """
     processed_text = text
     
-    # 注入夜琉璃 (Shivering) 标记
-    processed_text = re.sub(r'\[\[div class="Shivering-ACS"\]\]\s*(\[\[include :scp-wiki-cn:component:anomaly-class-bar-source.*?\]\])\s*\[\[/div\]\]', r'\1 |data-shivering=true', processed_text, flags=re.DOTALL)
-
+    # 注入夜琉璃 (Shivering) 标记，确保 |data-shivering=true 加在 ]] 内
+    processed_text = re.sub(
+        r'\[\[div class="Shivering-ACS"\]\]\s*\[\[include :scp-wiki-cn:component:anomaly-class-bar-source(.*?)\]\]\s*\[\[/div\]\]', 
+        r'[[include :scp-wiki-cn:component:anomaly-class-bar-source\1 |data-shivering=true]]', 
+        processed_text, 
+        flags=re.DOTALL
+    )
     def acs_replacer(match):
         source = match.group(0)
         def get_arg(name):

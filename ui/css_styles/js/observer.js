@@ -74,4 +74,65 @@ function setupObserver() {
     // 工具栏状态追踪
     document.addEventListener('selectionchange', syncToolbarState);
     syncToolbarState();
+
+    // 光标越界保护：防止光标落入两个半宽玄武岩文件框之间
+    function enforceCursorRules() {
+        var sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return;
+        var range = sel.getRangeAt(0);
+        if (!range.collapsed) return;
+
+        var node = range.startContainer;
+        var editor = document.getElementById('editor-root');
+        if (!editor || !editor.contains(node)) return;
+
+        var current = node;
+        while (current && current.parentNode && current.parentNode !== editor) {
+            current = current.parentNode;
+        }
+
+        if (current === editor || current.parentNode === editor) {
+            var childNodes = editor.childNodes;
+            var offset = -1;
+            if (current === editor) {
+                offset = range.startOffset;
+            } else {
+                offset = Array.prototype.indexOf.call(childNodes, current);
+            }
+
+            var prevNode = null;
+            var searchLeft = (current === editor) ? offset - 1 : offset - 1;
+            for (var i = searchLeft; i >= 0; i--) {
+                var child = childNodes[i];
+                if (child.nodeType === 1 && child.style && child.style.display !== 'none') {
+                    if (child.tagName === 'BR' || (child.tagName === 'P' && child.innerText.trim() === '')) continue;
+                    prevNode = child;
+                    break;
+                }
+            }
+
+            var nextNode = null;
+            var searchRight = (current === editor) ? offset : offset + 1;
+            for (var j = searchRight; j < childNodes.length; j++) {
+                var child = childNodes[j];
+                if (child.nodeType === 1 && child.style && child.style.display !== 'none') {
+                    if (child.tagName === 'BR' || (child.tagName === 'P' && child.innerText.trim() === '')) continue;
+                    nextNode = child;
+                    break;
+                }
+            }
+
+            if (prevNode && nextNode &&
+                prevNode.classList && prevNode.classList.contains('basalt-doc-wrapper') && prevNode.classList.contains('half-width') &&
+                nextNode.classList && nextNode.classList.contains('basalt-doc-wrapper') && nextNode.classList.contains('half-width')) {
+                var newRange = document.createRange();
+                newRange.setStartAfter(nextNode);
+                newRange.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(newRange);
+            }
+        }
+    }
+
+    document.addEventListener('selectionchange', enforceCursorRules);
 }

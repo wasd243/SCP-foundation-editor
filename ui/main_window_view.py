@@ -199,7 +199,31 @@ def setup_main_ui(window):
     window.basalt_extra_group = QGroupBox("玄武岩版式专用代码 (需启用玄武岩)")
     window.basalt_extra_group.setVisible(False)
     basalt_extra_layout = QVBoxLayout()
-    basalt_comps = [
+    basalt_templates = [
+        ("白色文件模板", "document", "background-color: #fff; border: 1px solid #eee;"),
+        ("黑色文件模板", "darkdocument", "background-color: #1a1a1a; border: 1px solid #333; color: white;")
+    ]
+    for label, cls, style in basalt_templates:
+        btn = QPushButton(label)
+        btn.setToolTip(f"[[div class=\"{cls}\"]]")
+        btn.setStyleSheet(f"height: 45px; font-family: 'Courier New', monospace; font-size: 14px; text-align: center; color: #333; {style}")
+        btn.clicked.connect(lambda checked, c=cls: window.insert_basalt_div(c))
+        basalt_extra_layout.addWidget(btn)
+
+    # --- 笔记组件 (折叠) ---
+    notes_toggle = QPushButton("▶ 笔记组件")
+    notes_toggle.setStyleSheet("text-align: left; font-weight: bold; padding: 5px; font-size: 13px; border: none; background: transparent; color: #555;")
+    notes_container = QWidget()
+    notes_container.setVisible(False)
+    notes_layout = QVBoxLayout(notes_container)
+    notes_layout.setContentsMargins(10, 0, 0, 0)
+    
+    def toggle_notes(checked=False, b=notes_toggle, c=notes_container):
+        c.setVisible(not c.isVisible())
+        b.setText("▼ 笔记组件" if c.isVisible() else "▶ 笔记组件")
+    notes_toggle.clicked.connect(toggle_notes)
+    
+    basalt_notes = [
         ("引用/笔记模块", "blockquote", "background-color: #f8f9fa; border: 1px solid #dee2e6;"),
         ("高级引用/笔记模块", "notation", "background-color: #f1f3f5; border-left: 5px solid #ced4da;"),
         ("虚线框", "jotting", "background-color: #f8f9fa; border: 1px dashed #ced4da;"),
@@ -207,9 +231,32 @@ def setup_main_ui(window):
         ("小号调试用笔记模块", "smallmodal", "background-color: #ffffff; border: 1px solid #e9ecef;"),
         ("笔记模块", "papernote", "background-color: #e9ecef; border: none;"),
         ("浮动框 (左)", "floatbox", "background-color: #f4f4f4; border: 1px solid #ddd;"),
-        ("浮动框 (右)", "floatbox right", "background-color: #f4f4f4; border: 1px solid #ddd;"),
-        ("白色文件模板", "document", "background-color: #fff; border: 1px solid #eee;"),
-        ("黑色文件模板", "darkdocument", "background-color: #1a1a1a; border: 1px solid #333; color: white;"),
+        ("浮动框 (右)", "floatbox right", "background-color: #f4f4f4; border: 1px solid #ddd;")
+    ]
+    for label, cls, style in basalt_notes:
+        btn = QPushButton(label)
+        btn.setToolTip(f"[[div class=\"{cls}\"]]")
+        btn.setStyleSheet(f"height: 40px; font-family: 'Courier New', monospace; font-size: 13px; text-align: center; color: #333; {style}")
+        btn.clicked.connect(lambda checked, c=cls: window.insert_basalt_div(c))
+        notes_layout.addWidget(btn)
+        
+    basalt_extra_layout.addWidget(notes_toggle)
+    basalt_extra_layout.addWidget(notes_container)
+
+    # --- 部门通知 (折叠) ---
+    depts_toggle = QPushButton("▶ 部门通知")
+    depts_toggle.setStyleSheet("text-align: left; font-weight: bold; padding: 5px; font-size: 13px; border: none; background: transparent; color: #555;")
+    depts_container = QWidget()
+    depts_container.setVisible(False)
+    depts_layout = QVBoxLayout(depts_container)
+    depts_layout.setContentsMargins(10, 0, 0, 0)
+    
+    def toggle_depts(checked=False, b=depts_toggle, c=depts_container):
+        c.setVisible(not c.isVisible())
+        b.setText("▼ 部门通知" if c.isVisible() else "▶ 部门通知")
+    depts_toggle.clicked.connect(toggle_depts)
+
+    basalt_depts = [
         ("RAISA备忘录", "raisa_memo", "background-color: #fef3c7; border: 1px solid #f59e0b;"),
         ("分级委员会备忘录", "classification_memo", "background-color: #ecfdf5; border: 1px solid #10b981;"),
         ("潜在威胁响应局通知", "ettra_memo", "background-color: #fef2f2; border: 1px solid #ef4444;"),
@@ -218,12 +265,16 @@ def setup_main_ui(window):
         ("监督者指挥部备忘录", "overwatch_memo", "background-color: #f1f5f9; border: 1px solid #475569;"),
         ("误传部门通知", "miscomm_memo", "background-color: #f5f3ff; border: 1px solid #8b5cf6;")
     ]
-    for label, cls, style in basalt_comps:
+    for label, cls, style in basalt_depts:
         btn = QPushButton(label)
         btn.setToolTip(f"[[div class=\"{cls}\"]]")
-        btn.setStyleSheet(f"height: 45px; font-family: 'Courier New', monospace; font-size: 14px; text-align: center; color: #333; {style}")
+        btn.setStyleSheet(f"height: 40px; font-family: 'Courier New', monospace; font-size: 13px; text-align: center; color: #333; {style}")
         btn.clicked.connect(lambda checked, c=cls: window.insert_basalt_div(c))
-        basalt_extra_layout.addWidget(btn)
+        depts_layout.addWidget(btn)
+
+    basalt_extra_layout.addWidget(depts_toggle)
+    basalt_extra_layout.addWidget(depts_container)
+
     window.basalt_extra_group.setLayout(basalt_extra_layout)
     comp_layout.addWidget(window.basalt_extra_group)
 

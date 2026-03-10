@@ -27,8 +27,8 @@ def process_image(text: str, store) -> str:
             
         name = get_arg('name')
         caption = get_arg('caption')
-        width = get_arg('width')
-        height = get_arg('height')
+        width = get_arg('width') or 'auto'
+        height = get_arg('height') or 'auto'
         align = get_arg('align') or 'right'
         
         img_style = "max-width:100%; display:block; margin:0 auto 5px auto;"
