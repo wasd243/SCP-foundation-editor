@@ -247,7 +247,7 @@ IMKCFRunLoopWakeUpReliable
 
 # ⏬下载--download
 
-点击右侧Rlease下载最新的beta版本（需要bug反馈）
+点击右侧Rlease下载最新的beta版本（需要足够的bug反馈和修复来更新正式版本，非常感谢您的测试）
 
 # ⚖️ 许可证与版权 / License & Copyright
 
