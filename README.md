@@ -8,12 +8,13 @@
 
 ---
 
-## 目录
+## 目录/TOC
 
 - [项目简介](#项目简介)
 - [警告 / Disclaimer](#警告--disclaimer)
 - [安全免责声明](#安全免责声明)
 - [功能 / Features](#功能--features)
+- [下载 / Download](#下载--download)
 - [许可证与版权](#️许可证与版权--license--copyright)
 
 ---
@@ -243,6 +244,10 @@ IMKCFRunLoopWakeUpReliable
 </details>
 
 ---
+
+## 下载--download
+
+点击右侧Rlease下载最新的beta版本（需要bug反馈）
 
 # ⚖️ 许可证与版权 / License & Copyright
 
