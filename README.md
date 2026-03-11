@@ -4,7 +4,7 @@
 > 一个用于编写 **SCP Wikidot 文档** 的辅助编辑器，旨在简化 SCP 文档的编辑流程并提升写作体验。
 
 ![License](https://img.shields.io/badge/license-AGPL_3.0-blue)
-![Status](https://img.shields.io/badge/status-Alpha-orange)
+![Status](https://img.shields.io/badge/status-Beta-green)
 
 ---
 
