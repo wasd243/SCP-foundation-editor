@@ -118,10 +118,6 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
         ph_count += 1
         return token
 
-    def register_forced_break(source):
-        html = f'<p class="forced-break" data-source="{source}" contenteditable="false" style="display: block; width: 100%; height: 0em; min-height: 0; border: 1px dashed transparent; margin: 0;"></p>'
-        return register_ph(html)
-
     # 1. 交给 ftml 原生解析
     def process_terminal_source(txt):
         # 暂时关闭检测用户输入的注入，交给 ftml 反向解析

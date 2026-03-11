@@ -160,10 +160,14 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     # (对导出的一些边界情况如并排空行进行去重或补全)
     # ==========================================
     body = raw_body.replace('\r\n', '\n').replace('\xa0', ' ')
-    body = re.sub(r'\n[ \t]*\n[ \t]*(@@@@|@@ @@)', r'\n\1', body)
-    body = re.sub(r'(@@@@|@@ @@)\n\s*\n+', r'\1\n', body)
     body = re.sub(r'([^\n])\s*(\[\[include component:image-block)', r'\1\n\2', body)
     body = re.sub(r'^[ \t]+(\[\[include component:image-block)', r'\1', body, flags=re.MULTILINE)
+    # 消除相邻 @@@@ 之间多余的空行（循环直到稳定，处理任意长度的连续序列）
+    while '@@@@\n\n@@@@' in body:
+        body = body.replace('@@@@\n\n@@@@', '@@@@\n@@@@')
+    # 消除文本和 @@@@ 之间的空行
+    body = re.sub(r'\n\n(@@@@)', r'\n\1', body)
+    body = re.sub(r'(@@@@)\n\n', r'\1\n', body)
 
     def remove_single_forced_break(match):
         between = match.group(2)

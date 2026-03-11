@@ -107,12 +107,12 @@ def handle_parse_node(node, state):
     content = content.replace('\u200b', '')
 
     if tag == 'p':
-        if 'forced-break' in node.get('class', []):
-            source = node.get('data-source', '@@@@')
-            return f"\n{source}\n"
         def expand_soft_breaks(match):
             count = len(match.group(0))
-            return "\n" + ("@@@@\n" * (count - 1))
+            if count <= 2:
+                return "\n" * count
+            # 保留一个\n作为段落分隔，后面紧连(N-2)个@@@@
+            return "\n" + ("@@@@\n" * (count - 2))
         content = re.sub(r'\n{2,}', expand_soft_breaks, content)
         clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
         if not clean: return "\n@@@@\n"
@@ -223,7 +223,10 @@ def handle_parse_node(node, state):
             clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
             if not clean: return "\n@@@@\n"
             def expand_soft_breaks(match):
-                return "\n" + ("@@@@\n" * (len(match.group(0)) - 1))
+                count = len(match.group(0))
+                if count <= 2:
+                    return "\n" * count
+                return "\n" + ("@@@@\n" * (count - 2))
             res = re.sub(r'\n{2,}', expand_soft_breaks, content) + "\n"
 
         if align_mark: 
@@ -234,7 +237,10 @@ def handle_parse_node(node, state):
         clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
         if not clean: return "\n@@@@\n"
         def expand_soft_breaks(match):
-            return "\n" + ("@@@@\n" * (len(match.group(0)) - 1))
+            count = len(match.group(0))
+            if count <= 2:
+                return "\n" * count
+            return "\n" + ("@@@@\n" * (count - 2))
         content_fixed = re.sub(r'\n{2,}', expand_soft_breaks, content)
         return f"{content_fixed}\n"
 
