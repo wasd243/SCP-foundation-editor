@@ -29,11 +29,11 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build Rust module
-        working-directory: engine
+        working-directory: engine/rust_engine/ftml_py
         run: maturin build --release
 
       - name: Install Rust wheel
-        run: pip install engine/target/wheels/*.whl
+        run: pip install engine/rust_engine/ftml_py/target/wheels/*.whl
 
       - name: Build EXE
         run: |
