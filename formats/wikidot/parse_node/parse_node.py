@@ -118,6 +118,7 @@ def handle_parse_node(node, state):
         if not clean: return "\n@@@@\n"
     
     if tag == 'br': return "\n"
+    if tag == 'hr': return "\n------\n"
 
     style = node.get('style', '') if hasattr(node, 'get') else ''
     align_mark = ""

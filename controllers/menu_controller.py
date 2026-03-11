@@ -19,11 +19,15 @@ def handle_prepare_context_menu(ui, pos):
     触发右键菜单前，先通过 JS 获取光标点所在的组件信息
     """
     js = f"document.elementFromPoint({pos.x()}, {pos.y()}).closest('.scp-component')?.getAttribute('data-type')"
+    
+    # 扩大hr的检测范围，检查点击位置上下10px是否命中hr
+    js_hr = f"(function(){{ for(let dy=-10; dy<=10; dy+=5) {{ let el = document.elementFromPoint({pos.x()}, {pos.y()}+dy); if(el && el.tagName === 'HR') return true; }} return false; }})()"
+
     js_table = f"!!document.elementFromPoint({pos.x()}, {pos.y()}).closest('table.wikidot-table')"
     js_tab_btn = f"!!document.elementFromPoint({pos.x()}, {pos.y()}).classList.contains('tab-btn')"
     js_fn_idx = f"(function(){{ var el = document.elementFromPoint({pos.x()}, {pos.y()}); return el ? Array.from(document.querySelectorAll('.scp-footnote')).indexOf(el.closest('.scp-footnote')) : -1; }})()"
     
-    full_js = f"JSON.stringify({{ comp: {js}, table: {js_table}, tabBtn: {js_tab_btn}, fnIdx: {js_fn_idx} }})"
+    full_js = f"JSON.stringify({{ comp: {js}, hr: {js_hr}, table: {js_table}, tabBtn: {js_tab_btn}, fnIdx: {js_fn_idx} }})"
     
     # 拿到结果后，调用内部函数真正展示菜单
     ui.browser.page().runJavaScript(full_js, lambda res: _handle_show_menu(ui, pos, json.loads(res)))
@@ -35,6 +39,7 @@ def _handle_show_menu(ui, pos, res):
     """
     menu = QMenu()
     c_type = res.get('comp')
+    is_hr = res.get('hr', False)
     in_table = res.get('table')
     is_tab_btn = res.get('tabBtn')
     fn_idx = res.get('fnIdx', -1)
@@ -55,6 +60,10 @@ def _handle_show_menu(ui, pos, res):
 
         del_act = menu.addAction("删除该组件")
         del_act.triggered.connect(lambda: _handle_remove_component(ui, pos))
+        
+    elif is_hr:
+        del_act = menu.addAction("删除分割线")
+        del_act.triggered.connect(lambda: _handle_remove_hr(ui, pos))
 
         if c_type == 'acs':
             cm = menu.addMenu("修改等级颜色 (主等级)")
@@ -129,6 +138,10 @@ def _handle_insert_newline(ui, pos):
 
 def _handle_remove_component(ui, pos):
     ui.browser.page().runJavaScript(f"var el = document.elementFromPoint({pos.x()}, {pos.y()}).closest('.scp-component'); if(el) {{ el.remove(); refreshFootnotes(); }}")
+
+def _handle_remove_hr(ui, pos):
+    js_snippet = f"(function(){{ for(let dy=-10; dy<=10; dy+=5) {{ let el = document.elementFromPoint({pos.x()}, {pos.y()}+dy); if(el && el.tagName === 'HR') {{ el.remove(); return; }} }} }})()"
+    ui.browser.page().runJavaScript(js_snippet)
 
 def _handle_change_acs_class(ui, pos, class_name):
     ui.browser.page().runJavaScript(f'applyAcsChange(document.elementFromPoint({pos.x()}, {pos.y()}), "{class_name}")')

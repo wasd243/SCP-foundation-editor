@@ -109,7 +109,7 @@ class SCPEditor(QMainWindow):
 
     # ================= 基础插入与编辑器事件 =================
     def insert_hr(self):
-        self.run_insert_js('<div class="scp-hr scp-component" data-type="hr" contenteditable="false"></div><p><br></p>')
+        self.run_insert_js('<hr><p><br></p>')
     def insert_toc(self):
         self.run_insert_js('<div class="scp-component" data-type="toc" contenteditable="false" style="border: 1px dashed #999; padding: 5px; background: #f0f0f0;"><b>目录 (TOC)</b><br>[[toc]]</div><p><br></p>')
     def insert_table(self): self.browser.page().runJavaScript("insertTable();")

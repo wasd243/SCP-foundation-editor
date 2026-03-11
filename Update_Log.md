@@ -208,6 +208,9 @@
 - Added the `collapsible` renderer for `ui`
 
 ### Changed
+- Changed the `MAIN_CONTROLLER.py` code about `insert_hr`
+- Changed the `menu_controller.py` code about `insert_hr`
+- Changed the `run_insert_js.js` code about `insert_hr`
 - Changed the `banner.py` code about this version
 - Changed the `banner.py` position from `core/` to `utils/`
 - Changed the `logger.py` code about this version
