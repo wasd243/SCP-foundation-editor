@@ -1,0 +1,92 @@
+/* --- Image Block 样式 --- */
+.image-block-box {
+    max-width: 300px;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    background: #f0f0f0;
+    padding: 0;
+    transition: all 0.3s;
+}
+
+.image-block-box[data-align="left"] {
+    float: left;
+    margin: 20px 20px 20px 0;
+}
+
+.image-block-box[data-align="right"] {
+    float: right;
+    margin: 20px 0 20px 20px;
+}
+
+.image-block-box[data-align="center"] {
+    float: none;
+    margin: 20px auto;
+    width: 100%;
+    max-width: none;
+}
+
+.image-block-box[data-align="center"] .img-preview {
+    width: 100%;
+}
+
+.image-block-content {
+    background: #fff;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.image-block-caption {
+    padding: 10px;
+    font-size: 0.9em;
+    background: #f9f9f9;
+}
+
+.img-align-controls {
+    background: #333;
+    padding: 5px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.img-align-btn {
+    background: #fff;
+    border: none;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+
+.img-align-btn:hover {
+    background: #ddd;
+}
+
+.img-toggle-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    background: #fff;
+    border: 1px solid #aaa;
+    font-size: 14px;
+    z-index: 10;
+    opacity: 0.7;
+}
+
+.img-toggle-btn:hover {
+    opacity: 1;
+}
+
+.img-controls-hidden .img-controls-wrapper {
+    display: none;
+}
+
+[data-field="name"] {
+    word-break: break-all;
+    min-width: 50px;
+    display: inline-block;
+    border-bottom: 1px dashed #ccc;
+}

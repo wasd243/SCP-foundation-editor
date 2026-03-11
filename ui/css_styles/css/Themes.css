@@ -1,0 +1,316 @@
+/* --- Basalt Special Modules --- */
+.basalt-div {
+    border: none;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+}
+
+.basalt-div .div-header {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 2px 8px;
+    font-size: 10px;
+    color: #888;
+    border: none;
+}
+
+.basalt-blockquote-box {
+    background: #f2f2f2;
+    border: 1px solid #d0d0d0;
+}
+
+.basalt-notation-box {
+    background: #f2f2f2;
+    border: none;
+    border-left: 5px solid #888;
+    border-right: 5px solid #888;
+    margin: 10px 20px;
+}
+
+.basalt-jotting-box {
+    background: #f2f2f2;
+    border: 1px dashed #888;
+    margin: 10px 60px;
+}
+
+.basalt-modal-box {
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 10px 20px;
+}
+
+.basalt-smallmodal-box {
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    margin: 10px auto;
+}
+
+.basalt-papernote-box {
+    background: #e9e9f2;
+    border: none;
+    width: 60%;
+    margin: 10px auto;
+}
+
+.basalt-floatbox-box {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    width: 30%;
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    clear: both;
+    border-radius: 4px;
+}
+
+.basalt-floatbox-box.right {
+    float: right;
+    margin-right: 0;
+    margin-left: 20px;
+}
+
+/* --- Basalt Document Components --- */
+#editor-root.basalt-theme {
+    padding-top: 80px !important;
+}
+
+.scp-component.basalt-doc-wrapper {
+    width: 48%;
+    /* Removed !important to make overrides easier */
+    min-height: 50px !important;
+    height: auto !important;
+    margin: 15px 1% !important;
+    clear: none !important;
+    transition: transform 0.3s;
+    display: block;
+    box-sizing: border-box;
+    /* Added to ensure padding doesn't affect width */
+}
+
+.basalt-document-box,
+.basalt-darkdocument-box {
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 1px;
+    overflow: visible;
+}
+
+.basalt-document-box {
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+#editor-root.shivering-theme {
+    padding-top: 100px !important;
+}
+
+.basalt-darkdocument-box {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #fff;
+}
+
+.basalt-darkdocument-box .div-content {
+    color: #fff;
+}
+
+/* Javascript driven Alternating Side-by-Side Layout */
+.scp-component.basalt-doc-wrapper {
+    display: block;
+    box-sizing: border-box;
+    transition: transform 0.3s;
+}
+
+.scp-component.basalt-doc-wrapper.full-width {
+    width: 100% !important;
+    float: none !important;
+    margin: 15px 0 !important;
+}
+
+.scp-component.basalt-doc-wrapper.half-width {
+    width: 48% !important;
+    margin: 15px 1% !important;
+}
+
+.scp-component.basalt-doc-wrapper.half-width:nth-of-type(odd) {
+    float: left !important;
+    transform: rotate(-0.5deg);
+}
+
+.scp-component.basalt-doc-wrapper.half-width:nth-of-type(even) {
+    float: right !important;
+    transform: rotate(0.6deg);
+}
+
+/* Force clearing after a pair */
+.scp-component.basalt-doc-wrapper.half-width+.basalt-doc-wrapper.half-width+* {
+    clear: both;
+}
+
+.basalt-doc-wrapper:hover {
+    transform: rotate(0deg) scale(1.01) !important;
+    z-index: 10;
+}
+
+/* --- Basalt Memo Components --- */
+.basalt-memo-box {
+    width: 100%;
+    margin: 20px 0;
+    padding: 40px 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em;
+    border-width: 1px;
+    border-style: solid;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clear: both;
+    box-sizing: border-box;
+    background-blend-mode: multiply;
+}
+
+.basalt-raisa_memo-box {
+    background-color: #fef3c7;
+    border-color: #f59e0b;
+    color: #92400e;
+    background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/raisa_logo.png');
+}
+
+.basalt-classification_memo-box {
+    background-color: #ecfdf5;
+    border-color: #10b981;
+    color: #065f46;
+    background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/classification_logo.png');
+}
+
+.basalt-ettra_memo-box {
+    background-color: #fef2f2;
+    border-color: #ef4444;
+    color: #991b1b;
+    background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/ettra_logo.png');
+}
+
+.basalt-ethics_memo-box {
+    background-color: #fff7ed;
+    border-color: #f97316;
+    color: #9a3412;
+    background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/ethics_logo.png');
+}
+
+.basalt-temporal_memo-box {
+    background-color: #f8fafc;
+    border-color: #64748b;
+    color: #334155;
+    background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/temporal_logo.png');
+}
+
+.basalt-overwatch_memo-box {
+    background-color: #f1f5f9;
+    border-color: #475569;
+    color: #1e293b;
+    background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/overwatch_logo.png');
+}
+
+.basalt-miscomm_memo-box {
+    background-color: #f5f3ff;
+    border-color: #8b5cf6;
+    color: #5b21b6;
+    background-image: url('https://scp-wiki.wikidot.com/local--files/theme:basalt/miscomm_logo.png');
+}
+
+.basalt-memo-box .div-header {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: transparent;
+    opacity: 0.6;
+}
+
+.basalt-memo-box .div-content {
+    width: 100%;
+    outline: none;
+}
+
+.basalt-div .div-content {
+    padding: 15px;
+}
+
+.bhl-theme {
+    --bhl-accent: #850005;
+    /* Rosewood */
+    --bhl-monochrome: #212121;
+    /* Dark Grey/Black */
+    --bhl-background: #ffffff;
+    --bhl-light-grey: #f4f4f4;
+    /* White Smoke */
+}
+
+.bhl-theme h1,
+.bhl-theme h2,
+.bhl-theme h3,
+.bhl-theme h4,
+.bhl-theme h5,
+.bhl-theme h6 {
+    color: var(--bhl-accent) !important;
+    font-family: 'Oswald', sans-serif;
+    border-bottom: 2px solid var(--bhl-monochrome);
+    transition: color 0.3s;
+}
+
+.bhl-theme h1:hover {
+    color: #f00 !important;
+}
+
+.bhl-theme .tabview-box .tab-header {
+    background: var(--bhl-monochrome);
+    border-bottom: 3px solid var(--bhl-accent);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.bhl-theme .tabview-box .tab-btn {
+    background: #555;
+    color: #fff;
+    border: none;
+    margin-right: 2px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.bhl-theme .tabview-box .tab-btn:hover {
+    background: #777;
+    transform: translateY(-1px);
+}
+
+.bhl-theme .tabview-box .tab-btn.active {
+    background: var(--bhl-accent);
+    font-weight: bold;
+}
+
+.bhl-theme .wikidot-table th {
+    background: var(--bhl-monochrome);
+    color: #fff;
+    border: 1px solid #666;
+    padding: 8px;
+}
+
+.bhl-theme .wikidot-table td {
+    border: 1px solid var(--bhl-monochrome);
+    background: var(--bhl-light-grey);
+    padding: 8px;
+}
+
+#editor-root.bhl-theme {
+    background: #fff !important;
+    padding-top: 120px !important;
+}

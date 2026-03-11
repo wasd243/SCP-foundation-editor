@@ -1,0 +1,67 @@
+/* --- 折叠块增强样式 --- */
+.collapsible-box {
+    border: 1px solid #aaa;
+    background: #f9f9f9;
+    padding: 0;
+    margin: 15px 0;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    clear: both;
+}
+
+.collapsible-header {
+    display: flex;
+    background: #e0e0e0;
+    padding: 8px 15px;
+    font-size: 13px;
+    color: #333;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    user-select: none;
+}
+
+.title-label {
+    color: #666;
+    margin-right: 5px;
+}
+
+.title-input {
+    color: #000;
+    outline: none;
+    min-width: 40px;
+}
+
+.title-input:hover,
+.title-input:focus {
+    background: rgba(255, 255, 255, 0.5);
+    border-bottom: 1px dashed #999;
+}
+
+.collapsible-show-title,
+.collapsible-hide-title {
+    display: inline;
+}
+
+.collapsible-arrow {
+    margin-left: auto;
+    font-size: 10px;
+    transition: transform 0.2s;
+}
+
+.collapsible-box.open .collapsible-arrow {
+    transform: rotate(90deg);
+}
+
+.collapsible-content-area {
+    padding: 15px;
+    background: #fff;
+    min-height: 40px;
+    display: none;
+}
+
+.collapsible-box.open .collapsible-content-area {
+    display: block;
+}

@@ -1,0 +1,297 @@
+/*
+============================================================
+SCP Foundation WYSIWYG Editor
+
+Copyright (C) 2026 Zichen Wang (wasd243)
+
+Licensed under the GNU Affero General Public License v3.0
+
+https://www.gnu.org/licenses/agpl-3.0.html
+============================================================
+*/
+body {
+    font-family: 'Verdana', sans-serif;
+    padding: 40px;
+    line-height: 1.4;
+    background: #fff;
+    position: relative;
+}
+
+#editor-root {
+    min-height: 400px;
+    outline: none;
+    padding-bottom: 50px;
+}
+
+a {
+    color: #b01;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.scp-component {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    margin: 20px 0;
+    background: #fdfdfd;
+    position: relative;
+    border-radius: 8px;
+    color: #444;
+    font-size: 14px;
+}
+
+/* Bounding Boxes & Tooltips */
+.scp-component:hover,
+.wikidot-table:hover,
+.terminal-shortcut-box:hover {
+    outline: 2px solid #3498db;
+}
+
+#component-tooltip {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 10000;
+    display: none;
+}
+
+#footnote-preview-tooltip {
+    position: fixed;
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    max-width: 300px;
+    font-size: 13px;
+    z-index: 10001;
+    display: none;
+    pointer-events: none;
+    line-height: 1.4;
+}
+
+.scp-footnote {}
+
+.scp-footnote:hover {
+    background: #e0f7fa;
+    border-top: 2px solid #00bcd4;
+}
+
+/* --- AIM 渲染样式 --- */
+.aim-box {
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 0;
+    margin: 20px 0;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    cursor: default;
+    /* 修复：全宽显示 */
+    width: 100%;
+    box-sizing: border-box;
+    clear: both;
+}
+
+.aim-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    border: none;
+    margin: 0;
+}
+
+.aim-table td {
+    border: 1px solid #eee;
+    padding: 8px 12px;
+    vertical-align: middle;
+}
+
+.aim-label {
+    color: #888;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.aim-value {
+    color: #333;
+    font-weight: bold;
+    outline: none;
+}
+
+.aim-header-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #555;
+}
+
+.aim-footer {
+    text-align: center;
+    background: #f9f9f9;
+    padding: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #999;
+    border-top: 2px solid #901111;
+}
+
+
+
+/* --- Table 样式 (修复) --- */
+table.wikidot-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+    font-size: 14px;
+    border: 1px solid #333;
+    /* 显式边框颜色 */
+}
+
+table.wikidot-table th,
+table.wikidot-table td {
+    border: 1px solid #333;
+    /* 单元格显式边框 */
+    padding: 8px;
+    min-width: 30px;
+    vertical-align: top;
+}
+
+table.wikidot-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    text-align: center;
+}
+
+table.wikidot-table.no-border,
+table.wikidot-table.no-border th,
+table.wikidot-table.no-border td {
+    border: 1px dashed #ccc !important;
+    /* 虚线提示 */
+}
+
+
+
+/* --- User Component 样式 --- */
+.user-tag {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+}
+
+.user-icon {
+    width: 12px;
+    height: 12px;
+    background: #b01;
+    border-radius: 2px;
+}
+
+/* --- 标题样式 --- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #901111;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+h1 {
+    border-bottom: 2px solid #901111;
+    font-size: 1.8em;
+}
+
+h2 {
+    border-bottom: 1px solid #ccc;
+    font-size: 1.6em;
+}
+
+/* --- 引用块样式 --- */
+blockquote {
+    border-left: 5px solid #ccc;
+    margin: 1.5em 10px;
+    padding: 0.5em 10px;
+    background-color: #f9f9f9;
+    color: #555;
+}
+
+
+
+.scp-footnote {
+    color: #B22222 !important;
+    font-weight: bold;
+    vertical-align: super;
+    font-size: 0.8em;
+    user-select: none;
+    margin: 0 1px;
+    padding: 0 1px;
+}
+
+#footnote-list-footer {
+    margin-top: 40px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.footnote-list-item {
+    margin-bottom: 5px;
+}
+
+.footnote-content {
+    outline: none;
+    border-bottom: 1px dashed transparent;
+}
+
+.footnote-content:focus {
+    border-bottom: 1px dashed #999;
+    background: #fffdf0;
+}
+
+.scp-hr {
+    height: 40px;
+    border: 1px dashed transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.scp-hr::after {
+    content: "";
+    width: 100%;
+    height: 2px;
+    background: #333;
+    display: block;
+}
+
+.scp-hr:hover {
+    border: 1px dashed #901111;
+    background: rgba(144, 17, 17, 0.05);
+}
+
+.size-span {
+    display: inline;
+}
+
+.forced-break {
+    margin: 0;
+    padding: 0;
+    min-height: 1em;
+}

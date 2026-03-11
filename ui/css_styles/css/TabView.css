@@ -1,0 +1,60 @@
+/* --- Tab View 样式 --- */
+.tabview-box {
+    border: 1px solid #ccc;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    clear: both;
+}
+
+.tab-header {
+    display: flex;
+    background: #f4f4f4;
+    border-bottom: 1px solid #ccc;
+    gap: 2px;
+    padding: 5px 5px 0 5px;
+}
+
+.tab-btn {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    background: #e8e8e8;
+    border-radius: 4px 4px 0 0;
+    font-size: 13px;
+    font-weight: bold;
+    color: #666;
+    outline: none;
+}
+
+.tab-btn:hover {
+    background: #f0f0f0;
+}
+
+.tab-btn.active {
+    background: #fff;
+    border-bottom: 1px solid #fff;
+    margin-bottom: -1px;
+    color: #333;
+}
+
+.tab-add {
+    padding: 8px 12px;
+    color: #888;
+    font-weight: bold;
+}
+
+.tab-contents {
+    padding: 15px;
+    border-top: 1px solid #eee;
+    min-height: 50px;
+}
+
+.tab-item {
+    display: none;
+}
+
+.tab-item.active {
+    display: block;
+}

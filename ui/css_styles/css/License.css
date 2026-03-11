@@ -1,0 +1,149 @@
+/* --- 授权引用修复样式 --- */
+.license-box {
+    border: 1px solid #901111;
+    padding: 0;
+    background: #fff;
+    font-size: 13px;
+    color: #333;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    clear: both;
+}
+
+.license-header {
+    color: #901111;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 15px;
+    background: #fdfdfd;
+}
+
+.license-header::after {
+    content: '▼';
+    font-size: 10px;
+    margin-left: 10px;
+}
+
+.license-box.open .license-header::after {
+    content: '▲';
+}
+
+.license-content {
+    display: none;
+    padding: 15px;
+    line-height: 1.8;
+}
+
+.license-box.open .license-content {
+    display: block;
+}
+
+.license-field-row {
+    margin-bottom: 4px;
+    border-bottom: 1px dotted #eee;
+    display: flex;
+    align-items: baseline;
+}
+
+.license-link-row {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.license-link-row .editable-field {
+    width: 100%;
+    word-break: break-all;
+    margin-top: 2px;
+}
+
+.field-label {
+    font-weight: bold;
+    color: #666;
+    width: 80px;
+    flex-shrink: 0;
+}
+
+.editable-field {
+    border-bottom: 1px dashed #ccc;
+    flex-grow: 1;
+    min-width: 0;
+    color: #333;
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+
+.editable-field:empty::before {
+    content: " (点击输入) ";
+    color: #ccc;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.editable-field:focus {
+    border-bottom: 1px solid #000;
+    outline: none;
+    background: #e8f0fe;
+}
+
+.extra-files-container {
+    border-top: 2px dashed #901111;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.file-entry {
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    position: relative;
+}
+
+.btn-add-file {
+    background: #901111;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    margin-top: 5px;
+    border-radius: 4px;
+}
+
+.btn-del-file {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+    color: red;
+    font-weight: bold;
+    border: none;
+    background: none;
+    font-size: 20px;
+}
+
+.btn-license-original {
+    background: #e8e8e8;
+    color: #333;
+    border: 1px solid #999;
+    padding: 4px 10px;
+    font-size: 12px;
+    margin-left: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.btn-license-original.active {
+    background: #2c7a2c;
+    color: white;
+    border-color: #1a5c1a;
+}
+
+.license-translator-row.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    text-decoration: line-through;
+}

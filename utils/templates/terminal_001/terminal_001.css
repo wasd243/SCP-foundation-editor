@@ -1,0 +1,91 @@
+div.terminal {
+    border: 1px solid black;
+    border: solid 3px #BBBBBB;
+    border-radius: 16px;
+    background-color: #000000;
+    /* 终端上方的黑色阴影 */
+    background-image:
+        radial-gradient(ellipse 1000% 100% at 50% 90%, transparent, #121);
+    background-position: center;
+    display: block;
+    /* 终端周围的阴影 */
+    box-shadow: inset 0 0 10em 1em rgba(0, 0, 0, 0.5);
+    /* 防止扫描条产生滚动条 */
+    overflow: hidden;
+}
+
+div.terminal blockquote {
+    background-color: black;
+    border: double 3px #80FF80;
+    color: #80FF80;
+}
+
+div.scanline {
+    margin-top: -40%;
+    width: 100%;
+    height: 60px;
+    position: relative;
+    pointer-events: none;
+    /* Safari 4.0 - 8.0 */
+    -webkit-animation: scan 12s linear 0s infinite;
+    /* 你可能需要修改这个。如果扫描条走得太快了，添加5秒。 */
+    animation: scan 12s linear 0s infinite;
+    /* 同上 */
+    background: linear-gradient(to bottom, rgba(56, 112, 82, 0), rgba(56, 112, 82, 0.1)) !important;
+}
+
+div.text {
+    color: rgba(128, 255, 128, 0.8);
+    padding-left: 2em;
+    padding-top: 40%;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2em;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes scan {
+    from {
+        transform: translateY(-10%);
+    }
+
+    to {
+        transform: translateY(5000%);
+    }
+
+    /* 你可能需要根据你终端的长短修改这个。如果扫描条走到一半停止了，增大第二个数字。 */
+}
+
+@keyframes scan {
+    from {
+        transform: translateY(-10%);
+    }
+
+    to {
+        transform: translateY(5000%);
+    }
+
+    /* 同上。 */
+}
+
+div.text a {
+    color: #90EE90;
+    text-decoration: none;
+    background: transparent;
+}
+
+div.text a.newpage {
+    color: #90EE90;
+    text-decoration: none;
+    background: transparent;
+}
+
+div.text a:hover {
+    color: #131;
+    text-decoration: underline;
+    background-color: #80FF80;
+    padding: 1px;
+}
+
+div.text a:hover::before {
+    content: "> ";
+}

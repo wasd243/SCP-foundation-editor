@@ -1,0 +1,97 @@
+/* --- ACS 样式 --- */
+.acs-box {
+    border: none;
+    border-left: 12px solid var(--acs-color, #f1c40f);
+    border-radius: 0;
+    text-align: left;
+    background: #f9f9f9;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    transition: all 0.3s ease;
+    clear: both;
+}
+
+.acs-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.acs-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.acs-item-num {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    color: #901111;
+    font-weight: bold;
+}
+
+.acs-anim-toggle,
+.acs-shiver-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #666;
+}
+
+.acs-toggles {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 16px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 16px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider,
+.switch.is-checked .slider {
+    background-color: #27ae60;
+}
+
+input:checked+.slider:before,
+.switch.is-checked .slider:before {
+    transform: translateX(14px);
+}
