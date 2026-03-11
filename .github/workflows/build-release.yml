@@ -29,7 +29,10 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build Rust module
-        run: maturin develop --release
+        run: maturin build --release
+
+      - name: Install Rust wheel
+        run: pip install target/wheels/*.whl
 
       - name: Build EXE
         run: |
@@ -37,7 +40,9 @@ jobs:
           --hidden-import ftml_parser `
           --add-data "engine;engine" `
           --add-data "ui;ui" `
-          --add-data "utils;utils"
+          --add-data "utils;utils" `
+          --add-data "controllers;controllers" `
+          --add-data "formats;formats"
 
       - name: Zip build
         run: |
