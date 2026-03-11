@@ -1,0 +1,49 @@
+name: Build Windows Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: |
+          pip install maturin
+          pip install pyinstaller
+          pip install -r requirements.txt
+
+      - name: Build Rust module
+        run: maturin develop --release
+
+      - name: Build EXE
+        run: |
+          pyinstaller main.py --noconsole `
+          --hidden-import ftml_parser `
+          --add-data "engine;engine" `
+          --add-data "ui;ui" `
+          --add-data "utils;utils"
+
+      - name: Zip build
+        run: |
+          Compress-Archive -Path dist/main/* -DestinationPath scp-editor-windows.zip
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: scp-editor-windows.zip
