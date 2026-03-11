@@ -75,6 +75,9 @@ from utils.logger import *
 # 处理终端报错问题
 os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--log-level=3"
 
+if getattr(sys, 'frozen', False):
+    os.chdir(os.path.dirname(sys.executable))
+
 print_startup_banner()
 log("INIT", "Application starting")
 log("QT", "Initializing PyQt6")
