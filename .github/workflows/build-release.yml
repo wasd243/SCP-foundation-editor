@@ -29,10 +29,11 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build Rust module
+        working-directory: engine
         run: maturin build --release
 
       - name: Install Rust wheel
-        run: pip install target/wheels/*.whl
+        run: pip install engine/target/wheels/*.whl
 
       - name: Build EXE
         run: |
@@ -46,7 +47,7 @@ jobs:
 
       - name: Zip build
         run: |
-          Compress-Archive -Path dist/main/* -DestinationPath scp-editor-windows.zip
+          Compress-Archive -Path dist/Main/* -DestinationPath scp-editor-windows.zip
 
       - name: Upload Release
         uses: softprops/action-gh-release@v2
