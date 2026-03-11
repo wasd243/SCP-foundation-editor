@@ -36,7 +36,7 @@ jobs:
 
       - name: Build EXE
         run: |
-          pyinstaller main.py --noconsole `
+          pyinstaller Main.py --noconsole `
           --hidden-import ftml_parser `
           --add-data "engine;engine" `
           --add-data "ui;ui" `
