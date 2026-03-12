@@ -33,7 +33,8 @@ jobs:
         run: maturin build --release
 
       - name: Install Rust wheel
-        run: pip install engine/rust_engine/ftml_py/target/wheels/*.whl
+        working-directory: engine/rust_engine/ftml_py
+        run: pip install target/wheels/*.whl
 
       - name: Build EXE
         run: |
