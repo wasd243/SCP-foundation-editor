@@ -24,7 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install maturin
+          run: maturin build --release --manifest-path Cargo.toml
           pip install pyinstaller
           pip install -r requirements.txt
 
@@ -40,6 +40,7 @@ jobs:
         run: |
           pyinstaller Main.py --noconsole `
           --hidden-import ftml_parser `
+          --hidden-import ftml_py
           --add-data "engine;engine" `
           --add-data "ui;ui" `
           --add-data "utils;utils" `
