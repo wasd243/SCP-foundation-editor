@@ -24,23 +24,24 @@ jobs:
 
       - name: Install dependencies
         run: |
-          maturin build --release --manifest-path Cargo.toml
-          pip install pyinstaller
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          python -m pip install maturin
+          python -m pip install pyinstaller
+          python -m pip install -r requirements.txt
 
       - name: Build Rust module
         working-directory: engine/rust_engine/ftml_py
-        run: maturin build --release
+        run: python -m maturin build --release
 
       - name: Install Rust wheel
         working-directory: engine/rust_engine/ftml_py
-        run: pip install target/wheels/*.whl
+        run: python -m pip install target/wheels/*.whl
 
       - name: Build EXE
         run: |
           pyinstaller Main.py --noconsole `
           --hidden-import ftml_parser `
-          --hidden-import ftml_py
+          --hidden-import ftml_py `
           --add-data "engine;engine" `
           --add-data "ui;ui" `
           --add-data "utils;utils" `
