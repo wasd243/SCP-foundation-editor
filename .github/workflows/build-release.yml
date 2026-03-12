@@ -1,4 +1,4 @@
-name: Build Windows Release
+name: Build Release
 
 on:
   push:
@@ -8,7 +8,11 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
@@ -36,8 +40,10 @@ jobs:
       - name: Check generated wheels
         working-directory: engine/rust_engine/ftml_py
         run: dir target/wheels
+        if: runner.os == 'Windows'
 
-      - name: Install Rust wheel
+      - name: Install Rust wheel (Windows)
+        if: runner.os == 'Windows'
         working-directory: engine/rust_engine/ftml_py
         run: |
           $wheel = Get-ChildItem target/wheels/*.whl | Select-Object -First 1
@@ -47,7 +53,19 @@ jobs:
           }
           python -m pip install $wheel.FullName
 
-      - name: Build EXE
+      - name: Install Rust wheel (Linux/macOS)
+        if: runner.os != 'Windows'
+        working-directory: engine/rust_engine/ftml_py
+        run: |
+          WHEEL=$(ls target/wheels/*.whl | head -n 1)
+          if [ -z "$WHEEL" ]; then
+            echo "Wheel file not found!"
+            exit 1
+          fi
+          python -m pip install "$WHEEL"
+
+      - name: Build EXE (Windows)
+        if: runner.os == 'Windows'
         run: |
           pyinstaller Main.py --noconsole `
           --hidden-import ftml_parser `
@@ -58,11 +76,39 @@ jobs:
           --add-data "controllers;controllers" `
           --add-data "formats;formats"
 
-      - name: Zip build
+      - name: Build App (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          pyinstaller Main.py --noconsole \
+          --hidden-import ftml_parser \
+          --hidden-import ftml_py \
+          --add-data "engine:engine" \
+          --add-data "ui:ui" \
+          --add-data "utils:utils" \
+          --add-data "controllers:controllers" \
+          --add-data "formats:formats"
+
+      - name: Zip build (Windows)
+        if: runner.os == 'Windows'
         run: |
           Compress-Archive -Path dist/Main/* -DestinationPath scp-editor-windows.zip
+
+      - name: Zip build (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          cd dist/Main
+          zip -r ../../scp-editor-linux.zip *
+
+      - name: Zip build (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          cd dist/Main
+          zip -r ../../scp-editor-macos.zip *
 
       - name: Upload Release
         uses: softprops/action-gh-release@v2
         with:
-          files: scp-editor-windows.zip
+          files: |
+            scp-editor-windows.zip
+            scp-editor-linux.zip
+            scp-editor-macos.zip
