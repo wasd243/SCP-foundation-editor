@@ -11,3 +11,5 @@ crate-type = ["cdylib"]
 pyo3 = { version = "0.20.0", features = ["extension-module"] }
 
 ftml = { git = "https://github.com/scpwiki/ftml", tag = "v1.38.0" }
+
+time = "=0.3.36"
