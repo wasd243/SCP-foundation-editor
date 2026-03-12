@@ -24,7 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          run: maturin build --release --manifest-path Cargo.toml
+          maturin build --release --manifest-path Cargo.toml
           pip install pyinstaller
           pip install -r requirements.txt
 
