@@ -10,7 +10,7 @@ LICENSE will update to AGPL v3.0 after publish pre-release with ftml code.
 
 协议将会在引用ftml代码测试版发布后更新。
 
-# Projects import
+# Import
 File/Folder name in code: rust_engine
 * **ftml** [By SCP Foundation community](https://github.com/scpwiki/ftml)
 
@@ -173,7 +173,7 @@ IMKCFRunLoopWakeUpReliable
 
 ### 脚注系统
 
-支持 **Better Footnote** 自动生成脚注代码。
+支持 原版的脚注预览/编辑和 **Better Footnote** 自动生成脚注代码。
 
 ---
 
