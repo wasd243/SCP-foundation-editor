@@ -24,24 +24,43 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install maturin
-          pip install pyinstaller
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          python -m pip install maturin
+          python -m pip install pyinstaller
+          python -m pip install -r requirements.txt
 
       - name: Build Rust module
-        run: maturin develop --release
+        working-directory: engine/rust_engine/ftml_py
+        run: python -m maturin build --release
+
+      - name: Check generated wheels
+        working-directory: engine/rust_engine/ftml_py
+        run: dir target/wheels
+
+      - name: Install Rust wheel
+        working-directory: engine/rust_engine/ftml_py
+        run: |
+          $wheel = Get-ChildItem target/wheels/*.whl | Select-Object -First 1
+          if (-not $wheel) {
+            Write-Error "Wheel file not found!"
+            exit 1
+          }
+          python -m pip install $wheel.FullName
 
       - name: Build EXE
         run: |
-          pyinstaller main.py --noconsole `
+          pyinstaller Main.py --noconsole `
           --hidden-import ftml_parser `
+          --hidden-import ftml_py `
           --add-data "engine;engine" `
           --add-data "ui;ui" `
-          --add-data "utils;utils"
+          --add-data "utils;utils" `
+          --add-data "controllers;controllers" `
+          --add-data "formats;formats"
 
       - name: Zip build
         run: |
-          Compress-Archive -Path dist/main/* -DestinationPath scp-editor-windows.zip
+          Compress-Archive -Path dist/Main/* -DestinationPath scp-editor-windows.zip
 
       - name: Upload Release
         uses: softprops/action-gh-release@v2

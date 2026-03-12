@@ -6,6 +6,17 @@
 ![License](https://img.shields.io/badge/license-AGPL_3.0-blue)
 ![Status](https://img.shields.io/badge/status-Beta-green)
 
+LICENSE will update to AGPL v3.0 after publish pre-release with ftml code.
+
+协议将会在引用ftml代码测试版发布后更新。
+
+# Import
+File/Folder name in code: rust_engine
+* **ftml** [By SCP Foundation community](https://github.com/scpwiki/ftml)
+
+# 引用的代码
+文件名或文件夹名：rust_engine
+* **ftml** [SCP 基金会](https://github.com/scpwiki/ftml)
 ---
 
 ## 目录/TOC
@@ -162,7 +173,7 @@ IMKCFRunLoopWakeUpReliable
 
 ### 脚注系统
 
-支持 **Better Footnote** 自动生成脚注代码。
+支持 原版的脚注预览/编辑和 **Better Footnote** 自动生成脚注代码。
 
 ---
 

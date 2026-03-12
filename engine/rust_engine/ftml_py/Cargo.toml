@@ -8,7 +8,8 @@ name = "ftml_py"
 crate-type = ["cdylib"]
 
 [dependencies]
-
 pyo3 = { version = "0.20.0", features = ["extension-module"] }
 
-ftml = { path = "C:/Users/dell/Desktop/wikidot_edit_resh-1/engine/rust_engine/ftml" }
+ftml = { git = "https://github.com/scpwiki/ftml", tag = "v1.38.0" }
+
+time = "=0.3.36"
