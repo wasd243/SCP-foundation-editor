@@ -1,4 +1,5 @@
 ## TOC
+
 - [v2.0.0-alpha.2-March 6, 2026](#v200-alpha2-march-6-2026)
 - [v2.0.0-alpha.3-March 7, 2026](#v200-alpha3-march-7-2026)
 - [v2.0.0-alpha.4-March 8, 2026](#v200-alpha4-march-8-2026)
@@ -9,6 +10,7 @@
 ## v2.0.0-alpha.2-March 6, 2026
 
 ### Changed
+
 - Completed the main code decomposition
 - Changed the update log
 - Changed `banner.py` for the startup banner
@@ -16,23 +18,28 @@
 - Changed the author's real name: Zichen Wang
 
 ### Fixed
+
 - Fixed an issue where div styles were not rendered in the editor
 - Fixed an issue where CSS styles were not rendered in the editor
 - Fixed an issue where JS scripts were not executed correctly in the editor
 
 ### ACS
+
 - Updated the ACS style to the new ACS layout
 - Fixed an issue where the ACS button could not respond to user clicks
 
 ### Image Block
+
 - Fixed an issue where image blocks could not render image links correctly
 
 ### Version
+
 - Updated the version to `v2.0.0-alpha.2`
 - Updated the license to GNU AGPLv3
 - Updated the author information to **Zichen Wang (wasd243)**
 
 ### Notes
+
 - This version is the second alpha release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
@@ -42,24 +49,29 @@
 ## v2.0.0-alpha.3-March 7, 2026
 
 ### Added
-- Updated the css_styles/js 
+
+- Updated the css_styles/js
 - Finished the main code decomposition
 
 ### Changed
+
 - Changed the user tag component
 - Changed the user advanced tag component
 - Changed the user tag button
 - Changed the user advanced tag button
 
 ### Fixed
+
 - Fixed an issue where the error message "Sorry, the page you are looking for does not exist" was displayed when the page restarted
 
 ### Version
+
 - Updated the version to `v2.0.0-alpha.3`
 - Updated the license to GNU AGPLv3
 - Updated the author information to **Zichen Wang (wasd243)**
 
 ### Notes
+
 - This version is the third alpha release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
@@ -69,6 +81,7 @@
 ## v2.0.0-alpha.4-March 8, 2026
 
 ### Added
+
 - Updated the css_styles/js
 - Updated the code refactoration of `parse_node.py`
 - Updated the code refactoration of `wikidot_exporter.py`
@@ -76,37 +89,41 @@
 - Added `insert_html_at_point.js`
 - Added `parse_node.py`
 - Added `utils/templates/` in css and txt files:
-    - `class_warning.txt`
-    - `email_template.css`
-    - `email_template.txt`
-    - `foundation_background.css`
-    - `foundation_background.txt`
-    - `login_logout.css`
-    - `login_logout.txt`
-    - `o5_command.txt`
-    - `page_note.css`
-    - `page_note.txt`
-    - `raisa_notice.txt`
-    - `terminal_001.css`
-    - `terminal_001.txt`
-    - `terminal_shortcut.css`
-    - `terminal_shortcut.txt`
-    - `video_record.txt`
-    - `video_record2.txt`
+  - `class_warning.txt`
+  - `email_template.css`
+  - `email_template.txt`
+  - `foundation_background.css`
+  - `foundation_background.txt`
+  - `login_logout.css`
+  - `login_logout.txt`
+  - `o5_command.txt`
+  - `page_note.css`
+  - `page_note.txt`
+  - `raisa_notice.txt`
+  - `terminal_001.css`
+  - `terminal_001.txt`
+  - `terminal_shortcut.css`
+  - `terminal_shortcut.txt`
+  - `video_record.txt`
+  - `video_record2.txt`
 
 ### Removed
+
 - Removed all files in `utils/js` except `insert_html_at_point`
 - Removed all files in `ui/css_styles/js/WILL_DELETE`
 
 ### Changed
+
 - Changed `editor.html` code about files in `ui/css_styles/js/WILL_DELETE`
 
 ### Version
+
 - Updated the version to `v2.0.0-alpha.4`
 - LINCESE: AGPLv3
 - Author: Zichen Wang (wasd243)
 
 ### Notes
+
 - This version is the fourth alpha release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
@@ -116,6 +133,7 @@
 ## v2.0.0-alpha.5-March 8-9, 2026
 
 ### Added
+
 - Added the `collapsible.py`
 - Updated the `banner.py` to alpha.5
 - Updated the `logger.py` to alpha.5
@@ -127,6 +145,7 @@
 - Updated the `wikidot_exporter.py`
 
 ### Changed
+
 - Changed the `terminal_shortcut` render form from `html` to `components`
 - Changed the `terminal_001` render form from `html` to `components`
 - Changed the `collapsible` render form from `html` to `components`
@@ -134,6 +153,7 @@
 - Changed the `componentEvents.js` code about files
 
 ### Fixed
+
 - Fixed the issue that RAISA-notice code could not generate successful
 - Fixed the issue that the CSS modules could not generate on top
 - Fixed the issue that the O5_command could not generate successful
@@ -148,11 +168,13 @@
 - Fixed the issue that the "@@@@" could not render successful
 
 ### Version
+
 - Updated the version to `v2.0.0-alpha.5`
 - LINCESE: AGPLv3
 - Author: Zichen Wang (wasd243)
 
 ### Notes
+
 - This version is the fifth alpha release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
@@ -162,14 +184,17 @@
 ### v2.0.0-alpha.6-March 10, 2026
 
 ### Added
+
 - Added the WYSIWYG injection for:
-    - `RAISA-notice`
-    - `Page Note`
-    - `O5-Command`
-    - `Class Warning`
-    - `Foundation Background`
+
+  - `RAISA-notice`
+  - `Page Note`
+  - `O5-Command`
+  - `Class Warning`
+  - `Foundation Background`
 
 ### Changed
+
 - Changed the `wikidot_parser.py` code about WYSIWYG injection
 - Changed the `div.py` code about WYSIWYG injection
 - Changed the `editor.html` code about WYSIWYG injection
@@ -180,9 +205,11 @@
 - Changed the `logger.py` code about this version
 
 ### Removed
+
 - Removed all temporary files in this version
 
 ### Fixed
+
 - Fixed the issue that the `RAISA-notice` could not render with WYSIWYG injection successfully
 - Fixed the issue that the `Page Note` could not render with WYSIWYG injection successfully
 - Fixed the issue that the `O5-Command` could not render with WYSIWYG injection successfully
@@ -190,11 +217,13 @@
 - Fixed the issue that the `Foundation Background` could not render with WYSIWYG injection successfully
 
 ### Version
+
 - Updated the version to `v2.0.0-alpha.6`
 - LINCESE: AGPLv3
 - Author: Zichen Wang (wasd243)
 
 ### Notes
+
 - This version is the sixth alpha release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
@@ -204,10 +233,12 @@
 ### v2.0.0-beta.1-March 11, 2026
 
 ### Added
+
 - Added the `auto format` for image block
 - Added the `collapsible` renderer for `ui`
 
 ### Changed
+
 - Changed the `MAIN_CONTROLLER.py` code about `insert_hr`
 - Changed the `menu_controller.py` code about `insert_hr`
 - Changed the `run_insert_js.js` code about `insert_hr`
@@ -219,9 +250,11 @@
 - Changed the `logger.py` position from `core/` to `utils/`
 
 ### Removed
+
 - Removed `core/` folder because it is not used
 
 ### Fixed
+
 - Fixed the issue that the `ACS夜琉璃` style button could not render successfully
 - Fixed the issue that the `table` could not generate successfully
 - Fixed the issue that the `image` width and height could not set automatically
@@ -229,11 +262,13 @@
 - Fixed the issue that the `basalt code` could not parse successfully
 
 ### Version
+
 - Updated the version to `v2.0.0-beta.1`
 - LINCESE: AGPLv3
 - Author: Zichen Wang (wasd243)
 
 ### Notes
+
 - This version is the first beta release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
