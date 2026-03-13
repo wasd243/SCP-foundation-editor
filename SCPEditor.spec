@@ -2,8 +2,6 @@
 
 from PyInstaller.utils.hooks import collect_submodules
 
-block_cipher = None
-
 hiddenimports = collect_submodules('PyQt6.QtWebEngine')
 
 datas = [
@@ -17,7 +15,7 @@ datas = [
 a = Analysis(
     ['Main.py'],
     pathex=['.'],
-    binaries=[],   # Rust module 通过 pip 安装自动收集
+    binaries=[],
     datas=datas,
     hiddenimports=hiddenimports + ['bs4', 'ftml_py'],
     excludes=['tkinter', 'matplotlib'],
@@ -28,17 +26,12 @@ pyz = PYZ(a.pure)
 exe = EXE(
     pyz,
     a.scripts,
-    [],
-    exclude_binaries=True,
-    name='SCPEditor',
-    console=False,
-    upx=False,
-)
-
-coll = COLLECT(
-    exe,
     a.binaries,
     a.zipfiles,
     a.datas,
+    [],
     name='SCPEditor',
+    console=False,
+    onefile=True,
+    upx=False,
 )
