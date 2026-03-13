@@ -20,8 +20,20 @@ def handle_prepare_context_menu(ui, pos):
     """
     js = f"document.elementFromPoint({pos.x()}, {pos.y()}).closest('.scp-component')?.getAttribute('data-type')"
     
-    # 扩大hr的检测范围，检查点击位置上下10px是否命中hr
-    js_hr = f"(function(){{ for(let dy=-10; dy<=10; dy+=5) {{ let el = document.elementFromPoint({pos.x()}, {pos.y()}+dy); if(el && el.tagName === 'HR') return true; }} return false; }})()"
+    # 扩大hr的检测范围，检查点击位置上下20px，同时检查子元素中是否有hr
+    _x, _y = pos.x(), pos.y()
+    js_hr = (
+        f"(function(){{"
+        f"for(let dy=-20;dy<=20;dy+=4){{"
+        f"let el=document.elementFromPoint({_x},{_y}+dy);"
+        f"if(!el)continue;"
+        f"if(el.tagName==='HR')return true;"
+        f"if(el.closest&&el.closest('hr'))return true;"
+        f"if(el.parentElement&&el.parentElement.tagName==='HR')return true;"
+        f"if(el.parentElement&&el.parentElement.querySelector&&el.parentElement.querySelector('hr'))return true;"
+        f"}}return false;"
+        f"}}()"
+    )
 
     js_table = f"!!document.elementFromPoint({pos.x()}, {pos.y()}).closest('table.wikidot-table')"
     js_tab_btn = f"!!document.elementFromPoint({pos.x()}, {pos.y()}).classList.contains('tab-btn')"

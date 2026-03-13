@@ -275,6 +275,17 @@
 
 ## v2.0.0-beta.5-March 14, 2026
 
+### Added
+
+- Added the `SCPEditor.spec` file
+- Added the `resource_path.py` in `utils/`
+- Added the `ftml_py.dll` to the `SCPEditor.spec`
+
+### Changed
+
+- Changed the `MAIN_CONTROLLER.py` code about `SCPEditor.spec`
+- Changed the `ui/main_window_view.py` code about `SCPEditor.spec`
+
 ### Fixed
 
 - Fixed the issue that the `ACS` right click menu could not render successfully
