@@ -280,6 +280,12 @@
 - Added the `SCPEditor.spec` file
 - Added the `resource_path.py` in `utils/`
 - Added the `ftml_py.dll` to the `SCPEditor.spec`
+- Added the `context_menu_comp.js`
+- Added the `context_menu_hr.js`
+- Added the `context_menu_table.js`
+- Added the `context_menu_tab.js`
+- Added the `context_menu_fn.js`
+- Updated the `wikidot_parser.py` code about `component`
 
 ### Changed
 

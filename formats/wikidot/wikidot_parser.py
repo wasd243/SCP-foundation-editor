@@ -337,7 +337,11 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
     # 阶段 4：占位符与金库还原
     # ========================================================
     if store:
-        for comp_uuid, comp in store.get_all().items():
+        # 修复：倒序还原组件。
+        # 在嵌套情况下，外层组件（如 Document 框）晚于内层组件（如折叠块）注册。
+        # 倒序遍历确保先还原外层组件，从而暴露出内部可能存在的内层组件占位符，接着内层占位符才能被后续遍历替换。
+        items = list(store.get_all().items())
+        for comp_uuid, comp in reversed(items):
             if comp['type'] == 'css-module':
                 # 先让 ftml 原生解析，不进行基于 marker 的注入
                 pass
