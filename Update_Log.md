@@ -230,7 +230,7 @@
 
 ---
 
-### v2.0.0-beta.1-March 11, 2026
+## v2.0.0-beta.1-March 11, 2026
 
 ### Added
 
@@ -272,3 +272,26 @@
 - This version is the first beta release with the FTML engine
 - The editor is still unstable and several features are not yet implemented
 - This version mainly serves as a recovery and fallback checkpoint
+
+## v2.0.0-beta.5-March 14, 2026
+
+### Fixed
+
+- Fixed the issue that the `ACS` right click menu could not render successfully
+
+### Removed
+
+- Removed ```js
+alert("标题js加载成功，有不统一的地方目前无法修复，可能会在后续更新处理")
+``` in `Title.js`
+
+### Version
+
+- Updated the version to `v2.0.0-beta.5`
+- LINCESE: AGPLv3
+- Author: Zichen Wang (wasd243)
+
+### Notes
+
+- This version is the fifth beta release with the FTML engine
+- The editor is stable

@@ -1,4 +1,3 @@
-alert("标题js加载成功，有不统一的地方目前无法修复，可能会在后续更新处理")
 function handleTitleMarkdown() {
     // 处理标题的 Markdown 语法
     const sel = window.getSelection();
