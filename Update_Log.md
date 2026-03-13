@@ -275,6 +275,23 @@
 
 ## v2.0.0-beta.5-March 14, 2026
 
+### Added
+
+- Added the `SCPEditor.spec` file
+- Added the `resource_path.py` in `utils/`
+- Added the `ftml_py.dll` to the `SCPEditor.spec`
+- Added the `context_menu_comp.js`
+- Added the `context_menu_hr.js`
+- Added the `context_menu_table.js`
+- Added the `context_menu_tab.js`
+- Added the `context_menu_fn.js`
+- Updated the `wikidot_parser.py` code about `component`
+
+### Changed
+
+- Changed the `MAIN_CONTROLLER.py` code about `SCPEditor.spec`
+- Changed the `ui/main_window_view.py` code about `SCPEditor.spec`
+
 ### Fixed
 
 - Fixed the issue that the `ACS` right click menu could not render successfully

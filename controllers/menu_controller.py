@@ -14,23 +14,44 @@ from utils.CSS_INJECTOR import (
 # 获取当前文件所在目录
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+def _load_js(filename, x, y):
+    """从 controllers/js/ 目录读取 JS 模板文件，替换坐标占位符"""
+    path = os.path.join(CURRENT_DIR, 'js', filename)
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            return f.read().replace('__POS_X__', str(x)).replace('__POS_Y__', str(y))
+    except Exception as e:
+        print(f"[菜单JS] 读取 {filename} 失败: {e}")
+        return 'null'
+
+
 def handle_prepare_context_menu(ui, pos):
     """
     触发右键菜单前，先通过 JS 获取光标点所在的组件信息
     """
-    js = f"document.elementFromPoint({pos.x()}, {pos.y()}).closest('.scp-component')?.getAttribute('data-type')"
-    
-    # 扩大hr的检测范围，检查点击位置上下10px是否命中hr
-    js_hr = f"(function(){{ for(let dy=-10; dy<=10; dy+=5) {{ let el = document.elementFromPoint({pos.x()}, {pos.y()}+dy); if(el && el.tagName === 'HR') return true; }} return false; }})()"
+    x, y = pos.x(), pos.y()
 
-    js_table = f"!!document.elementFromPoint({pos.x()}, {pos.y()}).closest('table.wikidot-table')"
-    js_tab_btn = f"!!document.elementFromPoint({pos.x()}, {pos.y()}).classList.contains('tab-btn')"
-    js_fn_idx = f"(function(){{ var el = document.elementFromPoint({pos.x()}, {pos.y()}); return el ? Array.from(document.querySelectorAll('.scp-footnote')).indexOf(el.closest('.scp-footnote')) : -1; }})()"
-    
-    full_js = f"JSON.stringify({{ comp: {js}, hr: {js_hr}, table: {js_table}, tabBtn: {js_tab_btn}, fnIdx: {js_fn_idx} }})"
-    
-    # 拿到结果后，调用内部函数真正展示菜单
-    ui.browser.page().runJavaScript(full_js, lambda res: _handle_show_menu(ui, pos, json.loads(res)))
+    js_comp  = _load_js('context_menu_comp.js',  x, y)
+    js_hr    = _load_js('context_menu_hr.js',    x, y)
+    js_table = _load_js('context_menu_table.js', x, y)
+    js_tab   = _load_js('context_menu_tab.js',   x, y)
+    js_fn    = _load_js('context_menu_fn.js',    x, y)
+
+    full_js = (f"(function(){{"
+               f"  try{{"
+               f"    return JSON.stringify({{comp:{js_comp},hr:{js_hr},table:{js_table},tabBtn:{js_tab},fnIdx:{js_fn}}});"
+               f"  }}catch(e){{"
+               f"    return JSON.stringify({{comp:null,hr:false,table:false,tabBtn:false,fnIdx:-1}});"
+               f"  }}"
+               f"}})()")
+
+    def _on_js_result(res):
+        try:
+            data = json.loads(res) if res else {}
+        except Exception:
+            data = {}
+        _handle_show_menu(ui, pos, data)
+    ui.browser.page().runJavaScript(full_js, _on_js_result)
 
 
 def _handle_show_menu(ui, pos, res):

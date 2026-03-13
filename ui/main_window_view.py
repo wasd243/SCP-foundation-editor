@@ -11,9 +11,9 @@ from PyQt6.QtCore import Qt, QTimer, QUrl
 from PyQt6.QtGui import QAction, QFont
 
 from ui.widgets.CustomControlls import PlainPasteTextEdit, CustomWebPage
-from ui.css_styles.html_template import EDITOR_HTML
+from utils.resource_path import resource_path
 
-html_path = os.path.abspath("ui/css_styles/editor.html")
+html_path = resource_path('ui', 'css_styles', 'editor.html')
 
 def setup_main_ui(window):
     """

@@ -3,11 +3,21 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+build/
+dist/
+
 
 # Virtual environment
 .venv/
 .env/
 .venv/
+
+# Rust
+target/
+Cargo.lock
+
+# git
+.git/
 
 # Windows
 Thumbs.db

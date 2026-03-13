@@ -49,6 +49,7 @@ from ui.toggle.toggle_right_dock import toggle_right_dock
 from ui.toggle.on_basalt_toggled import on_basalt_toggled
 from ui.toggle.on_shivering_toggled import on_shivering_toggled
 from ui.toggle.on_bhl_toggled import on_bhl_toggled
+from utils.resource_path import resource_path
 
 
 class SCPEditor(QMainWindow):
@@ -138,7 +139,7 @@ class SCPEditor(QMainWindow):
     def read_from_desktop(self): read_from_desktop(self)
     # URL确认==========================================
     def init_editor_html(self): 
-        path = os.path.abspath("ui/css_styles/editor.html")
+        path = resource_path('ui', 'css_styles', 'editor.html')
         self.browser.setUrl(QUrl.fromLocalFile(path))
     # =================================================
     def render_to_editor(self): handle_render_to_editor(self)
