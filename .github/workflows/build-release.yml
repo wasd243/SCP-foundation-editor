@@ -28,6 +28,13 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
+      # Linux system deps (Qt WebEngine)
+      - name: Install Linux system libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1 libegl1 libxcb-xinerama0
+
       # Install Python deps
       - name: Install dependencies
         run: |
@@ -41,73 +48,48 @@ jobs:
         run: |
           python -m maturin build --release
 
-      # Install wheel (Windows)
-      - name: Install Rust wheel (Windows)
-        if: runner.os == 'Windows'
-        working-directory: engine/rust_engine/ftml_py
-        shell: pwsh
-        run: |
-          $wheel = Get-ChildItem target/wheels/*.whl | Select-Object -First 1
-          if (-not $wheel) {
-            Write-Error "Wheel file not found!"
-            exit 1
-          }
-          python -m pip install $wheel.FullName
-
-      # Install wheel (Linux/macOS)
-      - name: Install Rust wheel (Linux/macOS)
-        if: runner.os != 'Windows'
+      # Install wheel
+      - name: Install Rust wheel
         working-directory: engine/rust_engine/ftml_py
         run: |
-          WHEEL=$(ls target/wheels/*.whl | head -n 1)
-          if [ -z "$WHEEL" ]; then
-            echo "Wheel file not found!"
-            exit 1
-          fi
-          python -m pip install "$WHEEL"
+          python -m pip install target/wheels/*.whl
 
-      # Verify Rust module loads
+      # Verify Rust module
       - name: Verify Rust module
         run: |
           python -c "import ftml_py; print('Rust module loaded successfully')"
 
-      # Build application using spec file
+      # Build application (ONEFILE)
       - name: Build application
         run: |
           pyinstaller SCPEditor.spec
 
-      # Show dist contents (debug)
-      - name: List dist folder
+      # Debug dist
+      - name: Show dist contents
         run: |
-          ls dist
-        if: runner.os != 'Windows'
+          ls dist || dir dist
 
-      - name: List dist folder (Windows)
+      # Package Windows
+      - name: Package Windows
         if: runner.os == 'Windows'
         run: |
-          dir dist
+          Compress-Archive -Path dist/SCPEditor.exe -DestinationPath scp-editor-windows.zip
 
-      # Zip Windows build
-      - name: Zip build (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          Compress-Archive -Path dist/SCPEditor/* -DestinationPath scp-editor-windows.zip
-
-      # Zip Linux build
-      - name: Zip build (Linux)
+      # Package Linux
+      - name: Package Linux
         if: runner.os == 'Linux'
         run: |
-          cd dist/SCPEditor
-          zip -r ../../scp-editor-linux.zip *
+          cd dist
+          zip ../scp-editor-linux.zip SCPEditor
 
-      # Zip macOS build
-      - name: Zip build (macOS)
+      # Package macOS
+      - name: Package macOS
         if: runner.os == 'macOS'
         run: |
-          cd dist/SCPEditor
-          zip -r ../../scp-editor-macos.zip *
+          cd dist
+          zip ../scp-editor-macos.zip SCPEditor
 
-      # Upload artifact (debug / backup)
+      # Upload artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
