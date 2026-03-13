@@ -60,12 +60,9 @@ def _handle_show_menu(ui, pos, res):
 
         del_act = menu.addAction("删除该组件")
         del_act.triggered.connect(lambda: _handle_remove_component(ui, pos))
-        
-    elif is_hr:
-        del_act = menu.addAction("删除分割线")
-        del_act.triggered.connect(lambda: _handle_remove_hr(ui, pos))
 
         if c_type == 'acs':
+            menu.addSeparator()
             cm = menu.addMenu("修改等级颜色 (主等级)")
             primary_classes = ["Safe", "Euclid", "Keter", "Neutralized", "Pending", "Explained", "Esoteric"]
             for cls in primary_classes:
@@ -77,10 +74,15 @@ def _handle_show_menu(ui, pos, res):
             for cls in secondary_classes:
                 act = sm.addAction(cls)
                 act.triggered.connect(lambda checked, c=cls: _handle_change_acs_secondary(ui, pos, c))
-        
+
         if c_type not in ['image-block', 'image-block-adv'] and not in_table:
-             menu.addSeparator()
-             menu.addAction("在下面换行").triggered.connect(lambda: _handle_insert_newline(ui, pos))
+            menu.addSeparator()
+            menu.addAction("在下面换行").triggered.connect(lambda: _handle_insert_newline(ui, pos))
+
+    elif is_hr:
+        del_act = menu.addAction("删除分割线")
+        del_act.triggered.connect(lambda: _handle_remove_hr(ui, pos))
+
 
     if c_type in ['css-module', 'div-block']:
         menu.addSeparator()
