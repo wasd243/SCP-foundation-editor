@@ -18,33 +18,34 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+      # Rust
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
+      # Install Python deps
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install maturin
-          python -m pip install pyinstaller
-          python -m pip install -r requirements.txt
+          pip install maturin pyinstaller
+          pip install -r requirements.txt
 
+      # Build Rust wheel
       - name: Build Rust module
         working-directory: engine/rust_engine/ftml_py
-        run: python -m maturin build --release
+        run: |
+          python -m maturin build --release
 
-      - name: Check generated wheels
-        working-directory: engine/rust_engine/ftml_py
-        run: dir target/wheels
-        if: runner.os == 'Windows'
-
+      # Install wheel (Windows)
       - name: Install Rust wheel (Windows)
         if: runner.os == 'Windows'
         working-directory: engine/rust_engine/ftml_py
+        shell: pwsh
         run: |
           $wheel = Get-ChildItem target/wheels/*.whl | Select-Object -First 1
           if (-not $wheel) {
@@ -53,6 +54,7 @@ jobs:
           }
           python -m pip install $wheel.FullName
 
+      # Install wheel (Linux/macOS)
       - name: Install Rust wheel (Linux/macOS)
         if: runner.os != 'Windows'
         working-directory: engine/rust_engine/ftml_py
@@ -64,47 +66,59 @@ jobs:
           fi
           python -m pip install "$WHEEL"
 
-      - name: Build EXE (Windows)
+      # Verify Rust module loads
+      - name: Verify Rust module
+        run: |
+          python -c "import ftml_py; print('Rust module loaded successfully')"
+
+      # Build application using spec file
+      - name: Build application
+        run: |
+          pyinstaller SCPEditor.spec
+
+      # Show dist contents (debug)
+      - name: List dist folder
+        run: |
+          ls dist
+        if: runner.os != 'Windows'
+
+      - name: List dist folder (Windows)
         if: runner.os == 'Windows'
         run: |
-          pyinstaller Main.py --noconsole `
-          --hidden-import ftml_parser `
-          --hidden-import ftml_py `
-          --add-data "engine;engine" `
-          --add-data "ui;ui" `
-          --add-data "utils;utils" `
-          --add-data "controllers;controllers" `
-          --add-data "formats;formats"
+          dir dist
 
-      - name: Build App (Linux/macOS)
-        if: runner.os != 'Windows'
-        run: |
-          pyinstaller Main.py --noconsole \
-          --hidden-import ftml_parser \
-          --hidden-import ftml_py \
-          --add-data "engine:engine" \
-          --add-data "ui:ui" \
-          --add-data "utils:utils" \
-          --add-data "controllers:controllers" \
-          --add-data "formats:formats"
-
+      # Zip Windows build
       - name: Zip build (Windows)
         if: runner.os == 'Windows'
         run: |
-          Compress-Archive -Path dist/Main/* -DestinationPath scp-editor-windows.zip
+          Compress-Archive -Path dist/SCPEditor/* -DestinationPath scp-editor-windows.zip
 
+      # Zip Linux build
       - name: Zip build (Linux)
         if: runner.os == 'Linux'
         run: |
-          cd dist/Main
+          cd dist/SCPEditor
           zip -r ../../scp-editor-linux.zip *
 
+      # Zip macOS build
       - name: Zip build (macOS)
         if: runner.os == 'macOS'
         run: |
-          cd dist/Main
+          cd dist/SCPEditor
           zip -r ../../scp-editor-macos.zip *
 
+      # Upload artifact (debug / backup)
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scp-editor-${{ matrix.os }}
+          path: |
+            scp-editor-windows.zip
+            scp-editor-linux.zip
+            scp-editor-macos.zip
+          if-no-files-found: ignore
+
+      # Publish GitHub Release
       - name: Upload Release
         uses: softprops/action-gh-release@v2
         with:
