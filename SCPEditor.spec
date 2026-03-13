@@ -14,14 +14,10 @@ datas = [
     ('formats', 'formats'),
 ]
 
-binaries = [
-    ('engine/rust_engine/ftml_py/target/release/ftml_py.dll', '.')
-]
-
 a = Analysis(
     ['Main.py'],
     pathex=['.'],
-    binaries=binaries,
+    binaries=[],   # Rust module 通过 pip 安装自动收集
     datas=datas,
     hiddenimports=hiddenimports + ['bs4', 'ftml_py'],
     excludes=['tkinter', 'matplotlib'],
