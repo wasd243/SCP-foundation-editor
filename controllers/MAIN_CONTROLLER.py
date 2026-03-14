@@ -21,8 +21,8 @@ from controllers.insert_basalt_div import handle_insert_basalt_div
 from controllers.toolbar_controller import (
     sync_toolbar_state, execute_format, handle_apply_relative_size, handle_set_heading,
     handle_open_link_dialog, handle_apply_font_size, handle_choose_color, handle_clear_color,
-    handle_insert_audio, handle_insert_component, handle_copy_to_clipboard, handle_update_theme_state,
-    handle_insert_new_footnote, handle_clear_all_content
+    handle_clear_styles, handle_insert_audio, handle_insert_component, handle_copy_to_clipboard,
+    handle_update_theme_state, handle_insert_new_footnote, handle_clear_all_content
 )
 
 # 导入各类独立编辑器
@@ -103,6 +103,7 @@ class SCPEditor(QMainWindow):
     def apply_font_size(self, size_str=None): handle_apply_font_size(self, size_str)
     def choose_color(self): handle_choose_color(self)
     def clear_color(self): handle_clear_color(self)
+    def clear_styles(self): handle_clear_styles(self)
     def insert_audio(self): handle_insert_audio(self)
     def copy_to_clipboard(self): handle_copy_to_clipboard(self)
     def insert_component(self): handle_insert_component(self)

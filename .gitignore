@@ -6,6 +6,15 @@ __pycache__/
 build/
 dist/
 
+# Antigravity
+.agy/
+
+# IDE
+.vscode/
+.idea/
+
+# FTML
+ftml/
 
 # Virtual environment
 .venv/
