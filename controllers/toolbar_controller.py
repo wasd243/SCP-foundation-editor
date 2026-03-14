@@ -136,6 +136,17 @@ def handle_clear_color(ui):
     except Exception as e:
         print(f"读取或执行 JS 失败: {e}")
 
+def handle_clear_styles(ui):
+    """清除选中文字的字体大小和颜色，恢复到正文样式（无标签）"""
+    js_path = os.path.join(CURRENT_DIR, 'js', 'clear_styles.js')
+    try:
+        with open(js_path, 'r', encoding='utf-8') as f:
+            js_clear_styles = f.read()
+        ui.browser.page().runJavaScript(js_clear_styles)
+        ui.browser.setFocus()
+    except Exception as e:
+        print(f"读取或执行 clear_styles JS 失败: {e}")
+
 def handle_insert_audio(ui):
     html_path = os.path.join(CURRENT_DIR, 'html', 'insert_audio.html')
     try:

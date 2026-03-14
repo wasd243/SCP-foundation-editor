@@ -209,6 +209,13 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     
     body = flatten_sizes(body)
 
+    # 临时修复：直接清除所有 [[size ...]] 标签（保留内容），彻底消除嵌套问题
+    # 用户点击"去除样式"按钮后不应该产生 [[size]] 标签，但如果仍存在就在此处清除
+    body = re.sub(r'\[\[size\s+[^\]]+\]\](.*?)\[\[/size\]\]', r'\1', body, flags=re.DOTALL | re.IGNORECASE)
+    # 同理清除空的 ##color|...## 颜色标签（保留内容） - 仅清除明显是"无色"的标记
+    # 注意：正常用户设置的颜色标签应保留，此处仅在已清除 style 情况下才会产生空标签
+    body = re.sub(r'##(?:black|#000000|#000)\|([^#]*?)##', r'\1', body, flags=re.IGNORECASE)
+
     final_code += body
     final_code += license_code
     

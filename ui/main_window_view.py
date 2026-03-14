@@ -128,6 +128,11 @@ def setup_main_ui(window):
         color_btn.setStyleSheet("color: red; font-weight: bold;")
         color_btn.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
+    clear_style_act = QAction("🧹", window)
+    clear_style_act.setToolTip("去除样式 (Remove FontSize & Color)")
+    clear_style_act.triggered.connect(window.clear_styles)
+    toolbar.addAction(clear_style_act)
+
     toolbar.addAction(QAction("🔗", window, toolTip="插入链接", triggered=window.open_link_dialog))
     toolbar.addSeparator()
 
