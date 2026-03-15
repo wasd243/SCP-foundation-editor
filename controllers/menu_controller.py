@@ -11,6 +11,8 @@ from utils.CSS_INJECTOR import (
     inject_email_template, inject_login_logout
 )
 
+from ui.widgets.TOCDialog import TOCDialog
+
 # 获取当前文件所在目录
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -31,17 +33,25 @@ def handle_prepare_context_menu(ui, pos):
     """
     x, y = pos.x(), pos.y()
 
-    js_comp  = _load_js('context_menu_comp.js',  x, y)
-    js_hr    = _load_js('context_menu_hr.js',    x, y)
-    js_table = _load_js('context_menu_table.js', x, y)
-    js_tab   = _load_js('context_menu_tab.js',   x, y)
-    js_fn    = _load_js('context_menu_fn.js',    x, y)
+    js_comp    = _load_js('context_menu_comp.js',    x, y)
+    js_hr      = _load_js('context_menu_hr.js',      x, y)
+    js_table   = _load_js('context_menu_table.js',   x, y)
+    js_tab     = _load_js('context_menu_tab.js',     x, y)
+    js_fn      = _load_js('context_menu_fn.js',      x, y)
+    js_heading = _load_js('context_menu_heading.js', x, y)
 
     full_js = (f"(function(){{"
                f"  try{{"
-               f"    return JSON.stringify({{comp:{js_comp},hr:{js_hr},table:{js_table},tabBtn:{js_tab},fnIdx:{js_fn}}});"
+               f"    return JSON.stringify({{"
+               f"        comp:{js_comp},"
+               f"        hr:{js_hr},"
+               f"        table:{js_table},"
+               f"        tabBtn:{js_tab},"
+               f"        fnIdx:{js_fn},"
+               f"        heading:{js_heading}"
+               f"    }});"
                f"  }}catch(e){{"
-               f"    return JSON.stringify({{comp:null,hr:false,table:false,tabBtn:false,fnIdx:-1}});"
+               f"    return JSON.stringify({{comp:null,hr:false,table:false,tabBtn:false,fnIdx:-1,heading:null}});"
                f"  }}"
                f"}})()")
 
@@ -64,6 +74,7 @@ def _handle_show_menu(ui, pos, res):
     in_table = res.get('table')
     is_tab_btn = res.get('tabBtn')
     fn_idx = res.get('fnIdx', -1)
+    heading_info = res.get('heading')
 
     paste_act = menu.addAction("粘贴")
     paste_act.triggered.connect(lambda: ui.browser.page().triggerAction(QWebEnginePage.WebAction.Paste))
@@ -71,6 +82,11 @@ def _handle_show_menu(ui, pos, res):
 
     if fn_idx != -1:
         menu.addAction("编辑脚注").triggered.connect(lambda: ui.open_footnote_editor(fn_idx))
+        menu.addSeparator()
+
+    # 标题相关操作
+    if heading_info:
+        menu.addAction("添加标题到目录").triggered.connect(lambda: _handle_add_to_toc(ui, pos, heading_info))
         menu.addSeparator()
 
     if c_type:
@@ -172,3 +188,25 @@ def _handle_change_acs_class(ui, pos, class_name):
 def _handle_change_acs_secondary(ui, pos, class_name):
     val = "none" if class_name == "None" else class_name
     ui.browser.page().runJavaScript(f'applyAcsSecondary(document.elementFromPoint({pos.x()}, {pos.y()}), "{val}")')
+
+def _handle_add_to_toc(ui, pos, heading_info):
+    dialog = TOCDialog(ui, default_name=heading_info['text'], default_anchor=heading_info['anchor'])
+    if dialog.exec():
+        name, anchor = dialog.get_data()
+        js = f"""
+        (function() {{
+            var el = document.elementFromPoint({pos.x()}, {pos.y()});
+            var h = el.closest('h1, h2, h3, h4, h5, h6');
+            if (h) {{
+                h.setAttribute('data-toc-anchor', "{anchor}");
+                // 移除可能存在的旧标记 span，此时信息已转移到 h 标签上
+                var marker = h.querySelector('.toc-anchor-marker');
+                if (marker) marker.remove();
+                
+                if ("{name}" !== h.innerText.trim()) {{
+                    h.innerText = "{name}";
+                }}
+            }}
+        }})();
+        """
+        ui.browser.page().runJavaScript(js)

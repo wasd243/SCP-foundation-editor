@@ -89,6 +89,11 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     final_code = theme_code + rate_code
     if use_better_footnotes: final_code += "[[include :scp-wiki-cn:component:betterfootnotes]]\n"
         
+    # TOC 功能：检测是否需要插入 [[toc]]
+    # 如果任意标题带有 data-toc-anchor 属性，且当前代码中尚未包含 [[toc]]
+    if 'data-toc-anchor' in html and '[[toc]]' not in final_code:
+        final_code += "[[toc]]\n"
+
     if soup.select_one('.email-example-box'):
          final_code += "[[module CSS]]\n.email-example .collapsible-block-folded a.collapsible-block-link {\n    animation: blink 0.8s ease-in-out infinite alternate;\n}\n@keyframes blink {\n    0% { color: transparent; }\n    50%, 100% { color: #b01; }\n}\n.email {border: solid 2px #000000; width: 88%; padding: 1px 15px; margin: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.5)}\n.email-example a.collapsible-block-link {font-weight: bold;}\n.tofrom {margin-left: 10px; margin-top: 5px; padding: 1px 15px; border-left: solid 3px maroon}\n[[/module]]\n"
 
@@ -169,9 +174,12 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
 
     # ==========================================
     # 步骤 3：最终排版修正和换行符清理
-    # (对导出的一些边界情况如并排空行进行去重或补全)
     # ==========================================
     body = raw_body.replace('\r\n', '\n').replace('\xa0', ' ')
+
+    # TOC：移除 body 中所有解析出来的 [[toc]]（因为会在顶部统一生成）
+    body = re.sub(r'\[\[toc\]\]\s*', '', body, flags=re.IGNORECASE)
+
     body = re.sub(r'([^\n])\s*(\[\[include component:image-block)', r'\1\n\2', body)
     body = re.sub(r'^[ \t]+(\[\[include component:image-block)', r'\1', body, flags=re.MULTILINE)
     # 消除相邻 @@@@ 之间多余的空行（循环直到稳定，处理任意长度的连续序列）
