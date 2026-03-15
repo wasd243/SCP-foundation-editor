@@ -137,7 +137,11 @@ def handle_parse_node(node, state):
 
     if tag == 'span' and node.has_attr('style'):
         if not content.strip(): return content
-        if 'monospace' in style or 'Courier' in style: return f"{{{{{content}}}}}"
+        if 'monospace' in style or 'Courier' in style:
+            # 等宽字安全逻辑：如果开启且包含中文，则跳过包裹
+            if state.get('mono_security') and re.search(r'[\u4e00-\u9fa5]', content):
+                return content
+            return f"{{{{{content}}}}}"
         res = content
         color_match = re.search(r'color:\s*([^;]+)', style)
         if color_match:
@@ -239,7 +243,7 @@ def handle_parse_node(node, state):
         def expand_soft_breaks(match):
             count = len(match.group(0))
             if count <= 2:
-                return "\n" * count
+                return "\n" * count 
             return "\n" + ("@@@@\n" * (count - 2))
         content_fixed = re.sub(r'\n{2,}', expand_soft_breaks, content)
         return f"{content_fixed}\n"

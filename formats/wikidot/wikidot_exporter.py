@@ -92,7 +92,10 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     if soup.select_one('.email-example-box'):
          final_code += "[[module CSS]]\n.email-example .collapsible-block-folded a.collapsible-block-link {\n    animation: blink 0.8s ease-in-out infinite alternate;\n}\n@keyframes blink {\n    0% { color: transparent; }\n    50%, 100% { color: #b01; }\n}\n.email {border: solid 2px #000000; width: 88%; padding: 1px 15px; margin: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.5)}\n.email-example a.collapsible-block-link {font-weight: bold;}\n.tofrom {margin-left: 10px; margin-top: 5px; padding: 1px 15px; border-left: solid 3px maroon}\n[[/module]]\n"
 
-    parse_state = {'better_footnotes': use_better_footnotes}
+    parse_state = {
+        'better_footnotes': use_better_footnotes,
+        'mono_security': snapshot.get('mono_security_on', True)
+    }
 
     def parse_license_only(comp_node):
         def get_field_lic(n, field):
@@ -221,5 +224,10 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     
     # 清理顶部或可能生成的空 CSS 模块
     final_code = re.sub(r'\[\[module CSS\]\]\s*\[\[/module\]\]\s*', '', final_code, flags=re.IGNORECASE)
+
+    # 等宽字安全兜底：如果开启了安全模式，强制清除所有包含中文的等宽字标签 {{...}}
+    if snapshot.get('mono_security_on', True):
+        # 匹配 {{ 和 }} 之间包含至少一个中文字符的内容
+        final_code = re.sub(r'\{\{([^{}]*[\u4e00-\u9fa5]+[^{}]*)\}\}', r'\1', final_code)
 
     return head_styles_code + final_code
