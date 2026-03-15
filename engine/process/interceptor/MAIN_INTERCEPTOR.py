@@ -16,6 +16,7 @@ from engine.process.interceptor.Components.user import process_user
 from engine.process.interceptor.Components.fakeprot import process_fakeprot
 from engine.process.interceptor.Components.collapsible import process_collapsible
 from engine.process.interceptor.Components.basalt_divs import process_basalt_divs
+from engine.process.interceptor.Components.toc import process_toc
 
 class ComponentStore:
     """组件金库：负责存储并分发所有被拦截的组件"""
@@ -82,6 +83,9 @@ class ComponentInterceptor:
         # 10. 玄武岩专用代码 拦截与解析（非玄武岩 div 交由 ftml 原生处理）
         if theme_type == 'basalt' or 'theme:basalt' in text.lower():
             processed_text = process_basalt_divs(processed_text, self.store, inner_parser_cb, theme_type)
+
+        # 11. TOC 模块拦截
+        processed_text = process_toc(processed_text, self.store, inner_parser_cb, theme_type)
 
         # 11. CSS 拦截与注入 - 暂时交给 ftml 原生解析，不注入 UUID
         def css_replacer(match):

@@ -128,12 +128,18 @@ def handle_parse_node(node, state):
 
     if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
         level = int(tag[1])
-        return f"\n{'+' * level} {content.strip()}\n"
+        anchor = node.get('data-toc-anchor', '')
+        anchor_part = f"[[# {anchor}]]" if anchor else ""
+        return f"\n{'+' * level} {anchor_part}{content.strip()}\n"
 
     if tag == 'span' and 'custom-dash' in node.get('class', []):
         try: count = int(node.get('data-count', '6'))
         except ValueError: count = 6
         return f'@{"-" * count}@'
+
+    if tag == 'span' and 'toc-anchor-marker' in node.get('class', []):
+        anchor = node.get('data-anchor', '')
+        return f"[[# {anchor}]]"
 
     if tag == 'span' and node.has_attr('style'):
         if not content.strip(): return content

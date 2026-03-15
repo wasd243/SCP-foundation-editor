@@ -26,6 +26,12 @@ var basaltObserver = new MutationObserver(function (mutations) {
 
 // 编辑器主控制监听与初始化
 function setupObserver() {
+    // 1. 防止重复初始化 (Idempotency check)
+    if (window.observerInitialized) {
+        console.log("[INIT] Observer already initialized, skipping...");
+        return;
+    }
+
     const editor = document.getElementById('editor-root');
     if (!editor) return; // Guard
 
@@ -80,7 +86,6 @@ function setupObserver() {
         if (!window.monoSecurityEnabled) return;
 
         // 检测输入的文本是否包含中文
-        // e.data 包含刚输入的字符，或者检查当前光标处的节点内容
         const inputData = e.data || "";
         const hasChinese = /[\u4e00-\u9fa5]/.test(inputData);
 
@@ -90,72 +95,74 @@ function setupObserver() {
             if (fontName.includes('Courier') || fontName.includes('monospace')) {
                 if (typeof toggleMonospace === 'function') {
                     toggleMonospace();
-                    // 提示用户 (可选)
                     console.log("[Security] Monospace disabled due to Chinese input");
-                    console.log("[等宽字安全] 等宽字已自动关闭，因为检测到中文字符输入");
                 }
             }
         }
     });
 
-    // 光标越界保护：防止光标落入两个半宽玄武岩文件框之间
-    function enforceCursorRules() {
-        var sel = window.getSelection();
-        if (!sel || sel.rangeCount === 0) return;
-        var range = sel.getRangeAt(0);
-        if (!range.collapsed) return;
+    document.addEventListener('selectionchange', enforceCursorRules);
 
-        var node = range.startContainer;
-        var editor = document.getElementById('editor-root');
-        if (!editor || !editor.contains(node)) return;
+    // 标记已初始化
+    window.observerInitialized = true;
+    console.log("[INIT] Editor observers and listeners initialized.");
+}
 
-        var current = node;
-        while (current && current.parentNode && current.parentNode !== editor) {
-            current = current.parentNode;
-        }
+// 光标越界保护：防止光标落入两个半宽玄武岩文件框之间
+function enforceCursorRules() {
+    var sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    var range = sel.getRangeAt(0);
+    if (!range.collapsed) return;
 
-        if (current === editor || current.parentNode === editor) {
-            var childNodes = editor.childNodes;
-            var offset = -1;
-            if (current === editor) {
-                offset = range.startOffset;
-            } else {
-                offset = Array.prototype.indexOf.call(childNodes, current);
-            }
+    var node = range.startContainer;
+    var editor = document.getElementById('editor-root');
+    if (!editor || !editor.contains(node)) return;
 
-            var prevNode = null;
-            var searchLeft = (current === editor) ? offset - 1 : offset - 1;
-            for (var i = searchLeft; i >= 0; i--) {
-                var child = childNodes[i];
-                if (child.nodeType === 1 && child.style && child.style.display !== 'none') {
-                    if (child.tagName === 'BR' || (child.tagName === 'P' && child.innerText.trim() === '')) continue;
-                    prevNode = child;
-                    break;
-                }
-            }
-
-            var nextNode = null;
-            var searchRight = (current === editor) ? offset : offset + 1;
-            for (var j = searchRight; j < childNodes.length; j++) {
-                var child = childNodes[j];
-                if (child.nodeType === 1 && child.style && child.style.display !== 'none') {
-                    if (child.tagName === 'BR' || (child.tagName === 'P' && child.innerText.trim() === '')) continue;
-                    nextNode = child;
-                    break;
-                }
-            }
-
-            if (prevNode && nextNode &&
-                prevNode.classList && prevNode.classList.contains('basalt-doc-wrapper') && prevNode.classList.contains('half-width') &&
-                nextNode.classList && nextNode.classList.contains('basalt-doc-wrapper') && nextNode.classList.contains('half-width')) {
-                var newRange = document.createRange();
-                newRange.setStartAfter(nextNode);
-                newRange.collapse(true);
-                sel.removeAllRanges();
-                sel.addRange(newRange);
-            }
-        }
+    var current = node;
+    while (current && current.parentNode && current.parentNode !== editor) {
+        current = current.parentNode;
     }
 
-    document.addEventListener('selectionchange', enforceCursorRules);
+    if (current === editor || current.parentNode === editor) {
+        var childNodes = editor.childNodes;
+        var offset = -1;
+        if (current === editor) {
+            offset = range.startOffset;
+        } else {
+            offset = Array.prototype.indexOf.call(childNodes, current);
+        }
+
+        var prevNode = null;
+        var searchLeft = (current === editor) ? offset - 1 : offset - 1;
+        for (var i = searchLeft; i >= 0; i--) {
+            var child = childNodes[i];
+            if (child.nodeType === 1 && child.style && child.style.display !== 'none') {
+                if (child.tagName === 'BR' || (child.tagName === 'P' && child.innerText.trim() === '')) continue;
+                prevNode = child;
+                break;
+            }
+        }
+
+        var nextNode = null;
+        var searchRight = (current === editor) ? offset : offset + 1;
+        for (var j = searchRight; j < childNodes.length; j++) {
+            var child = childNodes[j];
+            if (child.nodeType === 1 && child.style && child.style.display !== 'none') {
+                if (child.tagName === 'BR' || (child.tagName === 'P' && child.innerText.trim() === '')) continue;
+                nextNode = child;
+                break;
+            }
+        }
+
+        if (prevNode && nextNode &&
+            prevNode.classList && prevNode.classList.contains('basalt-doc-wrapper') && prevNode.classList.contains('half-width') &&
+            nextNode.classList && nextNode.classList.contains('basalt-doc-wrapper') && nextNode.classList.contains('half-width')) {
+            var newRange = document.createRange();
+            newRange.setStartAfter(nextNode);
+            newRange.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(newRange);
+        }
+    }
 }
