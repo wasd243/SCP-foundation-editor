@@ -14,7 +14,7 @@ dist/
 .idea/
 
 # FTML
-ftml/
+engine/rust_engine/ftml/
 
 # Virtual environment
 .venv/
