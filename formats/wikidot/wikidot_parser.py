@@ -89,15 +89,17 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
     text = re.sub(r'<br\s*/?>', '\n', text, flags=re.IGNORECASE)
     
     # 【修复 1】：智能保护 @@...@@ 原生标签
-    # 仅保护内部有实际内容（非空、非纯空格）的 raw block (如 @@-----@@)。
-    # 对于纯空格或空的 block (如 @@@@, @@ @@)，保留原样交给 ftml 解析，以保证其作为强制换行符的渲染效果。
+    # 将包含实质内容的 @@代码@@ 保护为占位符；
+    # 将空的 @@@@ 或 @@ @@ 标记为特殊空块占位符 EMPTY_RAW_TOKEN，它最终会被转为原生的 HTML 空行，完美对接导出的换行逻辑。
     RAW_PROTECT_TOKEN_START = "WDKEY_RAW_START_TOKEN"
     RAW_PROTECT_TOKEN_END = "WDKEY_RAW_END_TOKEN"
+    EMPTY_RAW_TOKEN = "WDKEY_EMPTY_RAW_TOKEN"
 
     def raw_protect_cb(match):
         inner = match.group(1)
         if not inner.strip():
-            return match.group(0) # 保持 @@@@ 或 @@ @@ 不变
+            # 这是一个空的 raw block (如 @@@@)，用于强制换行
+            return EMPTY_RAW_TOKEN
         return f"{RAW_PROTECT_TOKEN_START}{inner}{RAW_PROTECT_TOKEN_END}"
     
     text = re.sub(r'@@(.*?)@@', raw_protect_cb, text, flags=re.DOTALL)
@@ -120,7 +122,6 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
 
     # 1. 交给 ftml 原生解析
     def process_terminal_source(txt):
-        # 暂时关闭检测用户输入的注入，交给 ftml 反向解析
         pass
         return txt
     
@@ -128,7 +129,6 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
 
     # 2. 恢复 OLD 的 Fakeprot
     def process_fakeprot_source(txt):
-        # 暂时关闭检测用户输入的注入，交给 ftml 反向解析
         pass
         return txt
         
@@ -136,78 +136,6 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
 
     # 3. 恢复 OLD 的 Wikidot 表格
     def wikidot_table_replacer(txt):
-        # result = []
-        # cursor = 0
-        # pat_tbl_start = re.compile(r'\[\[table(\s[^\]]*)?\]\]', re.IGNORECASE)
-        # pat_tbl_end = re.compile(r'\[\[/table\]\]', re.IGNORECASE)
-        # pat_row = re.compile(r'\[\[row(\s[^\]]*)?\]\]', re.IGNORECASE)
-        # pat_row_end = re.compile(r'\[\[/row\]\]', re.IGNORECASE)
-        # pat_cell = re.compile(r'\[\[cell(\s[^\]]*)?\]\]', re.IGNORECASE)
-        # pat_cell_end = re.compile(r'\[\[/cell\]\]', re.IGNORECASE)
-
-        # for m_tbl in pat_tbl_start.finditer(txt):
-        #     tbl_start = m_tbl.start()
-        #     if tbl_start < cursor: continue
-        #     m_tend = pat_tbl_end.search(txt, m_tbl.end())
-        #     if not m_tend: continue
-        #     tbl_end = m_tend.end()
-
-        #     tbl_params = (m_tbl.group(1) or '').strip()
-        #     inner_txt = txt[m_tbl.end(): m_tend.start()]
-
-        #     rows_html = ''
-        #     row_cursor = 0
-        #     for m_row in pat_row.finditer(inner_txt):
-        #         if m_row.start() < row_cursor: continue
-        #         m_rend = pat_row_end.search(inner_txt, m_row.end())
-        #         if not m_rend: continue
-
-        #         row_params = (m_row.group(1) or '').strip()
-        #         row_inner = inner_txt[m_row.end(): m_rend.start()]
-
-        #         row_style_m = re.search(r'style=["\']([^"\']*)["\']', row_params, re.IGNORECASE)
-        #         row_style = row_style_m.group(1) if row_style_m else ''
-        #         row_style_attr = f' style="{row_style}"' if row_style else ''
-        #         row_data = f' data-wd-style="{row_style}"' if row_style else ''
-
-        #         cells_html = ''
-        #         cell_cursor = 0
-        #         for m_cell in pat_cell.finditer(row_inner):
-        #             if m_cell.start() < cell_cursor: continue
-        #             m_cend = pat_cell_end.search(row_inner, m_cell.end())
-        #             if not m_cend: continue
-
-        #             cell_params = (m_cell.group(1) or '').strip()
-        #             cell_inner_raw = row_inner[m_cell.end(): m_cend.start()].strip()
-
-        #             cell_style_m = re.search(r'style=["\']([^"\']*)["\']', cell_params, re.IGNORECASE)
-        #             cell_style = cell_style_m.group(1) if cell_style_m else ''
-        #             cell_style_attr = f' style="{cell_style}"' if cell_style else ''
-        #             cell_data = f' data-wd-style="{cell_style}"' if cell_style else ''
-
-        #             parsed_cell = parse_wikidot_to_editor_html(cell_inner_raw, theme_type)
-        #             cells_html += f'<td{cell_style_attr}{cell_data} contenteditable="true">{parsed_cell}</td>'
-        #             cell_cursor = m_cend.end()
-
-        #         rows_html += f'<tr{row_style_attr}{row_data}>{cells_html}</tr>'
-        #         row_cursor = m_rend.end()
-
-        #     tbl_style_m = re.search(r'style=["\']([^"\']*)["\']', tbl_params, re.IGNORECASE)
-        #     tbl_style = tbl_style_m.group(1) if tbl_style_m else ''
-        #     tbl_style_attr = f' style="{tbl_style}"' if tbl_style else ''
-        #     tbl_data = f' data-wd-style="{tbl_style}"' if tbl_style else ''
-
-        #     tbl_html = (
-        #         f'<table class="scp-component wikidot-adv-table" data-type="wikidot-table"'
-        #         f'{tbl_style_attr}{tbl_data} contenteditable="false">'
-        #         f'<tbody>{rows_html}</tbody></table>'
-        #     )
-        #     result.append(txt[cursor: tbl_start])
-        #     result.append(register_ph(tbl_html))
-        #     cursor = tbl_end
-
-        # result.append(txt[cursor:])
-        # return ''.join(result)
         pass 
         return txt
     
@@ -215,7 +143,6 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
 
     # 4. 玄武岩专用 DIV 及 其他特定 DIV - 暂时交给 ftml 原生解析
     def process_special_divs(txt):
-        # 暂时关闭检测用户输入的注入，交给 ftml 反向解析
         pass
         return txt
 
@@ -357,6 +284,14 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
     # 【修复 1】：恢复 @@...@@ 原生标签
     html_output = html_output.replace(RAW_PROTECT_TOKEN_START, '@@')
     html_output = html_output.replace(RAW_PROTECT_TOKEN_END, '@@')
+    
+    # 【处理强制换行的空块 @@@@】
+    # 1. 独立空行：如果它自己占了一行，就变成原生空段落 <p><br></p>，撑起可视高度，用户在编辑器里可以直接看到空行。
+    html_output = html_output.replace(f"<p>{EMPTY_RAW_TOKEN}</p>", "<p><br></p>")
+    html_output = html_output.replace(f"<div>{EMPTY_RAW_TOKEN}</div>", "<div><br></div>")
+    # 2. 内联软换行：如果由于没有回车它被包在文本中间，ftml 本身就会用 <br> 夹住它（形成 <br>EMPTY_RAW_TOKEN<br>）。
+    #    消除占位符后，自然变成纯正的 <br><br> 。这刚好对上了导出器里的换行导出逻辑！
+    html_output = html_output.replace(EMPTY_RAW_TOKEN, "")
 
     return html_output
 

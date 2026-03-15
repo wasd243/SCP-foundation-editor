@@ -109,10 +109,10 @@ def handle_parse_node(node, state):
     if tag == 'p':
         def expand_soft_breaks(match):
             count = len(match.group(0))
-            if count <= 2:
+            if count <= 1:
                 return "\n" * count
-            # 保留一个\n作为段落分隔，后面紧连(N-2)个@@@@
-            return "\n" + ("@@@@\n" * (count - 2))
+            # 保留一个\n作为段落分隔，后面紧连(N-1)个@@@@
+            return "\n" + ("@@@@\n" * (count - 1))
         content = re.sub(r'\n{2,}', expand_soft_breaks, content)
         clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
         if not clean: return "\n@@@@\n"
@@ -229,9 +229,9 @@ def handle_parse_node(node, state):
             if not clean: return "\n@@@@\n"
             def expand_soft_breaks(match):
                 count = len(match.group(0))
-                if count <= 2:
+                if count <= 1:
                     return "\n" * count
-                return "\n" + ("@@@@\n" * (count - 2))
+                return "\n" + ("@@@@\n" * (count - 1))
             res = re.sub(r'\n{2,}', expand_soft_breaks, content) + "\n"
 
         if align_mark: 
