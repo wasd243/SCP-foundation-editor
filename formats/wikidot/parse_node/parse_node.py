@@ -211,7 +211,8 @@ def handle_parse_node(node, state):
                 # If it only had excluded classes and no styling, return raw content
                 res = content
                 if align_mark: return f"[[{align_mark}]]\n{res.strip()}\n[[/{align_mark}]]\n"
-                return res
+                # 修复：防止连续的基础 div 粘连在一起，为其补充换行符性质
+                return res + "\n" if not res.endswith("\n") else res
                 
         if node.has_attr('style') and node['style'].strip():
             # We must strip text-align out since align_mark will handle it
@@ -228,25 +229,14 @@ def handle_parse_node(node, state):
             if not clean: return "\n@@@@\n"
             def expand_soft_breaks(match):
                 count = len(match.group(0))
-                if count <= 2:
+                if count <= 1:
                     return "\n" * count
-                return "\n" + ("@@@@\n" * (count - 2))
+                return "\n" + ("@@@@\n" * (count - 1))
             res = re.sub(r'\n{2,}', expand_soft_breaks, content) + "\n"
 
         if align_mark: 
             return f"[[{align_mark}]]\n{res.strip()}\n[[/{align_mark}]]\n"
         return res
-            
-        # Fallback to pure text cleaning if no useful attributes
-        clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
-        if not clean: return "\n@@@@\n"
-        def expand_soft_breaks(match):
-            count = len(match.group(0))
-            if count <= 2:
-                return "\n" * count 
-            return "\n" + ("@@@@\n" * (count - 2))
-        content_fixed = re.sub(r'\n{2,}', expand_soft_breaks, content)
-        return f"{content_fixed}\n"
 
     if tag in ['b', 'strong']: return f"**{content}**" if content.strip() else content
     if tag in ['i', 'em']: return f"//{content}//" if content.strip() else content

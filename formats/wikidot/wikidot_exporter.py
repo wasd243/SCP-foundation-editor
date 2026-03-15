@@ -154,7 +154,16 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     for c in root.contents:
         if isinstance(c, NavigableString):
             if not str(c).strip(): continue
-        body_parts.append(parse_node(c, parse_state))
+            
+        parsed = parse_node(c, parse_state)
+        
+        # 修复：防止首行纯文本与随后的块级元素连在一起
+        # 检查当前是否是块级元素，如果上一段内容的末尾没有换行符，且当前也不以换行符开头，则补齐换行符
+        if getattr(c, 'name', '') in ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'blockquote', 'table']:
+            if body_parts and not body_parts[-1].endswith('\n') and not parsed.startswith('\n'):
+                parsed = '\n' + parsed
+                
+        body_parts.append(parsed)
     
     raw_body = "".join(body_parts)
 
