@@ -81,6 +81,15 @@ class SCPEditor(QMainWindow):
             True
         )
 
+        # 等宽字安全初始化与监听
+        self.check_mono_security.toggled.connect(self.update_mono_security_js)
+        # 初始化延迟同步 (确保页面加载完成)
+        QTimer.singleShot(2000, self.update_mono_security_js)
+
+    def update_mono_security_js(self):
+        enabled = "true" if self.check_mono_security.isChecked() else "false"
+        self.browser.page().runJavaScript(f"window.monoSecurityEnabled = {enabled};")
+
     # ================= UI 切换事件 =================
     def toggle_config_panels(self): toggle_panels(self)
     def toggle_right_dock(self): toggle_right_dock(self)
@@ -164,6 +173,7 @@ class SCPEditor(QMainWindow):
             'bhl_center':   self.check_bhl_centered.isChecked(),
             'bhl_office':   self.check_bhl_office.isChecked(),
             'bf_on':        self.check_better_footnotes.isChecked(),
+            'mono_security_on': self.check_mono_security.isChecked(),
         }
         
         js_sync = "document.querySelectorAll('.acs-anim-checkbox, .acs-shiver-checkbox').forEach(cb => { if(cb.checked) cb.setAttribute('checked', 'checked'); else cb.removeAttribute('checked'); });"

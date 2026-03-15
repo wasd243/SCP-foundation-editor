@@ -75,6 +75,29 @@ function setupObserver() {
     document.addEventListener('selectionchange', syncToolbarState);
     syncToolbarState();
 
+    // 等宽字安全逻辑 (当开启等宽字时输入中文自动关闭)
+    editor.addEventListener('input', (e) => {
+        if (!window.monoSecurityEnabled) return;
+
+        // 检测输入的文本是否包含中文
+        // e.data 包含刚输入的字符，或者检查当前光标处的节点内容
+        const inputData = e.data || "";
+        const hasChinese = /[\u4e00-\u9fa5]/.test(inputData);
+
+        if (hasChinese) {
+            // 获取当前光标所在位置的字体
+            const fontName = document.queryCommandValue('fontName') || "";
+            if (fontName.includes('Courier') || fontName.includes('monospace')) {
+                if (typeof toggleMonospace === 'function') {
+                    toggleMonospace();
+                    // 提示用户 (可选)
+                    console.log("[Security] Monospace disabled due to Chinese input");
+                    console.log("[等宽字安全] 等宽字已自动关闭，因为检测到中文字符输入");
+                }
+            }
+        }
+    });
+
     // 光标越界保护：防止光标落入两个半宽玄武岩文件框之间
     function enforceCursorRules() {
         var sel = window.getSelection();

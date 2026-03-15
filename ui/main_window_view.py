@@ -424,6 +424,11 @@ def setup_main_ui(window):
     window.check_auto_refresh.stateChanged.connect(window.toggle_auto_refresh)
     comp_layout.addWidget(window.check_auto_refresh)
 
+    window.check_mono_security = QCheckBox("等宽字安全 (输入中文自动关闭)")
+    window.check_mono_security.setStyleSheet("font-size: 13px; font-weight: bold; padding: 5px; color: #2980b9;")
+    window.check_mono_security.setChecked(True)
+    comp_layout.addWidget(window.check_mono_security)
+
     window.auto_refresh_timer = QTimer(window)
     window.auto_refresh_timer.timeout.connect(window.export_wikidot)
 
