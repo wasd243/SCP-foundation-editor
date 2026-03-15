@@ -229,9 +229,9 @@ def handle_parse_node(node, state):
             if not clean: return "\n@@@@\n"
             def expand_soft_breaks(match):
                 count = len(match.group(0))
-                if count <= 1:
+                if count <= 2:
                     return "\n" * count
-                return "\n" + ("@@@@\n" * (count - 1))
+                return "\n" + ("@@@@\n" * (count - 2))
             res = re.sub(r'\n{2,}', expand_soft_breaks, content) + "\n"
 
         if align_mark: 
@@ -240,7 +240,14 @@ def handle_parse_node(node, state):
 
     if tag in ['b', 'strong']: return f"**{content}**" if content.strip() else content
     if tag in ['i', 'em']: return f"//{content}//" if content.strip() else content
+    if tag in ['tt', 'code']:
+        # 等宽字处理逻辑：恢复为 {{...}} 格式
+        # 等宽字安全逻辑：如果开启且包含中文，则跳过包裹
+        if state.get('mono_security') and re.search(r'[\u4e00-\u9fa5]', content):
+            return content
+        return f"{{{{{content}}}}}" if content.strip() else content
     if tag == 'style':
+        if not content.strip(): return ""
         return f"\n[[module CSS]]\n{content.strip()}\n[[/module]]\n"
         
     return content
