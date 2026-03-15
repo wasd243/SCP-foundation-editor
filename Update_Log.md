@@ -9,6 +9,7 @@
 - [v2.0.0-beta.5-March 14, 2026](#v200-beta5-march-14-2026)
 - [v2.0.0-beta.6-March 14, 2026](#v200-beta6-march-14-2026)
 - [v2.0.0-beta.7-March 15, 2026](#v200-beta7-march-15-2026)
+- [v2.0.0-beta.8-March 15, 2026](#v200-beta8-march-15-2026)
 
 ## v2.0.0-alpha.2-March 6, 2026
 
@@ -385,3 +386,33 @@ alert("标题js加载成功，有不统一的地方目前无法修复，可能�
 
 - This version is the seventh beta release with the FTML engine
 - The editor is stable
+
+## v2.0.0-beta.8-March 15, 2026
+
+### Added
+
+- Added the `toc.py` in `engine/process/interceptor/Components` for render and generating TOC code in wikidot
+
+### Changed
+
+- Changed the `wikidot_exporter.py` code about `TOC`
+- Changed the `wikidot_parser` code about `TOC`
+- Changed the `MAIN_INTERCEPTOR.py` code about `TOC`
+- Changed the `banner.py` code about this version
+- Changed the `logger.py` code about this version
+
+### Fixed
+
+- Fixed the issue that while user inserting a new line, the width of new line was 2*normal line
+- Fixed the issue that `TOC` could not render and generate successfully
+
+### Version
+
+- Updated the version to `v2.0.0-beta.8`
+- LINCESE: AGPLv3
+- Author: Zichen Wang (wasd243)
+
+### Notes
+
+- This version is the eighth beta release with the FTML engine
+- The editor is not stable yet
