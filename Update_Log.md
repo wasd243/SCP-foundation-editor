@@ -485,4 +485,4 @@ h6 {
 ### Notes
 
 - This version is the ninth beta release with the FTML engine
-- The editor is not stable yet
+- The editor is stable
