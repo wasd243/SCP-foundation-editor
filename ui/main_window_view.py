@@ -62,6 +62,7 @@ def setup_main_ui(window):
     bold_font.setBold(True)
     window.bold_act.setFont(bold_font)
     window.bold_act.setCheckable(True)
+    window.bold_act.setShortcut("Ctrl+B")
     window.bold_act.triggered.connect(lambda: window.exec_format("bold"))
     toolbar.addAction(window.bold_act)
 
@@ -71,6 +72,7 @@ def setup_main_ui(window):
     italic_font.setItalic(True)
     window.italic_act.setFont(italic_font)
     window.italic_act.setCheckable(True)
+    window.italic_act.setShortcut("Ctrl+I")
     window.italic_act.triggered.connect(lambda: window.exec_format("italic"))
     toolbar.addAction(window.italic_act)
 
@@ -80,6 +82,7 @@ def setup_main_ui(window):
     underline_font.setUnderline(True)
     window.underline_act.setFont(underline_font)
     window.underline_act.setCheckable(True)
+    window.underline_act.setShortcut("Ctrl+U")
     window.underline_act.triggered.connect(lambda: window.exec_format("underline"))
     toolbar.addAction(window.underline_act)
 

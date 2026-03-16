@@ -1,5 +1,5 @@
-VERSION = "v2.0.0-beta.9"
-CODENAME = "Beta-9"
+VERSION = "v2.0.1-beta.1"
+CODENAME = "Beta-1"
 LICENSE = "GNU AGPLv3"
 
 def print_startup_banner():

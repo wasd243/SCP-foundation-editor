@@ -20,7 +20,7 @@
             };
 
             const range = sel.getRangeAt(0);
-            const marker = document.createTextNode('\\u200B');
+            const marker = document.createTextNode(String.fromCharCode(8203));
             range.insertNode(marker);
 
             const newRange = document.createRange();
