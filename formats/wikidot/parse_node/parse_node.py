@@ -129,7 +129,7 @@ def handle_parse_node(node, state):
     if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
         level = int(tag[1])
         anchor = node.get('data-toc-anchor', '')
-        anchor_part = f"[[# {anchor}]]" if anchor else ""
+        anchor_part = f"[[# {anchor}]] " if anchor else ""
         return f"\n{'+' * level} {anchor_part}{content.strip()}\n"
 
     if tag == 'span' and 'custom-dash' in node.get('class', []):
