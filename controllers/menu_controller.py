@@ -193,20 +193,19 @@ def _handle_add_to_toc(ui, pos, heading_info):
     dialog = TOCDialog(ui, default_name=heading_info['text'], default_anchor=heading_info['anchor'])
     if dialog.exec():
         name, anchor = dialog.get_data()
+        heading_id = heading_info.get('id', '')
         js = f"""
         (function() {{
-            var el = document.elementFromPoint({pos.x()}, {pos.y()});
-            var h = el.closest('h1, h2, h3, h4, h5, h6');
+            var h = document.getElementById("{heading_id}");
             if (h) {{
                 h.setAttribute('data-toc-anchor', "{anchor}");
                 // 移除可能存在的旧标记 span，此时信息已转移到 h 标签上
                 var marker = h.querySelector('.toc-anchor-marker');
                 if (marker) marker.remove();
-                
-                if ("{name}" !== h.innerText.trim()) {{
-                    h.innerText = "{name}";
-                }}
             }}
         }})();
         """
-        ui.browser.page().runJavaScript(js)
+        def _on_js_done(*args):
+            ui.browser.page().toHtml(ui.update_toc_ui)
+            
+        ui.browser.page().runJavaScript(js, _on_js_done)

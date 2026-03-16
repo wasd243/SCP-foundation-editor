@@ -16,31 +16,8 @@ def process_toc(text: str, store, inner_parser_cb, theme_type: str) -> str:
     def toc_replacer(match):
         source = match.group(0)
         
-        # 构建预览列表 (最多展示 6 个)
-        preview_list = []
-        for h in all_headings[:6]:
-            level = len(h[0])
-            title = h[2].strip()
-            indent = "&nbsp;" * (level - 1) * 4
-            preview_list.append(f'<li style="list-style:none; margin: 2px 0;">{indent}<span style="color:#888;">{"·" * level}</span> {title}</li>')
-        
-        if len(all_headings) > 6:
-            preview_list.append('<li style="list-style:none; color:#AAA;">...更多标题...</li>')
-            
-        list_html = "".join(preview_list) if preview_list else '<li style="list-style:none; color:#999;">（暂无配置锚点的标题条目）</li>'
-
-        html = (
-            f'<div class="scp-component toc-placeholder" data-type="toc" contenteditable="false" '
-            f'style="border: 1px solid #ccc; background: #f9f9f9; padding: 12px; margin: 15px 0; border-radius: 4px; font-family: sans-serif;">'
-            f'<div style="font-weight: bold; color: #333; margin-bottom: 8px; font-size: 1.1em; border-bottom: 1px solid #eee;">'
-            f'<span style="color: #c00; margin-right: 5px;">[[</span> 文本目录 (TOC) <span style="color: #c00; margin-left: 5px;">]]</span>'
-            f'</div>'
-            f'<ul style="margin: 0; padding: 0 5px; font-size: 0.9em; line-height: 1.4; color: #555;">'
-            f'{list_html}'
-            f'</ul>'
-            f'<div style="margin-top: 8px; font-size: 0.8em; color: #999; font-style: italic;">提示: 导出时将自动生成 Wikidot 目录</div>'
-            f'</div>'
-        )
+        # 使用一个隐藏的标记，用于承载 [[toc]]，保证导出和双向解析时不丢失，但不在编辑区占位
+        html = f'<span class="scp-component" data-type="toc" style="display:none;" contenteditable="false">[[toc]]</span>'
         return store.register_html(source, "toc", html)
 
     processed_text = re.sub(r'\[\[toc\]\]', toc_replacer, text, flags=re.IGNORECASE)

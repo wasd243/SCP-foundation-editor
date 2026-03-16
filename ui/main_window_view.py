@@ -492,7 +492,24 @@ def setup_main_ui(window):
     window.right_dock_layout.addWidget(window.lbl_theme_status)
     window.right_dock_layout.addWidget(window.lbl_bf_status)
     window.right_dock_layout.addWidget(window.lbl_sidebar_status)
+    
+    # 目录 (TOC) 包含标题
+    window.toc_group_box = QGroupBox("目录 (TOC) 包含标题")
+    window.toc_group_layout = QVBoxLayout(window.toc_group_box)
+    window.lbl_toc_list = QLabel("<i>（暂无目录条目）</i>")
+    window.lbl_toc_list.setWordWrap(True)
+    window.lbl_toc_list.setStyleSheet("font-size: 12px; color: #444; line-height: 1.5;")
+    window.toc_group_layout.addWidget(window.lbl_toc_list)
+    
+    # 添加一个滚动区域以防条目过多
+    toc_scroll = QScrollArea()
+    toc_scroll.setWidgetResizable(True)
+    toc_scroll.setWidget(window.lbl_toc_list)
+    toc_scroll.setStyleSheet("QScrollArea { border: none; background: transparent; }")
+    window.toc_group_layout.addWidget(toc_scroll)
+    
+    window.right_dock_layout.addWidget(window.toc_group_box)
     window.right_dock_layout.addStretch()
 
     window.right_dock.setWidget(window.right_dock_content)
-    window.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, window.right_dock)
+    window.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, window.right_dock)

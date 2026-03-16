@@ -210,21 +210,36 @@ h2,
 h3,
 h4,
 h5,
-h6 {
-    color: #901111;
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-}
+h6,
 
 h1 {
-    border-bottom: 2px solid #901111;
-    font-size: 1.8em;
+    color: #901111;
+    font-size: 1.6em;
 }
 
 h2 {
-    border-bottom: 1px solid #ccc;
-    font-size: 1.6em;
+    color: #000;
+    font-size: 1.4em;
+}
+
+h3 {
+    color: #000;
+    font-size: 1.2em;
+}
+
+h4 {
+    color: #000;
+    font-size: 1.1em;
+}
+
+h5 {
+    color: #000;
+    font-size: 1em;
+}
+
+h6 {
+    color: #000;
+    font-size: 1em;
 }
 
 /* --- 引用块样式 --- */

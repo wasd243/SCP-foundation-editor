@@ -154,6 +154,22 @@ class SCPEditor(QMainWindow):
     # =================================================
     def render_to_editor(self): handle_render_to_editor(self)
 
+    def update_toc_ui(self, html):
+        from bs4 import BeautifulSoup
+        soup = BeautifulSoup(html, 'html.parser')
+        toc_items = []
+        for tag in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
+            if tag.has_attr('data-toc-anchor'):
+                level = int(tag.name[1])
+                text = tag.get_text().strip()
+                indent = "&nbsp;" * (level - 1) * 4
+                toc_items.append(f'<li style="list-style:none; margin: 2px 0;">{indent}<span style="color:#888;">{"·" * level}</span> {text}</li>')
+        
+        if toc_items:
+            self.lbl_toc_list.setText(f'<ul style="margin: 0; padding: 0;">{"".join(toc_items)}</ul>')
+        else:
+            self.lbl_toc_list.setText("<i>（暂无目录条目）</i>")
+
     def export_wikidot(self):
         self._export_snapshot = {
             'basalt_on':    self.check_enable_basalt.isChecked(),
@@ -183,7 +199,9 @@ class SCPEditor(QMainWindow):
             final_code = export_html_to_wikidot(html, self._export_snapshot)
             self.use_better_footnotes = self._export_snapshot.get('bf_on')
             self.update_theme_state()
+            self.update_toc_ui(html)
             
+
             if getattr(self, 'is_saving_mode', False):
                 self.is_saving_mode = False 
                 dialog = SaveConfirmDialog(self)
