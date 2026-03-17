@@ -431,6 +431,16 @@ def setup_main_ui(window):
     window.check_mono_security.setChecked(True)
     comp_layout.addWidget(window.check_mono_security)
 
+    window.check_line_break_lock = QCheckBox("换行锁定 (禁止编辑器内换行)")
+    window.check_line_break_lock.setStyleSheet("font-size: 13px; font-weight: bold; padding: 5px; color: #8e44ad;")
+    window.check_line_break_lock.setChecked(False)
+    comp_layout.addWidget(window.check_line_break_lock)
+
+    window.check_line_break_symbol_lock = QCheckBox("换行符锁定 (换行不生成@@@@)")
+    window.check_line_break_symbol_lock.setStyleSheet("font-size: 13px; font-weight: bold; padding: 5px; color: #27ae60;")
+    window.check_line_break_symbol_lock.setChecked(False)
+    comp_layout.addWidget(window.check_line_break_symbol_lock)
+
     window.auto_refresh_timer = QTimer(window)
     window.auto_refresh_timer.timeout.connect(window.export_wikidot)
 

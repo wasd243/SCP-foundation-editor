@@ -109,13 +109,14 @@ def handle_parse_node(node, state):
     if tag == 'p':
         def expand_soft_breaks(match):
             count = len(match.group(0))
-            if count <= 2:
+            if count <= 2 or state.get('line_break_symbol_lock'):
                 return "\n" * count
             # 保留一个\n作为段落分隔，后面紧连(N-2)个@@@@
             return "\n" + ("@@@@\n" * (count - 2))
         content = re.sub(r'\n{2,}', expand_soft_breaks, content)
         clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
-        if not clean: return "\n@@@@\n"
+        if not clean: 
+            return "\n" if state.get('line_break_symbol_lock') else "\n@@@@\n"
     
     if tag == 'br': return "\n"
     if tag == 'hr': return "\n------\n"
@@ -129,7 +130,14 @@ def handle_parse_node(node, state):
     if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
         level = int(tag[1])
         anchor = node.get('data-toc-anchor', '')
-        anchor_part = f"[[# {anchor}]] " if anchor else ""
+        anchor_part = ""
+        if anchor:
+            # 若 data-toc-auto=="true"，说明这是反向解析时自动赋予的 slug。
+            # [[toc]] 会自动为标题生成锚点，所以无需输出 [[# anchor]]。
+            # 只有用户通过右键对话框手动设置的自定义锚点才导出 (data-toc-auto 缺少或为 false)
+            is_auto = node.get('data-toc-auto', '') == 'true'
+            if not is_auto:
+                anchor_part = f"[[# {anchor}]] "
         return f"\n{'+' * level} {anchor_part}{content.strip()}\n"
 
     if tag == 'span' and 'custom-dash' in node.get('class', []):
@@ -199,6 +207,9 @@ def handle_parse_node(node, state):
 
     if tag == 'a':
         href = node.get('href')
+        # 无 href 时为纯锚点元素（如 ftml 将 [[# anchor]] 渲染为 <a id="...">），直接返回内容
+        if not href:
+            return content
         prefix = "*" if node.get('target') == '_blank' else ""
         return f"[{prefix}{href} {content.strip()}]"
 
@@ -232,10 +243,11 @@ def handle_parse_node(node, state):
         else:
             # Fallback to pure text cleaning if no useful attributes
             clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
-            if not clean: return "\n@@@@\n"
+            if not clean: 
+                return "\n" if state.get('line_break_symbol_lock') else "\n@@@@\n"
             def expand_soft_breaks(match):
                 count = len(match.group(0))
-                if count <= 2:
+                if count <= 2 or state.get('line_break_symbol_lock'):
                     return "\n" * count
                 return "\n" + ("@@@@\n" * (count - 2))
             res = re.sub(r'\n{2,}', expand_soft_breaks, content) + "\n"

@@ -120,7 +120,8 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
 
     parse_state = {
         'better_footnotes': use_better_footnotes,
-        'mono_security': snapshot.get('mono_security_on', True)
+        'mono_security': snapshot.get('mono_security_on', True),
+        'line_break_symbol_lock': snapshot.get('line_break_symbol_lock_on', False)
     }
 
     def parse_license_only(comp_node):
