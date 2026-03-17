@@ -12,7 +12,7 @@
 - [v2.0.0-beta.8-March 15, 2026](#v200-beta8-march-15-2026)
 - [v2.0.0-beta.9-March 16, 2026](#v200-beta9-march-16-2026)
 - [v2.0.1-beta.1-March 16, 2026](#v201-beta1-march-16-2026)
-- [v2.0.1-beta.2-March 16, 2026](#v201-beta2-march-16-2026)
+- [v2.0.1-beta.2-March 17, 2026](#v201-beta2-march-17-2026)
 
 ## v2.0.0-alpha.2-March 6, 2026
 
