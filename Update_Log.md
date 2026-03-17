@@ -529,3 +529,65 @@ if tag == 'p':
 
 - This version is the first beta release with the FTML engine
 - The editor is stable
+
+## v2.0.1-beta.2-March 18, 2026
+
+### Changed
+
+- Changed the `editor.css` code about `user tag`
+```css
+.user-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    margin: 0;
+    vertical-align: middle;
+}
+```
+- Changed the `wikidot_parser.py` code about `user tag`
+```python
+    html = f'<span class="scp-component user-tag" data-type="user" data-source-uuid="{{{{uuid}}}}" data-source="{{{{source}}}}" contenteditable="false" style="display:inline-flex; align-items:center; gap:4px; padding:0 2px;"><span class="user-icon" style="background:#aaa; display:inline-block; width:12px; height:12px; border-radius:50%;"></span><span class="user-name" contenteditable="true" style="color:#b01; font-weight:bold;">{_html_module.escape(name)}</span></span>&#8203;'
+```
+- Changed the `editor.js` code about `paste`
+```javascript
+    // 拦截粘贴事件，只粘贴纯文本
+    document.getElementById('editor-root').addEventListener('paste', function(e) {
+        e.preventDefault();
+        var text = '';
+        if (e.clipboardData || e.originalEvent && e.originalEvent.clipboardData) {
+            text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        } else if (window.clipboardData) {
+            text = window.clipboardData.getData('Text');
+        }
+        if (document.queryCommandSupported('insertText')) {
+            document.execCommand('insertText', false, text);
+        } else {
+            document.execCommand('paste', false, text);
+        }
+    });
+```
+- Changed the `componentsEvents.js` code about `user tag`
+```javascript
+if (comp && !comp.matches('.image-block-box') && !comp.matches('.wikidot-table') && !comp.matches('.aim-box') && !comp.matches('.user-tag')) {
+    // ...
+}
+```
+
+- Changed the `banner.py` code about this version
+- Changed the `logger.py` code about this version
+
+### Fixed
+
+- Fixed the issue that `user tag` could not render correctly
+
+### Version
+
+- Updated the version to `v2.0.1-beta.2`
+- LINCESE: AGPLv3
+- Author: Zichen Wang (wasd243)
+
+### Notes
+
+- This version is the second beta release with the FTML engine
+- The editor is stable

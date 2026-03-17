@@ -46,7 +46,7 @@ document.addEventListener('click', function (e) {
 
     // Click-to-Insert-Newline on Right Side
     const comp = e.target.closest('.scp-component, .acs-box, .rate-module-box, .tabview-box, .collapsible-box, .license-box, .wikidot-table, .div-box, .css-box');
-    if (comp && !comp.matches('.image-block-box') && !comp.matches('.wikidot-table') && !comp.matches('.aim-box')) {
+    if (comp && !comp.matches('.image-block-box') && !comp.matches('.wikidot-table') && !comp.matches('.aim-box') && !comp.matches('.user-tag')) {
         // Prevent triggering on interactive elements or headers
         if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'A' ||
             e.target.closest('.rate-controls') || e.target.closest('.license-header') || e.target.closest('.collapsible-header') || e.target.closest('.tab-header')) {
