@@ -13,7 +13,7 @@ import datetime
 from formats.wikidot.wikidot_parser import HAS_FTML
 
 
-VERSION = "v2.0.1-beta.1"
+VERSION = "v2.0.1-beta.2"
 ENGINE = "FTML + PyQt6"
 EDITOR = "SCP Wiki WYSIWYG Editor"
 

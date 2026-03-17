@@ -38,4 +38,20 @@ window.addEventListener("load", function () {
             refreshImg(span, true);
         }
     });
+
+    // 拦截粘贴事件，只粘贴纯文本
+    document.getElementById('editor-root').addEventListener('paste', function(e) {
+        e.preventDefault();
+        var text = '';
+        if (e.clipboardData || e.originalEvent && e.originalEvent.clipboardData) {
+            text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        } else if (window.clipboardData) {
+            text = window.clipboardData.getData('Text');
+        }
+        if (document.queryCommandSupported('insertText')) {
+            document.execCommand('insertText', false, text);
+        } else {
+            document.execCommand('paste', false, text);
+        }
+    });
 });

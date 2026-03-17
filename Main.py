@@ -75,6 +75,7 @@ from utils.logger import *
 # 处理终端报错问题
 os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--log-level=3"
 
+# 打包程序时，切换工作目录到可执行文件所在目录
 if getattr(sys, 'frozen', False):
     os.chdir(os.path.dirname(sys.executable))
 
