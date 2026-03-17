@@ -101,6 +101,8 @@ def handle_render_to_editor(ui):
                 .replace(/^-+|-+$/g, '')
                 .toLowerCase() || ('heading-' + idx);
             h.setAttribute('data-toc-anchor', slug);
+            // 标记为自动生成，导出时不输出 [[# anchor]]
+            h.setAttribute('data-toc-auto', 'true');
         }
     });
 })()

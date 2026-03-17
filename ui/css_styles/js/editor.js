@@ -54,4 +54,12 @@ window.addEventListener("load", function () {
             document.execCommand('paste', false, text);
         }
     });
+
+    // 拦截回车键，实现“换行锁定”功能
+    document.getElementById('editor-root').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && window.lineBreakLocked) {
+            e.preventDefault();
+            return false;
+        }
+    });
 });

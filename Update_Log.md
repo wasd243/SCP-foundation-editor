@@ -2,6 +2,32 @@
 
 
 All notable changes to this project will be documented in this file.
+
+---
+
+## [v2.0.1-beta.4] - 2026-03-18
+
+### Added
+- Added `TOC` component support
+- Added toolbar button for `prevent enter key`
+- Added toolbar button for `no @@@@`
+- Added `prevent enter key` to `main_window_view.py`
+- Added `no @@@@` to `main_window_view.py`
+
+### Changed
+- Updated `parse_node.py` for newline handling
+- Updated `wikidot_parser.py` for newline handling
+- Updated `MAIN_CONTROLLER.py` for newline handling
+- Updated `main_window_view.py` for newline handling
+- Updated `editor.js` for prevent enter key
+- Updated `main_window_view.py` for prevent enter key
+
+### Fixed
+- Fixed newline width issue
+- Fixed enter key issue
+- Fixed paste issue
+- Fixed TOC generation issue
+
 ---
 
 ## [v2.0.1-beta.3] - 2026-03-18

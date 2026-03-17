@@ -199,6 +199,8 @@ def _handle_add_to_toc(ui, pos, heading_info):
             var h = document.getElementById("{heading_id}");
             if (h) {{
                 h.setAttribute('data-toc-anchor', "{anchor}");
+                // 用户手动设置，移除自动标记
+                h.removeAttribute('data-toc-auto');
                 // 移除可能存在的旧标记 span，此时信息已转移到 h 标签上
                 var marker = h.querySelector('.toc-anchor-marker');
                 if (marker) marker.remove();
