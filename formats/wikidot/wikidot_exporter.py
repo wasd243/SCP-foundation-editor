@@ -34,12 +34,15 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     head_styles_code = ""
     seen_css_blocks = set()
     for style_tag in soup.find_all('style'):
-        # 这里调用已经有的 parse_node 能将 <style> 转换为 [[module CSS]]...
+        # 跳过 data-no-hoist（如基金会背景，它的CSS应跟在组件后面）
+        if style_tag.get('data-no-hoist') == 'true':
+            continue
         parsed = parse_node(style_tag, {})
-        # 如果解析结果包含 rate-module 那么多半是误读，或者是重复的 css，我们都要过滤
-        if parsed and parsed.strip() not in seen_css_blocks and '[[module Rate]]' not in parsed:
-            seen_css_blocks.add(parsed.strip())
-            head_styles_code += parsed
+        # 过滤重复、空块及 rate-module 误读
+        css_content = parsed.strip() if parsed else ''
+        if css_content and css_content not in seen_css_blocks and '[[module Rate]]' not in css_content:
+            seen_css_blocks.add(css_content)
+            head_styles_code += css_content + "\n"
         # 删除节点，防止稍后在 body 遍历中被重复导出
         style_tag.decompose()
 
@@ -95,7 +98,25 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
         final_code += "[[toc]]\n"
 
     if soup.select_one('.email-example-box'):
-         final_code += "[[module CSS]]\n.email-example .collapsible-block-folded a.collapsible-block-link {\n    animation: blink 0.8s ease-in-out infinite alternate;\n}\n@keyframes blink {\n    0% { color: transparent; }\n    50%, 100% { color: #b01; }\n}\n.email {border: solid 2px #000000; width: 88%; padding: 1px 15px; margin: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.5)}\n.email-example a.collapsible-block-link {font-weight: bold;}\n.tofrom {margin-left: 10px; margin-top: 5px; padding: 1px 15px; border-left: solid 3px maroon}\n[[/module]]\n"
+        # email-example-box 的专属 CSS 直接注入 head_styles_code（已有去重逻辑）
+        email_css_block = (
+            "[[module CSS]]\n"
+            ".email-example .collapsible-block-folded a.collapsible-block-link {\n"
+            "    animation: blink 0.8s ease-in-out infinite alternate;\n"
+            "}\n"
+            "@keyframes blink {\n"
+            "    0% { color: transparent; }\n"
+            "    50%, 100% { color: #b01; }\n"
+            "}\n"
+            ".email {border: solid 2px #000000; width: 88%; padding: 1px 15px; margin: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.5)}\n"
+            ".email-example a.collapsible-block-link {font-weight: bold;}\n"
+            ".tofrom {margin-left: 10px; margin-top: 5px; padding: 1px 15px; border-left: solid 3px maroon}\n"
+            "[[/module]]\n"
+        )
+        key = email_css_block.strip()
+        if key not in seen_css_blocks:
+            seen_css_blocks.add(key)
+            head_styles_code += email_css_block
 
     parse_state = {
         'better_footnotes': use_better_footnotes,
@@ -239,13 +260,35 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
 
     final_code += body
     final_code += license_code
-    
-    # 清理顶部或可能生成的空 CSS 模块
-    final_code = re.sub(r'\[\[module CSS\]\]\s*\[\[/module\]\]\s*', '', final_code, flags=re.IGNORECASE)
 
     # 等宽字安全兜底：如果开启了安全模式，强制清除所有包含中文的等宽字标签 {{...}}
     if snapshot.get('mono_security_on', True):
-        # 匹配 {{ 和 }} 之间包含至少一个中文字符的内容
         final_code = re.sub(r'\{\{([^{}]*[\u4e00-\u9fa5]+[^{}]*)\}\}', r'\1', final_code)
 
-    return head_styles_code + final_code
+    combined = head_styles_code + final_code
+
+    # ==========================================
+    # 最终去重：保留每个 [[module CSS]] 块的独立性，
+    # 但若内容已出现过（重复插入同一组件），则丢弃该块
+    # ==========================================
+    css_pattern = re.compile(
+        r'\[\[module CSS\]\]\n?(.*?)\n?\[\[/module\]\]',
+        re.DOTALL | re.IGNORECASE
+    )
+    seen_css_contents = set()
+
+    def dedup_css_block(m):
+        block = m.group(1).strip()
+        if not block:
+            return ''  # 空块直接丢弃
+        if block in seen_css_contents:
+            return ''  # 内容重复，丢弃
+        seen_css_contents.add(block)
+        return f"[[module CSS]]\n{block}\n[[/module]]"
+
+    combined = css_pattern.sub(dedup_css_block, combined)
+
+    # 清理多余的空行（连续三个以上换行压缩为两个）
+    combined = re.sub(r'\n{3,}', '\n\n', combined).strip()
+
+    return combined

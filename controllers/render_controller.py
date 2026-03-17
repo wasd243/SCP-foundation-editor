@@ -51,6 +51,12 @@ def handle_render_to_editor(ui):
 
     ui.check_better_footnotes.setChecked(parsed_data.get("better_footnotes", False))
     ui.update_theme_state()
+    
+    has_toc = parsed_data.get("has_toc", False)
+    if has_toc:
+        ui.lbl_toc_status.setText("<b>页面 TOC:</b> <span style='color:red;'>已存在</span>")
+    else:
+        ui.lbl_toc_status.setText("<b>页面 TOC:</b> 未解析")
 
     # 3. 将 Wikidot 源码转换为 HTML 组件
     current_theme = getattr(ui, "page_theme_config", {}).get("type", "none")
@@ -81,6 +87,29 @@ def handle_render_to_editor(ui):
                     .replace('__RATE_ALIGN__', safe_rate_align))
 
         ui.browser.page().runJavaScript(final_js)
+        # 如果源码包含 [[toc]]，将编辑器中所有标题自动打上 data-toc-anchor，以便左侧目录栏提示正税内容
+        if has_toc:
+            mark_js = """
+(function() {
+    var root = document.getElementById('editor-root');
+    if (!root) return;
+    var headings = root.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    headings.forEach(function(h, idx) {
+        if (!h.hasAttribute('data-toc-anchor')) {
+            var slug = (h.innerText || h.textContent || '').trim()
+                .replace(/[^\w\u4e00-\u9fa5]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .toLowerCase() || ('heading-' + idx);
+            h.setAttribute('data-toc-anchor', slug);
+        }
+    });
+})()
+"""
+            def _on_mark_done(*args):
+                ui.refresh_toc()
+            ui.browser.page().runJavaScript(mark_js, _on_mark_done)
+        else:
+            ui.reset_toc_ui()
         QMessageBox.information(ui, "渲染完成", "代码已还原到编辑器。（部分功能仍待完善）")
 
     except Exception as e:

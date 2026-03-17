@@ -154,21 +154,41 @@ class SCPEditor(QMainWindow):
     # =================================================
     def render_to_editor(self): handle_render_to_editor(self)
 
+    def refresh_toc(self):
+        """立即从浏览器获取 HTML 并更新 TOC 侧边栏（仅展示已把 data-toc-anchor 属性的标题）"""
+        def handle_html(html):
+            self.update_toc_ui(html)
+        self.browser.page().toHtml(handle_html)
+
+    def reset_toc_ui(self):
+        """重置 TOC 展示面板（清空所有内容）"""
+        self.lbl_toc_list.setText("<i>（暂无目录条目）</i>")
+        self.lbl_toc_status.setText("<b>页面 TOC:</b> 未解析")
+        self.lbl_toc_status.setStyleSheet(
+            "padding: 10px; background: #ffe0b2; border: 1px solid #ff9800; border-radius: 5px; margin-bottom: 5px; font-size: 14px; color: black;"
+        )
+
     def update_toc_ui(self, html):
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, 'html.parser')
         toc_items = []
         for tag in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
-            if tag.has_attr('data-toc-anchor'):
-                level = int(tag.name[1])
-                text = tag.get_text().strip()
-                indent = "&nbsp;" * (level - 1) * 4
-                toc_items.append(f'<li style="list-style:none; margin: 2px 0;">{indent}<span style="color:#888;">{"·" * level}</span> {text}</li>')
-        
+            # 只展示通过右键“添加到目录”显式添加了 data-toc-anchor 的标题
+            if not tag.has_attr('data-toc-anchor'):
+                continue
+            level = int(tag.name[1])
+            text = tag.get_text().strip()
+            if not text: continue
+            indent = "\u00a0" * (level - 1) * 4
+            toc_items.append(f'<li style="list-style:none; margin: 2px 0;">{indent}<span style="color:#888;">{" ·" * level}</span> <span style="color:red;">{text}</span></li>')
+
         if toc_items:
             self.lbl_toc_list.setText(f'<ul style="margin: 0; padding: 0;">{"".join(toc_items)}</ul>')
+            self.lbl_toc_status.setText("<b>页面 TOC:</b> <span style='color:red;'>已存在</span>")
         else:
-            self.lbl_toc_list.setText("<i>（暂无目录条目）</i>")
+            self.reset_toc_ui()
+
+
 
     def export_wikidot(self):
         self._export_snapshot = {

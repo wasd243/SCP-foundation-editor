@@ -325,4 +325,5 @@ def handle_clear_all_content(ui):
         ui.comp_selector.setCurrentIndex(0)
         ui.update_theme_state()
         ui.init_editor_html()
+        ui.reset_toc_ui()
         QMessageBox.information(ui, "清理完成", "编辑器内容与设置已清空。")

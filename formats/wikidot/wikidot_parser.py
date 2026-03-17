@@ -37,7 +37,8 @@ def parse_wikidot_code(code: str) -> dict:
         },
         "better_footnotes": False,
         "rate_module": {"hidden": True, "align": ""},
-        "css": ""
+        "css": "",
+        "has_toc": False
     }
 
     if not code or not code.strip(): return result
@@ -68,6 +69,9 @@ def parse_wikidot_code(code: str) -> dict:
         result["rate_module"]["hidden"] = False
         if re.search(r'\[\[<\]\]\s*\[\[module Rate\]\]\s*\[\[/<\]\]', code, re.IGNORECASE): result["rate_module"]["align"] = "left"
         elif re.search(r'\[\[>\]\]\s*\[\[module Rate\]\]\s*\[\[/>\]\]', code, re.IGNORECASE): result["rate_module"]["align"] = "right"
+
+    if re.search(r'\[\[toc\]\]', code, re.IGNORECASE):
+        result["has_toc"] = True
 
     extracted_css = ""
     css_matches = re.finditer(r'\[\[module CSS\]\](.*?)\[\[/module\]\]', code, flags=re.DOTALL|re.IGNORECASE)
@@ -154,6 +158,8 @@ def parse_wikidot_to_editor_html(text: str, theme_type: str = "none") -> str:
         html = f'<div class="scp-component html5player-box" data-type="html5player" contenteditable="false"><audio controls src="{audio_url}"></audio><span class="html5player-url" style="display:none;">{audio_url}</span></div>'
         return register_ph(html)
     text = re.sub(r'\[\[include\s+:snippets:html5player\s*\|type=audio\s*\|url=(.*?)\]\]', audio_replacer, text, flags=re.IGNORECASE)
+
+    # 6. 处理标题标记... (或其他后续逻辑)
 
     # ========================================================
     # 阶段 2：拦截器 (ACS, AIM, 脚注, License, 图片块, Tabview, User, div, css等)

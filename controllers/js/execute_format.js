@@ -3,8 +3,8 @@
     if (sel.rangeCount > 0) {
         let node = sel.anchorNode;
         if (node && node.nodeType === 3) node = node.parentNode;
-        if (node && node.closest('a')) {
-            // 阻止在链接内部进行样式覆盖，因为 Wikidot 不支持
+        if (node && (node.closest('a') || node.closest('h1, h2, h3, h4, h5, h6'))) {
+            // 阻止在链接内部或标题内部进行样式覆盖
             return;
         }
     }
