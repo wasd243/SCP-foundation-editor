@@ -153,7 +153,6 @@ def setup_main_ui(window):
     toolbar.addAction(QAction("——", window, toolTip="分割线", triggered=window.insert_hr))
     toolbar.addAction(QAction("⊞", window, toolTip="表格", triggered=window.insert_table))
     toolbar.addAction(QAction("音频", window, toolTip="音频播放器", triggered=window.insert_audio))
-    toolbar.addAction(QAction("TOC", window, toolTip="目录", triggered=window.insert_toc))
 
     window.left_act = QAction("⇐", window, toolTip="靠左 [关闭]", checkable=True)
     window.left_act.triggered.connect(lambda: window.exec_format("justifyLeft"))
@@ -499,9 +498,14 @@ def setup_main_ui(window):
     # 目录 (TOC) 包含标题
     window.toc_group_box = QGroupBox("目录 (TOC) 包含标题")
     window.toc_group_layout = QVBoxLayout(window.toc_group_box)
+    
+    window.lbl_toc_status = QLabel("<b>页面 TOC:</b> 未解析")
+    window.lbl_toc_status.setStyleSheet("padding: 10px; background: #ffe0b2; border: 1px solid #ff9800; border-radius: 5px; margin-bottom: 5px; font-size: 14px; color: red;")
+    window.toc_group_layout.addWidget(window.lbl_toc_status)
+
     window.lbl_toc_list = QLabel("<i>（暂无目录条目）</i>")
     window.lbl_toc_list.setWordWrap(True)
-    window.lbl_toc_list.setStyleSheet("font-size: 12px; color: #444; line-height: 1.5;")
+    window.lbl_toc_list.setStyleSheet("font-size: 12px; color: red; line-height: 1.5;")
     window.toc_group_layout.addWidget(window.lbl_toc_list)
     
     # 添加一个滚动区域以防条目过多
@@ -515,4 +519,4 @@ def setup_main_ui(window):
     window.right_dock_layout.addStretch()
 
     window.right_dock.setWidget(window.right_dock_content)
-    window.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, window.right_dock)
+    window.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, window.right_dock)

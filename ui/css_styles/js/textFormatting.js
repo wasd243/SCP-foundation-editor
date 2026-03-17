@@ -17,6 +17,10 @@ function applyFontSize(sizeValue) {
     const range = sel.getRangeAt(0);
     let targetNode = range.commonAncestorContainer;
     if (targetNode.nodeType === 3) targetNode = targetNode.parentNode;
+
+    // 标题不允许更改字号
+    if (targetNode.closest('h1, h2, h3, h4, h5, h6')) return;
+
     if (targetNode.classList.contains('size-span') && targetNode.innerText === sel.toString()) {
         targetNode.style.fontSize = sizeValue;
         const newRange = document.createRange();

@@ -2,6 +2,23 @@
 
 
 All notable changes to this project will be documented in this file.
+---
+
+## [v2.0.1-beta.3] - 2026-03-18
+
+### Fixed
+- Fixed CSS duplicate output issue
+- Fixed empty CSS block output issue
+- Fixed extra newline output issue
+- Fixed `TOC` could not be inserted
+- Fixed `TOC` could not be removed
+- Fixed `TOC` could not be updated
+- Fixed `[[module CSS]]` could not be removed
+- Fixed `[[module CSS]]` could not be updated
+
+### Removed
+
+- Removed `TOC` from toolbar
 
 ---
 
