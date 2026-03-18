@@ -5,7 +5,7 @@
 
 ![License](https://img.shields.io/badge/license-AGPL_3.0-blue)
 ![Status](https://img.shields.io/badge/status-Beta-green)
-![Downloads](https://img.shield.io/github/downloads/wasd243/SCP-foundation-editor/total.svg)
+![Downloads](https://img.shields.io/github/downloads/wasd243/SCP-foundation-editor/total)
 
 ---
 
