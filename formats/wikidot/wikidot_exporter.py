@@ -210,6 +210,9 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     # 消除文本和 @@@@ 之间的空行
     body = re.sub(r'\n\n(@@@@)', r'\n\1', body)
     body = re.sub(r'(@@@@)\n\n', r'\1\n', body)
+    # 消除所有靠左符号
+    body = re.sub(r'\[\[<\]\]', '', body)
+    body = re.sub(r'\[\[\/<\]\]', '', body)
 
     def remove_single_forced_break(match):
         between = match.group(2)

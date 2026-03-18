@@ -12,8 +12,10 @@ dist/
 # IDE
 .vscode/
 .idea/
+.github/
 
 # FTML
+ftml/
 engine/rust_engine/ftml/
 ftml
 

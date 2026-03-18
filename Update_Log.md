@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v2.0.1-beta.4] - 2026-03-19
+
+### Added
+
+- Added `middle` button on toolbar
+
+### Changed
+
+- Updated `parse_node.py` for `middle` button
+- Updated `main_window_view.py` for `middle` button
+
+### Fixed
+
+- Fixed `[[size xxx]]text[[/size]]` generate issue
+
+---
+
 ## [v2.0.1-beta.4] - 2026-03-18
 
 ### Added
