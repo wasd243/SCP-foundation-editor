@@ -167,7 +167,6 @@ def handle_parse_node(node, state):
         # 字号处理
         if size_match: 
             size_val = size_match.group(1).strip()
-            print(size_val)
             # Wikidot 默认字体大小为 1em 或 medium，其他值都需要显式声明 [[size]] 标签
             default_sizes = ['medium', '1em', 'inherit', 'normal']
             if size_val.lower() not in default_sizes:
