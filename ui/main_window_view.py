@@ -154,11 +154,15 @@ def setup_main_ui(window):
     toolbar.addAction(QAction("⊞", window, toolTip="表格", triggered=window.insert_table))
     toolbar.addAction(QAction("音频", window, toolTip="音频播放器", triggered=window.insert_audio))
 
-    window.left_act = QAction("⇐", window, toolTip="靠左 [关闭]", checkable=True)
+    window.left_act = QAction("⇐", window, toolTip="靠左 [关闭]", checkable=False)
     window.left_act.triggered.connect(lambda: window.exec_format("justifyLeft"))
     toolbar.addAction(window.left_act)
 
-    window.right_act = QAction("⇒", window, toolTip="靠右 [关闭]", checkable=True)
+    window.center_act = QAction("≡", window, toolTip="居中 [关闭]", checkable=False)
+    window.center_act.triggered.connect(lambda: window.exec_format("justifyCenter"))
+    toolbar.addAction(window.center_act)
+
+    window.right_act = QAction("⇒", window, toolTip="靠右 [关闭]", checkable=False)
     window.right_act.triggered.connect(lambda: window.exec_format("justifyRight"))
     toolbar.addAction(window.right_act)
 
