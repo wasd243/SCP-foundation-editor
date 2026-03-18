@@ -163,11 +163,17 @@ def handle_parse_node(node, state):
         if color_match:
             color_val = rgb_to_hex(color_match.group(1).strip())
             res = f"###{color_val[1:]}|{res}##" if color_val.startswith('#') else f"##{color_val}|{res}##"
-        size_match = re.search(r'font-size:\s*([\w\.\-%]+)', style)
+        size_match = re.search(r'font-size:\s*([^;]+)', style)
+        # 字号处理
         if size_match: 
             size_val = size_match.group(1).strip()
-            if size_val.lower() not in ['medium', '1em']:
+            print(size_val)
+            # Wikidot 默认字体大小为 1em 或 medium，其他值都需要显式声明 [[size]] 标签
+            default_sizes = ['medium', '1em', 'inherit', 'normal']
+            if size_val.lower() not in default_sizes:
                 res = f"[[size {size_val}]]{res}[[/size]]"
+            if size_val.lower() in default_sizes:
+                res = f"{res}"
         if 'underline' in style:
             match = re.fullmatch(r'(\s*)(.*?)(\s*)', res, flags=re.DOTALL)
             if match and match.group(2): res = f"{match.group(1)}__{match.group(2)}__{match.group(3)}"
