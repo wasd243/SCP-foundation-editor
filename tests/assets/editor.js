@@ -27,10 +27,14 @@ const customTags = {
     monosapace: Tag.define(),
     list1: Tag.define(),
     list2: Tag.define(),
+    list3: Tag.define(),
     quote: Tag.define(),
     table: Tag.define(),
     table_header: Tag.define(),
     table_cell: Tag.define(),
+    original_text: Tag.define(), // 用于原始文本
+    image: Tag.define(), // 用于图片
+    footnote: Tag.define(),
 };
 
 /**
@@ -61,6 +65,10 @@ const wikidotLanguage = StreamLanguage.define({
         if (stream.match(/\@\@\@\@/)) return "newline";
         // 英文等宽字体
         if (stream.match(/\{\{.*?\}\}/)) return "monosapace";
+        // 原始文本
+        if (stream.match(/\@\@.*?\@\@/)) {
+            stream.skipToEnd();
+            return "original_text"}
         // 无序列表
         if (stream.sol() && stream.match(/\*+ /)) {
             return "list1";
@@ -68,6 +76,10 @@ const wikidotLanguage = StreamLanguage.define({
         // 有序列表
         if (stream.sol() && stream.match(/#+ /)) {
             return "list2";
+        }
+        // 定义列表
+        if (stream.sol() && stream.match(/\:.*?\:/)) {
+            return "list3";
         }
         // 引用
         if (stream.sol() && stream.match(/>+ /)) {
@@ -101,10 +113,14 @@ const wikidotLanguage = StreamLanguage.define({
         // 居中
         if (stream.match(/\[\[\=?\]\]/)) return "center";
         if (stream.match(/\[\[\/\=?\]\]/)) return "center";
+        // 图片
+        if (stream.match(/\[\[image.*?\]\]/)) return "image";
+        // 脚注
+        if (stream.match(/\[\[footnote\]\]/) || stream.match(/\[\[\/footnote\]\]/)) return "footnote";
         // ================================================================
         // Wikidot 标签
         if (stream.match(/\[\[.*?\]\]/)) return "wikiTag";
-        // 分隔线
+        // 分割线
         if (stream.sol() && stream.match(/^-{5,}$/)) return "hr";
 
         stream.next();
@@ -130,10 +146,14 @@ const wikidotLanguage = StreamLanguage.define({
         "monosapace": customTags.monosapace,
         "list1": customTags.list1,
         "list2": customTags.list2,
+        "list3": customTags.list3,
         "quote": customTags.quote,
         "table": customTags.table,
         "table_header": customTags.table_header,
         "table_cell": customTags.table_cell,
+        "original_text": customTags.original_text,
+        "image": customTags.image,
+        "footnote": customTags.footnote,
     }
 });
 
@@ -157,10 +177,14 @@ const wikidotHighlightStyle = HighlightStyle.define([
     { tag: customTags.monosapace, class: "cm-monosapace" },
     { tag: customTags.list1, class: "cm-list1" },
     { tag: customTags.list2, class: "cm-list2" },
+    { tag: customTags.list3, class: "cm-list3" },
     { tag: customTags.quote, class: "cm-quote" },
     { tag: customTags.table, class: "cm-table" },
     { tag: customTags.table_header, class: "cm-table-header" },
     { tag: customTags.table_cell, class: "cm-table-cell" },
+    { tag: customTags.original_text, class: "cm-original-text" },
+    { tag: customTags.image, class: "cm-image" },
+    { tag: customTags.footnote, class: "cm-footnote" },
 ]);
 
 /**
@@ -190,9 +214,10 @@ const customKeymap = keymap.of([
             // Wikidot列表语法：单个*表示无序列表，单个#表示有序列表
             // 匹配行首的 * 或 #，后面必须跟空格
             const listMatch = line.text.match(/^([*#])\s+/);
+            const list3Match = line.text.match(/^(:.*?:)\s+/); // 定义列表匹配
             
-            if (listMatch) {
-                const listMarker = listMatch[1]; // * 或 #
+            if (listMatch || list3Match) {
+                const listMarker = listMatch ? listMatch[1] : list3Match[1]; // * 或 # 或 :
                 
                 // 检查是否在空列表项上按回车
                 const contentAfterMarker = line.text.substring(listMarker.length + 1).trim();
@@ -231,67 +256,10 @@ const customKeymap = keymap.of([
     indentWithTab
 ]);
 
-
 /**
  * 自动补全配置
  */
-const wikidotCompletionSource = (context) => {
-    // 查找光标前最近的 "[["
-    let before = context.matchBefore(/\[\[[\w\s]*/);
-    let atMatch = context.matchBefore(/^\@+/);
-    let tableMatch = context.matchBefore(/\|\|.*?/);
-
-    // 如果光标前是 "@@@@"，则提供强制换行符的补全选项
-    if (atMatch && (atMatch.from !== atMatch.to || context.explicit)) {
-        return {
-            from: atMatch.from,
-            options: [
-                { label: "@@@@", type: "keyword", apply: "@@@@", detail: "强制换行 / 原始文本" }
-            ],
-            filter: true
-        };
-    }
-
-    // 如果光标前是表格语法，提供表格相关的补全选项
-    if (tableMatch && (tableMatch.from !== tableMatch.to || context.explicit)) {
-        return {
-            from: tableMatch.from,
-            options: [
-                { label: "|| Header 1 || Header 2 ||", type: "keyword", apply: "||~Header 1||~Header 2||", detail: "表头行" },
-                { label: "|| Cell 1 || Cell 2 ||", type: "keyword", apply: "||Cell 1||Cell 2||", detail: "表格行" }
-            ],
-            filter: true
-        };
-    }
-
-    // 如果没搜到 "[["，或者搜索结果不是以 "[[" 开始，则不触发
-    if (!before || before.from == before.to && !context.explicit) return {
-        from: context.pos,
-        options: [
-            // 这里可以提供一些全局的补全选项，或者直接返回空数组
-        ]
-    };
-
-    return {
-        from: before.from,
-        options: [
-            // 常见标签
-            { label: "[[include ", type: "keyword", detail: "引用页面" },
-            { label: "[[div ", type: "keyword", detail: "容器" },
-            { label: "[[module ", type: "keyword", detail: "功能组件" },
-
-            // 更多 Wikidot 标签可以在这里添加
-            // 注意这里不需要后面两个]]，因为用户输入[[后会自动补全]]，我们只需要提供标签的前半部分
-            { label: "[[module rate]]", type: "function", apply: "[[module rate", detail: "评分模块" },
-            { label: "[[code]]", type: "keyword", apply: "[[code]]\n\n[[/code", detail: "代码块" },
-            { label: "[[>]]", type: "keyword", apply: "[[>]]\n\n[[/>", detail: "右对齐" },
-            { label: "[[<]]", type: "keyword", apply: "[[<]]\n\n[[/<", detail: "左对齐" },
-            { label: "[[=]]", type: "keyword", apply: "[[=]]\n\n[[/=", detail: "居中" }
-        ],
-        // 允许根据输入内容进行有效过滤
-        filter: true 
-    };
-};
+import { wikidotCompletionSource } from "./completion.js";
 
 // 3. 初始化编辑器
 const startEditor = () => {
@@ -305,8 +273,13 @@ const startEditor = () => {
 __下划线文字__
 --删除线文字--
 
+[[footnote]]这是一个脚注[[/footnote]]
+
 * 这是一个无序列表项
 # 这是一个有序列表项
+: 123 : 这是一个定义列表项
+
+> 这是一个引用
 
 [http://scp-wiki.wikidot.com SCP基金会]
 
@@ -316,8 +289,9 @@ __下划线文字__
 
 ----
 
-[[code]]
-  // 纯 Wikidot 环境
+[[code type="python"]]
+# 这是一个代码块
+print("Hello, World!")
 [[/code]]`,
         extensions: [
             // 将 customKeymap 放在 basicSetup 之前，确保优先级

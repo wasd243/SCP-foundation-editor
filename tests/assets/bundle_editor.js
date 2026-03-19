@@ -23038,6 +23038,224 @@ var oneDarkHighlightStyle = /* @__PURE__ */ HighlightStyle.define([
 ]);
 var oneDark = [oneDarkTheme, /* @__PURE__ */ syntaxHighlighting(oneDarkHighlightStyle)];
 
+// assets/completion.js
+var wikidotCompletionSource = (context) => {
+  let before = context.matchBefore(/\[\[[\w\s]*/);
+  let atMatch = context.matchBefore(/^\@+/);
+  let tableMatch = context.matchBefore(/\|\|.*?/);
+  if (atMatch && (atMatch.from !== atMatch.to || context.explicit)) {
+    return {
+      from: atMatch.from,
+      options: [
+        {
+          label: "@@@@",
+          type: "keyword",
+          apply: "@@@@",
+          detail: "\u5F3A\u5236\u6362\u884C / \u539F\u59CB\u6587\u672C"
+        },
+        {
+          label: "@@...@@",
+          type: "keyword",
+          apply: (view, completion, from, to) => {
+            const text = "@@Your text here@@";
+            const selectFrom = from + "@@".length;
+            const selectTo = selectFrom + "Your text here".length;
+            view.dispatch({
+              changes: { from, to, insert: text },
+              selection: {
+                anchor: selectFrom,
+                head: selectTo
+              }
+              // 光标放在 @@ 之后
+            });
+          },
+          detail: "\u539F\u59CB\u6587\u672C"
+        }
+      ],
+      filter: true
+    };
+  }
+  if (tableMatch && (tableMatch.from !== tableMatch.to || context.explicit)) {
+    return {
+      from: tableMatch.from,
+      options: [
+        {
+          label: "|| Header 1 || Header 2 ||",
+          type: "keyword",
+          apply: (view, completion, from, to) => {
+            const text = "||~Header 1||~Header 2||";
+            view.dispatch({
+              changes: { from, to, insert: text },
+              selection: { anchor: from + 3 }
+              // 光标放在 ||~ 之后
+            });
+          },
+          detail: "\u8868\u5934\u884C"
+        },
+        {
+          label: "|| Cell 1 || Cell 2 ||",
+          type: "keyword",
+          apply: (view, completion, from, to) => {
+            const text = "||Cell 1||Cell 2||";
+            view.dispatch({
+              changes: { from, to, insert: text },
+              selection: { anchor: from + 2 }
+              // 光标放在 || 之后
+            });
+          },
+          detail: "\u8868\u683C\u884C"
+        }
+      ],
+      filter: true
+    };
+  }
+  if (!before || before.from == before.to && !context.explicit) return {
+    from: context.pos,
+    options: []
+  };
+  return {
+    from: before.from,
+    options: [
+      // 常见标签
+      {
+        label: "[[include ",
+        type: "keyword",
+        apply: (view, completion, from, to) => {
+          const text = "[[include ";
+          view.dispatch({
+            changes: { from, to, insert: text },
+            selection: { anchor: from + text.length }
+            // 光标放在标签名之后
+          });
+        },
+        detail: "\u5F15\u7528\u9875\u9762"
+      },
+      {
+        label: "[[div ",
+        type: "keyword",
+        apply: (view, completion, from, to) => {
+          const text = "[[div ";
+          view.dispatch({
+            changes: { from, to, insert: text },
+            selection: { anchor: from + text.length }
+            // 光标放在标签名之后
+          });
+        },
+        detail: "\u5BB9\u5668"
+      },
+      {
+        label: "[[module ",
+        type: "keyword",
+        apply: (view, completion, from, to) => {
+          const text = "[[module ";
+          view.dispatch({
+            changes: { from, to, insert: text },
+            selection: { anchor: from + text.length }
+            // 光标放在标签名之后
+          });
+        },
+        detail: "\u529F\u80FD\u7EC4\u4EF6"
+      },
+      // 更多 Wikidot 标签可以在这里添加
+      {
+        label: "[[module rate]]",
+        type: "function",
+        apply: (view, completion, from, to) => {
+          const text = "[[module rate";
+          view.dispatch({
+            changes: { from, to, insert: text },
+            selection: { anchor: from + text.length + 2 }
+          });
+        },
+        detail: "\u8BC4\u5206\u6A21\u5757"
+      },
+      {
+        label: "[[code]]",
+        type: "keyword",
+        apply: (view, completion, from, to) => {
+          const text = '[[code type=""]]\n\n[[/code';
+          view.dispatch({
+            changes: { from, to, insert: text },
+            selection: { anchor: from + '[[code type="'.length }
+            // 光标放在双引号之间
+          });
+        },
+        detail: "\u4EE3\u7801\u5757"
+      },
+      {
+        label: "[[>]]",
+        type: "keyword",
+        apply: (view, completion, from, to) => {
+          const text = "[[>]]\u5BF9\u9F50\u5185\u5BB9[[/>";
+          const selectFrom = from + "[[>]]".length;
+          const selectTo = selectFrom + "\u5BF9\u9F50\u5185\u5BB9".length;
+          view.dispatch({
+            changes: { from, to, insert: text },
+            selection: { anchor: selectFrom, head: selectTo }
+          });
+        },
+        detail: "\u53F3\u5BF9\u9F50"
+      },
+      {
+        label: "[[<]]",
+        type: "keyword",
+        apply: (view, completion, from, to) => {
+          const text = "[[<]]\u5BF9\u9F50\u5185\u5BB9[[/<";
+          const selectFrom = from + "[[<]]".length;
+          const selectTo = selectFrom + "\u5BF9\u9F50\u5185\u5BB9".length;
+          view.dispatch({
+            changes: { from, to, insert: text },
+            selection: { anchor: selectFrom, head: selectTo }
+          });
+        },
+        detail: "\u5DE6\u5BF9\u9F50"
+      },
+      {
+        label: "[[=]]",
+        type: "keyword",
+        apply: (view, completion, from, to) => {
+          const text = "[[=]]\u5C45\u4E2D\u5185\u5BB9[[/=";
+          const selectFrom = from + "[[=]]".length;
+          const selectTo = selectFrom + "\u5C45\u4E2D\u5185\u5BB9".length;
+          view.dispatch({
+            changes: { from, to, insert: text },
+            selection: { anchor: selectFrom, head: selectTo }
+          });
+        },
+        detail: "\u5C45\u4E2D"
+      },
+      {
+        label: "[[image ",
+        type: "keyword",
+        apply: (view, completion, from, to) => {
+          const text = "[[image ";
+          view.dispatch({
+            changes: { from, to, insert: text },
+            selection: { anchor: from + text.length }
+            // 光标放在标签名之后
+          });
+        },
+        detail: "\u56FE\u7247"
+      },
+      {
+        label: "[[footnote]]",
+        type: "keyword",
+        apply: (view, completion, from, to) => {
+          const text = "[[footnote]]\u8FD9\u662F\u4E00\u6761\u811A\u6CE8[[/footnote";
+          const selectFrom = from + "[[footnote]]".length;
+          const selectTo = selectFrom + "\u8FD9\u662F\u4E00\u6761\u811A\u6CE8".length;
+          view.dispatch({
+            changes: { from, to, insert: text },
+            selection: { anchor: selectFrom, head: selectTo }
+          });
+        },
+        detail: "\u811A\u6CE8"
+      }
+    ],
+    filter: true
+  };
+};
+
 // assets/editor.js
 var customTags = {
   header: Tag.define(),
@@ -23058,10 +23276,16 @@ var customTags = {
   monosapace: Tag.define(),
   list1: Tag.define(),
   list2: Tag.define(),
+  list3: Tag.define(),
   quote: Tag.define(),
   table: Tag.define(),
   table_header: Tag.define(),
-  table_cell: Tag.define()
+  table_cell: Tag.define(),
+  original_text: Tag.define(),
+  // 用于原始文本
+  image: Tag.define(),
+  // 用于图片
+  footnote: Tag.define()
 };
 var wikidotLanguage = StreamLanguage.define({
   token(stream) {
@@ -23078,11 +23302,18 @@ var wikidotLanguage = StreamLanguage.define({
     if (stream.match(/\[https?:\/\/.*?\]/)) return "link";
     if (stream.match(/\@\@\@\@/)) return "newline";
     if (stream.match(/\{\{.*?\}\}/)) return "monosapace";
+    if (stream.match(/\@\@.*?\@\@/)) {
+      stream.skipToEnd();
+      return "original_text";
+    }
     if (stream.sol() && stream.match(/\*+ /)) {
       return "list1";
     }
     if (stream.sol() && stream.match(/#+ /)) {
       return "list2";
+    }
+    if (stream.sol() && stream.match(/\:.*?\:/)) {
+      return "list3";
     }
     if (stream.sol() && stream.match(/>+ /)) {
       stream.skipToEnd();
@@ -23105,6 +23336,8 @@ var wikidotLanguage = StreamLanguage.define({
     if (stream.match(/\[\[\/\<?\]\]/)) return "left";
     if (stream.match(/\[\[\=?\]\]/)) return "center";
     if (stream.match(/\[\[\/\=?\]\]/)) return "center";
+    if (stream.match(/\[\[image.*?\]\]/)) return "image";
+    if (stream.match(/\[\[footnote\]\]/) || stream.match(/\[\[\/footnote\]\]/)) return "footnote";
     if (stream.match(/\[\[.*?\]\]/)) return "wikiTag";
     if (stream.sol() && stream.match(/^-{5,}$/)) return "hr";
     stream.next();
@@ -23130,10 +23363,14 @@ var wikidotLanguage = StreamLanguage.define({
     "monosapace": customTags.monosapace,
     "list1": customTags.list1,
     "list2": customTags.list2,
+    "list3": customTags.list3,
     "quote": customTags.quote,
     "table": customTags.table,
     "table_header": customTags.table_header,
-    "table_cell": customTags.table_cell
+    "table_cell": customTags.table_cell,
+    "original_text": customTags.original_text,
+    "image": customTags.image,
+    "footnote": customTags.footnote
   }
 });
 var wikidotHighlightStyle = HighlightStyle.define([
@@ -23155,10 +23392,14 @@ var wikidotHighlightStyle = HighlightStyle.define([
   { tag: customTags.monosapace, class: "cm-monosapace" },
   { tag: customTags.list1, class: "cm-list1" },
   { tag: customTags.list2, class: "cm-list2" },
+  { tag: customTags.list3, class: "cm-list3" },
   { tag: customTags.quote, class: "cm-quote" },
   { tag: customTags.table, class: "cm-table" },
   { tag: customTags.table_header, class: "cm-table-header" },
-  { tag: customTags.table_cell, class: "cm-table-cell" }
+  { tag: customTags.table_cell, class: "cm-table-cell" },
+  { tag: customTags.original_text, class: "cm-original-text" },
+  { tag: customTags.image, class: "cm-image" },
+  { tag: customTags.footnote, class: "cm-footnote" }
 ]);
 var customKeymap = keymap.of([
   {
@@ -23174,8 +23415,9 @@ var customKeymap = keymap.of([
         return false;
       }
       const listMatch = line.text.match(/^([*#])\s+/);
-      if (listMatch) {
-        const listMarker = listMatch[1];
+      const list3Match = line.text.match(/^(:.*?:)\s+/);
+      if (listMatch || list3Match) {
+        const listMarker = listMatch ? listMatch[1] : list3Match[1];
         const contentAfterMarker = line.text.substring(listMarker.length + 1).trim();
         const isListItemEmpty = contentAfterMarker === "";
         if (isListItemEmpty) {
@@ -23207,54 +23449,6 @@ ${listMarker} `;
   },
   indentWithTab
 ]);
-var wikidotCompletionSource = (context) => {
-  let before = context.matchBefore(/\[\[[\w\s]*/);
-  let atMatch = context.matchBefore(/^\@+/);
-  let tableMatch = context.matchBefore(/\|\|.*?/);
-  if (atMatch && (atMatch.from !== atMatch.to || context.explicit)) {
-    return {
-      from: atMatch.from,
-      options: [
-        { label: "@@@@", type: "keyword", apply: "@@@@", detail: "\u5F3A\u5236\u6362\u884C / \u539F\u59CB\u6587\u672C" }
-      ],
-      filter: true
-    };
-  }
-  if (tableMatch && (tableMatch.from !== tableMatch.to || context.explicit)) {
-    return {
-      from: tableMatch.from,
-      options: [
-        { label: "|| Header 1 || Header 2 ||", type: "keyword", apply: "||~Header 1||~Header 2||", detail: "\u8868\u5934\u884C" },
-        { label: "|| Cell 1 || Cell 2 ||", type: "keyword", apply: "||Cell 1||Cell 2||", detail: "\u8868\u683C\u884C" }
-      ],
-      filter: true
-    };
-  }
-  if (!before || before.from == before.to && !context.explicit) return {
-    from: context.pos,
-    options: [
-      // 这里可以提供一些全局的补全选项，或者直接返回空数组
-    ]
-  };
-  return {
-    from: before.from,
-    options: [
-      // 常见标签
-      { label: "[[include ", type: "keyword", detail: "\u5F15\u7528\u9875\u9762" },
-      { label: "[[div ", type: "keyword", detail: "\u5BB9\u5668" },
-      { label: "[[module ", type: "keyword", detail: "\u529F\u80FD\u7EC4\u4EF6" },
-      // 更多 Wikidot 标签可以在这里添加
-      // 注意这里不需要后面两个]]，因为用户输入[[后会自动补全]]，我们只需要提供标签的前半部分
-      { label: "[[module rate]]", type: "function", apply: "[[module rate", detail: "\u8BC4\u5206\u6A21\u5757" },
-      { label: "[[code]]", type: "keyword", apply: "[[code]]\n\n[[/code", detail: "\u4EE3\u7801\u5757" },
-      { label: "[[>]]", type: "keyword", apply: "[[>]]\n\n[[/>", detail: "\u53F3\u5BF9\u9F50" },
-      { label: "[[<]]", type: "keyword", apply: "[[<]]\n\n[[/<", detail: "\u5DE6\u5BF9\u9F50" },
-      { label: "[[=]]", type: "keyword", apply: "[[=]]\n\n[[/=", detail: "\u5C45\u4E2D" }
-    ],
-    // 允许根据输入内容进行有效过滤
-    filter: true
-  };
-};
 var startEditor = () => {
   const state = EditorState.create({
     doc: `[[include main-theme]]
@@ -23266,8 +23460,13 @@ var startEditor = () => {
 __\u4E0B\u5212\u7EBF\u6587\u5B57__
 --\u5220\u9664\u7EBF\u6587\u5B57--
 
+[[footnote]]\u8FD9\u662F\u4E00\u4E2A\u811A\u6CE8[[/footnote]]
+
 * \u8FD9\u662F\u4E00\u4E2A\u65E0\u5E8F\u5217\u8868\u9879
 # \u8FD9\u662F\u4E00\u4E2A\u6709\u5E8F\u5217\u8868\u9879
+: 123 : \u8FD9\u662F\u4E00\u4E2A\u5B9A\u4E49\u5217\u8868\u9879
+
+> \u8FD9\u662F\u4E00\u4E2A\u5F15\u7528
 
 [http://scp-wiki.wikidot.com SCP\u57FA\u91D1\u4F1A]
 
@@ -23277,8 +23476,9 @@ __\u4E0B\u5212\u7EBF\u6587\u5B57__
 
 ----
 
-[[code]]
-  // \u7EAF Wikidot \u73AF\u5883
+[[code type="python"]]
+# \u8FD9\u662F\u4E00\u4E2A\u4EE3\u7801\u5757
+print("Hello, World!")
 [[/code]]`,
     extensions: [
       // 将 customKeymap 放在 basicSetup 之前，确保优先级
