@@ -53,3 +53,11 @@ color: #61afef !important;
 color: #043eff !important;
 text-decoration: underline !important;
 }
+/* 分隔线 */
+.cm-editor .cm-hr {
+color: #5c6370 !important;
+}
+/* 评分模块 */
+.cm-editor .cm-rate {
+color: #c45d6a !important;
+}

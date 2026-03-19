@@ -23046,7 +23046,8 @@ var customTags = {
   strikethrough: Tag.define(),
   wikiTag: Tag.define(),
   link: Tag.define(),
-  hr: Tag.define()
+  hr: Tag.define(),
+  rate: Tag.define()
 };
 var wikidotLanguage = StreamLanguage.define({
   token(stream) {
@@ -23059,8 +23060,9 @@ var wikidotLanguage = StreamLanguage.define({
     if (stream.match(/__.*?__/)) return "underline";
     if (stream.match(/--.*?--/)) return "strikethrough";
     if (stream.match(/\[https?:\/\/.*?\]/)) return "link";
+    if (stream.match(/\[\[module rate\]\]/)) return "rate";
     if (stream.match(/\[\[.*?\]\]/)) return "wikiTag";
-    if (stream.sol() && stream.match(/^-{4,}$/)) return "hr";
+    if (stream.sol() && stream.match(/^-{5,}$/)) return "hr";
     stream.next();
     return null;
   },
@@ -23073,7 +23075,8 @@ var wikidotLanguage = StreamLanguage.define({
     "strikethrough": customTags.strikethrough,
     "wikiTag": customTags.wikiTag,
     "link": customTags.link,
-    "hr": customTags.hr
+    "hr": customTags.hr,
+    "rate": customTags.rate
   }
 });
 var wikidotHighlightStyle = HighlightStyle.define([
@@ -23084,24 +23087,26 @@ var wikidotHighlightStyle = HighlightStyle.define([
   { tag: customTags.strikethrough, class: "cm-strikethrough" },
   { tag: customTags.wikiTag, class: "cm-wikiTag" },
   { tag: customTags.link, class: "cm-link" },
-  { tag: customTags.hr, class: "cm-hr" }
+  { tag: customTags.hr, class: "cm-hr" },
+  { tag: customTags.rate, class: "cm-rate" }
 ]);
 var wikidotCompletionSource = (context) => {
-  let tagMatch = context.matchBefore(/\[\[/);
-  if (tagMatch) {
-    return {
-      from: tagMatch.from,
-      options: [
-        { label: "[[include ", type: "keyword", detail: "\u5F15\u7528" },
-        { label: "[[div ", type: "keyword", detail: "\u5BB9\u5668" },
-        { label: "[[module ", type: "keyword", detail: "\u529F\u80FD\u7EC4\u4EF6" },
-        // 更多 Wikidot 标签可以在这里添加
-        // 注意这里不需要后面两个]]，因为用户输入[[后会自动补全]]，我们只需要提供标签的前半部分
-        { label: "[[code]]", type: "keyword", apply: "[[code]]\n\n[[/code", detail: "\u4EE3\u7801\u5757" }
-      ]
-    };
-  }
-  return null;
+  let before = context.matchBefore(/\[\[[\w\s]*/);
+  if (!before || before.from == before.to && !context.explicit) return null;
+  return {
+    from: before.from,
+    options: [
+      { label: "[[include ", type: "keyword", detail: "\u5F15\u7528\u9875\u9762" },
+      { label: "[[div ", type: "keyword", detail: "\u5BB9\u5668" },
+      { label: "[[module ", type: "keyword", detail: "\u529F\u80FD\u7EC4\u4EF6" },
+      // 更多 Wikidot 标签可以在这里添加
+      // 注意这里不需要后面两个]]，因为用户输入[[后会自动补全]]，我们只需要提供标签的前半部分
+      { label: "[[module rate]]", type: "function", apply: "[[module rate", detail: "\u8BC4\u5206\u6A21\u5757" },
+      { label: "[[code]]", type: "keyword", apply: "[[code]]\n\n[[/code", detail: "\u4EE3\u7801\u5757" }
+    ],
+    // 允许根据输入内容进行有效过滤
+    filter: true
+  };
 };
 var startEditor = () => {
   const state = EditorState.create({

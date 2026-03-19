@@ -14,7 +14,8 @@ const customTags = {
     strikethrough: Tag.define(),
     wikiTag: Tag.define(),
     link: Tag.define(),
-    hr: Tag.define()
+    hr: Tag.define(),
+    rate: Tag.define()
 };
 
 /**
@@ -37,10 +38,12 @@ const wikidotLanguage = StreamLanguage.define({
         if (stream.match(/--.*?--/)) return "strikethrough";
         // 链接
         if (stream.match(/\[https?:\/\/.*?\]/)) return "link";
+        // 评分模块注意需要放在标签前面，因为它也是以 [[ 开头的
+        if (stream.match(/\[\[module rate\]\]/)) return "rate";
         // Wikidot 标签
         if (stream.match(/\[\[.*?\]\]/)) return "wikiTag";
         // 分隔线
-        if (stream.sol() && stream.match(/^-{4,}$/)) return "hr";
+        if (stream.sol() && stream.match(/^-{5,}$/)) return "hr";
 
         stream.next();
         return null;
@@ -54,7 +57,8 @@ const wikidotLanguage = StreamLanguage.define({
         "strikethrough": customTags.strikethrough,
         "wikiTag": customTags.wikiTag,
         "link": customTags.link,
-        "hr": customTags.hr
+        "hr": customTags.hr,
+        "rate": customTags.rate
     }
 });
 
@@ -67,28 +71,34 @@ const wikidotHighlightStyle = HighlightStyle.define([
     { tag: customTags.strikethrough, class: "cm-strikethrough" },
     { tag: customTags.wikiTag, class: "cm-wikiTag" },
     { tag: customTags.link, class: "cm-link" },
-    { tag: customTags.hr, class: "cm-hr" }
+    { tag: customTags.hr, class: "cm-hr" },
+    { tag: customTags.rate, class: "cm-rate" }
 ]);
 
 /**
  * 自动补全配置
  */
 const wikidotCompletionSource = (context) => {
-    let tagMatch = context.matchBefore(/\[\[/);
-    if (tagMatch) {
-        return {
-            from: tagMatch.from,
-            options: [
-                { label: "[[include ", type: "keyword", detail: "引用" },
-                { label: "[[div ", type: "keyword", detail: "容器" },
-                { label: "[[module ", type: "keyword", detail: "功能组件" },
-                // 更多 Wikidot 标签可以在这里添加
-                // 注意这里不需要后面两个]]，因为用户输入[[后会自动补全]]，我们只需要提供标签的前半部分
-                { label: "[[code]]", type: "keyword", apply: "[[code]]\n\n[[/code", detail: "代码块" },
-            ]
-        };
-    }
-    return null;
+    // 查找光标前最近的 "[["
+    let before = context.matchBefore(/\[\[[\w\s]*/);
+    
+    // 如果没搜到 "[["，或者搜索结果不是以 "[[" 开始，则不触发
+    if (!before || before.from == before.to && !context.explicit) return null;
+
+    return {
+        from: before.from,
+        options: [
+            { label: "[[include ", type: "keyword", detail: "引用页面" },
+            { label: "[[div ", type: "keyword", detail: "容器" },
+            { label: "[[module ", type: "keyword", detail: "功能组件" },
+            // 更多 Wikidot 标签可以在这里添加
+            // 注意这里不需要后面两个]]，因为用户输入[[后会自动补全]]，我们只需要提供标签的前半部分
+            { label: "[[module rate]]", type: "function", apply: "[[module rate", detail: "评分模块" },
+            { label: "[[code]]", type: "keyword", apply: "[[code]]\n\n[[/code", detail: "代码块" }
+        ],
+        // 允许根据输入内容进行有效过滤
+        filter: true 
+    };
 };
 
 // 3. 初始化编辑器
