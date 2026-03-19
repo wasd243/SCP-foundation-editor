@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Foundation Editor</title>
+    <link rel="stylesheet" href="code_view.css">
+    <!-- PyQt 通信脚本 -->
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    
+</head>
+<body>
+    <div id="editor-container"></div>
+    <!-- 使用 esm.sh 引入 CodeMirror 6 核心及其扩展 -->
+    <script type="module" src="bundle_editor.js"></script>
+</body>
+</html>

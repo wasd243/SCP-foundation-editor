@@ -9,6 +9,11 @@ dist/
 # Antigravity
 .agy/
 
+# tests
+tests/node_modules/
+tests/esbuild
+
+
 # IDE
 .vscode/
 .idea/

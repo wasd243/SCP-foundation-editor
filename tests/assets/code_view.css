@@ -1,0 +1,55 @@
+/* 基础背景 */
+html, body, #editor-container {
+margin: 0;
+padding: 0;
+height: 100%;
+width: 100%;
+overflow: hidden;
+background-color: #282c34 !important;
+}
+
+.cm-editor {
+height: 100%;
+}
+
+.cm-scroller {
+font-family: 'Cascadia Code', 'Consolas', monospace;
+font-size: 14px;
+line-height: 1.6;
+}
+
+/* 强制高亮类 - 增加了层级以确保覆盖 One Dark 默认样式 */
+.cm-editor .cm-header {
+color: #e06c75 !important;
+font-weight: bold !important;
+font-size: 1.2em;
+}
+/* 加粗 */
+.cm-editor .cm-strong {
+color: #abb2bf !important;
+font-weight: bold !important;
+}
+/* 斜体 */
+.cm-editor .cm-em {
+color: #abb2bf !important;
+font-style: italic !important;
+}
+/* 下划线 */
+.cm-editor .cm-underline {
+color: #abb2bf !important;
+text-decoration: underline !important;
+}
+/* 删除线 */
+.cm-editor .cm-strikethrough {
+color: #5c6370 !important;
+text-decoration: line-through !important;
+}
+/* wiki[[]] */
+.cm-editor .cm-wikiTag {
+color: #61afef !important;
+}
+/* 链接 */
+.cm-editor .cm-link {
+color: #043eff !important;
+text-decoration: underline !important;
+}
