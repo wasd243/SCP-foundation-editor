@@ -44,6 +44,18 @@ text-decoration: underline !important;
 color: #5c6370 !important;
 text-decoration: line-through !important;
 }
+/* 上标 */
+.cm-editor .cm-sup {
+color: #c678dd !important;
+font-size: 0.8em;
+vertical-align: super !important;
+}
+/* 下标 */
+.cm-editor .cm-sub {
+color: #c678dd !important;
+font-size: 0.8em;
+vertical-align: sub !important;
+}
 /* wiki[[]] */
 .cm-editor .cm-wikiTag {
 color: #61afef !important;
@@ -60,4 +72,21 @@ color: #5c6370 !important;
 /* 评分模块 */
 .cm-editor .cm-rate {
 color: #c45d6a !important;
+}
+/* 右对齐 */
+.cm-editor .cm-right {
+color: #5173b1 !important;
+}
+/* 左对齐 */
+.cm-editor .cm-left {
+color: #5173b1 !important;
+}
+/* 居中 */
+.cm-editor .cm-center {
+color: #5173b1 !important;
+}
+/* 强制换行符 */
+.cm-editor .cm-newline {
+color: #527ac4 !important;
+font-weight: bold !important;
 }

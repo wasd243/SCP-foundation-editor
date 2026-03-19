@@ -23047,7 +23047,13 @@ var customTags = {
   wikiTag: Tag.define(),
   link: Tag.define(),
   hr: Tag.define(),
-  rate: Tag.define()
+  rate: Tag.define(),
+  right: Tag.define(),
+  left: Tag.define(),
+  center: Tag.define(),
+  sup: Tag.define(),
+  sub: Tag.define(),
+  newline: Tag.define()
 };
 var wikidotLanguage = StreamLanguage.define({
   token(stream) {
@@ -23059,8 +23065,17 @@ var wikidotLanguage = StreamLanguage.define({
     if (stream.match(/\/\/.*?\/\//)) return "em";
     if (stream.match(/__.*?__/)) return "underline";
     if (stream.match(/--.*?--/)) return "strikethrough";
+    if (stream.match(/\^\^.*?\^\^/)) return "sup";
+    if (stream.match(/,,.*?,,/)) return "sub";
     if (stream.match(/\[https?:\/\/.*?\]/)) return "link";
-    if (stream.match(/\[\[module rate\]\]/)) return "rate";
+    if (stream.match(/\@\@\@\@/)) return "newline";
+    if (stream.match(/\[\[module rate\]\]/i)) return "rate";
+    if (stream.match(/\[\[\>?\]\]/)) return "right";
+    if (stream.match(/\[\[\/\>?\]\]/)) return "right";
+    if (stream.match(/\[\[\<?\]\]/)) return "left";
+    if (stream.match(/\[\[\/\<?\]\]/)) return "left";
+    if (stream.match(/\[\[\=?\]\]/)) return "center";
+    if (stream.match(/\[\[\/\=?\]\]/)) return "center";
     if (stream.match(/\[\[.*?\]\]/)) return "wikiTag";
     if (stream.sol() && stream.match(/^-{5,}$/)) return "hr";
     stream.next();
@@ -23074,9 +23089,15 @@ var wikidotLanguage = StreamLanguage.define({
     "underline": customTags.underline,
     "strikethrough": customTags.strikethrough,
     "wikiTag": customTags.wikiTag,
+    "sup": customTags.sup,
+    "sub": customTags.sub,
     "link": customTags.link,
     "hr": customTags.hr,
-    "rate": customTags.rate
+    "rate": customTags.rate,
+    "right": customTags.right,
+    "left": customTags.left,
+    "center": customTags.center,
+    "newline": customTags.newline
   }
 });
 var wikidotHighlightStyle = HighlightStyle.define([
@@ -23088,21 +23109,46 @@ var wikidotHighlightStyle = HighlightStyle.define([
   { tag: customTags.wikiTag, class: "cm-wikiTag" },
   { tag: customTags.link, class: "cm-link" },
   { tag: customTags.hr, class: "cm-hr" },
-  { tag: customTags.rate, class: "cm-rate" }
+  { tag: customTags.rate, class: "cm-rate" },
+  { tag: customTags.right, class: "cm-right" },
+  { tag: customTags.left, class: "cm-left" },
+  { tag: customTags.center, class: "cm-center" },
+  { tag: customTags.sup, class: "cm-sup" },
+  { tag: customTags.sub, class: "cm-sub" },
+  { tag: customTags.newline, class: "cm-newline" }
 ]);
 var wikidotCompletionSource = (context) => {
   let before = context.matchBefore(/\[\[[\w\s]*/);
-  if (!before || before.from == before.to && !context.explicit) return null;
+  let atMatch = context.matchBefore(/^\@+/);
+  if (atMatch && (atMatch.from !== atMatch.to || context.explicit)) {
+    return {
+      from: atMatch.from,
+      options: [
+        { label: "@@@@", type: "keyword", apply: "@@@@", detail: "\u5F3A\u5236\u6362\u884C / \u539F\u59CB\u6587\u672C" }
+      ],
+      filter: true
+    };
+  }
+  if (!before || before.from == before.to && !context.explicit) return {
+    from: context.pos,
+    options: [
+      // 这里可以提供一些全局的补全选项，或者直接返回空数组
+    ]
+  };
   return {
     from: before.from,
     options: [
+      // 常见标签
       { label: "[[include ", type: "keyword", detail: "\u5F15\u7528\u9875\u9762" },
       { label: "[[div ", type: "keyword", detail: "\u5BB9\u5668" },
       { label: "[[module ", type: "keyword", detail: "\u529F\u80FD\u7EC4\u4EF6" },
       // 更多 Wikidot 标签可以在这里添加
       // 注意这里不需要后面两个]]，因为用户输入[[后会自动补全]]，我们只需要提供标签的前半部分
       { label: "[[module rate]]", type: "function", apply: "[[module rate", detail: "\u8BC4\u5206\u6A21\u5757" },
-      { label: "[[code]]", type: "keyword", apply: "[[code]]\n\n[[/code", detail: "\u4EE3\u7801\u5757" }
+      { label: "[[code]]", type: "keyword", apply: "[[code]]\n\n[[/code", detail: "\u4EE3\u7801\u5757" },
+      { label: "[[>]]", type: "keyword", apply: "[[>]]\n\n[[/>", detail: "\u53F3\u5BF9\u9F50" },
+      { label: "[[<]]", type: "keyword", apply: "[[<]]\n\n[[/<", detail: "\u5DE6\u5BF9\u9F50" },
+      { label: "[[=]]", type: "keyword", apply: "[[=]]\n\n[[/=", detail: "\u5C45\u4E2D" }
     ],
     // 允许根据输入内容进行有效过滤
     filter: true
