@@ -19595,6 +19595,7 @@ var defaultKeymap = /* @__PURE__ */ [
   { key: "Alt-A", run: toggleBlockComment },
   { key: "Ctrl-m", mac: "Shift-Alt-m", run: toggleTabFocusMode }
 ].concat(standardKeymap);
+var indentWithTab = { key: "Tab", run: indentMore, shift: indentLess };
 
 // node_modules/@codemirror/search/dist/index.js
 var basicNormalize = typeof String.prototype.normalize == "function" ? (x) => x.normalize("NFKD") : (x) => x;
@@ -23053,7 +23054,14 @@ var customTags = {
   center: Tag.define(),
   sup: Tag.define(),
   sub: Tag.define(),
-  newline: Tag.define()
+  newline: Tag.define(),
+  monosapace: Tag.define(),
+  list1: Tag.define(),
+  list2: Tag.define(),
+  quote: Tag.define(),
+  table: Tag.define(),
+  table_header: Tag.define(),
+  table_cell: Tag.define()
 };
 var wikidotLanguage = StreamLanguage.define({
   token(stream) {
@@ -23069,6 +23077,27 @@ var wikidotLanguage = StreamLanguage.define({
     if (stream.match(/,,.*?,,/)) return "sub";
     if (stream.match(/\[https?:\/\/.*?\]/)) return "link";
     if (stream.match(/\@\@\@\@/)) return "newline";
+    if (stream.match(/\{\{.*?\}\}/)) return "monosapace";
+    if (stream.sol() && stream.match(/\*+ /)) {
+      return "list1";
+    }
+    if (stream.sol() && stream.match(/#+ /)) {
+      return "list2";
+    }
+    if (stream.sol() && stream.match(/>+ /)) {
+      stream.skipToEnd();
+      return "quote";
+    }
+    if (stream.match(/\|\|/)) {
+      return "table";
+    }
+    if (stream.match(/\~/)) {
+      return "table_header";
+    }
+    if (stream.sol() && stream.match(/\|\|(?!~)/)) {
+      stream.skipToEnd();
+      return "table_cell";
+    }
     if (stream.match(/\[\[module rate\]\]/i)) return "rate";
     if (stream.match(/\[\[\>?\]\]/)) return "right";
     if (stream.match(/\[\[\/\>?\]\]/)) return "right";
@@ -23097,7 +23126,14 @@ var wikidotLanguage = StreamLanguage.define({
     "right": customTags.right,
     "left": customTags.left,
     "center": customTags.center,
-    "newline": customTags.newline
+    "newline": customTags.newline,
+    "monosapace": customTags.monosapace,
+    "list1": customTags.list1,
+    "list2": customTags.list2,
+    "quote": customTags.quote,
+    "table": customTags.table,
+    "table_header": customTags.table_header,
+    "table_cell": customTags.table_cell
   }
 });
 var wikidotHighlightStyle = HighlightStyle.define([
@@ -23115,16 +23151,81 @@ var wikidotHighlightStyle = HighlightStyle.define([
   { tag: customTags.center, class: "cm-center" },
   { tag: customTags.sup, class: "cm-sup" },
   { tag: customTags.sub, class: "cm-sub" },
-  { tag: customTags.newline, class: "cm-newline" }
+  { tag: customTags.newline, class: "cm-newline" },
+  { tag: customTags.monosapace, class: "cm-monosapace" },
+  { tag: customTags.list1, class: "cm-list1" },
+  { tag: customTags.list2, class: "cm-list2" },
+  { tag: customTags.quote, class: "cm-quote" },
+  { tag: customTags.table, class: "cm-table" },
+  { tag: customTags.table_header, class: "cm-table-header" },
+  { tag: customTags.table_cell, class: "cm-table-cell" }
+]);
+var customKeymap = keymap.of([
+  {
+    key: "Enter",
+    run: (view) => {
+      const state = view.state;
+      const selection2 = state.selection.main;
+      if (!selection2.empty) return false;
+      const line = state.doc.lineAt(selection2.head);
+      const cursorPos = selection2.head - line.from;
+      const isAtEndOfLine = cursorPos >= line.text.length - 1;
+      if (!isAtEndOfLine) {
+        return false;
+      }
+      const listMatch = line.text.match(/^([*#])\s+/);
+      if (listMatch) {
+        const listMarker = listMatch[1];
+        const contentAfterMarker = line.text.substring(listMarker.length + 1).trim();
+        const isListItemEmpty = contentAfterMarker === "";
+        if (isListItemEmpty) {
+          view.dispatch({
+            changes: {
+              from: line.from,
+              to: line.to,
+              insert: ""
+            },
+            selection: { anchor: line.from }
+          });
+          return true;
+        } else {
+          const newLineContent = `
+${listMarker} `;
+          view.dispatch({
+            changes: {
+              from: selection2.head,
+              to: selection2.head,
+              insert: newLineContent
+            },
+            selection: { anchor: selection2.head + newLineContent.length }
+          });
+          return true;
+        }
+      }
+      return false;
+    }
+  },
+  indentWithTab
 ]);
 var wikidotCompletionSource = (context) => {
   let before = context.matchBefore(/\[\[[\w\s]*/);
   let atMatch = context.matchBefore(/^\@+/);
+  let tableMatch = context.matchBefore(/\|\|.*?/);
   if (atMatch && (atMatch.from !== atMatch.to || context.explicit)) {
     return {
       from: atMatch.from,
       options: [
         { label: "@@@@", type: "keyword", apply: "@@@@", detail: "\u5F3A\u5236\u6362\u884C / \u539F\u59CB\u6587\u672C" }
+      ],
+      filter: true
+    };
+  }
+  if (tableMatch && (tableMatch.from !== tableMatch.to || context.explicit)) {
+    return {
+      from: tableMatch.from,
+      options: [
+        { label: "|| Header 1 || Header 2 ||", type: "keyword", apply: "||~Header 1||~Header 2||", detail: "\u8868\u5934\u884C" },
+        { label: "|| Cell 1 || Cell 2 ||", type: "keyword", apply: "||Cell 1||Cell 2||", detail: "\u8868\u683C\u884C" }
       ],
       filter: true
     };
@@ -23156,14 +23257,37 @@ var wikidotCompletionSource = (context) => {
 };
 var startEditor = () => {
   const state = EditorState.create({
-    doc: "[[include main-theme]]\n\n+ \u4E00\u7EA7\u6807\u9898\n\n**\u52A0\u7C97\u6587\u5B57**\n//\u659C\u4F53\u6587\u5B57//\n__\u4E0B\u5212\u7EBF\u6587\u5B57__\n--\u5220\u9664\u7EBF\u6587\u5B57--\n\n[http://scp-wiki.wikidot.com SCP\u57FA\u91D1\u4F1A]\n\n----\n\n[[code]]\n  // \u7EAF Wikidot \u73AF\u5883\n[[/code]]",
+    doc: `[[include main-theme]]
+
++ \u4E00\u7EA7\u6807\u9898
+
+**\u52A0\u7C97\u6587\u5B57**
+//\u659C\u4F53\u6587\u5B57//
+__\u4E0B\u5212\u7EBF\u6587\u5B57__
+--\u5220\u9664\u7EBF\u6587\u5B57--
+
+* \u8FD9\u662F\u4E00\u4E2A\u65E0\u5E8F\u5217\u8868\u9879
+# \u8FD9\u662F\u4E00\u4E2A\u6709\u5E8F\u5217\u8868\u9879
+
+[http://scp-wiki.wikidot.com SCP\u57FA\u91D1\u4F1A]
+
+||~\u8868\u59341||~\u8868\u59342||~\u8868\u59343||
+||\u5355\u5143\u683C1||\u5355\u5143\u683C2||\u5355\u5143\u683C3||
+||\u5355\u5143\u683C4||\u5355\u5143\u683C5||\u5355\u5143\u683C6||
+
+----
+
+[[code]]
+  // \u7EAF Wikidot \u73AF\u5883
+[[/code]]`,
     extensions: [
+      // 将 customKeymap 放在 basicSetup 之前，确保优先级
+      customKeymap,
       basicSetup,
       oneDark,
       wikidotLanguage,
       syntaxHighlighting(wikidotHighlightStyle),
-      // 应用自定义高亮映射
-      autocompletion({ override: [wikidotCompletionSource] }),
+      autocompletion({ override: [wikidotCompletionSource], selectOnOpen: true }),
       EditorView.updateListener.of((update) => {
         if (update.docChanged && window.py_bridge) {
           window.py_bridge.on_code_changed(update.state.doc.toString());

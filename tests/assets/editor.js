@@ -3,6 +3,8 @@ import { EditorState } from "@codemirror/state";
 import { StreamLanguage, syntaxHighlighting, HighlightStyle } from "@codemirror/language";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { autocompletion } from "@codemirror/autocomplete";
+import { keymap } from "@codemirror/view";
+import { indentWithTab } from "@codemirror/commands";
 import { Tag } from "@lezer/highlight";
 
 // 1. 定义自定义高亮标签，防止 "Unknown highlighting tag" 报错
@@ -21,7 +23,14 @@ const customTags = {
     center: Tag.define(),
     sup: Tag.define(),
     sub: Tag.define(),
-    newline: Tag.define()
+    newline: Tag.define(),
+    monosapace: Tag.define(),
+    list1: Tag.define(),
+    list2: Tag.define(),
+    quote: Tag.define(),
+    table: Tag.define(),
+    table_header: Tag.define(),
+    table_cell: Tag.define(),
 };
 
 /**
@@ -50,6 +59,35 @@ const wikidotLanguage = StreamLanguage.define({
         if (stream.match(/\[https?:\/\/.*?\]/)) return "link";
         // 强制换行符
         if (stream.match(/\@\@\@\@/)) return "newline";
+        // 英文等宽字体
+        if (stream.match(/\{\{.*?\}\}/)) return "monosapace";
+        // 无序列表
+        if (stream.sol() && stream.match(/\*+ /)) {
+            return "list1";
+        }
+        // 有序列表
+        if (stream.sol() && stream.match(/#+ /)) {
+            return "list2";
+        }
+        // 引用
+        if (stream.sol() && stream.match(/>+ /)) {
+            stream.skipToEnd();
+            return "quote";
+        }
+        // 表格
+        if (stream.match(/\|\|/)) {
+        // 高亮竖线
+            return "table";
+        }
+        if (stream.match(/\~/)) {
+            return "table_header";
+        }
+        // 匹配普通表格行
+        if (stream.sol() && stream.match(/\|\|(?!~)/)) {
+            stream.skipToEnd();
+            return "table_cell";
+        }
+
         // 带有[[]]的注意需要放在标签前面，因为它也是以 [[ 开头的
         // ================================================================
         // 评分
@@ -88,7 +126,14 @@ const wikidotLanguage = StreamLanguage.define({
         "right": customTags.right,
         "left": customTags.left,
         "center": customTags.center,
-        "newline": customTags.newline
+        "newline": customTags.newline,
+        "monosapace": customTags.monosapace,
+        "list1": customTags.list1,
+        "list2": customTags.list2,
+        "quote": customTags.quote,
+        "table": customTags.table,
+        "table_header": customTags.table_header,
+        "table_cell": customTags.table_cell,
     }
 });
 
@@ -104,12 +149,88 @@ const wikidotHighlightStyle = HighlightStyle.define([
     { tag: customTags.hr, class: "cm-hr" },
     { tag: customTags.rate, class: "cm-rate" },
     { tag: customTags.right, class: "cm-right" },
-    {tag: customTags.left, class: "cm-left" },
-    {tag: customTags.center, class: "cm-center" },
-    {tag: customTags.sup, class: "cm-sup" },
-    {tag: customTags.sub, class: "cm-sub" },
-    {tag: customTags.newline, class: "cm-newline" }
+    { tag: customTags.left, class: "cm-left" },
+    { tag: customTags.center, class: "cm-center" },
+    { tag: customTags.sup, class: "cm-sup" },
+    { tag: customTags.sub, class: "cm-sub" },
+    { tag: customTags.newline, class: "cm-newline" },
+    { tag: customTags.monosapace, class: "cm-monosapace" },
+    { tag: customTags.list1, class: "cm-list1" },
+    { tag: customTags.list2, class: "cm-list2" },
+    { tag: customTags.quote, class: "cm-quote" },
+    { tag: customTags.table, class: "cm-table" },
+    { tag: customTags.table_header, class: "cm-table-header" },
+    { tag: customTags.table_cell, class: "cm-table-cell" },
 ]);
+
+/**
+ * 改进的自动延续列表逻辑 - 针对Wikidot语法
+ * 使用更高优先级确保覆盖默认行为
+ */
+const customKeymap = keymap.of([
+    {
+        key: "Enter",
+        run: (view) => {
+            const state = view.state;
+            const selection = state.selection.main;
+            
+            if (!selection.empty) return false;
+            
+            const line = state.doc.lineAt(selection.head);
+            const cursorPos = selection.head - line.from;
+            
+            // 检查光标是否在行末（或者接近行末）
+            const isAtEndOfLine = cursorPos >= line.text.length - 1;
+            
+            if (!isAtEndOfLine) {
+                // 如果光标不在行末，让默认行为处理（比如在行中间换行）
+                return false;
+            }
+            
+            // Wikidot列表语法：单个*表示无序列表，单个#表示有序列表
+            // 匹配行首的 * 或 #，后面必须跟空格
+            const listMatch = line.text.match(/^([*#])\s+/);
+            
+            if (listMatch) {
+                const listMarker = listMatch[1]; // * 或 #
+                
+                // 检查是否在空列表项上按回车
+                const contentAfterMarker = line.text.substring(listMarker.length + 1).trim();
+                const isListItemEmpty = contentAfterMarker === '';
+                
+                if (isListItemEmpty) {
+                    // 空列表项：删除当前行的列表标记
+                    view.dispatch({
+                        changes: { 
+                            from: line.from, 
+                            to: line.to, 
+                            insert: "" 
+                        },
+                        selection: { anchor: line.from }
+                    });
+                    return true;
+                } else {
+                    // 非空列表项：插入新行并延续列表标记
+                    const newLineContent = `\n${listMarker} `;
+                    
+                    view.dispatch({
+                        changes: { 
+                            from: selection.head, 
+                            to: selection.head, 
+                            insert: newLineContent 
+                        },
+                        selection: { anchor: selection.head + newLineContent.length }
+                    });
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+    },
+    indentWithTab
+]);
+
 
 /**
  * 自动补全配置
@@ -118,6 +239,7 @@ const wikidotCompletionSource = (context) => {
     // 查找光标前最近的 "[["
     let before = context.matchBefore(/\[\[[\w\s]*/);
     let atMatch = context.matchBefore(/^\@+/);
+    let tableMatch = context.matchBefore(/\|\|.*?/);
 
     // 如果光标前是 "@@@@"，则提供强制换行符的补全选项
     if (atMatch && (atMatch.from !== atMatch.to || context.explicit)) {
@@ -129,7 +251,19 @@ const wikidotCompletionSource = (context) => {
             filter: true
         };
     }
-    
+
+    // 如果光标前是表格语法，提供表格相关的补全选项
+    if (tableMatch && (tableMatch.from !== tableMatch.to || context.explicit)) {
+        return {
+            from: tableMatch.from,
+            options: [
+                { label: "|| Header 1 || Header 2 ||", type: "keyword", apply: "||~Header 1||~Header 2||", detail: "表头行" },
+                { label: "|| Cell 1 || Cell 2 ||", type: "keyword", apply: "||Cell 1||Cell 2||", detail: "表格行" }
+            ],
+            filter: true
+        };
+    }
+
     // 如果没搜到 "[["，或者搜索结果不是以 "[[" 开始，则不触发
     if (!before || before.from == before.to && !context.explicit) return {
         from: context.pos,
@@ -162,13 +296,37 @@ const wikidotCompletionSource = (context) => {
 // 3. 初始化编辑器
 const startEditor = () => {
     const state = EditorState.create({
-        doc: "[[include main-theme]]\n\n+ 一级标题\n\n**加粗文字**\n//斜体文字//\n__下划线文字__\n--删除线文字--\n\n[http://scp-wiki.wikidot.com SCP基金会]\n\n----\n\n[[code]]\n  // 纯 Wikidot 环境\n[[/code]]",
+        doc: `[[include main-theme]]
+
++ 一级标题
+
+**加粗文字**
+//斜体文字//
+__下划线文字__
+--删除线文字--
+
+* 这是一个无序列表项
+# 这是一个有序列表项
+
+[http://scp-wiki.wikidot.com SCP基金会]
+
+||~表头1||~表头2||~表头3||
+||单元格1||单元格2||单元格3||
+||单元格4||单元格5||单元格6||
+
+----
+
+[[code]]
+  // 纯 Wikidot 环境
+[[/code]]`,
         extensions: [
+            // 将 customKeymap 放在 basicSetup 之前，确保优先级
+            customKeymap,
             basicSetup,
             oneDark,
             wikidotLanguage,
-            syntaxHighlighting(wikidotHighlightStyle), // 应用自定义高亮映射
-            autocompletion({ override: [wikidotCompletionSource] }),
+            syntaxHighlighting(wikidotHighlightStyle),
+            autocompletion({ override: [wikidotCompletionSource], selectOnOpen: true }),
             
             EditorView.updateListener.of((update) => {
                 if (update.docChanged && window.py_bridge) {

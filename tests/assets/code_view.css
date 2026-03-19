@@ -90,3 +90,31 @@ color: #5173b1 !important;
 color: #527ac4 !important;
 font-weight: bold !important;
 }
+/* 英文等宽字体 */
+.cm-editor .cm-monosapace {
+color: #3e79e7 !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+}
+/* 无序列表 */
+.cm-editor .cm-list1 {
+color: #98c379 !important;
+}
+/* 有序列表 */
+.cm-editor .cm-list2 {
+color: #98c379 !important;
+}
+/* 引用 */
+.cm-editor .cm-quote {
+color: #639a3c !important;
+}
+/* 表格 */
+.cm-editor .cm-table {
+color: #e5c07b !important;
+}
+.cm-table-header {
+color: #5383de !important;
+font-weight: bold !important;
+}
+.cm-table-cell {
+color: #abb2bf !important;
+}
