@@ -238,7 +238,12 @@ color: #fd7a00 !important;
 color: #fd7a00 !important;
 }
 
-
+/* LICENSE */
+.cm-editor .cm-license {
+color: #ff0000 !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+font-weight: bold !important;
+}
 
 
 

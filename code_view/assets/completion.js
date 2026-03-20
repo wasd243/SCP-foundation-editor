@@ -373,6 +373,18 @@ export const wikidotCompletionSource = (context) => {
                 }
             },
             {
+                label: "[[include :scp-wiki-cn:components:license-box",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 license-box 类名
+                    const text = "[[include :scp-wiki-cn:components:license-box]]\n|lang=cn\n|author= \n=====\n> 文件名：\n> 图像名： \n> 图像作者： \n> 授权协议： \n> 来源链接：\n=====\n[[include :scp-wiki-cn:components:license-end";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + 81 }
+                    });
+                }
+            },
+            {
                 label: "[[span",
                 type: "keyword",
                 apply: (view, completion, from, to) => {

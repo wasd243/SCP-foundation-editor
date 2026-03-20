@@ -51,6 +51,7 @@ const customTags = {
     size: Tag.define(), // 用于字体大小标签
     aim: Tag.define(), // 用于AIM
     collapsible: Tag.define(), // 用于可折叠内容
+    license: Tag.define(), // LICENSE
 };
 
 /**
@@ -213,6 +214,11 @@ const wikidotLanguage = StreamLanguage.define({
             return "collapsible";
         }
 
+        // LICENSE
+        if (stream.match(/include :scp-wiki-cn:components:license-box/)) {
+            return "license";
+        }
+
         // ACS AIM
         // ================================================================
         if (stream.match(/include :scp-wiki-cn:component:anomaly-class-bar-source *?/)) {
@@ -268,6 +274,12 @@ const wikidotLanguage = StreamLanguage.define({
             return "components";
         }
         if (stream.match(/blocks/)){
+            return "components";
+        }
+        if (stream.match(/author/)){
+            return "components";
+        }
+        if (stream.match(/translator/)){
             return "components";
         }
         // ================================================================
