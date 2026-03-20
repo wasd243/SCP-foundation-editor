@@ -10,8 +10,9 @@ dist/
 .agy/
 
 # tests
-tests/node_modules/
-tests/esbuild
+code_view/node_modules/
+code_view/esbuild
+code_view/assets/bundle_editor.js
 node_modules/
 
 # packages
