@@ -12,7 +12,7 @@ dist/
 # tests
 tests/node_modules/
 tests/esbuild
-
+node_modules/
 
 # IDE
 .vscode/

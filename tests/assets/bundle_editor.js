@@ -23038,6 +23038,141 @@ var oneDarkHighlightStyle = /* @__PURE__ */ HighlightStyle.define([
 ]);
 var oneDark = [oneDarkTheme, /* @__PURE__ */ syntaxHighlighting(oneDarkHighlightStyle)];
 
+// assets/color_preview.js
+var ColorPreviewWidget = class extends WidgetType {
+  constructor(color) {
+    super();
+    this.color = color;
+  }
+  eq(other) {
+    return other.color === this.color;
+  }
+  toDOM() {
+    const span = document.createElement("span");
+    span.className = "cm-color-preview";
+    span.setAttribute("data-color", this.color);
+    span.style.cssText = `
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin: 0 4px 0 0;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      background-color: ${this.color};
+      vertical-align: middle;
+      cursor: pointer;
+    `;
+    span.addEventListener("click", this.handleClick.bind(this));
+    return span;
+  }
+  handleClick(e) {
+    e.stopPropagation();
+    this.openColorPicker(e.target);
+  }
+  openColorPicker(element) {
+    const color = element.getAttribute("data-color");
+    const picker = document.createElement("input");
+    picker.type = "color";
+    picker.value = color;
+    picker.style.position = "absolute";
+    picker.style.opacity = "0";
+    picker.style.width = "0";
+    picker.style.height = "0";
+    picker.style.pointerEvents = "none";
+    picker.addEventListener("change", (e) => {
+      const newColor = e.target.value;
+      this.updateColorInEditor(color, newColor, element);
+    });
+    document.body.appendChild(picker);
+    picker.click();
+    document.body.removeChild(picker);
+  }
+  updateColorInEditor(oldColor, newColor, element) {
+    const event = new CustomEvent("colorChange", {
+      detail: {
+        oldColor,
+        newColor,
+        element
+      }
+    });
+    window.dispatchEvent(event);
+  }
+};
+var colorPreviewExtension = EditorView.decorations.of((view) => {
+  const builder = new RangeSetBuilder();
+  const text = view.state.doc.toString();
+  const hexColorRegex = /#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
+  let match;
+  while ((match = hexColorRegex.exec(text)) !== null) {
+    const color = match[0];
+    const from = match.index;
+    const to = from + color.length;
+    builder.add(
+      from,
+      from,
+      Decoration.widget({
+        widget: new ColorPreviewWidget(color),
+        side: -1
+      })
+    );
+  }
+  return builder.finish();
+});
+function setupColorPickerHandler(editorView) {
+  window.addEventListener("colorChange", (event) => {
+    const { oldColor, newColor, element } = event.detail;
+    const text = editorView.state.doc.toString();
+    const index = text.indexOf(oldColor);
+    if (index !== -1) {
+      editorView.dispatch({
+        changes: {
+          from: index,
+          to: index + oldColor.length,
+          insert: newColor
+        }
+      });
+    }
+  });
+}
+
+// assets/color_widgets.js
+var wikidotColorExtension = EditorView.decorations.of((view) => {
+  const builder = new RangeSetBuilder();
+  const text = view.state.doc.toString();
+  const wikidotColorRegex = /###([0-9a-fA-F]{6})\|([^#]*)##/g;
+  let match;
+  while ((match = wikidotColorRegex.exec(text)) !== null) {
+    try {
+      const fullMatch = match[0];
+      const colorCode = "#" + match[1];
+      const content2 = match[2];
+      const start = match.index;
+      const end = start + fullMatch.length;
+      const colorPartLength = 10;
+      const contentStart = start + colorPartLength;
+      const contentEnd = contentStart + content2.length;
+      if (content2.length > 0) {
+        builder.add(
+          contentStart,
+          contentEnd,
+          Decoration.mark({
+            attributes: {
+              style: `color: ${colorCode}; font-weight: normal!important;`,
+              class: "cm-wikidot-colored-text"
+            }
+          })
+        );
+      }
+      console.log(`\u5339\u914D\u5230Wikidot\u989C\u8272\u6807\u7B7E: ${fullMatch}`);
+      console.log(`\u989C\u8272\u4EE3\u7801: ${colorCode}, \u5185\u5BB9: "${content2}"`);
+      console.log(`\u4F4D\u7F6E: ${start}-${end}, \u5185\u5BB9\u4F4D\u7F6E: ${contentStart}-${contentEnd}`);
+    } catch (error) {
+      console.error("\u5904\u7406Wikidot\u989C\u8272\u6807\u7B7E\u65F6\u51FA\u9519:", error, match);
+    }
+  }
+  return builder.finish();
+});
+
 // assets/completion.js
 var wikidotCompletionSource = (context) => {
   let before = context.matchBefore(/\[\[[\w\s]*/);
@@ -23285,7 +23420,8 @@ var customTags = {
   // 用于原始文本
   image: Tag.define(),
   // 用于图片
-  footnote: Tag.define()
+  footnote: Tag.define(),
+  color: Tag.define()
 };
 var wikidotLanguage = StreamLanguage.define({
   token(stream) {
@@ -23293,15 +23429,33 @@ var wikidotLanguage = StreamLanguage.define({
       stream.skipToEnd();
       return "header";
     }
-    if (stream.match(/\*\*.*?\*\*/)) return "strong";
-    if (stream.match(/\/\/.*?\/\//)) return "em";
-    if (stream.match(/__.*?__/)) return "underline";
-    if (stream.match(/--.*?--/)) return "strikethrough";
-    if (stream.match(/\^\^.*?\^\^/)) return "sup";
-    if (stream.match(/,,.*?,,/)) return "sub";
+    if (stream.match(/\*\*(?:[^*]|\*[^*])*\*\*/)) return "strong";
+    if (stream.match(/\/\/(?:[^/]|\/[^/])*\/\//)) return "em";
+    if (stream.match(/__(?:[^_]|_[^_])*__/)) return "underline";
+    if (stream.match(/--(?:[^-]|-[^-])*--/)) return "strikethrough";
+    if (stream.match(/\^\^(?:[^\^]|\^[^\^])*\^\^/)) return "sup";
+    if (stream.match(/,,(?:[^,]|,[^,])*,/)) return "sub";
     if (stream.match(/\[https?:\/\/.*?\]/)) return "link";
     if (stream.match(/\@\@\@\@/)) return "newline";
     if (stream.match(/\{\{.*?\}\}/)) return "monosapace";
+    if (stream.match(/###([0-9a-fA-F]{6})\|/)) {
+      let content2 = "";
+      while (!stream.eol()) {
+        if (stream.peek() === "#") {
+          stream.next();
+          if (stream.peek() === "#") {
+            stream.next();
+            return "color";
+          }
+        } else {
+          content2 += stream.next();
+        }
+      }
+      return null;
+    }
+    if (stream.match(/#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/)) {
+      return "color";
+    }
     if (stream.match(/\@\@.*?\@\@/)) {
       stream.skipToEnd();
       return "original_text";
@@ -23370,7 +23524,8 @@ var wikidotLanguage = StreamLanguage.define({
     "table_cell": customTags.table_cell,
     "original_text": customTags.original_text,
     "image": customTags.image,
-    "footnote": customTags.footnote
+    "footnote": customTags.footnote,
+    "color": customTags.color
   }
 });
 var wikidotHighlightStyle = HighlightStyle.define([
@@ -23399,7 +23554,8 @@ var wikidotHighlightStyle = HighlightStyle.define([
   { tag: customTags.table_cell, class: "cm-table-cell" },
   { tag: customTags.original_text, class: "cm-original-text" },
   { tag: customTags.image, class: "cm-image" },
-  { tag: customTags.footnote, class: "cm-footnote" }
+  { tag: customTags.footnote, class: "cm-footnote" },
+  { tag: customTags.color, class: "cm-color" }
 ]);
 var customKeymap = keymap.of([
   {
@@ -23479,7 +23635,18 @@ __\u4E0B\u5212\u7EBF\u6587\u5B57__
 [[code type="python"]]
 # \u8FD9\u662F\u4E00\u4E2A\u4EE3\u7801\u5757
 print("Hello, World!")
-[[/code]]`,
+[[/code]]
+
+# \u989C\u8272\u793A\u4F8B
+#ff0000 \u7EA2\u8272\uFF08\u666E\u901A16\u8FDB\u5236\u989C\u8272\uFF09
+#00ff00 \u7EFF\u8272\uFF08\u666E\u901A16\u8FDB\u5236\u989C\u8272\uFF09
+#0000ff \u84DD\u8272\uFF08\u666E\u901A16\u8FDB\u5236\u989C\u8272\uFF09
+
+# Wikidot\u989C\u8272\u6807\u7B7E\u793A\u4F8B
+###ff0000|\u8FD9\u662F\u7EA2\u8272\u6587\u5B57##
+###00ff00|\u8FD9\u662F\u7EFF\u8272\u6587\u5B57##
+###0000ff|\u8FD9\u662F\u84DD\u8272\u6587\u5B57##
+###ffff00|\u8FD9\u662F\u9EC4\u8272\u6587\u5B57##`,
     extensions: [
       // 将 customKeymap 放在 basicSetup 之前，确保优先级
       customKeymap,
@@ -23487,6 +23654,10 @@ print("Hello, World!")
       oneDark,
       wikidotLanguage,
       syntaxHighlighting(wikidotHighlightStyle),
+      // 先添加Wikidot颜色标签扩展
+      wikidotColorExtension,
+      // 再添加普通颜色预览扩展
+      colorPreviewExtension,
       autocompletion({ override: [wikidotCompletionSource], selectOnOpen: true }),
       EditorView.updateListener.of((update) => {
         if (update.docChanged && window.py_bridge) {
@@ -23499,13 +23670,31 @@ print("Hello, World!")
         ".cm-scroller": {
           fontFamily: "'Cascadia Code', 'Consolas', monospace",
           lineHeight: "1.6"
+        },
+        // 为颜色预览添加一些基本样式
+        ".cm-color-preview": {
+          display: "inline-block",
+          width: "12px",
+          height: "12px",
+          margin: "0 4px 0 0",
+          border: "1px solid #ccc",
+          borderRadius: "2px",
+          backgroundColor: "var(--color-value, #ccc)",
+          verticalAlign: "middle",
+          cursor: "pointer"
+        },
+        // Wikidot颜色文本样式
+        ".cm-wikidot-colored-text": {
+          fontWeight: "normal!important"
         }
       })
     ]
   });
-  new EditorView({
+  const editorView = new EditorView({
     state,
     parent: document.getElementById("editor-container")
   });
+  setupColorPickerHandler(editorView);
+  return editorView;
 };
 window.onload = startEditor;

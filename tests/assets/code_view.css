@@ -159,3 +159,84 @@ font-weight: bold !important;
 .cm-table-cell {
 color: #abb2bf !important;
 }
+
+/* 颜色 */
+/* 颜色代码高亮 */
+.cm-editor.cm-color {
+    color: var(--color-value);
+    font-weight: normal!important;
+}
+
+/* 颜色预览小部件 */
+.cm-editor.cm-color-preview {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 0 4px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background-color: var(--color-value, #ccc);
+    vertical-align: middle;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.cm-editor.cm-color-preview:hover {
+    transform: scale(1.2);
+    border-color: #666;
+}
+
+/* ====== 颜色相关样式 ====== */
+
+/* 1. 普通16进制颜色代码高亮 */
+.cm-editor.cm-color {
+    color: #e06c75; /* 默认颜色代码的文本颜色 */
+}
+
+/* 2. 颜色预览小部件样式 */
+.cm-editor.cm-color-preview {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 0 4px 0 0;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.cm-editor.cm-color-preview:hover {
+    transform: scale(1.2);
+    border-color: #666;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 3. Wikidot颜色标签中的文字样式 */
+.cm-editor.cm-wikidot-colored-text {
+    /* 这里不需要设置颜色，因为通过内联样式动态设置 */
+    font-weight: normal!important;
+}
+
+/* 4. 颜色代码的视觉增强 */
+.cm-editor .cm-color {
+    position: relative;
+    padding: 1px 3px;
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* 5. 为不同的颜色模式添加主题支持 */
+.cm-editor.cm-theme-light .cm-color-preview {
+    border-color: #999;
+}
+
+.cm-editor.cm-theme-dark .cm-color-preview {
+    border-color: #555;
+}
+
+.cm-editor.cm-theme-dark .cm-color {
+    color: #ff6b6b; /* 深色主题下的颜色代码文本颜色 */
+}
+
+/* ====== 颜色相关样式 ====== */

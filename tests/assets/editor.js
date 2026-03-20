@@ -6,6 +6,9 @@ import { autocompletion } from "@codemirror/autocomplete";
 import { keymap } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
 import { Tag } from "@lezer/highlight";
+// 导入颜色预览扩展和事件处理函数
+import { colorPreviewExtension, setupColorPickerHandler } from "./color_preview.js";
+import { wikidotColorExtension } from "./color_widgets.js";
 
 // 1. 定义自定义高亮标签，防止 "Unknown highlighting tag" 报错
 const customTags = {
@@ -35,6 +38,7 @@ const customTags = {
     original_text: Tag.define(), // 用于原始文本
     image: Tag.define(), // 用于图片
     footnote: Tag.define(),
+    color: Tag.define(), 
 };
 
 /**
@@ -45,47 +49,93 @@ const wikidotLanguage = StreamLanguage.define({
         // 标题
         if (stream.sol() && stream.match(/\++ /)) {
             stream.skipToEnd();
-            return "header"; // 这里的字符串会被映射到 customTags.header
+            return "header";
         }
-        // 加粗
-        if (stream.match(/\*\*.*?\*\*/)) return "strong";
-        // 斜体
-        if (stream.match(/\/\/.*?\/\//)) return "em";
-        // 下划线
-        if (stream.match(/__.*?__/)) return "underline";
-        // 删除线
-        if (stream.match(/--.*?--/)) return "strikethrough";
-        // 上标
-        if (stream.match(/\^\^.*?\^\^/)) return "sup";
-        // 下标
-        if (stream.match(/,,.*?,,/)) return "sub";
+
+        // 改进的格式匹配，支持基本嵌套
+        // 加粗：允许内部包含单个*字符
+        if (stream.match(/\*\*(?:[^*]|\*[^*])*\*\*/)) return "strong";
+        
+        // 斜体：允许内部包含单个/字符
+        if (stream.match(/\/\/(?:[^/]|\/[^/])*\/\//)) return "em";
+        
+        // 下划线：允许内部包含单个_字符
+        if (stream.match(/__(?:[^_]|_[^_])*__/)) return "underline";
+        
+        // 删除线：允许内部包含单个-字符
+        if (stream.match(/--(?:[^-]|-[^-])*--/)) return "strikethrough";
+        
+        // 上标：允许内部包含单个^字符
+        if (stream.match(/\^\^(?:[^\^]|\^[^\^])*\^\^/)) return "sup";
+        
+        // 下标：允许内部包含单个,字符
+        if (stream.match(/,,(?:[^,]|,[^,])*,/)) return "sub";
+
         // 链接
         if (stream.match(/\[https?:\/\/.*?\]/)) return "link";
+
         // 强制换行符
         if (stream.match(/\@\@\@\@/)) return "newline";
+
         // 英文等宽字体
         if (stream.match(/\{\{.*?\}\}/)) return "monosapace";
+
+
+        // 在wikidotLanguage的token函数中修改颜色匹配部分：
+        // Wikidot颜色标签：###ffffff|文字##
+        if (stream.match(/###([0-9a-fA-F]{6})\|/)) {
+            // 匹配了 ###ffffff| 部分
+            // 现在查找文字内容直到 ##（注意是2个#，不是3个）
+            let content = "";
+            while (!stream.eol()) {
+                // 检查是否遇到 ##
+                if (stream.peek() === "#") {
+                    stream.next(); // 跳过第一个#
+                    if (stream.peek() === "#") {
+                        stream.next(); // 跳过第二个#
+                        // 找到了结束标记 ##
+                        return "color";
+                    }
+                } else {
+                    content += stream.next();
+                }
+            }
+            // 如果没有找到结束标记，返回null
+            return null;
+        }
+
+        // 16进制颜色代码（用于普通颜色预览）
+        if (stream.match(/#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/)) {
+            return "color";
+        }
+
+
         // 原始文本
         if (stream.match(/\@\@.*?\@\@/)) {
             stream.skipToEnd();
             return "original_text"}
+
         // 无序列表
         if (stream.sol() && stream.match(/\*+ /)) {
             return "list1";
         }
+
         // 有序列表
         if (stream.sol() && stream.match(/#+ /)) {
             return "list2";
         }
+
         // 定义列表
         if (stream.sol() && stream.match(/\:.*?\:/)) {
             return "list3";
         }
+
         // 引用
         if (stream.sol() && stream.match(/>+ /)) {
             stream.skipToEnd();
             return "quote";
         }
+
         // 表格
         if (stream.match(/\|\|/)) {
         // 高亮竖线
@@ -104,22 +154,28 @@ const wikidotLanguage = StreamLanguage.define({
         // ================================================================
         // 评分
         if (stream.match(/\[\[module rate\]\]/i)) return "rate";
+
         // 右对齐
         if (stream.match(/\[\[\>?\]\]/)) return "right";
         if (stream.match(/\[\[\/\>?\]\]/)) return "right";
+
         // 左对齐
         if (stream.match(/\[\[\<?\]\]/)) return "left";
         if (stream.match(/\[\[\/\<?\]\]/)) return "left";
+
         // 居中
         if (stream.match(/\[\[\=?\]\]/)) return "center";
         if (stream.match(/\[\[\/\=?\]\]/)) return "center";
+
         // 图片
         if (stream.match(/\[\[image.*?\]\]/)) return "image";
+
         // 脚注
         if (stream.match(/\[\[footnote\]\]/) || stream.match(/\[\[\/footnote\]\]/)) return "footnote";
         // ================================================================
         // Wikidot 标签
         if (stream.match(/\[\[.*?\]\]/)) return "wikiTag";
+
         // 分割线
         if (stream.sol() && stream.match(/^-{5,}$/)) return "hr";
 
@@ -154,6 +210,7 @@ const wikidotLanguage = StreamLanguage.define({
         "original_text": customTags.original_text,
         "image": customTags.image,
         "footnote": customTags.footnote,
+        "color": customTags.color,
     }
 });
 
@@ -185,6 +242,7 @@ const wikidotHighlightStyle = HighlightStyle.define([
     { tag: customTags.original_text, class: "cm-original-text" },
     { tag: customTags.image, class: "cm-image" },
     { tag: customTags.footnote, class: "cm-footnote" },
+    { tag: customTags.color, class: "cm-color" },
 ]);
 
 /**
@@ -292,7 +350,18 @@ __下划线文字__
 [[code type="python"]]
 # 这是一个代码块
 print("Hello, World!")
-[[/code]]`,
+[[/code]]
+
+# 颜色示例
+#ff0000 红色（普通16进制颜色）
+#00ff00 绿色（普通16进制颜色）
+#0000ff 蓝色（普通16进制颜色）
+
+# Wikidot颜色标签示例
+###ff0000|这是红色文字##
+###00ff00|这是绿色文字##
+###0000ff|这是蓝色文字##
+###ffff00|这是黄色文字##`,
         extensions: [
             // 将 customKeymap 放在 basicSetup 之前，确保优先级
             customKeymap,
@@ -300,6 +369,10 @@ print("Hello, World!")
             oneDark,
             wikidotLanguage,
             syntaxHighlighting(wikidotHighlightStyle),
+            // 先添加Wikidot颜色标签扩展
+            wikidotColorExtension,
+            // 再添加普通颜色预览扩展
+            colorPreviewExtension,
             autocompletion({ override: [wikidotCompletionSource], selectOnOpen: true }),
             
             EditorView.updateListener.of((update) => {
@@ -314,15 +387,36 @@ print("Hello, World!")
                 ".cm-scroller": { 
                     fontFamily: "'Cascadia Code', 'Consolas', monospace",
                     lineHeight: "1.6"
+                },
+                // 为颜色预览添加一些基本样式
+                ".cm-color-preview": {
+                    display: "inline-block",
+                    width: "12px",
+                    height: "12px",
+                    margin: "0 4px 0 0",
+                    border: "1px solid #ccc",
+                    borderRadius: "2px",
+                    backgroundColor: "var(--color-value, #ccc)",
+                    verticalAlign: "middle",
+                    cursor: "pointer",
+                },
+                // Wikidot颜色文本样式
+                ".cm-wikidot-colored-text": {
+                    fontWeight: "normal!important",
                 }
             })
         ]
     });
 
-    new EditorView({
+    const editorView = new EditorView({
         state,
         parent: document.getElementById("editor-container")
     });
+    
+    // 设置颜色选择器事件处理
+    setupColorPickerHandler(editorView);
+    
+    return editorView;
 };
 
 window.onload = startEditor;
