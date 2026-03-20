@@ -1,9 +1,11 @@
 // completion.js
 export const wikidotCompletionSource = (context) => {
     // 查找光标前最近的 "[["
-    let before = context.matchBefore(/\[\[[\w\s]*/);
+    let before = context.matchBefore(/\[\[[\w\s:]*/);
     let atMatch = context.matchBefore(/^\@+/);
     let tableMatch = context.matchBefore(/\|\|.*?/);
+    // 匹配引号内的内容（不包括引号本身）
+    let classMatch = context.matchBefore(/(?<=")[^"]*$|(?<=')[^']*$/);
 
     // 如果光标前是 "@@@@"，则提供强制换行符的补全选项
     if (atMatch && (atMatch.from !== atMatch.to || context.explicit)) {
@@ -74,6 +76,153 @@ export const wikidotCompletionSource = (context) => {
         };
     }
 
+    // 如果光标前是 class="，提供常见的 CSS 类名补全选项
+    if (classMatch && (classMatch.from !== classMatch.to || context.explicit)) {
+    // 提供 class 值的补全
+    return {
+        from: classMatch.from,
+        options: [
+             // 版式用div自动补全
+             // ========================================================
+            { 
+                label: "[[div ", 
+                type: "keyword", 
+                apply: (view, completion, from, to) => {
+                    const text = "[[div class=\"\"]]\n\n[[/div";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + "[[div class=\"".length }
+                    });
+                }, 
+                detail: "容器" 
+            },
+            {
+                label: "blockquote",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 blockquote 类名
+                    const text = "blockquote";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "blockquote"
+            },
+            {
+                label: "notation",
+                type: "constant",
+                apply: (view, completion, from, to) => {
+                    const text = "notation";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "notation"
+            },
+            {
+                label: "jotting",
+                type: "constant",
+                apply: (view, completion, from, to) => {
+                    const text = "jotting";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "jotting"
+            },
+            {
+                label: "modal",
+                type: "constant",
+                apply: (view, completion, from, to) => {
+                    const text = "modal";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "modal"
+            },
+            {
+                label: "smallmodal",
+                type: "constant",
+                apply: (view, completion, from, to) => {
+                    const text = "smallmodal";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "smallmodal"
+            },
+            {
+                label: "papernote",
+                type: "constant",
+                apply: (view, completion, from, to) => {
+                    const text = "papernote";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "papernote"
+            },
+            {
+                label: "floatbox",
+                type: "constant",
+                apply: (view, completion, from, to) => {
+                    const text = "floatbox";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "floatbox"
+            },
+            {
+                label: "document",
+                type: "constant",
+                apply: (view, completion, from, to) => {
+                    const text = "document";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "document"
+            },
+            {
+                label: "darkdocument",
+                type: "constant",
+                apply: (view, completion, from, to) => {
+                    const text = "darkdocument";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "darkdocument"
+            },
+            {
+                label: "raisa_memo",
+                type: "constant",
+                apply: (view, completion, from, to) => {
+                    const text = "raisa_memo";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "raisa_memo"
+            },
+            // ========================================================
+        ],
+        filter: true
+    };
+}
+
     // 如果没搜到 "[["，或者搜索结果不是以 "[[" 开始，则不触发
     if (!before || before.from == before.to && !context.explicit) return {
         from: context.pos,
@@ -85,10 +234,21 @@ export const wikidotCompletionSource = (context) => {
         options: [
             // 常见标签
             { 
+                label: "[[div ", 
+                type: "keyword", 
+                apply: (view, completion, from, to) => {
+                    const text = "[[div class=\"\"]]\n\n[[/div";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + "[[div class=\"".length }
+                    });
+                }, 
+                detail: "容器" 
+            },
+            { 
                 label: "[[include ", 
                 type: "keyword", 
                 apply: (view, completion, from, to) => {
-                    // 插入 include 标签，光标放在中间
                     const text = "[[include ";
                     view.dispatch({
                         changes: { from, to, insert: text },
@@ -97,18 +257,43 @@ export const wikidotCompletionSource = (context) => {
                 }, 
                 detail: "引用页面" 
             },
-            { 
-                label: "[[div ", 
-                type: "keyword", 
+            {
+                label: "[[include :scp-wiki",
+                type: "keyword",
                 apply: (view, completion, from, to) => {
-                    // 插入 div 标签，光标放在属性位置
-                    const text = "[[div ";
+                    // 插入分会标签，光标放在后面
+                    const text = "[[include :scp-wiki";
                     view.dispatch({
                         changes: { from, to, insert: text },
                         selection: { anchor: from + text.length } // 光标放在标签名之后
                     });
-                }, 
-                detail: "容器" 
+                },
+                detail: "SCP-Wiki"
+            },
+            {
+                label: "[[include :scp-wiki-cn",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 theme 标签，光标放在后面
+                    const text = "[[include :scp-wiki-cn:theme:";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length } // 光标放在标签名之后
+                    });
+                },
+                detail: "版式"
+            },
+            {
+                label: "[[span",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 span 标签，光标放在属性位置
+                    const text = "[[span class=\"\"";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + "[[span class=\"".length } // 光标放在 class 属性的双引号之间
+                    });
+                }
             },
             { 
                 label: "[[module ", 
@@ -156,8 +341,8 @@ export const wikidotCompletionSource = (context) => {
                 type: "keyword", 
                 apply: (view, completion, from, to) => {
                     // 插入右对齐标签，选中内容区域
-                    const text = "[[>]]对齐内容[[/>";
-                    const selectFrom = from + "[[>]]".length;
+                    const text = "[[>]]\n对齐内容\n[[/>";
+                    const selectFrom = from + "[[>]]\n".length;
                     const selectTo = selectFrom + "对齐内容".length;
                     view.dispatch({
                         changes: { from, to, insert: text },
@@ -171,8 +356,8 @@ export const wikidotCompletionSource = (context) => {
                 type: "keyword", 
                 apply: (view, completion, from, to) => {
                     // 插入左对齐标签，选中内容区域
-                    const text = "[[<]]对齐内容[[/<";
-                    const selectFrom = from + "[[<]]".length;
+                    const text = "[[<]]\n对齐内容\n[[/<";
+                    const selectFrom = from + "[[<]]\n".length;
                     const selectTo = selectFrom + "对齐内容".length;
                     view.dispatch({
                         changes: { from, to, insert: text },
@@ -186,8 +371,8 @@ export const wikidotCompletionSource = (context) => {
                 type: "keyword", 
                 apply: (view, completion, from, to) => {
                     // 插入居中标签，选中内容区域
-                    const text = "[[=]]居中内容[[/=";
-                    const selectFrom = from + "[[=]]".length;
+                    const text = "[[=]]\n居中内容\n[[/=";
+                    const selectFrom = from + "[[=]]\n".length;
                     const selectTo = selectFrom + "居中内容".length;
                     view.dispatch({
                         changes: { from, to, insert: text },

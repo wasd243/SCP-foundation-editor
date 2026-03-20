@@ -39,6 +39,9 @@ const customTags = {
     image: Tag.define(), // 用于图片
     footnote: Tag.define(),
     color: Tag.define(), 
+    include: Tag.define(), // 用于 [[include ...]] 标签
+    scp_wiki: Tag.define(), // 用于特定的主题标签
+    div: Tag.define(), // 用于 [[div ...]] 标签
 };
 
 /**
@@ -172,6 +175,21 @@ const wikidotLanguage = StreamLanguage.define({
 
         // 脚注
         if (stream.match(/\[\[footnote\]\]/) || stream.match(/\[\[\/footnote\]\]/)) return "footnote";
+
+        // div
+        if (stream.match(/\[\[div.*?\]\]/) || stream.match(/\[\[\/div\]\]/)) {
+            return "div";
+        }
+
+        if (stream.match(/\[\[include[^\]]*\]\]/)) {
+            // 匹配整个 include 标签
+            // 我们可以检查里面是否有分会
+            const match = stream.current();
+            if (match.includes(':scp-wiki')) {
+                return "scp_wiki";  // 如果有分会，整个标签都高亮为 scp_wiki
+            }
+            return "include";  // 否则高亮为 include
+        }
         // ================================================================
         // Wikidot 标签
         if (stream.match(/\[\[.*?\]\]/)) return "wikiTag";
@@ -211,6 +229,9 @@ const wikidotLanguage = StreamLanguage.define({
         "image": customTags.image,
         "footnote": customTags.footnote,
         "color": customTags.color,
+        "include": customTags.include,
+        "scp_wiki": customTags.scp_wiki,
+        "div": customTags.div,
     }
 });
 
@@ -243,6 +264,9 @@ const wikidotHighlightStyle = HighlightStyle.define([
     { tag: customTags.image, class: "cm-image" },
     { tag: customTags.footnote, class: "cm-footnote" },
     { tag: customTags.color, class: "cm-color" },
+    { tag: customTags.include, class: "cm-include" },
+    { tag: customTags.scp_wiki, class: "cm-scp-wiki" },
+    { tag: customTags.div, class: "cm-div" },
 ]);
 
 /**
@@ -322,7 +346,7 @@ import { wikidotCompletionSource } from "./completion.js";
 // 3. 初始化编辑器
 const startEditor = () => {
     const state = EditorState.create({
-        doc: `[[include main-theme]]
+        doc: `[[include :scp-wiki-cn:theme:basalt]]
 
 + 一级标题
 
@@ -332,6 +356,10 @@ __下划线文字__
 --删除线文字--
 
 [[footnote]]这是一个脚注[[/footnote]]
+
+[[div class="example"]]
+123
+[[/div]]
 
 * 这是一个无序列表项
 # 这是一个有序列表项

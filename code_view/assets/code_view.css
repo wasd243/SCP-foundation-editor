@@ -160,7 +160,31 @@ font-weight: bold !important;
 color: #abb2bf !important;
 }
 
-/* 颜色 */
+/* 代码块 */
+.cm-editor .cm-include {
+color: #61cdb4 !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+}
+
+/* 分会高亮 */
+.cm-editor .cm-scp-wiki {
+color: #f88222 !important;
+font-weight: normal !important;
+}
+
+/* div标签 */
+.cm-editor .cm-div {
+color: #9597ff !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+font-weight: bold !important;
+}
+
+
+
+
+
+
+/* ====== 颜色相关样式 ====== */
 /* 颜色代码高亮 */
 .cm-editor.cm-color {
     color: var(--color-value);
@@ -185,8 +209,6 @@ color: #abb2bf !important;
     transform: scale(1.2);
     border-color: #666;
 }
-
-/* ====== 颜色相关样式 ====== */
 
 /* 1. 普通16进制颜色代码高亮 */
 .cm-editor.cm-color {
