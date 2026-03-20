@@ -65,13 +65,13 @@ vertical-align: sub !important;
 
 /* wiki[[]] */
 .cm-editor .cm-wikiTag {
-color: #61afef !important;
+color: #61afef;
 }
 
 /* 链接 */
 .cm-editor .cm-link {
-color: #043eff !important;
-text-decoration: underline !important;
+color: #043eff;
+text-decoration: underline;
 }
 
 /* 分隔线 */

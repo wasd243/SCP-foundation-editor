@@ -194,7 +194,7 @@ const wikidotLanguage = StreamLanguage.define({
         if (stream.match(/\[\[\/\=?\]\]/)) return "center";
 
         // 图片
-        if (stream.match(/\[\[image.*?\]\]/)) return "image";
+        if (stream.match(/\[\[.*?image.*?\]\]/)) return "image";
 
         // 脚注
         if (stream.match(/\[\[footnote\]\]/) || stream.match(/\[\[\/footnote\]\]/)) return "footnote";
