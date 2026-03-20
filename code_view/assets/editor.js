@@ -38,6 +38,7 @@ const customTags = {
     original_text: Tag.define(), // 用于原始文本
     image: Tag.define(), // 用于图片
     footnote: Tag.define(),
+    footnote_block: Tag.define(), // 用于脚注块
     color: Tag.define(), 
     include: Tag.define(), // 用于 [[include ...]] 标签
     scp_wiki: Tag.define(), // 用于特定的主题标签
@@ -199,6 +200,9 @@ const wikidotLanguage = StreamLanguage.define({
         // 脚注
         if (stream.match(/\[\[footnote\]\]/) || stream.match(/\[\[\/footnote\]\]/)) return "footnote";
 
+        // 脚注块
+        if (stream.match(/\[\[footnoteblock\]\]/)) return "footnote_block";
+
         // div
         if (stream.match(/\[\[div.*?\]\]/) || stream.match(/\[\[\/div\]\]/)) {
             return "div";
@@ -325,6 +329,7 @@ const wikidotLanguage = StreamLanguage.define({
         "original_text": customTags.original_text,
         "image": customTags.image,
         "footnote": customTags.footnote,
+        "footnote_block": customTags.footnote_block,
         "color": customTags.color,
         "include": customTags.include,
         "scp_wiki": customTags.scp_wiki,
@@ -368,6 +373,7 @@ const wikidotHighlightStyle = HighlightStyle.define([
     { tag: customTags.original_text, class: "cm-original-text" },
     { tag: customTags.image, class: "cm-image" },
     { tag: customTags.footnote, class: "cm-footnote" },
+    { tag: customTags.footnote_block, class: "cm-footnote-block" },
     { tag: customTags.color, class: "cm-color" },
     { tag: customTags.include, class: "cm-include" },
     { tag: customTags.scp_wiki, class: "cm-scp-wiki" },

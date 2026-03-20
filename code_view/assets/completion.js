@@ -538,6 +538,19 @@ export const wikidotCompletionSource = (context) => {
                 }, 
                 detail: "脚注" 
             },
+            {
+                label: "[[footnoteblock]]",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入脚注块标签，选中脚注块内容
+                    const text = "[[footnoteblock";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "脚注块"
+            },
         ],
         filter: true 
     };

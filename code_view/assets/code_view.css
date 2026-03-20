@@ -142,10 +142,17 @@ font-family: 'Cascadia Mono', 'Consolas', monospace !important;
 color: #2ac7a5 !important;
 font-family: 'Cascadia Mono', 'Consolas', monospace !important;
 }
+
 /* 脚注 */
 .cm-editor .cm-footnote {
 color: #910f0f !important;
 font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+}
+/* 脚注块 */
+.cm-editor .cm-footnote-block {
+color: #910f0f !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+font-weight: bold !important;
 }
 
 /* 表格 */
