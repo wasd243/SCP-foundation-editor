@@ -42,6 +42,11 @@ const customTags = {
     include: Tag.define(), // 用于 [[include ...]] 标签
     scp_wiki: Tag.define(), // 用于特定的主题标签
     div: Tag.define(), // 用于 [[div ...]] 标签
+    tabview: Tag.define(), // 用于 [[tabview]] 标签
+    acs: Tag.define(), // 用于ACS
+    components: Tag.define(), // Components
+    equal: Tag.define(), // 用于 = 号
+    line_up: Tag.define(), // 用于|
 };
 
 /**
@@ -139,7 +144,18 @@ const wikidotLanguage = StreamLanguage.define({
             return "quote";
         }
 
+        // = 号
+        if (stream.match(/=/)) {
+            return "equal";
+        }
+
+        // | 竖线
+        if (stream.match(/\|/)) {
+            return "line_up";
+        }
+
         // 表格
+        // ================================================================
         if (stream.match(/\|\|/)) {
         // 高亮竖线
             return "table";
@@ -152,6 +168,7 @@ const wikidotLanguage = StreamLanguage.define({
             stream.skipToEnd();
             return "table_cell";
         }
+        // ================================================================
 
         // 带有[[]]的注意需要放在标签前面，因为它也是以 [[ 开头的
         // ================================================================
@@ -181,6 +198,48 @@ const wikidotLanguage = StreamLanguage.define({
             return "div";
         }
 
+        // ACS
+        // ================================================================
+        if (stream.match(/\[\[include :scp-wiki-cn:component:anomaly-class-bar-source *?/)) {
+            return "acs";
+        }
+        // ================================================================
+
+        // Components
+        // ================================================================
+        if (stream.match(/lang.*?/)){
+            return "components";
+        }
+        if (stream.match(/item-number.*?/)){
+            return "components";
+        }
+        if (stream.match(/clearance.*?/)){
+            return "components";
+        }
+        if (stream.match(/container-class.*?/)){
+            return "components";
+        }
+        if (stream.match(/disruption.*?/)){
+            return "components";
+        }
+        if (stream.match(/risk-class.*?/)){
+            return "components";
+        }
+        if (stream.match(/\]\]?/)){
+            return "components";
+        }
+        // ================================================================
+
+        // Tabview
+        // ================================================================
+        if (stream.match(/\[\[tabview.*?\]\]/) || stream.match(/\[\[\/tabview\]\]/)) {
+            return "tabview";
+        }
+        if (stream.match(/\[\[tab.*?\]\]/) || stream.match(/\[\[\/tab\]\]/)) {
+            return "tabview";
+        }
+        // ================================================================
+
         if (stream.match(/\[\[include[^\]]*\]\]/)) {
             // 匹配整个 include 标签
             // 我们可以检查里面是否有分会
@@ -192,7 +251,7 @@ const wikidotLanguage = StreamLanguage.define({
         }
         // ================================================================
         // Wikidot 标签
-        if (stream.match(/\[\[.*?\]\]/)) return "wikiTag";
+        if (stream.match(/\[\[*?\]\]/)) return "wikiTag";
 
         // 分割线
         if (stream.sol() && stream.match(/^-{5,}$/)) return "hr";
@@ -232,6 +291,11 @@ const wikidotLanguage = StreamLanguage.define({
         "include": customTags.include,
         "scp_wiki": customTags.scp_wiki,
         "div": customTags.div,
+        "tabview": customTags.tabview,
+        "acs": customTags.acs,
+        "components": customTags.components,
+        "equal": customTags.equal,
+        "line_up": customTags.line_up,
     }
 });
 
@@ -267,6 +331,11 @@ const wikidotHighlightStyle = HighlightStyle.define([
     { tag: customTags.include, class: "cm-include" },
     { tag: customTags.scp_wiki, class: "cm-scp-wiki" },
     { tag: customTags.div, class: "cm-div" },
+    { tag: customTags.tabview, class: "cm-tabview" },
+    { tag: customTags.acs, class: "cm-acs" },
+    { tag: customTags.components, class: "cm-components" },
+    { tag: customTags.equal, class: "cm-equal" },
+    { tag: customTags.line_up, class: "cm-line-up" },
 ]);
 
 /**
@@ -355,6 +424,8 @@ const startEditor = () => {
 __下划线文字__
 --删除线文字--
 
+[[include :scp-wiki-cn:component:anomaly-class-bar-source\n|lang=cn\n|item-number=SCP-CN-XXXX\n|clearance= \n|container-class= \n|disruption= \n|risk-class= \n]]
+
 [[footnote]]这是一个脚注[[/footnote]]
 
 [[div class="example"]]
@@ -372,6 +443,15 @@ __下划线文字__
 ||~表头1||~表头2||~表头3||
 ||单元格1||单元格2||单元格3||
 ||单元格4||单元格5||单元格6||
+
+[[tabview]]
+[[tab 123]]
+123123
+[[/tab]]
+[[tab 456]]
+456456
+[[/tab]]
+[[/tabview]]
 
 ----
 

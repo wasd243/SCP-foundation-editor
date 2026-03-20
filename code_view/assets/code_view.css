@@ -179,6 +179,36 @@ font-family: 'Cascadia Mono', 'Consolas', monospace !important;
 font-weight: bold !important;
 }
 
+/* tabview标签 */
+.cm-editor .cm-tabview {
+color: #b179ff !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+font-weight: bold !important;
+}
+
+/* ACS */
+.cm-editor .cm-acs {
+color: #00ffc8 !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+font-weight: bold !important;
+}
+
+/* Components */
+.cm-editor .cm-components {
+color: #00ffc8 !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+font-weight: bold !important;
+}
+
+/* = */
+.cm-editor .cm-equal {
+color: #fd7a00 !important;
+}
+
+/* | */
+.cm-editor .cm-line-up {
+color: #fd7a00 !important;
+}
 
 
 

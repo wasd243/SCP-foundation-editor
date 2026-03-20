@@ -258,6 +258,32 @@ export const wikidotCompletionSource = (context) => {
                 detail: "引用页面" 
             },
             {
+                label: "[[tabview",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 tabview 标签，光标放在标签名后
+                    const text = "[[tabview]]\n[[/tabview";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + "[[tabview".length } // 光标放在标签名之后
+                    });
+                },
+                detail: "标签页"
+            },
+            {
+                label: "[[tab", 
+                type: "keyword", 
+                apply: (view, completion, from, to) => {
+                    // 插入 tab 标签，光标放在tab
+                    const text = "[[tab ]]\n[[/tab";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + "[[tab ".length } // 光标放在tab
+                    });
+                }, 
+                detail: "tab" 
+            },
+            {
                 label: "[[include :scp-wiki",
                 type: "keyword",
                 apply: (view, completion, from, to) => {
@@ -282,6 +308,46 @@ export const wikidotCompletionSource = (context) => {
                     });
                 },
                 detail: "版式"
+            },
+            {
+                label: "[[include :scp-wiki-cn:component:",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 component 标签，光标放在后面
+                    const text = "[[include :scp-wiki-cn:component:";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length } // 光标放在标签名之后
+                    });
+                },
+                detail: "组件"
+            },
+            {
+                label: "[[include :scp-wiki-cn:component:acs-animation",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 acs-animation 类名
+                    const text = "[[include :scp-wiki-cn:component:acs-animation";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + text.length }
+                    });
+                },
+                detail: "acs-animation"
+            },
+            {
+                label: "[[include :scp-wiki-cn:component:anomaly-class-bar-source",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 anomaly-class-bar-source 类名
+                    const text = "[[include :scp-wiki-cn:component:anomaly-class-bar-source\n|lang=cn\n|item-number=SCP-CN-XXXX\n|clearance= \n|container-class= \n|disruption= \n|risk-class= \n";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + 80, head: from + 91 } // 光标放在标签名之后
+                    });
+                },
+                detail: "ACS",
+                source: "1000",
             },
             {
                 label: "[[span",
