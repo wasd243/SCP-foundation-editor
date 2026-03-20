@@ -245,6 +245,17 @@ export const wikidotCompletionSource = (context) => {
                 }, 
                 detail: "容器" 
             },
+            {
+                label: "[[size ",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    const text = "[[size ]]\n\n[[/size";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + "[[size ".length } // 光标放在 size 后面
+                    });
+                }
+            },
             { 
                 label: "[[include ", 
                 type: "keyword", 
@@ -347,7 +358,19 @@ export const wikidotCompletionSource = (context) => {
                     });
                 },
                 detail: "ACS",
-                source: "1000",
+                source: "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000" // 设定较高的优先级,
+            },
+            {
+                label: "[[include :scp-wiki-cn:components:advanced-information-methodaology",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 advanced-information-methodaology 类名
+                    const text = "[[include :scp-wiki-cn:components:advanced-information-methodaology\n|lang=cn\n|XXXX=SCP-XXXX\n|lv=等级\n|cc= \n|dc= \n|site= \n|dir= \n|head= \n|mtf= \n";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + 87, head: from + 91 }
+                    });
+                }
             },
             {
                 label: "[[span",
@@ -361,6 +384,19 @@ export const wikidotCompletionSource = (context) => {
                     });
                 }
             },
+            {
+                label: "[[collapsible]]",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 collapsible 标签，光标放在标签名后
+                    const text = "[[collapsible show=\"+\" hide=\"-\"]]\n[[/collapsible";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + "[[collapsible".length + 8 } // 光标放在标签名之后
+                    });
+                },
+                detail: "可折叠内容"
+            },
             { 
                 label: "[[module ", 
                 type: "keyword", 
@@ -373,6 +409,33 @@ export const wikidotCompletionSource = (context) => {
                     });
                 }, 
                 detail: "功能组件" 
+            },
+            {
+                label: "[[module css]]",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 css 模块，光标放在标签内部
+                    const text = "[[module css]]\n\n[[/module";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + "[[module css".length + 2 } // 光标放在标签内部
+                    });
+                },
+                detail: "CSS 模块"
+            },
+            {
+                label: "[[html]]",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 html 模块，光标放在标签内部
+                    const text = "[[html]]\n\n[[/html";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + "[[html".length + 2 } // 光标放在标签内部
+                    });
+                },
+                detail: "HTML 模块"
+
             },
 
             // 更多 Wikidot 标签可以在这里添加

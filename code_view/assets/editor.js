@@ -47,6 +47,9 @@ const customTags = {
     components: Tag.define(), // Components
     equal: Tag.define(), // 用于 = 号
     line_up: Tag.define(), // 用于|
+    size: Tag.define(), // 用于字体大小标签
+    aim: Tag.define(), // 用于AIM
+    collapsible: Tag.define(), // 用于可折叠内容
 };
 
 /**
@@ -87,6 +90,9 @@ const wikidotLanguage = StreamLanguage.define({
 
         // 英文等宽字体
         if (stream.match(/\{\{.*?\}\}/)) return "monosapace";
+
+        // size 标签
+        if (stream.match(/\[\[size.*?\]\]/) || stream.match(/\[\[\/size\]\]/)) return "size";
 
 
         // 在wikidotLanguage的token函数中修改颜色匹配部分：
@@ -198,10 +204,18 @@ const wikidotLanguage = StreamLanguage.define({
             return "div";
         }
 
-        // ACS
+        // collapsible
+        if (stream.match(/\[\[collapsible.*?\]\]/) || stream.match(/\[\[\/collapsible\]\]/)) {
+            return "collapsible";
+        }
+
+        // ACS AIM
         // ================================================================
-        if (stream.match(/\[\[include :scp-wiki-cn:component:anomaly-class-bar-source *?/)) {
+        if (stream.match(/include :scp-wiki-cn:component:anomaly-class-bar-source *?/)) {
             return "acs";
+        }
+        if (stream.match(/include :scp-wiki-cn:components:advanced-information-methodaology *?/)){
+            return "aim";
         }
         // ================================================================
 
@@ -225,7 +239,31 @@ const wikidotLanguage = StreamLanguage.define({
         if (stream.match(/risk-class.*?/)){
             return "components";
         }
-        if (stream.match(/\]\]?/)){
+        if (stream.match(/lv/)){
+            return "components";
+        }
+        if (stream.match(/cc/)){
+            return "components";
+        }
+        if (stream.match(/dc/)){
+            return "components";
+        }
+        if (stream.match(/site/)){
+            return "components";
+        }
+        if (stream.match(/dir/)){
+            return "components";
+        }
+        if (stream.match(/head/)){
+            return "components";
+        }
+        if (stream.match(/mtf/)){
+            return "components";
+        }
+        if (stream.match(/XXXX/)){
+            return "components";
+        }
+        if (stream.match(/blocks/)){
             return "components";
         }
         // ================================================================
@@ -251,7 +289,7 @@ const wikidotLanguage = StreamLanguage.define({
         }
         // ================================================================
         // Wikidot 标签
-        if (stream.match(/\[\[*?\]\]/)) return "wikiTag";
+        if (stream.match(/\]\]/) || stream.match(/\[\[/)) return "wikiTag";
 
         // 分割线
         if (stream.sol() && stream.match(/^-{5,}$/)) return "hr";
@@ -296,6 +334,9 @@ const wikidotLanguage = StreamLanguage.define({
         "components": customTags.components,
         "equal": customTags.equal,
         "line_up": customTags.line_up,
+        "size": customTags.size,
+        "aim": customTags.aim,
+        "collapsible": customTags.collapsible,
     }
 });
 
@@ -336,6 +377,9 @@ const wikidotHighlightStyle = HighlightStyle.define([
     { tag: customTags.components, class: "cm-components" },
     { tag: customTags.equal, class: "cm-equal" },
     { tag: customTags.line_up, class: "cm-line-up" },
+    { tag: customTags.size, class: "cm-size" },
+    { tag: customTags.aim, class: "cm-aim" },
+    { tag: customTags.collapsible, class: "cm-collapsible" },
 ]);
 
 /**
@@ -423,6 +467,8 @@ const startEditor = () => {
 //斜体文字//
 __下划线文字__
 --删除线文字--
+
+[[size 150%]]大号文字[[/size]]
 
 [[include :scp-wiki-cn:component:anomaly-class-bar-source\n|lang=cn\n|item-number=SCP-CN-XXXX\n|clearance= \n|container-class= \n|disruption= \n|risk-class= \n]]
 

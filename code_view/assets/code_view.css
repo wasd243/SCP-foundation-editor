@@ -172,6 +172,13 @@ color: #f88222 !important;
 font-weight: normal !important;
 }
 
+/* size标签 */
+.cm-editor .cm-size {
+color: #7a54ed !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+font-weight: bold !important;
+}
+
 /* div标签 */
 .cm-editor .cm-div {
 color: #9597ff !important;
@@ -193,9 +200,23 @@ font-family: 'Cascadia Mono', 'Consolas', monospace !important;
 font-weight: bold !important;
 }
 
+/* AIM */
+.cm-editor .cm-aim {
+color: #00ffc8 !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+font-weight: bold !important;
+}
+
 /* Components */
 .cm-editor .cm-components {
 color: #00ffc8 !important;
+font-family: 'Cascadia Mono', 'Consolas', monospace !important;
+font-weight: bold !important;
+}
+
+/* collapsible */
+.cm-editor .cm-collapsible {
+color: #bc0404 !important;
 font-family: 'Cascadia Mono', 'Consolas', monospace !important;
 font-weight: bold !important;
 }
