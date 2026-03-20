@@ -14,6 +14,10 @@ tests/node_modules/
 tests/esbuild
 node_modules/
 
+# packages
+package-lock.json
+package.json
+
 # IDE
 .vscode/
 .idea/
