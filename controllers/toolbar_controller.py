@@ -111,8 +111,50 @@ def handle_open_link_dialog(ui):
             html = f'<a href="{url}"{target_attr}>{display_text}</a>'
             ui.browser.page().runJavaScript(f"document.execCommand('insertHTML', false, '{html}');")
 
+# ---同步富文本编辑器到代码视窗---
+def _sync_source_to_editor(ui):
+    import json
+    import os
+    if not hasattr(ui, 'source_editor_window') or ui.source_editor_window is None:
+        return
+    code_content = ui.source_display.toPlainText()
+    safe_content = json.dumps(code_content)
+    
+    js_path = os.path.join(CURRENT_DIR, 'js', '_sync_source_to_editor.js')
+    try:
+        with open(js_path, 'r', encoding='utf-8') as f:
+            js_template = f.read()
+        js_inject = js_template.replace('__SAFE_CONTENT__', safe_content)
+        ui.source_editor_window.browser.page().runJavaScript(js_inject)
+    except Exception as e:
+        print(f"读取 JS 模板失败 ({js_path}): {e}")
+
 def handle_open_source_dialog(ui):
-    pass  # 这个功能待填充
+    from code_view.main import FoundationEditor
+    import json
+    import os
+    if not hasattr(ui, 'source_editor_window') or ui.source_editor_window is None:
+        ui.source_editor_window = FoundationEditor()
+        # 绑定实时同步机制：当代码视窗的内容改变时，实时推送到右侧 Foundation Editor
+        ui.source_display.textChanged.connect(lambda: _sync_source_to_editor(ui))
+        
+    ui.source_editor_window.show()
+    ui.source_editor_window.activateWindow()
+    ui.source_editor_window.raise_()
+    
+    # 每次打开时，执行初始的同步（使用带重试的setInterval以防JS尚未加载完毕）
+    code_content = ui.source_display.toPlainText()
+    safe_content = json.dumps(code_content)
+    
+    js_path = os.path.join(CURRENT_DIR, 'js', 'open_source_dialog.js')
+    try:
+        with open(js_path, 'r', encoding='utf-8') as f:
+            js_template = f.read()
+        js_inject = js_template.replace('__SAFE_CONTENT__', safe_content)
+        ui.source_editor_window.browser.page().runJavaScript(js_inject)
+    except Exception as e:
+        print(f"读取 JS 模板失败 ({js_path}): {e}")
+# ---同步代码视窗到富文本编辑器---
 
 def handle_apply_font_size(ui, size_str=None):
     if not size_str: size_str = ui.size_selector.currentText()

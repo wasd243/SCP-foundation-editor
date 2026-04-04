@@ -140,7 +140,7 @@ def setup_main_ui(window):
     toolbar.addSeparator()
 
     # ---</>source---
-    toolbar.addAction(QAction("</>", window, toolTip="源代码编辑", triggered=window.open_link_dialog))
+    toolbar.addAction(QAction("</>", window, toolTip="源代码编辑", triggered=window.open_source_dialog))
     toolbar.addSeparator()
     # ---</>source---
 

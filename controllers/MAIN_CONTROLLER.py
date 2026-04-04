@@ -22,7 +22,8 @@ from controllers.toolbar_controller import (
     sync_toolbar_state, execute_format, handle_apply_relative_size, handle_set_heading,
     handle_open_link_dialog, handle_apply_font_size, handle_choose_color, handle_clear_color,
     handle_clear_styles, handle_insert_audio, handle_insert_component, handle_copy_to_clipboard,
-    handle_update_theme_state, handle_insert_new_footnote, handle_clear_all_content
+    handle_update_theme_state, handle_insert_new_footnote, handle_clear_all_content,
+    handle_open_source_dialog
 )
 
 # 导入各类独立编辑器
@@ -116,6 +117,7 @@ class SCPEditor(QMainWindow):
     def apply_relative_size(self): handle_apply_relative_size(self)
     def set_heading(self, index): handle_set_heading(self, index)
     def open_link_dialog(self): handle_open_link_dialog(self)
+    def open_source_dialog(self): handle_open_source_dialog(self)
     def exec_format(self, command, value=None): execute_format(self, command, value)
     def apply_font_size(self, size_str=None): handle_apply_font_size(self, size_str)
     def choose_color(self): handle_choose_color(self)
