@@ -1,5 +1,55 @@
 // completion.js
 export const wikidotCompletionSource = (context) => {
+
+    // ====== 新增：判定当前上下文范围 ======
+    // 获取从文档开头到当前光标的所有文本
+    const textBefore = context.state.sliceDoc(0, context.pos);
+    
+    // 判定是否在 CSS 内：比较最后一次开启和关闭标签的位置
+    const lowerText = textBefore.toLowerCase();
+    const lastCssOpen = lowerText.lastIndexOf('[[module css]]');
+    const lastCssClose = lowerText.lastIndexOf('[[/module]]');
+    const inCSS = lastCssOpen > lastCssClose;
+
+    // 判定是否在 HTML 内
+    const lastHtmlOpen = textBefore.toLowerCase().lastIndexOf('[[html]]');
+    const lastHtmlClose = textBefore.toLowerCase().lastIndexOf('[[/html]]');
+    const inHTML = lastHtmlOpen > lastHtmlClose;
+
+    // 如果在 CSS 内部，拦截并专属补全
+    if (inCSS) {
+        let word = context.matchBefore(/[a-zA-Z-]+/);
+        if (!word || (word.from === word.to && !context.explicit)) return null;
+        return {
+            from: word.from,
+            options: [
+                // 往这里加 CSS 词库
+                { label: "color", type: "property", apply: "color: ;", detail: "文本颜色" },
+                { label: "background-color", type: "property", apply: "background-color: ;", detail: "背景色" },
+                { label: "display", type: "property", apply: "display: flex;", detail: "弹性布局" },
+                { label: "border", type: "property", apply: "border: 1px solid #fff;", detail: "边框" },
+            ],
+            filter: true
+        };
+    }
+
+    // 如果在 HTML 内部，拦截并专属补全
+    if (inHTML) {
+        let word = context.matchBefore(/<\/?[a-zA-Z0-9-]*/);
+        if (!word || (word.from === word.to && !context.explicit)) return null;
+        return {
+            from: word.from,
+            options: [
+                { label: "<div>", type: "keyword", apply: "<div>\n\n</div>", detail: "块级元素" },
+                { label: "<span>", type: "keyword", apply: "<span></span>", detail: "行内元素" },
+                { label: "<style>", type: "keyword", apply: "<style>\n\n</style>", detail: "样式表" },
+                { label: "class", type: "property", apply: "class=\"\"", detail: "类名" },
+            ],
+            filter: true
+        };
+    }
+    // ====== 新增判定结束 ======
+
     // 查找光标前最近的 "[["
     let before = context.matchBefore(/\[\[[\w\s:]*/);
     let atMatch = context.matchBefore(/^\@+/);
@@ -361,11 +411,11 @@ export const wikidotCompletionSource = (context) => {
                 source: "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000" // 设定较高的优先级,
             },
             {
-                label: "[[include :scp-wiki-cn:components:advanced-information-methodaology",
+                label: "[[include :scp-wiki-cn:component:advanced-information-methodaology",
                 type: "keyword",
                 apply: (view, completion, from, to) => {
                     // 插入 advanced-information-methodaology 类名
-                    const text = "[[include :scp-wiki-cn:components:advanced-information-methodaology\n|lang=cn\n|XXXX=SCP-XXXX\n|lv=等级\n|cc= \n|dc= \n|site= \n|dir= \n|head= \n|mtf= \n";
+                    const text = "[[include :scp-wiki-cn:component:advanced-information-methodaology\n|lang=cn\n|XXXX=SCP-XXXX\n|lv=等级\n|cc= \n|dc= \n|site= \n|dir= \n|head= \n|mtf= \n";
                     view.dispatch({
                         changes: { from, to, insert: text },
                         selection: { anchor: from + 87, head: from + 91 }
@@ -373,11 +423,11 @@ export const wikidotCompletionSource = (context) => {
                 }
             },
             {
-                label: "[[include :scp-wiki-cn:components:license-box",
+                label: "[[include :scp-wiki-cn:component:license-box",
                 type: "keyword",
                 apply: (view, completion, from, to) => {
                     // 插入 license-box 类名
-                    const text = "[[include :scp-wiki-cn:components:license-box]]\n|lang=cn\n|author= \n=====\n> 文件名：\n> 图像名： \n> 图像作者： \n> 授权协议： \n> 来源链接：\n=====\n[[include :scp-wiki-cn:components:license-end";
+                    const text = "[[include :scp-wiki-cn:component:license-box\n|lang=cn\n|author= \n]]\n=====\n> 文件名：\n> 图像名： \n> 图像作者： \n> 授权协议： \n> 来源链接：\n=====\n[[include :scp-wiki-cn:component:license-end";
                     view.dispatch({
                         changes: { from, to, insert: text },
                         selection: { anchor: from + 81 }
@@ -389,7 +439,7 @@ export const wikidotCompletionSource = (context) => {
                 type: "keyword",
                 apply: (view, completion, from, to) => {
                     // 插入 span 标签，光标放在属性位置
-                    const text = "[[span class=\"\"";
+                    const text = "[[span class=\"\"]]\n\n[[/span";
                     view.dispatch({
                         changes: { from, to, insert: text },
                         selection: { anchor: from + "[[span class=\"".length } // 光标放在 class 属性的双引号之间
@@ -408,6 +458,32 @@ export const wikidotCompletionSource = (context) => {
                     });
                 },
                 detail: "可折叠内容"
+            },
+            {
+                label: "[[note",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 note
+                    const text = "[[note]]\n\n[[/note";
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: from + "[[note]]\n".length }
+                    });
+                },
+                detail: "笔记"
+            },
+            {
+                label: "[[user",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 插入 user
+                    const text = "[[*user "
+                    view.dispatch({
+                        changes: { from, to, insert: text},
+                        selection: { anchor: from + "[[#user ".length }
+                    });
+                },
+                detail: "用户头像"
             },
             { 
                 label: "[[module ", 
@@ -534,6 +610,20 @@ export const wikidotCompletionSource = (context) => {
                     });
                 }, 
                 detail: "图片" 
+            },
+            {
+                label: "[[include component:image-block",
+                type: "keyword",
+                apply: (view, completion, from, to) => {
+                    // 导入插图块
+                    const text = "[[include component:image-block\n|name= \n|caption= \n|width= \n|height= \n|align= ";
+                    const selectFrom = from + "[[include component:image-block\n|name=".length;
+                    view.dispatch({
+                        changes: { from, to, insert: text },
+                        selection: { anchor: selectFrom } // 光标
+                    });
+                }, 
+                detail: "插图块"
             },
             { 
                 label: "[[footnote]]", 

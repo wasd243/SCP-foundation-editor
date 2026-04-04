@@ -1,0 +1,12 @@
+{
+  "editor.tabCompletion": "on",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": true,
+    "strings": true
+  },
+  "editor.suggestSelection": "first",
+  "javascript.suggest.autoImports": true,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.formatOnSave": true
+}
