@@ -68,7 +68,6 @@ import os
 from PyQt6.QtWidgets import QApplication
 
 # 从 controllers 包中导入业务主类
-# 确保你已经将原来的 SCPEditor 类移动到了 controllers/main_controller.py
 from controllers.MAIN_CONTROLLER import SCPEditor
 from utils.banner import print_startup_banner
 from utils.logger import *

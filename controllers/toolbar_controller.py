@@ -111,6 +111,9 @@ def handle_open_link_dialog(ui):
             html = f'<a href="{url}"{target_attr}>{display_text}</a>'
             ui.browser.page().runJavaScript(f"document.execCommand('insertHTML', false, '{html}');")
 
+def handle_open_source_dialog(ui):
+    pass  # 这个功能待填充
+
 def handle_apply_font_size(ui, size_str=None):
     if not size_str: size_str = ui.size_selector.currentText()
     if size_str == "自定义px":

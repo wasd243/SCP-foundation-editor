@@ -139,6 +139,11 @@ def setup_main_ui(window):
     toolbar.addAction(QAction("🔗", window, toolTip="插入链接", triggered=window.open_link_dialog))
     toolbar.addSeparator()
 
+    # ---</>source---
+    toolbar.addAction(QAction("</>", window, toolTip="源代码编辑", triggered=window.open_link_dialog))
+    toolbar.addSeparator()
+    # ---</>source---
+
     window.ul_act = QAction("• List", window, toolTip="无序列表", checkable=True)
     window.ul_act.triggered.connect(lambda: window.exec_format("insertUnorderedList"))
     toolbar.addAction(window.ul_act)
