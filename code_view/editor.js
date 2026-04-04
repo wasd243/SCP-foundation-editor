@@ -386,8 +386,12 @@ import { foldEffect } from "@codemirror/language/dist/index.js";
 
 // 3. 初始化编辑器
 const startEditor = () => {
+    // 如果已经有实例了，先销毁，防止重复创建
+    if (window.editorInstance) {
+        window.editorInstance.destroy();
+    }
     const state = EditorState.create({
-        doc: "",
+        doc: window.INJECTED_CODE || window.PENDING_CONTENT || "",
         extensions: [
             // 将 customKeymap 放在 basicSetup 之前，确保优先级
             customKeymap,
@@ -477,10 +481,4 @@ window.WikidotEditor = {
     // 可以添加其他公共API
 };
 
-// 当DOM加载完成后启动编辑器
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startEditor);
-} else {
-    startEditor();
-}
-window.startEditor = startEditor; // 直接挂载到全局，方便 html 调用
+window.startEditor = startEditor; // 直接暴露一个全局函数，方便调用

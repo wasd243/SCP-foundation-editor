@@ -114,20 +114,51 @@ def handle_open_link_dialog(ui):
 # ---同步富文本编辑器到代码视窗---
 def _sync_source_to_editor(ui):
     import json
-    import os
     if not hasattr(ui, 'source_editor_window') or ui.source_editor_window is None:
         return
+    
     code_content = ui.source_display.toPlainText()
     safe_content = json.dumps(code_content)
     
-    js_path = os.path.join(CURRENT_DIR, 'js', '_sync_source_to_editor.js')
-    try:
-        with open(js_path, 'r', encoding='utf-8') as f:
-            js_template = f.read()
-        js_inject = js_template.replace('__SAFE_CONTENT__', safe_content)
-        ui.source_editor_window.browser.page().runJavaScript(js_inject)
-    except Exception as e:
-        print(f"读取 JS 模板失败 ({js_path}): {e}")
+    # 这一步是核心：不管三七二十一，先塞进全局变量
+    # 同时尝试调用同步函数（万一 JS 已经加载好了呢）
+    js_inject = f"""
+    window.PENDING_CONTENT = {safe_content};
+    if (window.syncToEditor) {{
+        window.syncToEditor(window.PENDING_CONTENT);
+    }}
+    """
+    ui.source_editor_window.browser.page().runJavaScript(js_inject)
+    
+    # 1. 检查主程序的源码显示框是否存在
+    if not hasattr(ui, 'source_display') or ui.source_display is None:
+        print("错误：ui.source_display 不存在，拿不到内容")
+        return ""
+
+    # 2. 拿到内容
+    code_content = ui.source_display.toPlainText()
+    
+    # 3. 打印看看（加个长度显示，免得内容太多刷屏）
+    print(f"--- 成功拿到源码内容 (长度: {len(code_content)}) ---")
+    print(code_content[:200] + ("..." if len(code_content) > 200 else "")) 
+    print("------------------------------------------")
+
+    # 4. 返回这个字符串，准备注入到编辑器里
+    # 拿到你刚才 print 成功的那个内容
+    code_content = ui.source_display.toPlainText()
+    safe_content = json.dumps(code_content)
+    
+    # 暴力注入：
+    # 1. 如果编辑器准备好了 (window.syncToEditor)，直接调
+    # 2. 如果还没准备好，挂在 window.PENDING_CONTENT 上等它初始化
+    js_inject = f"""
+    if (window.syncToEditor) {{
+        window.syncToEditor({safe_content});
+    }} else {{
+        window.PENDING_CONTENT = {safe_content};
+    }}
+    """
+    ui.source_editor_window.browser.page().runJavaScript(js_inject)
 
 def handle_open_source_dialog(ui):
     from code_view.main import FoundationEditor
@@ -154,6 +185,9 @@ def handle_open_source_dialog(ui):
         ui.source_editor_window.browser.page().runJavaScript(js_inject)
     except Exception as e:
         print(f"读取 JS 模板失败 ({js_path}): {e}")
+    
+    print("已打开源码视窗，并执行初始同步")
+    _sync_source_to_editor(ui)  # 确保打开对话框前先同步一次内容
 # ---同步代码视窗到富文本编辑器---
 
 def handle_apply_font_size(ui, size_str=None):

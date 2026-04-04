@@ -48,8 +48,17 @@ class FoundationEditor(QMainWindow):
         except Exception as e:
             print(f"读取文件失败: {e}")
             return
+        
+        # 直接在 HTML 字符串里替换掉那个占位符
+        # 我们在 HTML 里预留一个 var INJECTED_CODE = '';
+        import json
+        safe_code = json.dumps(initial_code)
+        html_content = html_content.replace(
+            "var PENDING_CONTENT = null;", 
+            f"window.PENDING_CONTENT = {safe_code};"
+        )
 
-        # 核心关键：必须指定 baseUrl，否则 HTML 里的相对路径 (href="...") 无法加载
+        # 必须指定 baseUrl，否则 HTML 里的相对路径 (href="...") 无法加载
         # 注意末尾一定要带斜杠 "/"
         base_url = QUrl.fromLocalFile(self.base_dir + os.path.sep) 
         self.browser.setHtml(html_content, base_url)
