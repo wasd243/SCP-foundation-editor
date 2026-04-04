@@ -40,50 +40,83 @@
                 console.warn("H2O2: 未检测到 Qt 环境，处于普通浏览器模式");
             }
         });
+        // 定义模板
+        const EXAMPLE_CODE = ``;
 
-        // 供 Python 或其他地方调用的动作处理
-        window.handleAction = function(type) {
+        // 插入代码逻辑
+        window.insertCode = function(before, after = before) {
             const view = window.editorInstance;
             if (!view) return;
-            // 你的原有清空等逻辑可以放这里
-        };
 
-        // --- 核心：轮询等待 editor.js 加载完毕 ---
-        function bootstrapEditor() {
-            const container = document.getElementById('editor-container');
-            
-            // 检查 editor.js 是不是已经把 startEditor 挂到 window 上了
-            if (typeof window.startEditor === 'function') {
-                console.log("H2O2: 编辑器引擎就绪，正在初始化...");
-                
-                // 1. 初始化编辑器
-                window.editorInstance = window.startEditor(container);
-                
-                // 2. 挂载同步函数供 Python 随时调用
-                window.syncToEditor = function(code) {
-                    if (!window.editorInstance) return;
-                    window.editorInstance.dispatch({
-                        changes: {
-                            from: 0, 
-                            to: window.editorInstance.state.doc.length, 
-                            insert: code
-                        }
-                    });
-                };
+            const { state } = view;
+            const mainSelection = state.selection.main;
+            const from = mainSelection.from;
+            const to = mainSelection.to;
+            const selectedText = state.sliceDoc(from, to);
 
-                // 3. 马上把 Python 存在 PENDING_CONTENT 里的 19 个字符塞进去
-                if (window.PENDING_CONTENT) {
-                    console.log("H2O2: 发现预存内容，立刻注入！");
-                    window.syncToEditor(window.PENDING_CONTENT);
-                }
-            } else {
-                // 如果还没加载完，等 50ms 再回来看一眼
-                setTimeout(bootstrapEditor, 50);
-            }
+            view.dispatch({
+                changes: { from, to, insert: before + selectedText + after },
+                selection: { anchor: from + before.length + selectedText.length },
+                scrollIntoView: true
+            });
+            view.focus();
         }
 
-        // 开始监控启动
-        bootstrapEditor();
-    </script>
+        window.handleAction = function(type) {
+            const view = window.editorInstance;
+            if (!view) {
+                console.warn("[Editor] 实例尚未初始化，请稍后...");
+                return;
+            }
+
+            let contentToInsert = ""; 
+
+            if (type === 'sync') {
+                const docContent = view.state.doc.toString(); 
+                navigator.clipboard.writeText(docContent).then(() => {
+                    const syncBtn = document.querySelector('.btn-sync');
+                    const oldText = syncBtn.innerText;
+                    syncBtn.innerText = "COPIED!";
+                    
+                    // 触发闪烁动画（如果有的话）
+                    const container = document.getElementById('editor-container');
+                    if(container) container.classList.add('syncing');
+                    
+                    setTimeout(() => { 
+                        syncBtn.innerText = oldText; 
+                        if(container) container.classList.remove('syncing');
+                    }, 2000);
+                });
+                return; 
+            } 
+            
+            // --- 核心修改部分 ---
+            if (type === 'init') {
+                // 增加二次确认窗口
+                const msg = "此操作将覆盖当前编辑器内的所有内容并加载演示模板，确定吗？";
+                if (!confirm(msg)) return; 
+                contentToInsert = EXAMPLE_CODE;
+            } else if (type === 'clear') {
+                if (!confirm("确定要清空所有内容吗？")) return;
+                contentToInsert = "";
+            }
+
+            // 执行替换
+            view.dispatch({
+                changes: { from: 0, to: view.state.doc.length, insert: contentToInsert },
+                selection: { anchor: 0 } // 初始化后光标回到开头
+            });
+        };
+        // Qt 环境下，等编辑器脚本加载完毕后再初始化编辑器实例
+        window.onload = function() {
+            const container = document.getElementById('editor-container');
+            if (window.startEditor) {
+                window.editorInstance = window.startEditor(container);
+                console.log("H2O2: 编辑器已挂载到容器");
+            } else {
+                console.error("H2O2: 找不到 startEditor 函数，请检查 bundle 是否正确导出了该函数");
+            }
+        }
+    </script> 
 </body>
 </html>
