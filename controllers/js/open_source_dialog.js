@@ -1,7 +1,7 @@
-(function() {
+(function () {
     var max_attempts = 50;
     var attempts = 0;
-    var timer = setInterval(function() {
+    var timer = setInterval(function () {
         if (window.editorInstance) {
             clearInterval(timer);
             var view = window.editorInstance;
@@ -9,7 +9,7 @@
             var current_doc = view.state.doc.toString();
             if (current_doc !== new_doc) {
                 view.dispatch({
-                    changes: { from: 0, to: view.state.doc.length, insert: new_doc }
+                    changes: {from: 0, to: view.state.doc.length, insert: new_doc}
                 });
             }
         } else if (attempts >= max_attempts) {

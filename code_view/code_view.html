@@ -8,12 +8,15 @@
 
     <style>
         html, body {
-            margin: 0; padding: 0;
-            height: 100%; width: 100%;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
             background-color: #282c34;
             overflow: hidden;
-            font-family: var(--p-font-monospace, 'Sarasa Gothic SC', monospace);
+            font-family: var(--p-font-monospace, 'Sarasa Gothic SC', monospace), serif;
         }
+
         #editor-container {
             width: 100%;
             height: 100%;
@@ -24,99 +27,109 @@
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
 </head>
 <body>
-    <input type="checkbox" id="toolbar-toggle" style="display: none;">
-    <div id="editor-container"></div>
-    <script type="module" src="assets/bundle_editor.js"></script>
+<input type="checkbox" id="toolbar-toggle" style="display: none;">
+<div id="editor-container"></div>
+<script type="module" src="assets/bundle_editor.js"></script>
 
-    <script>
-        // --- QtWebChannel 初始化 ---
-        document.addEventListener("DOMContentLoaded", function () {
-            if (typeof qt !== 'undefined') {
-                new QWebChannel(qt.webChannelTransport, function (channel) {
-                    window.pyBridge = channel.objects.py_bridge;
-                    console.log("H2O2: Qt 通道联通成功！");
-                });
-            } else {
-                console.warn("H2O2: 未检测到 Qt 环境，处于普通浏览器模式");
-            }
-        });
-        // 定义模板
-        const EXAMPLE_CODE = ``;
-
-        // 插入代码逻辑
-        window.insertCode = function(before, after = before) {
-            const view = window.editorInstance;
-            if (!view) return;
-
-            const { state } = view;
-            const mainSelection = state.selection.main;
-            const from = mainSelection.from;
-            const to = mainSelection.to;
-            const selectedText = state.sliceDoc(from, to);
-
-            view.dispatch({
-                changes: { from, to, insert: before + selectedText + after },
-                selection: { anchor: from + before.length + selectedText.length },
-                scrollIntoView: true
+<script>
+    // --- QtWebChannel 初始化 ---
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof qt !== 'undefined') {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                window.py_Bridge = channel.objects.py_bridge;
+                console.log("H2O2: Qt 通道联通成功！");
             });
-            view.focus();
+        } else {
+            console.warn("H2O2: 未检测到 Qt 环境，处于普通浏览器模式");
         }
+    });
 
-        window.handleAction = function(type) {
-            const view = window.editorInstance;
-            if (!view) {
-                console.warn("[Editor] 实例尚未初始化，请稍后...");
-                return;
-            }
+    const EXAMPLE_CODE = ``;
 
-            let contentToInsert = ""; 
+    window.insertCode = function (before, after = before) {
+        const view = window.editorInstance;
+        if (!view) return;
+        const {state} = view;
+        const mainSelection = state.selection.main;
+        const from = mainSelection.from;
+        const to = mainSelection.to;
+        const selectedText = state.sliceDoc(from, to);
+        view.dispatch({
+            changes: {from, to, insert: before + selectedText + after},
+            selection: {anchor: from + before.length + selectedText.length},
+            scrollIntoView: true
+        });
+        view.focus();
+    };
 
-            if (type === 'sync') {
-                const docContent = view.state.doc.toString(); 
-                navigator.clipboard.writeText(docContent).then(() => {
-                    const syncBtn = document.querySelector('.btn-sync');
+    window.handleAction = function (type) {
+        const view = window.editorInstance;
+        if (!view) {
+            console.warn("[Editor] 实例尚未初始化，请稍后...");
+            return;
+        }
+        let contentToInsert = "";
+        if (type === 'sync') {
+            const docContent = view.state.doc.toString();
+            navigator.clipboard.writeText(docContent).then(() => {
+                const syncBtn = document.querySelector('.btn-sync');
+                if (syncBtn) {
                     const oldText = syncBtn.innerText;
                     syncBtn.innerText = "COPIED!";
-                    
-                    // 触发闪烁动画（如果有的话）
-                    const container = document.getElementById('editor-container');
-                    if(container) container.classList.add('syncing');
-                    
-                    setTimeout(() => { 
-                        syncBtn.innerText = oldText; 
-                        if(container) container.classList.remove('syncing');
+                    setTimeout(() => {
+                        syncBtn.innerText = oldText;
                     }, 2000);
-                });
-                return; 
-            } 
-            
-            // --- 核心修改部分 ---
-            if (type === 'init') {
-                // 增加二次确认窗口
-                const msg = "此操作将覆盖当前编辑器内的所有内容并加载演示模板，确定吗？";
-                if (!confirm(msg)) return; 
-                contentToInsert = EXAMPLE_CODE;
-            } else if (type === 'clear') {
-                if (!confirm("确定要清空所有内容吗？")) return;
-                contentToInsert = "";
-            }
-
-            // 执行替换
-            view.dispatch({
-                changes: { from: 0, to: view.state.doc.length, insert: contentToInsert },
-                selection: { anchor: 0 } // 初始化后光标回到开头
+                }
             });
-        };
-        // Qt 环境下，等编辑器脚本加载完毕后再初始化编辑器实例
-        window.onload = function() {
-            const container = document.getElementById('editor-container');
-            if (window.startEditor) {
-                window.editorInstance = window.startEditor(container);
-                console.log("H2O2: 编辑器已挂载到容器");
-            } else {
-                console.error("H2O2: 找不到 startEditor 函数，请检查 bundle 是否正确导出了该函数");
-            }
+            return;
         }
-    </script> 
+        if (type === 'init') {
+            if (!confirm("此操作将覆盖当前编辑器内的所有内容并加载演示模板，确定吗？")) return;
+            contentToInsert = EXAMPLE_CODE;
+        } else if (type === 'clear') {
+            if (!confirm("确定要清空所有内容吗？")) return;
+            contentToInsert = "";
+        }
+        view.dispatch({
+            changes: {from: 0, to: view.state.doc.length, insert: contentToInsert},
+            selection: {anchor: 0}
+        });
+    };
+
+    // ============================================================
+    // 🔧 核心修复：window.onload 是唯一启动入口
+    // editor.js 只挂载 window.startEditor，不自动执行
+    // 这里是唯一触发点，消灭幽灵实例竞态
+    // ============================================================
+    window.onload = function () {
+        const container = document.getElementById('editor-container');
+
+        if (!window.startEditor) {
+            console.error("❌ H2O2 FATAL: window.startEditor 未找到，bundle 可能未加载！");
+            return;
+        }
+
+        // 启动唯一实例
+        window.editorInstance = window.startEditor(container);
+        console.log("H2O2: 编辑器初始化成功，实例：", window.editorInstance);
+
+        // 消费 Python 提前发来的内容（startEditor 内部也会消费，这里作双保险）
+        if (window.PENDING_CONTENT && window.syncToEditor) {
+            console.log("H2O2: window.onload 检测到 PENDING_CONTENT，补发同步");
+            window.syncToEditor(window.PENDING_CONTENT);
+            window.PENDING_CONTENT = null;
+        }
+
+        // 🔍 存活探针：每隔5秒打印一次 syncToEditor 的挂载状态，方便排查
+        // 上线后可删除此段
+        let probeCount = 0;
+        const probe = setInterval(() => {
+            probeCount++;
+            const alive = typeof window.syncToEditor === 'function';
+            console.log(`🔍 [探针 #${probeCount}] syncToEditor 存活=${alive}, editorInstance 存活=${!!window.editorInstance}`);
+            if (probeCount >= 3) clearInterval(probe); // 探针只跑3次
+        }, 5000);
+    };
+</script>
 </body>
 </html>

@@ -15,6 +15,7 @@ from ui.widgets.ClearConfirmDialog import ClearConfirmDialog
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+
 def sync_toolbar_state(ui, state):
     """
     根据 JS 传来的状态更新工具栏按钮提示
@@ -32,7 +33,7 @@ def sync_toolbar_state(ui, state):
         'ul': (ui.ul_act, "无序列表"),
         'ol': (ui.ol_act, "有序列表")
     }
-    
+
     for key, (act, label) in mapping.items():
         is_on = state.get(key, False)
         act.blockSignals(True)
@@ -40,7 +41,7 @@ def sync_toolbar_state(ui, state):
         act.blockSignals(False)
         status = "[开启]" if is_on else "[关闭]"
         act.setToolTip(f"{label} {status}")
-        
+
     # 颜色按钮状态
     color_on = state.get('color', False)
     ui.color_act.blockSignals(True)
@@ -70,19 +71,20 @@ def sync_toolbar_state(ui, state):
 def execute_format(ui, command, value=None):
     """执行富文本格式化命令 (通过外部 JS 模板)"""
     val_str = json.dumps(value) if value is not None else "null"
-    
+
     js_path = os.path.join(CURRENT_DIR, 'js', 'execute_format.js')
     try:
         with open(js_path, 'r', encoding='utf-8') as f:
             js_template = f.read()
-            
+
         # 核心：连续使用 replace 替换掉 JS 文件里的两个占位符
         final_js = js_template.replace('__COMMAND__', command).replace('__VAL_STR__', val_str)
-        
+
         ui.browser.page().runJavaScript(final_js)
         ui.browser.setFocus()
     except Exception as e:
         print(f"读取 JS 模板失败 ({js_path}): {e}")
+
 
 def handle_apply_relative_size(ui):
     size_str = ui.rel_size_selector.currentText()
@@ -95,11 +97,13 @@ def handle_apply_relative_size(ui):
     ui.browser.page().runJavaScript(f"applyFontSize('{size_str}');")
     ui.browser.setFocus()
 
+
 def handle_set_heading(ui, index):
     tags = ["p", "h1", "h2", "h3", "h4", "h5", "h6"]
     if 0 <= index < len(tags):
         tag = tags[index]
         ui.exec_format("formatBlock", tag)
+
 
 def handle_open_link_dialog(ui):
     dialog = LinkDialog(ui)
@@ -111,84 +115,137 @@ def handle_open_link_dialog(ui):
             html = f'<a href="{url}"{target_attr}>{display_text}</a>'
             ui.browser.page().runJavaScript(f"document.execCommand('insertHTML', false, '{html}');")
 
-# ---同步富文本编辑器到代码视窗---
+
+# =========================================================
+# 🔧 修复版：带重试机制的同步核心函数
+# =========================================================
 def _sync_source_to_editor(ui):
+    """
+    将 source_display 的内容同步到 CodeMirror 源码视窗。
+    包含防御检查 + 暴力视觉反馈（通过 JS 侧的 syncToEditor 实现）。
+    """
     import json
-    if not hasattr(ui, 'source_editor_window') or ui.source_editor_window is None:
+
+    # 防御：视窗不存在则退出
+    if getattr(ui, 'source_editor_window', None) is None:
         return
-    
-    code_content = ui.source_display.toPlainText()
-    safe_content = json.dumps(code_content)
-    
-    # 这一步是核心：不管三七二十一，先塞进全局变量
-    # 同时尝试调用同步函数（万一 JS 已经加载好了呢）
-    js_inject = f"""
-    window.PENDING_CONTENT = {safe_content};
-    if (window.syncToEditor) {{
-        window.syncToEditor(window.PENDING_CONTENT);
-    }}
-    """
-    ui.source_editor_window.browser.page().runJavaScript(js_inject)
-    
-    # 1. 检查主程序的源码显示框是否存在
-    if not hasattr(ui, 'source_display') or ui.source_display is None:
-        print("错误：ui.source_display 不存在，拿不到内容")
-        return ""
+    if getattr(ui, 'source_display', None) is None:
+        print("⚠️ 警告：ui.source_display 不存在")
+        return
 
-    # 2. 拿到内容
     code_content = ui.source_display.toPlainText()
-    
-    # 3. 打印看看（加个长度显示，免得内容太多刷屏）
-    print(f"--- 成功拿到源码内容 (长度: {len(code_content)}) ---")
-    print(code_content[:200] + ("..." if len(code_content) > 200 else "")) 
-    print("------------------------------------------")
+    safe_content = json.dumps(code_content)  # 安全序列化，处理引号/换行/Unicode
 
-    # 4. 返回这个字符串，准备注入到编辑器里
-    # 拿到你刚才 print 成功的那个内容
-    code_content = ui.source_display.toPlainText()
-    safe_content = json.dumps(code_content)
-    
-    # 暴力注入：
-    # 1. 如果编辑器准备好了 (window.syncToEditor)，直接调
-    # 2. 如果还没准备好，挂在 window.PENDING_CONTENT 上等它初始化
+    print(f"🚀 [同步] 准备发送到 CodeMirror (长度: {len(code_content)} 字节)")
+
+    # 注入逻辑：syncToEditor 存在则直接调用，否则写入 PENDING_CONTENT 等待编辑器就绪
     js_inject = f"""
-    if (window.syncToEditor) {{
-        window.syncToEditor({safe_content});
+(function() {{
+    var content = {safe_content};
+    console.log("🐍 Python->JS 注入触发，内容长度=" + content.length);
+    if (typeof window.syncToEditor === 'function') {{
+        window.syncToEditor(content);
     }} else {{
-        window.PENDING_CONTENT = {safe_content};
+        console.warn("⏳ syncToEditor 尚未就绪，写入 PENDING_CONTENT");
+        window.PENDING_CONTENT = content;
     }}
-    """
+}})();
+"""
     ui.source_editor_window.browser.page().runJavaScript(js_inject)
+
+
+def _inject_after_load(ui, code_content):
+    """
+    等待 source_editor_window 页面加载完成后再注入内容。
+    使用 loadFinished 信号 + 单次重试兜底，解决时序断路问题。
+    """
+    import json
+    from PyQt6.QtCore import QTimer
+
+    page = ui.source_editor_window.browser.page()
+    safe_content = json.dumps(code_content)
+
+    # 核心注入 JS（带暴力视觉反馈）
+    js_inject = f"""
+(function() {{
+    var content = {safe_content};
+    var MAX_RETRY = 20;   // 最多重试20次
+    var INTERVAL = 150;   // 每次间隔150ms，总计最多等3秒
+    var attempt = 0;
+
+    function trySync() {{
+        attempt++;
+        console.log("🔄 [重试 #" + attempt + "] 检查 syncToEditor...");
+
+        if (typeof window.syncToEditor === 'function') {{
+            window.syncToEditor(content);
+            console.log("✅ [重试 #" + attempt + "] 同步成功！");
+            return;
+        }}
+
+        if (attempt < MAX_RETRY) {{
+            setTimeout(trySync, INTERVAL);
+        }} else {{
+            // 最终兜底：写入 PENDING_CONTENT，等编辑器自己读取
+            console.error("❌ 重试耗尽，写入 PENDING_CONTENT 兜底");
+            window.PENDING_CONTENT = content;
+        }}
+    }}
+
+    // 第一次立即尝试
+    trySync();
+}})();
+"""
+
+    def do_inject():
+        print("📡 [loadFinished/Timer] 开始执行注入 JS")
+        page.runJavaScript(js_inject)
+
+    # 方案A：绑定 loadFinished 信号（如果页面还在加载）
+    try:
+        # 用单次连接，避免信号重复绑定
+        page.loadFinished.connect(lambda ok: do_inject())
+    except Exception:
+        pass
+
+    # 方案B：同时用 Timer 做兜底（页面可能已经加载完了，loadFinished 不会再触发）
+    QTimer.singleShot(300, do_inject)
+
 
 def handle_open_source_dialog(ui):
+    """
+    打开/聚焦 CodeMirror 源码视窗，并执行一次可靠的初始同步。
+    """
     from code_view.main import FoundationEditor
-    import json
-    import os
+
+    is_new_window = False
+
     if not hasattr(ui, 'source_editor_window') or ui.source_editor_window is None:
         ui.source_editor_window = FoundationEditor()
-        # 绑定实时同步机制：当代码视窗的内容改变时，实时推送到右侧 Foundation Editor
+        is_new_window = True
+
+        # 🔧 修复：只绑定一次 textChanged，避免多次打开产生重复信号
+        # 实时同步：source_display 内容变化时推送到 CodeMirror
         ui.source_display.textChanged.connect(lambda: _sync_source_to_editor(ui))
-        
+        print("✅ [source_dialog] 新建视窗，已绑定 textChanged 信号")
+
     ui.source_editor_window.show()
     ui.source_editor_window.activateWindow()
     ui.source_editor_window.raise_()
-    
-    # 每次打开时，执行初始的同步（使用带重试的setInterval以防JS尚未加载完毕）
+
+    # 获取当前内容，执行初始同步
     code_content = ui.source_display.toPlainText()
-    safe_content = json.dumps(code_content)
-    
-    js_path = os.path.join(CURRENT_DIR, 'js', 'open_source_dialog.js')
-    try:
-        with open(js_path, 'r', encoding='utf-8') as f:
-            js_template = f.read()
-        js_inject = js_template.replace('__SAFE_CONTENT__', safe_content)
-        ui.source_editor_window.browser.page().runJavaScript(js_inject)
-    except Exception as e:
-        print(f"读取 JS 模板失败 ({js_path}): {e}")
-    
-    print("已打开源码视窗，并执行初始同步")
-    _sync_source_to_editor(ui)  # 确保打开对话框前先同步一次内容
-# ---同步代码视窗到富文本编辑器---
+    print(f"📤 [source_dialog] 执行初始同步，内容长度={len(code_content)}")
+
+    if is_new_window:
+        # 新窗口：页面还在加载，必须等 loadFinished
+        _inject_after_load(ui, code_content)
+    else:
+        # 已有窗口：页面早已加载完毕，直接同步
+        _sync_source_to_editor(ui)
+
+
+# =============================================================
 
 def handle_apply_font_size(ui, size_str=None):
     if not size_str: size_str = ui.size_selector.currentText()
@@ -201,9 +258,11 @@ def handle_apply_font_size(ui, size_str=None):
     ui.browser.page().runJavaScript(f"applyFontSize('{size_str}');")
     ui.browser.setFocus()
 
+
 def handle_choose_color(ui):
     color = QColorDialog.getColor()
     if color.isValid(): ui.exec_format("foreColor", color.name())
+
 
 def handle_clear_color(ui):
     js_path = os.path.join(CURRENT_DIR, 'js', 'clear_color.js')
@@ -214,6 +273,7 @@ def handle_clear_color(ui):
         ui.browser.setFocus()
     except Exception as e:
         print(f"读取或执行 JS 失败: {e}")
+
 
 def handle_clear_styles(ui):
     """清除选中文字的字体大小和颜色，恢复到正文样式（无标签）"""
@@ -226,6 +286,7 @@ def handle_clear_styles(ui):
     except Exception as e:
         print(f"读取或执行 clear_styles JS 失败: {e}")
 
+
 def handle_insert_audio(ui):
     html_path = os.path.join(CURRENT_DIR, 'html', 'insert_audio.html')
     try:
@@ -234,6 +295,7 @@ def handle_insert_audio(ui):
         ui.run_insert_js(audio_html.replace('\n', ''))
     except Exception as e:
         print(f"读取或执行 HTML 失败: {e}")
+
 
 def handle_insert_component(ui):
     comp = ui.comp_selector.currentText()
@@ -245,8 +307,10 @@ def handle_insert_component(ui):
         return
     elif comp == "AIM 高级信息方法论":
         mode = "full"
-        if ui.radio_aim_top.isChecked(): mode = "-"
-        elif ui.radio_aim_bottom.isChecked(): mode = "!"
+        if ui.radio_aim_top.isChecked():
+            mode = "-"
+        elif ui.radio_aim_bottom.isChecked():
+            mode = "!"
         html = get_aim_template(mode)
     elif comp == "授权引用 (License Box)":
         ui.browser.page().runJavaScript("insertLicenseBox()")
@@ -259,128 +323,134 @@ def handle_insert_component(ui):
 
     if html:
         safe_html = html.replace('\n', ' ').replace("'", "\\'")
-            
+
         # 1. 动态获取 JS 文件路径
         current_dir = os.path.dirname(os.path.abspath(__file__))
         js_path = os.path.join(current_dir, 'js', 'insert_component.js')
-    
+
         try:
-        # 2. 读取 JS 模板
+            # 2. 读取 JS 模板
             with open(js_path, 'r', encoding='utf-8') as f:
-               js_template = f.read()
-                
+                js_template = f.read()
+
             # 3. 核心：用真正的 HTML 替换掉模板里的占位符
             final_js = js_template.replace('__SAFE_HTML__', safe_html)
-    
+
             # 4. 执行
             ui.browser.page().runJavaScript(final_js)
-            
+
         except Exception as e:
             print(f"读取组件插入 JS 模板失败: {e}")
 
         ui.update_theme_state()
+
 
 def handle_copy_to_clipboard(ui):
     clipboard = QApplication.clipboard()
     clipboard.setText(ui.source_display.toPlainText())
     QMessageBox.information(ui, "成功", "代码已复制到剪切板！")
 
+
 def handle_update_theme_state(ui):
-        if not hasattr(ui, 'lbl_bf_status') or not hasattr(ui, 'lbl_theme_status'):
-             return
+    if not hasattr(ui, 'lbl_bf_status') or not hasattr(ui, 'lbl_theme_status'):
+        return
 
-        ui.use_better_footnotes = ui.check_better_footnotes.isChecked()
-        bf_text = "开启" if ui.use_better_footnotes else "关闭"
-        ui.lbl_bf_status.setText(f"<b>Better Footnotes:</b> {bf_text}")
+    ui.use_better_footnotes = ui.check_better_footnotes.isChecked()
+    bf_text = "开启" if ui.use_better_footnotes else "关闭"
+    ui.lbl_bf_status.setText(f"<b>Better Footnotes:</b> {bf_text}")
 
-        ui.browser.page().runJavaScript("if(document.getElementById('basalt-logo-overlay')) document.getElementById('basalt-logo-overlay').style.display='none';")
+    ui.browser.page().runJavaScript(
+        "if(document.getElementById('basalt-logo-overlay')) document.getElementById('basalt-logo-overlay').style.display='none';")
+    ui.browser.page().runJavaScript("document.body.classList.remove('bhl-theme');")
+    ui.browser.page().runJavaScript(
+        "if(document.getElementById('editor-root')) { document.getElementById('editor-root').classList.remove('bhl-theme'); document.getElementById('editor-root').classList.remove('basalt-theme'); document.getElementById('editor-root').classList.remove('shivering-theme'); }")
+
+    if ui.check_enable_basalt.isChecked():
+        ui.page_theme_config["type"] = "basalt"
+        opts = []
+        if ui.check_dark.isChecked(): opts.append("darkmode=a")
+        if ui.check_wide.isChecked(): opts.append("wide=a")
+        if ui.check_hidetitle.isChecked(): opts.append("hidetitle=a")
+        ui.page_theme_config["options"] = opts
+
+        theme_text = "玄武岩 (Basalt)"
+        if opts:
+            theme_text += f"<br>选项: {', '.join(opts)}"
+        ui.lbl_theme_status.setText(f"<b>当前版式:</b> {theme_text}")
+
+        ui.browser.page().runJavaScript(
+            "if(document.getElementById('basalt-logo-overlay')) document.getElementById('basalt-logo-overlay').style.display='block';")
+        ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.add('basalt-theme');")
         ui.browser.page().runJavaScript("document.body.classList.remove('bhl-theme');")
-        ui.browser.page().runJavaScript("if(document.getElementById('editor-root')) { document.getElementById('editor-root').classList.remove('bhl-theme'); document.getElementById('editor-root').classList.remove('basalt-theme'); document.getElementById('editor-root').classList.remove('shivering-theme'); }")
+        ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.remove('bhl-theme');")
+        ui.basalt_extra_group.setVisible(True)
 
-        if ui.check_enable_basalt.isChecked():
-            ui.page_theme_config["type"] = "basalt"
-            opts = []
-            if ui.check_dark.isChecked(): opts.append("darkmode=a")
-            if ui.check_wide.isChecked(): opts.append("wide=a")
-            if ui.check_hidetitle.isChecked(): opts.append("hidetitle=a")
-            ui.page_theme_config["options"] = opts
+    elif ui.check_enable_shivering.isChecked():
+        ui.basalt_extra_group.setVisible(False)
+        ui.page_theme_config["type"] = "shivering"
+        ui.page_theme_config["options"] = []
 
-            theme_text = "玄武岩 (Basalt)"
-            if opts:
-                theme_text += f"<br>选项: {', '.join(opts)}"
-            ui.lbl_theme_status.setText(f"<b>当前版式:</b> {theme_text}")
+        sub_text = "默认"
+        code_suffix = ""
+        if ui.radio_shiv_mo.isChecked():
+            sub_text = "澳门"
+            code_suffix = " mo=*"
+        elif ui.radio_shiv_kl.isChecked():
+            sub_text = "吉隆坡"
+            code_suffix = " kl=*"
+        elif ui.radio_shiv_dub.isChecked():
+            sub_text = "都柏林"
+            code_suffix = " dub=*"
+        elif ui.radio_shiv_ct.isChecked():
+            sub_text = "开普敦"
+            code_suffix = " ct=*"
+        elif ui.radio_shiv_ba.isChecked():
+            sub_text = "布宜诺斯艾利斯"
+            code_suffix = " ba=*"
 
-            ui.browser.page().runJavaScript("if(document.getElementById('basalt-logo-overlay')) document.getElementById('basalt-logo-overlay').style.display='block';")
-            ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.add('basalt-theme');")
-            ui.browser.page().runJavaScript("document.body.classList.remove('bhl-theme');")
-            ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.remove('bhl-theme');")
-            ui.basalt_extra_group.setVisible(True)
- 
-        elif ui.check_enable_shivering.isChecked():
-            ui.basalt_extra_group.setVisible(False)
-            ui.page_theme_config["type"] = "shivering"
-            ui.page_theme_config["options"] = [] 
-            
-            sub_text = "默认"
-            code_suffix = ""
-            if ui.radio_shiv_mo.isChecked():
-                sub_text = "澳门"
-                code_suffix = " mo=*"
-            elif ui.radio_shiv_kl.isChecked():
-                sub_text = "吉隆坡"
-                code_suffix = " kl=*"
-            elif ui.radio_shiv_dub.isChecked():
-                sub_text = "都柏林"
-                code_suffix = " dub=*"
-            elif ui.radio_shiv_ct.isChecked():
-                sub_text = "开普敦"
-                code_suffix = " ct=*"
-            elif ui.radio_shiv_ba.isChecked():
-                sub_text = "布宜诺斯艾利斯"
-                code_suffix = " ba=*"
-            
-            ui.page_theme_config["shivering_suffix"] = code_suffix
-            ui.lbl_theme_status.setText(f"<b>当前版式:</b> 夜琉璃 ({sub_text})")
-            ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.add('shivering-theme');")
-            ui.browser.page().runJavaScript("document.body.classList.remove('bhl-theme');")
-            ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.remove('bhl-theme');")
-            ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.remove('basalt-theme');")
+        ui.page_theme_config["shivering_suffix"] = code_suffix
+        ui.lbl_theme_status.setText(f"<b>当前版式:</b> 夜琉璃 ({sub_text})")
+        ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.add('shivering-theme');")
+        ui.browser.page().runJavaScript("document.body.classList.remove('bhl-theme');")
+        ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.remove('bhl-theme');")
+        ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.remove('basalt-theme');")
 
-        elif ui.check_enable_bhl.isChecked():
-            ui.page_theme_config["type"] = "bhl"
-            sub_opts = []
-            if ui.check_dark_sidebar.isChecked(): sub_opts.append("暗色侧边栏")
-            if ui.check_bhl_collapsible.isChecked(): sub_opts.append("可折叠侧边栏")
-            if ui.check_bhl_toggle.isChecked(): sub_opts.append("切换侧边栏")
-            if ui.check_bhl_centered.isChecked(): sub_opts.append("居中页眉")
-            if ui.check_bhl_office.isChecked(): sub_opts.append("办公室")
-            
-            theme_text = "黑色标记笔 (Black Highlighter)"
-            if sub_opts:
-                theme_text += f"<br>选项: {', '.join(sub_opts)}"
-            ui.lbl_theme_status.setText(f"<b>当前版式:</b> {theme_text}")
-            
-            ui.page_theme_config["bhl_options"] = {
-                "dark_sidebar": ui.check_dark_sidebar.isChecked(),
-                "collapsible": ui.check_bhl_collapsible.isChecked(),
-                "toggle": ui.check_bhl_toggle.isChecked(),
-                "centered": ui.check_bhl_centered.isChecked(),
-                "office": ui.check_bhl_office.isChecked()
-            }
-            ui.browser.page().runJavaScript("document.body.classList.add('bhl-theme');")
-            ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.add('bhl-theme');")
-            ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.remove('basalt-theme');")
+    elif ui.check_enable_bhl.isChecked():
+        ui.page_theme_config["type"] = "bhl"
+        sub_opts = []
+        if ui.check_dark_sidebar.isChecked(): sub_opts.append("暗色侧边栏")
+        if ui.check_bhl_collapsible.isChecked(): sub_opts.append("可折叠侧边栏")
+        if ui.check_bhl_toggle.isChecked(): sub_opts.append("切换侧边栏")
+        if ui.check_bhl_centered.isChecked(): sub_opts.append("居中页眉")
+        if ui.check_bhl_office.isChecked(): sub_opts.append("办公室")
 
-        else:
-            ui.basalt_extra_group.setVisible(False)
-            ui.page_theme_config["type"] = "none"
-            ui.page_theme_config["options"] = []
-            ui.lbl_theme_status.setText("<b>当前版式:</b> 无")
+        theme_text = "黑色标记笔 (Black Highlighter)"
+        if sub_opts:
+            theme_text += f"<br>选项: {', '.join(sub_opts)}"
+        ui.lbl_theme_status.setText(f"<b>当前版式:</b> {theme_text}")
 
-        is_ds = ui.check_enable_bhl.isChecked() and ui.check_dark_sidebar.isChecked()
-        sidebar_text = "开启" if is_ds else "关闭"
-        if hasattr(ui, 'lbl_sidebar_status'):
-             ui.lbl_sidebar_status.setText(f"<b>Dark Sidebar:</b> {sidebar_text}")
+        ui.page_theme_config["bhl_options"] = {
+            "dark_sidebar": ui.check_dark_sidebar.isChecked(),
+            "collapsible": ui.check_bhl_collapsible.isChecked(),
+            "toggle": ui.check_bhl_toggle.isChecked(),
+            "centered": ui.check_bhl_centered.isChecked(),
+            "office": ui.check_bhl_office.isChecked()
+        }
+        ui.browser.page().runJavaScript("document.body.classList.add('bhl-theme');")
+        ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.add('bhl-theme');")
+        ui.browser.page().runJavaScript("document.getElementById('editor-root').classList.remove('basalt-theme');")
+
+    else:
+        ui.basalt_extra_group.setVisible(False)
+        ui.page_theme_config["type"] = "none"
+        ui.page_theme_config["options"] = []
+        ui.lbl_theme_status.setText("<b>当前版式:</b> 无")
+
+    is_ds = ui.check_enable_bhl.isChecked() and ui.check_dark_sidebar.isChecked()
+    sidebar_text = "开启" if is_ds else "关闭"
+    if hasattr(ui, 'lbl_sidebar_status'):
+        ui.lbl_sidebar_status.setText(f"<b>Dark Sidebar:</b> {sidebar_text}")
+
 
 def handle_insert_new_footnote(ui):
     js_path = os.path.join(CURRENT_DIR, 'js', 'insert_new_footnote.js')
@@ -391,6 +461,7 @@ def handle_insert_new_footnote(ui):
     except Exception as e:
         print(f"读取或执行 JS 失败: {e}")
 
+
 def handle_clear_all_content(ui):
     dialog = ClearConfirmDialog(ui)
     if dialog.exec() == QDialog.DialogCode.Accepted:
@@ -399,7 +470,7 @@ def handle_clear_all_content(ui):
         ui.check_enable_shivering.setChecked(False)
         ui.check_enable_bhl.setChecked(False)
         ui.check_better_footnotes.setChecked(False)
-        ui.page_theme_config = { "type": "none", "options": [] }
+        ui.page_theme_config = {"type": "none", "options": []}
         ui.heading_selector.setCurrentIndex(0)
         ui.comp_selector.setCurrentIndex(0)
         ui.update_theme_state()
