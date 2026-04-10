@@ -1,20 +1,24 @@
 import os
 import sys
 
-# 优化日志，方便排查控制台错误
 os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--log-level=3"
 os.environ["QTWEBENGINE_REMOTE_DEBUGGING"] = "9222"
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebChannel import QWebChannel
-from PyQt6.QtCore import QObject, pyqtSlot, QUrl
+from PyQt6.QtCore import QObject, pyqtSlot, QUrl, pyqtSignal  # ← 新增 pyqtSignal
 
 
 class EditorBridge(QObject):
+    # ✅ 新增：内容变更信号，供外部（toolbar_controller）订阅
+    content_changed = pyqtSignal(str)
+
     @pyqtSlot(str)
     def on_code_changed(self, content):
         print(f"🚀 [桥梁接收] 内容长度: {len(content)}")
+        # ✅ 新增：发射信号，把内容广播出去
+        self.content_changed.emit(content)
 
 
 class FoundationEditor(QMainWindow):
@@ -30,7 +34,6 @@ class FoundationEditor(QMainWindow):
         self.channel.registerObject("py_bridge", self.bridge)
         self.browser.page().setWebChannel(self.channel)
 
-        # 路径定位：main.py 同级有 assets 文件夹
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.assets_dir = os.path.join(self.base_dir, "assets")
 
@@ -55,8 +58,6 @@ class FoundationEditor(QMainWindow):
             print(f"读取文件失败: {e}")
             return
 
-        # 核心关键：必须指定 baseUrl，否则 HTML 里的相对路径 (href="...") 无法加载
-        # 注意末尾一定要带斜杠 "/"
         base_url = QUrl.fromLocalFile(self.base_dir + os.path.sep)
         self.browser.setHtml(html_content, base_url)
 

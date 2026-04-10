@@ -121,12 +121,11 @@ def handle_open_link_dialog(ui):
 # =========================================================
 def _sync_source_to_editor(ui):
     """
-    将 source_display 的内容同步到 CodeMirror 源码视窗。
-    包含防御检查 + 暴力视觉反馈（通过 JS 侧的 syncToEditor 实现）。
+    将 source_display 内容推送到 CodeMirror。
+    设置 _is_pushing_to_cm 标志，防止 CodeMirror 回调再触发一次同步（循环问题）。
     """
     import json
 
-    # 防御：视窗不存在则退出
     if getattr(ui, 'source_editor_window', None) is None:
         return
     if getattr(ui, 'source_display', None) is None:
@@ -134,15 +133,17 @@ def _sync_source_to_editor(ui):
         return
 
     code_content = ui.source_display.toPlainText()
-    safe_content = json.dumps(code_content)  # 安全序列化，处理引号/换行/Unicode
+    safe_content = json.dumps(code_content)
 
-    print(f"🚀 [同步] 准备发送到 CodeMirror (长度: {len(code_content)} 字节)")
+    print(f"🚀 [同步→CM] 推送内容长度: {len(code_content)} 字节")
 
-    # 注入逻辑：syncToEditor 存在则直接调用，否则写入 PENDING_CONTENT 等待编辑器就绪
+    # ✅ 标记"本次是 Python 主动推送"，让反向回调跳过更新
+    ui._is_pushing_to_cm = True
+
     js_inject = f"""
 (function() {{
     var content = {safe_content};
-    console.log("🐍 Python->JS 注入触发，内容长度=" + content.length);
+    console.log("🐍 Python->CM 注入，内容长度=" + content.length);
     if (typeof window.syncToEditor === 'function') {{
         window.syncToEditor(content);
     }} else {{
@@ -153,69 +154,63 @@ def _sync_source_to_editor(ui):
 """
     ui.source_editor_window.browser.page().runJavaScript(js_inject)
 
+    # ✅ JS 是异步的，延迟 500ms 后解除标志（CM 的回调通常在 100ms 内到达）
+    from PyQt6.QtCore import QTimer
+    QTimer.singleShot(500, lambda: setattr(ui, '_is_pushing_to_cm', False))
+
 
 def _inject_after_load(ui, code_content):
-    """
-    等待 source_editor_window 页面加载完成后再注入内容。
-    使用 loadFinished 信号 + 单次重试兜底，解决时序断路问题。
-    """
+    """等待页面加载完成后再注入，解决时序断路。"""
     import json
     from PyQt6.QtCore import QTimer
 
     page = ui.source_editor_window.browser.page()
     safe_content = json.dumps(code_content)
 
-    # 核心注入 JS（带暴力视觉反馈）
     js_inject = f"""
 (function() {{
     var content = {safe_content};
-    var MAX_RETRY = 20;   // 最多重试20次
-    var INTERVAL = 150;   // 每次间隔150ms，总计最多等3秒
+    var MAX_RETRY = 20;
+    var INTERVAL = 150;
     var attempt = 0;
 
     function trySync() {{
         attempt++;
         console.log("🔄 [重试 #" + attempt + "] 检查 syncToEditor...");
-
         if (typeof window.syncToEditor === 'function') {{
             window.syncToEditor(content);
             console.log("✅ [重试 #" + attempt + "] 同步成功！");
             return;
         }}
-
         if (attempt < MAX_RETRY) {{
             setTimeout(trySync, INTERVAL);
         }} else {{
-            // 最终兜底：写入 PENDING_CONTENT，等编辑器自己读取
             console.error("❌ 重试耗尽，写入 PENDING_CONTENT 兜底");
             window.PENDING_CONTENT = content;
         }}
     }}
-
-    // 第一次立即尝试
     trySync();
 }})();
 """
 
     def do_inject():
         print("📡 [loadFinished/Timer] 开始执行注入 JS")
+        # 初始推送也标记一下，防止 CM 回调触发反向写入
+        ui._is_pushing_to_cm = True
         page.runJavaScript(js_inject)
+        from PyQt6.QtCore import QTimer as _QTimer
+        _QTimer.singleShot(2000, lambda: setattr(ui, '_is_pushing_to_cm', False))
 
-    # 方案A：绑定 loadFinished 信号（如果页面还在加载）
     try:
-        # 用单次连接，避免信号重复绑定
         page.loadFinished.connect(lambda ok: do_inject())
     except Exception:
         pass
 
-    # 方案B：同时用 Timer 做兜底（页面可能已经加载完了，loadFinished 不会再触发）
     QTimer.singleShot(300, do_inject)
 
 
 def handle_open_source_dialog(ui):
-    """
-    打开/聚焦 CodeMirror 源码视窗，并执行一次可靠的初始同步。
-    """
+    """打开 CodeMirror 源码视窗，并建立双向同步。"""
     from code_view.main import FoundationEditor
 
     is_new_window = False
@@ -224,28 +219,52 @@ def handle_open_source_dialog(ui):
         ui.source_editor_window = FoundationEditor()
         is_new_window = True
 
-        # 🔧 修复：只绑定一次 textChanged，避免多次打开产生重复信号
-        # 实时同步：source_display 内容变化时推送到 CodeMirror
+        # ── 方向 A：source_display → CodeMirror ──────────────────────
+        # source_display 内容变化时推送到 CM（已有逻辑）
         ui.source_display.textChanged.connect(lambda: _sync_source_to_editor(ui))
-        print("✅ [source_dialog] 新建视窗，已绑定 textChanged 信号")
+        print("✅ [source_dialog] 已绑定 A 向：source_display → CodeMirror")
+
+        # ── 方向 B：CodeMirror → source_display ──────────────────────
+        def _on_cm_content_changed(content: str):
+            # 如果是 Python 自己刚推过去的内容触发的回调，直接跳过，防止无限循环
+            if getattr(ui, '_is_pushing_to_cm', False):
+                print("🔁 [防循环] Python 推送期间，跳过 CM→source_display 回写")
+                return
+
+            # 内容相同时也跳过（兜底防止无意义刷新）
+            if ui.source_display.toPlainText() == content:
+                return
+
+            print(f"📨 [CM→source_display] 接收 CM 内容，长度={len(content)} 字节")
+
+            # 阻断 textChanged 信号，防止回写触发再一次 A 向同步
+            ui.source_display.blockSignals(True)
+            try:
+                # 保留滚动位置
+                v = ui.source_display.verticalScrollBar().value()
+                h = ui.source_display.horizontalScrollBar().value()
+                ui.source_display.setPlainText(content)
+                ui.source_display.verticalScrollBar().setValue(v)
+                ui.source_display.horizontalScrollBar().setValue(h)
+            finally:
+                ui.source_display.blockSignals(False)
+
+        ui.source_editor_window.bridge.content_changed.connect(_on_cm_content_changed)
+        print("✅ [source_dialog] 已绑定 B 向：CodeMirror → source_display")
 
     ui.source_editor_window.show()
     ui.source_editor_window.activateWindow()
     ui.source_editor_window.raise_()
 
-    # 获取当前内容，执行初始同步
+    # 执行初始同步（A 方向：把当前内容推入 CM）
     code_content = ui.source_display.toPlainText()
     print(f"📤 [source_dialog] 执行初始同步，内容长度={len(code_content)}")
 
     if is_new_window:
-        # 新窗口：页面还在加载，必须等 loadFinished
         _inject_after_load(ui, code_content)
     else:
-        # 已有窗口：页面早已加载完毕，直接同步
         _sync_source_to_editor(ui)
 
-
-# =============================================================
 
 def handle_apply_font_size(ui, size_str=None):
     if not size_str: size_str = ui.size_selector.currentText()

@@ -70,7 +70,7 @@ const customTags = {
     list3: Tag.define(),
     list4: Tag.define(),
     quote: Tag.define(),
-    newline_defult: Tag.define(), // IMPORTANT new line defult defination
+    newline_defult: Tag.define(), // IMPORTANT new line defult definition
     code: Tag.define(), // 用于代码块
     table: Tag.define(),
     table_header: Tag.define(),
