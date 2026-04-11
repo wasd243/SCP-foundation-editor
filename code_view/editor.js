@@ -521,6 +521,28 @@ const startEditor = (container) => {
         }
     };
 
+    // 新增：跳转到指定行号（1-based）
+    window.gotoLine = (lineNumber) => {
+        try {
+            if (!window.editorInstance) return;
+            const lv = window.editorInstance;
+            if (typeof lineNumber !== 'number') lineNumber = Number(lineNumber);
+            if (!Number.isFinite(lineNumber) || lineNumber < 1) return;
+            const doc = lv.state.doc;
+            const total = doc.lines;
+            const ln = Math.min(Math.max(1, lineNumber), total);
+            const line = doc.line(ln);
+            const pos = line.from;
+            lv.dispatch({selection: {anchor: pos}});
+            lv.focus();
+            // 小幅视觉反馈
+            lv.dom.style.outline = "2px solid #00aaff";
+            setTimeout(()=> { lv.dom.style.outline = ""; }, 600);
+        } catch (e) {
+            console.error("gotoLine error:", e);
+        }
+    };
+
     // 逻辑闭环：消费 Python 提前打包的快递
     if (window.PENDING_CONTENT) {
         console.log("📦 H2O2: 发现 PENDING_CONTENT，立即消费");

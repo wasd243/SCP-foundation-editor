@@ -2,6 +2,7 @@ import os
 import json
 from PyQt6.QtWidgets import QMenu
 from PyQt6.QtWebEngineCore import QWebEnginePage
+from PyQt6.QtCore import QTimer
 
 from controllers.scanner.MAIN_SCANNER import scan_code
 from controllers.toolbar_controller import handle_open_source_dialog
@@ -125,7 +126,7 @@ def _handle_show_menu(ui, pos, res):
 
     if c_type in ['css-module', 'div-block']:
         menu.addSeparator()
-        menu.addAction("开启自定义").triggered.connect(lambda: scan_code(ui))
+        menu.addAction("开启自定义").triggered.connect(lambda: _open_source_and_scan(ui))
         menu.addSeparator()
         menu.addAction("快捷代码：终端样式").triggered.connect(lambda: _apply_terminal_shortcut(ui, pos))
         menu.addAction("快捷代码：终端 #001").triggered.connect(lambda: inject_terminal_001(ui.browser.page(), pos.x(), pos.y()))
@@ -178,6 +179,16 @@ def _handle_insert_newline(ui, pos):
         ui.browser.page().runJavaScript(final_js)
     except Exception as e:
         print(f"读取换行 JS 模板失败: {e}")
+
+
+def _open_source_and_scan(ui):
+    """打开源码视窗并在编辑器就绪后运行扫描跳转到匹配行"""
+    try:
+        handle_open_source_dialog(ui)
+        # 延迟以等待 CodeMirror 页面挂载 syncToEditor / gotoLine
+        QTimer.singleShot(400, lambda: scan_code(ui))
+    except Exception as e:
+        print(f"_open_source_and_scan 失败: {e}")
 
 def _handle_remove_component(ui, pos):
     ui.browser.page().runJavaScript(f"var el = document.elementFromPoint({pos.x()}, {pos.y()}).closest('.scp-component'); if(el) {{ el.remove(); refreshFootnotes(); }}")

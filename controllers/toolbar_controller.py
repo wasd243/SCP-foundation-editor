@@ -370,6 +370,17 @@ def handle_copy_to_clipboard(ui):
     QMessageBox.information(ui, "成功", "代码已复制到剪切板！")
 
 
+def handle_run_scanner(ui):
+    """运行正则扫描并尝试在 CodeMirror 中跳转到第一个匹配行。"""
+    try:
+        from controllers.scanner.MAIN_SCANNER import scan_code
+        result = scan_code(ui)
+        return result
+    except Exception as e:
+        print(f"运行扫描器失败: {e}")
+        return None
+
+
 def handle_update_theme_state(ui):
     if not hasattr(ui, 'lbl_bf_status') or not hasattr(ui, 'lbl_theme_status'):
         return
