@@ -3,6 +3,7 @@ import json
 from PyQt6.QtWidgets import QMenu
 from PyQt6.QtWebEngineCore import QWebEnginePage
 
+from controllers.toolbar_controller import handle_open_source_dialog
 # 导入所有的组件注入器 (因为现在全归菜单模块管了，主模块不再需要它们)
 from utils.CSS_INJECTOR import (
     inject_terminal_shortcut, inject_terminal_001, inject_raisa_notice,
@@ -122,6 +123,8 @@ def _handle_show_menu(ui, pos, res):
 
 
     if c_type in ['css-module', 'div-block']:
+        menu.addSeparator()
+        menu.addAction("开启自定义").triggered.connect(lambda: handle_open_source_dialog(ui))
         menu.addSeparator()
         menu.addAction("快捷代码：终端样式").triggered.connect(lambda: _apply_terminal_shortcut(ui, pos))
         menu.addAction("快捷代码：终端 #001").triggered.connect(lambda: inject_terminal_001(ui.browser.page(), pos.x(), pos.y()))
