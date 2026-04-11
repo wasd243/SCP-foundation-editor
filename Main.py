@@ -62,7 +62,10 @@
 #  CSS 样式表（CSS和div模块快捷代码）由：aismallard Jerden Lt Flops EstrellaYoshte Deadly Bread Rounderhouse stormbreath 
 #  Croquembouche Calibold 和 Dr Hormress 汇总，
 #  链接：https://scp-wiki.wikidot.com/scp-style-resource
-#  中文链接：https://scp-wiki-cn.wikidot.com/scp-style-resource 
+#  中文链接：https://scp-wiki-cn.wikidot.com/scp-style-resource
+
+# Main.py
+
 import sys
 import os
 import io
