@@ -40,25 +40,20 @@ def _read_template(filename):
 def inject_terminal_shortcut(page, x, y): 
     code_css = _read_template("terminal_shortcut/terminal_shortcut.css")
     code_body = _read_template("terminal_shortcut/terminal_shortcut.txt")
-    code = f"""[[module css]]
-{code_css}
-[[/module]]
-{code_body}"""
-    html_content = parse_wikidot_to_editor_html(code)
     
-    import re
-    def terminal_replacer(m):
-        inner = m.group(1).replace('<p>', '<p contenteditable="true">')
-        return f'<div class="danke agent scp-component terminal-shortcut-box" data-type="div-block" contenteditable="false">{inner}</div>'
+    # 创建一个保留换行的CSS字符串
+    css_with_newlines = code_css.replace('\\n', '\\\n').replace('\\', '\\\\')
     
-    html_content = re.sub(r'<div class="danke agent">(.*?)</div>', terminal_replacer, html_content, flags=re.DOTALL)
+    # 创建一个保留换行的HTML字符串
+    html_content = parse_wikidot_to_editor_html(code_body)
+    html_with_newlines = html_content.replace('\\n', '\\\n').replace('\\', '\\\\')
     
-    safe_html = html_content.replace('\\', '\\\\').replace('`', '\\`')
+    # 使用保留换行的版本进行注入
     js_path = os.path.join(CURRENT_DIR, 'js', 'insert_html_at_point.js')
     try:
         with open(js_path, 'r', encoding='utf-8') as f:
             js_template = f.read()
-        final_js = js_template.replace('__POS_X__', str(x)).replace('__POS_Y__', str(y)).replace('__SAFE_HTML__', f"`{safe_html}`")
+        final_js = js_template.replace('__POS_X__', str(x)).replace('__POS_Y__', str(y)).replace('__SAFE_CSS__', f"`{css_with_newlines}`").replace('__SAFE_HTML__', f"`{html_with_newlines}`")
         page.runJavaScript(final_js)
     except Exception as e:
         print(f"执行 HTML 注入脚本失败: {e}")
