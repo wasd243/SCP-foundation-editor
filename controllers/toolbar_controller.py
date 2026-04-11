@@ -371,10 +371,21 @@ def handle_copy_to_clipboard(ui):
 
 
 def handle_run_scanner(ui):
-    """运行正则扫描并尝试在 CodeMirror 中跳转到第一个匹配行。"""
+    """运行正则扫描并尝试在 CodeMirror 中跳转到第一个匹配行（改为选最近/下一个）."""
     try:
         from controllers.scanner.MAIN_SCANNER import scan_code
-        result = scan_code(ui)
+        # 尝试获取当前源码光标位置（字符偏移），供后端选择下一个/最近匹配
+        cursor_pos = None
+        try:
+            if hasattr(ui, 'source_display') and ui.source_display is not None:
+                tc = ui.source_display.textCursor()
+                cursor_pos = tc.position()
+                print(f"🔎 [scanner] 当前源码光标位置（字符偏移）: {cursor_pos}")
+        except Exception as e:
+            print(f"无法获取 source_display 光标位置: {e}")
+            cursor_pos = None
+
+        result = scan_code(ui, cursor_pos=cursor_pos)
         return result
     except Exception as e:
         print(f"运行扫描器失败: {e}")

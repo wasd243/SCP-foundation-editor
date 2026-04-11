@@ -543,6 +543,57 @@ const startEditor = (container) => {
         }
     };
 
+    // 新增：接受一组匹配项（带 offset 和 line），前端根据自身的光标位置决定跳转到最近/下一个
+    window.gotoMatchList = (matches) => {
+        try {
+            if (!window.editorInstance) {
+                console.warn("gotoMatchList: editorInstance 不存在，尝试退回到 gotoLine");
+                // 如果 matches 是数组且至少有一项，退回跳第一项
+                if (Array.isArray(matches) && matches.length > 0 && typeof window.gotoLine === 'function') {
+                    window.gotoLine(matches[0].line);
+                }
+                return;
+            }
+
+            // 如果传入的是字符串（JSON），先解析
+            let list = matches;
+            if (typeof matches === 'string') {
+                try { list = JSON.parse(matches); } catch(e) { list = []; }
+            }
+            if (!Array.isArray(list) || list.length === 0) {
+                console.warn("gotoMatchList: matches 无效或为空，忽略");
+                return;
+            }
+
+            const lv = window.editorInstance;
+            const cursorPos = lv.state.selection.main.head; // character offset in document
+
+            // 找到第一个 offset > cursorPos（下一个），若找不到则循环到第一个
+            let chosen = null;
+            for (let i = 0; i < list.length; i++) {
+                const m = list[i];
+                if (typeof m.offset === 'number' && m.offset > cursorPos) {
+                    chosen = m;
+                    break;
+                }
+            }
+            if (!chosen) {
+                // 如果没有更后的，选择第一个
+                chosen = list[0];
+            }
+
+            if (chosen && chosen.line) {
+                window.gotoLine(chosen.line);
+            } else {
+                // 兜底：若没有 line 信息，使用第一项或不动
+                const first = list[0];
+                if (first && first.line) window.gotoLine(first.line);
+            }
+        } catch (e) {
+            console.error("gotoMatchList error:", e);
+        }
+    };
+
     // 逻辑闭环：消费 Python 提前打包的快递
     if (window.PENDING_CONTENT) {
         console.log("📦 H2O2: 发现 PENDING_CONTENT，立即消费");
