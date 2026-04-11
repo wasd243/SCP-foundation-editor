@@ -307,9 +307,9 @@ def setup_main_ui(window):
     comp_layout.addWidget(QLabel("<br><b>选择维基组件:</b>"))
     window.comp_selector = QComboBox()
     window.comp_selector.addItems([
-        "ACS 分级系统", "AIM 高级信息方法论", "折叠块 (Collapsible)", "CSS 模块",
-        "DIV 模块", "脚注 (Footnote)", "版式", "图片块 (Image Block)",
-        "高级图片块 (Advanced Image)", "Tab View (选项卡)", "用户标签 (User)",
+        "ACS 分级系统", "AIM 高级信息方法论", "折叠块 (Collapsible)",
+        "代码模块 (默认渲染为div，请在代码视窗修改)", "脚注 (Footnote)", "版式", "图片块 (Image Block)",
+         "Tab View (选项卡)", "用户标签 (User)",
         "高级用户信息 (Advanced User)", "授权引用 (License Box)"
     ])
     window.comp_selector.currentIndexChanged.connect(window.toggle_config_panels)

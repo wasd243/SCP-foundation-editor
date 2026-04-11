@@ -91,10 +91,9 @@ document.addEventListener('keydown', function (e) {
     if (target.id === 'editor-root') return;
     const inComp = target.closest('.scp-component');
     if (!inComp) return;
-    // ── 白名单：允许回车的元素或其祖先类 ──
+    // ── 白名单：允许回车的元素或其父类 ──
     const ALLOW_SELECTORS = [
         '.div-content',          // div模块正文区
-        '.css-content',          // css模块代码区
         '.collapsible-content-area', // 折叠块内容区
         '.tab-item',             // tabview 标签页内容
         'td[contenteditable]',   // 表格单元格（wikidot-table）
@@ -107,7 +106,7 @@ document.addEventListener('keydown', function (e) {
         '.acs-anim-checkbox',    // ACS 动画开关
         '.acs-shiver-checkbox',  // ACS 夜琉璃开关
         '.terminal-shortcut-box',// 终端样式快捷插入组件允许回车
-        '.terminal-001-box',     // 终端#001组件允许回车
+        '.terminal-001-box',     // 终端#001 组件允许回车
         '.raisa-notice',         // RAISA通知组件
         '.page-note-box'         // 便签纸组件允许回车
     ];

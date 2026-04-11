@@ -32,7 +32,6 @@ ftml
 # Virtual environment
 .venv/
 .env/
-.venv/
 
 # Rust
 target/
@@ -45,3 +44,5 @@ Cargo.lock
 Thumbs.db
 # MacOS
 .DS_Store
+# aiderchat
+.aider*
