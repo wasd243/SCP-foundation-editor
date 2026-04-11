@@ -30,7 +30,8 @@ def scan_wikidot(text: str) -> dict:
     RE_CSS_CLASS = re.compile(r'\.([a-zA-Z0-9_-]+)')
 
     # 块外：匹配 [[div ... class="foo bar"]]
-    RE_DIV = re.compile(r'\[\[\s*div\b[^\]]*\bclass\s*=\s*"([^"]*)"', re.IGNORECASE)
+    # 改为非贪婪匹配以避免灾难性回溯，同时允许跨行匹配（DOTALL）
+    RE_DIV = re.compile(r'\[\[\s*div\b.*?\bclass\s*=\s*"([^"]*)"', re.IGNORECASE | re.DOTALL)
 
     # 为了计算全局字符偏移，逐行迭代但保留换行符以便精确计算偏移
     cumulative_offset = 0
@@ -69,6 +70,8 @@ def scan_wikidot(text: str) -> dict:
 
         # 块外：提取 [[div class="..."]] 里的类名（可能有多个）
         else:
+            # 由于 RE_DIV 现在是 DOTALL 且跨行匹配，为了保持逐行偏移计算的准确性，
+            # 仍然在单行上尝试匹配（保持现有行为），同时也支持在单行中出现的多重 div
             for m in RE_DIV.finditer(line_text):
                 group_start = line_start_offset + m.start(1)
                 group_text = m.group(1)
