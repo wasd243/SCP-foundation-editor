@@ -123,8 +123,10 @@ def _sync_source_to_editor(ui):
     """
     将 source_display 内容推送到 CodeMirror。
     设置 _is_pushing_to_cm 标志，防止 CodeMirror 回调再触发一次同步（循环问题）。
+    已增强鲁棒性：无论 runJavaScript 是否抛出异常，都会在 500ms 后通过 QTimer 释放标志位，防止永久卡死。
     """
     import json
+    from PyQt6.QtCore import QTimer
 
     if getattr(ui, 'source_editor_window', None) is None:
         return
@@ -136,9 +138,6 @@ def _sync_source_to_editor(ui):
     safe_content = json.dumps(code_content)
 
     print(f"🚀 [同步→CM] 推送内容长度: {len(code_content)} 字节")
-
-    # ✅ 标记"本次是 Python 主动推送"，让反向回调跳过更新
-    ui._is_pushing_to_cm = True
 
     js_inject = f"""
 (function() {{
@@ -152,11 +151,18 @@ def _sync_source_to_editor(ui):
     }}
 }})();
 """
-    ui.source_editor_window.browser.page().runJavaScript(js_inject)
-
-    # ✅ JS 是异步的，延迟 500ms 后解除标志（CM 的回调通常在 100ms 内到达）
-    from PyQt6.QtCore import QTimer
-    QTimer.singleShot(500, lambda: setattr(ui, '_is_pushing_to_cm', False))
+    # 更安全的执行方式：确保在任何异常情况下都会在 finally 中释放标志
+    page = ui.source_editor_window.browser.page()
+    try:
+        ui._is_pushing_to_cm = True
+        try:
+            page.runJavaScript(js_inject)
+        except Exception as e:
+            # 记录但不阻塞，后续 finally 保证释放标志
+            print(f"JS Sync Failed: {e}")
+    finally:
+        # 强制在 500ms 后释放，无论成功与否
+        QTimer.singleShot(500, lambda: setattr(ui, '_is_pushing_to_cm', False))
 
 
 def _inject_after_load(ui, code_content):
