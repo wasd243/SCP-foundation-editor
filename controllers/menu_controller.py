@@ -2,7 +2,10 @@ import os
 import json
 from PyQt6.QtWidgets import QMenu
 from PyQt6.QtWebEngineCore import QWebEnginePage
+from PyQt6.QtCore import QTimer
 
+from controllers.scanner.MAIN_SCANNER import scan_code
+from controllers.toolbar_controller import handle_open_source_dialog
 # 导入所有的组件注入器 (因为现在全归菜单模块管了，主模块不再需要它们)
 from utils.CSS_INJECTOR import (
     inject_terminal_shortcut, inject_terminal_001, inject_raisa_notice,
@@ -123,6 +126,25 @@ def _handle_show_menu(ui, pos, res):
 
     if c_type in ['css-module', 'div-block']:
         menu.addSeparator()
+        act_open = menu.addAction("开启自定义")
+        def _on_open_custom():
+            try:
+                # 在页面中计算用户点击的模块在同类模块中的序号（1-based）
+                js = f"(function(){{\n  var el = document.elementFromPoint({pos.x()}, {pos.y()});\n  if(!el) return -1;\n  var comp = el.closest('.scp-component');\n  if(!comp) return -1;\n  var type = comp.getAttribute('data-type') || '';\n  var selector = '.scp-component[data-type="' + type + '"]';\n  var list = Array.from(document.querySelectorAll(selector));\n  var idx = list.indexOf(comp);\n  return idx >= 0 ? idx+1 : -1;\n}})()"
+                def _js_cb(idx):
+                    try:
+                        if idx is None or idx == -1:
+                            _open_source_and_scan(ui, None)
+                        else:
+                            _open_source_and_scan(ui, int(idx))
+                    except Exception as e:
+                        print(f"开启自定义回调失败: {e}")
+                ui.browser.page().runJavaScript(js, _js_cb)
+            except Exception as e:
+                print(f"计算模块索引失败，直接打开源码并扫描: {e}")
+                _open_source_and_scan(ui, None)
+        act_open.triggered.connect(_on_open_custom)
+        menu.addSeparator()
         menu.addAction("快捷代码：终端样式").triggered.connect(lambda: _apply_terminal_shortcut(ui, pos))
         menu.addAction("快捷代码：终端 #001").triggered.connect(lambda: inject_terminal_001(ui.browser.page(), pos.x(), pos.y()))
         menu.addAction("快捷代码：RAISA通知").triggered.connect(lambda: inject_raisa_notice(ui.browser.page(), pos.x(), pos.y()))
@@ -174,6 +196,18 @@ def _handle_insert_newline(ui, pos):
         ui.browser.page().runJavaScript(final_js)
     except Exception as e:
         print(f"读取换行 JS 模板失败: {e}")
+
+
+def _open_source_and_scan(ui, module_index=None):
+    """打开源码视窗并在编辑器就绪后运行扫描跳转到匹配行。
+    module_index: 1-based index 指定要跳转到第几个 [[module css]]（若为 None 则保留原有行为）。
+    """
+    try:
+        handle_open_source_dialog(ui)
+        # 延迟以等待 CodeMirror 页面挂载 syncToEditor / gotoLine
+        QTimer.singleShot(400, lambda: scan_code(ui, module_index))
+    except Exception as e:
+        print(f"_open_source_and_scan 失败: {e}")
 
 def _handle_remove_component(ui, pos):
     ui.browser.page().runJavaScript(f"var el = document.elementFromPoint({pos.x()}, {pos.y()}).closest('.scp-component'); if(el) {{ el.remove(); refreshFootnotes(); }}")

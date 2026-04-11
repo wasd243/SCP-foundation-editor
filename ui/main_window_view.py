@@ -1,5 +1,3 @@
-import os
-
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QComboBox,
     QLabel, QToolBar, QMenu, QCheckBox, QGroupBox, QRadioButton,
@@ -14,6 +12,7 @@ from ui.widgets.CustomControlls import PlainPasteTextEdit, CustomWebPage
 from utils.resource_path import resource_path
 
 html_path = resource_path('ui', 'css_styles', 'editor.html')
+
 
 def setup_main_ui(window):
     """
@@ -43,7 +42,8 @@ def setup_main_ui(window):
     main_layout.addWidget(toolbar)
 
     window.heading_selector = QComboBox()
-    window.heading_selector.addItems(["正文 (P)", "标题 1 (+)", "标题 2 (++)", "标题 3 (+++)", "标题 4 (++++)", "标题 5 (+++++)", "标题 6 (++++++)"])
+    window.heading_selector.addItems(
+        ["正文 (P)", "标题 1 (+)", "标题 2 (++)", "标题 3 (+++)", "标题 4 (++++)", "标题 5 (+++++)", "标题 6 (++++++)"])
     window.heading_selector.setMinimumWidth(120)
     window.heading_selector.currentIndexChanged.connect(window.set_heading)
     toolbar.addWidget(window.heading_selector)
@@ -139,6 +139,11 @@ def setup_main_ui(window):
     toolbar.addAction(QAction("🔗", window, toolTip="插入链接", triggered=window.open_link_dialog))
     toolbar.addSeparator()
 
+    # ---</>source---
+    toolbar.addAction(QAction("</>", window, toolTip="源代码编辑", triggered=window.open_source_dialog))
+    toolbar.addSeparator()
+    # ---</>source---
+
     window.ul_act = QAction("• List", window, toolTip="无序列表", checkable=True)
     window.ul_act.triggered.connect(lambda: window.exec_format("insertUnorderedList"))
     toolbar.addAction(window.ul_act)
@@ -147,7 +152,8 @@ def setup_main_ui(window):
     window.ol_act.triggered.connect(lambda: window.exec_format("insertOrderedList"))
     toolbar.addAction(window.ol_act)
 
-    toolbar.addAction(QAction("❝❞", window, toolTip="引用块", triggered=lambda: window.exec_format("formatBlock", "blockquote")))
+    toolbar.addAction(
+        QAction("❝❞", window, toolTip="引用块", triggered=lambda: window.exec_format("formatBlock", "blockquote")))
     toolbar.addSeparator()
 
     toolbar.addAction(QAction("——", window, toolTip="分割线", triggered=window.insert_hr))
@@ -188,7 +194,8 @@ def setup_main_ui(window):
     comp_layout.addWidget(QLabel("<b>相对字号设置:</b>"))
     rel_size_layout = QHBoxLayout()
     window.rel_size_selector = QComboBox()
-    window.rel_size_selector.addItems(["smaller", "larger", "80%", "100%", "120%", "150%", "200%", "0.8em", "1em", "1.2em", "1.5em", "2em", "自定义"])
+    window.rel_size_selector.addItems(
+        ["smaller", "larger", "80%", "100%", "120%", "150%", "200%", "0.8em", "1em", "1.2em", "1.5em", "2em", "自定义"])
     apply_rel_size_btn = QPushButton("应用")
     apply_rel_size_btn.clicked.connect(window.apply_relative_size)
     rel_size_layout.addWidget(window.rel_size_selector)
@@ -199,7 +206,8 @@ def setup_main_ui(window):
     comp_layout.addWidget(QLabel("<b>绝对字号设置:</b>"))
     size_layout = QHBoxLayout()
     window.size_selector = QComboBox()
-    window.size_selector.addItems(["xx-small", "x-small", "small", "medium", "large", "x-large", "xx-large", "自定义px"])
+    window.size_selector.addItems(
+        ["xx-small", "x-small", "small", "medium", "large", "x-large", "xx-large", "自定义px"])
     apply_size_btn = QPushButton("应用字号")
     apply_size_btn.clicked.connect(lambda: window.apply_font_size())
     size_layout.addWidget(window.size_selector)
@@ -217,23 +225,26 @@ def setup_main_ui(window):
     for label, cls, style in basalt_templates:
         btn = QPushButton(label)
         btn.setToolTip(f"[[div class=\"{cls}\"]]")
-        btn.setStyleSheet(f"height: 45px; font-family: 'Courier New', monospace; font-size: 14px; text-align: center; color: #333; {style}")
+        btn.setStyleSheet(
+            f"height: 45px; font-family: 'Courier New', monospace; font-size: 14px; text-align: center; color: #333; {style}")
         btn.clicked.connect(lambda checked, c=cls: window.insert_basalt_div(c))
         basalt_extra_layout.addWidget(btn)
 
     # --- 笔记组件 (折叠) ---
     notes_toggle = QPushButton("▶ 笔记组件")
-    notes_toggle.setStyleSheet("text-align: left; font-weight: bold; padding: 5px; font-size: 13px; border: none; background: transparent; color: #555;")
+    notes_toggle.setStyleSheet(
+        "text-align: left; font-weight: bold; padding: 5px; font-size: 13px; border: none; background: transparent; color: #555;")
     notes_container = QWidget()
     notes_container.setVisible(False)
     notes_layout = QVBoxLayout(notes_container)
     notes_layout.setContentsMargins(10, 0, 0, 0)
-    
+
     def toggle_notes(checked=False, b=notes_toggle, c=notes_container):
         c.setVisible(not c.isVisible())
         b.setText("▼ 笔记组件" if c.isVisible() else "▶ 笔记组件")
+
     notes_toggle.clicked.connect(toggle_notes)
-    
+
     basalt_notes = [
         ("引用/笔记模块", "blockquote", "background-color: #f8f9fa; border: 1px solid #dee2e6;"),
         ("高级引用/笔记模块", "notation", "background-color: #f1f3f5; border-left: 5px solid #ced4da;"),
@@ -247,24 +258,27 @@ def setup_main_ui(window):
     for label, cls, style in basalt_notes:
         btn = QPushButton(label)
         btn.setToolTip(f"[[div class=\"{cls}\"]]")
-        btn.setStyleSheet(f"height: 40px; font-family: 'Courier New', monospace; font-size: 13px; text-align: center; color: #333; {style}")
+        btn.setStyleSheet(
+            f"height: 40px; font-family: 'Courier New', monospace; font-size: 13px; text-align: center; color: #333; {style}")
         btn.clicked.connect(lambda checked, c=cls: window.insert_basalt_div(c))
         notes_layout.addWidget(btn)
-        
+
     basalt_extra_layout.addWidget(notes_toggle)
     basalt_extra_layout.addWidget(notes_container)
 
     # --- 部门通知 (折叠) ---
     depts_toggle = QPushButton("▶ 部门通知")
-    depts_toggle.setStyleSheet("text-align: left; font-weight: bold; padding: 5px; font-size: 13px; border: none; background: transparent; color: #555;")
+    depts_toggle.setStyleSheet(
+        "text-align: left; font-weight: bold; padding: 5px; font-size: 13px; border: none; background: transparent; color: #555;")
     depts_container = QWidget()
     depts_container.setVisible(False)
     depts_layout = QVBoxLayout(depts_container)
     depts_layout.setContentsMargins(10, 0, 0, 0)
-    
+
     def toggle_depts(checked=False, b=depts_toggle, c=depts_container):
         c.setVisible(not c.isVisible())
         b.setText("▼ 部门通知" if c.isVisible() else "▶ 部门通知")
+
     depts_toggle.clicked.connect(toggle_depts)
 
     basalt_depts = [
@@ -279,7 +293,8 @@ def setup_main_ui(window):
     for label, cls, style in basalt_depts:
         btn = QPushButton(label)
         btn.setToolTip(f"[[div class=\"{cls}\"]]")
-        btn.setStyleSheet(f"height: 40px; font-family: 'Courier New', monospace; font-size: 13px; text-align: center; color: #333; {style}")
+        btn.setStyleSheet(
+            f"height: 40px; font-family: 'Courier New', monospace; font-size: 13px; text-align: center; color: #333; {style}")
         btn.clicked.connect(lambda checked, c=cls: window.insert_basalt_div(c))
         depts_layout.addWidget(btn)
 
@@ -292,9 +307,9 @@ def setup_main_ui(window):
     comp_layout.addWidget(QLabel("<br><b>选择维基组件:</b>"))
     window.comp_selector = QComboBox()
     window.comp_selector.addItems([
-        "ACS 分级系统", "AIM 高级信息方法论", "折叠块 (Collapsible)", "CSS 模块",
-        "DIV 模块", "脚注 (Footnote)", "版式", "图片块 (Image Block)",
-        "高级图片块 (Advanced Image)", "Tab View (选项卡)", "用户标签 (User)",
+        "ACS 分级系统", "AIM 高级信息方法论", "折叠块 (Collapsible)",
+        "代码模块 (默认渲染为div，请在代码视窗修改)", "脚注 (Footnote)", "版式", "图片块 (Image Block)",
+         "Tab View (选项卡)", "用户标签 (User)",
         "高级用户信息 (Advanced User)", "授权引用 (License Box)"
     ])
     window.comp_selector.currentIndexChanged.connect(window.toggle_config_panels)
@@ -327,7 +342,8 @@ def setup_main_ui(window):
     window.check_wide = QCheckBox("加宽页面 (wide)")
     window.check_hidetitle = QCheckBox("隐藏标题 (hidetitle)")
     cb_style = "QCheckBox { font-size: 13px; spacing: 8px; padding: 3px; }"
-    for cb in [window.check_enable_basalt, window.check_dark, window.check_wide, window.check_hidetitle]: cb.setStyleSheet(cb_style)
+    for cb in [window.check_enable_basalt, window.check_dark, window.check_wide,
+               window.check_hidetitle]: cb.setStyleSheet(cb_style)
     sub_layout.addWidget(window.check_dark)
     sub_layout.addWidget(window.check_wide)
     sub_layout.addWidget(window.check_hidetitle)
@@ -355,7 +371,8 @@ def setup_main_ui(window):
     window.radio_shiv_ct = QRadioButton("开普敦 (Cape Town)")
     window.radio_shiv_ba = QRadioButton("布宜诺斯艾利斯 (Buenos Aires)")
     rb_style = "QRadioButton { font-size: 13px; spacing: 8px; padding: 3px; }"
-    for rb in [window.radio_shiv_default, window.radio_shiv_mo, window.radio_shiv_kl, window.radio_shiv_dub, window.radio_shiv_ct, window.radio_shiv_ba]:
+    for rb in [window.radio_shiv_default, window.radio_shiv_mo, window.radio_shiv_kl, window.radio_shiv_dub,
+               window.radio_shiv_ct, window.radio_shiv_ba]:
         rb.setStyleSheet(rb_style)
         window.shivering_city_group.addButton(rb)
         shivering_sub_layout.addWidget(rb)
@@ -382,16 +399,19 @@ def setup_main_ui(window):
     window.check_bhl_centered = QCheckBox("居中页眉 (Centered Header)")
     window.check_bhl_office = QCheckBox("办公室 (Office)")
 
-    for cb in [window.check_dark_sidebar, window.check_bhl_collapsible, window.check_bhl_toggle, window.check_bhl_centered, window.check_bhl_office]:
+    for cb in [window.check_dark_sidebar, window.check_bhl_collapsible, window.check_bhl_toggle,
+               window.check_bhl_centered, window.check_bhl_office]:
         cb.setStyleSheet(cb_style)
-        if cb == window.check_bhl_office: cb.toggled.connect(window.on_bhl_office_toggled)
-        else: cb.toggled.connect(window.update_theme_state)
+        if cb == window.check_bhl_office:
+            cb.toggled.connect(window.on_bhl_office_toggled)
+        else:
+            cb.toggled.connect(window.update_theme_state)
         bhl_sub_layout.addWidget(cb)
     scroll_layout.addWidget(window.bhl_sub_options_frame)
 
     scroll_area.setWidget(scroll_content)
     scroll_area.setMinimumHeight(400)
-    scroll_area.setMaximumHeight(800) 
+    scroll_area.setMaximumHeight(800)
     basalt_vbox.addWidget(scroll_area)
     window.basalt_group.setLayout(basalt_vbox)
     comp_layout.addWidget(window.basalt_group)
@@ -416,12 +436,14 @@ def setup_main_ui(window):
     comp_layout.addWidget(window.aim_group)
 
     insert_btn = QPushButton("应用/插入选定组件")
-    insert_btn.setStyleSheet("background-color: #f39c12; color: white; font-weight: bold; height: 50px; font-size: 16px; border-radius: 5px;")
+    insert_btn.setStyleSheet(
+        "background-color: #f39c12; color: white; font-weight: bold; height: 50px; font-size: 16px; border-radius: 5px;")
     insert_btn.clicked.connect(window.insert_component)
     comp_layout.addWidget(insert_btn)
 
     export_btn = QPushButton("生成维基代码")
-    export_btn.setStyleSheet("background-color: #27ae60; color: white; font-weight: bold; height: 60px; font-size: 18px; margin-top: 15px; border-radius: 6px;")
+    export_btn.setStyleSheet(
+        "background-color: #27ae60; color: white; font-weight: bold; height: 60px; font-size: 18px; margin-top: 15px; border-radius: 6px;")
     export_btn.clicked.connect(window.export_wikidot)
     comp_layout.addWidget(export_btn)
 
@@ -441,7 +463,8 @@ def setup_main_ui(window):
     comp_layout.addWidget(window.check_line_break_lock)
 
     window.check_line_break_symbol_lock = QCheckBox("换行符锁定 (换行不生成@@@@)")
-    window.check_line_break_symbol_lock.setStyleSheet("font-size: 13px; font-weight: bold; padding: 5px; color: #27ae60;")
+    window.check_line_break_symbol_lock.setStyleSheet(
+        "font-size: 13px; font-weight: bold; padding: 5px; color: #27ae60;")
     window.check_line_break_symbol_lock.setChecked(False)
     comp_layout.addWidget(window.check_line_break_symbol_lock)
 
@@ -449,17 +472,20 @@ def setup_main_ui(window):
     window.auto_refresh_timer.timeout.connect(window.export_wikidot)
 
     copy_btn = QPushButton("一键复制到剪切板")
-    copy_btn.setStyleSheet("background-color: #3498db; color: white; font-weight: bold; height: 40px; margin-top: 5px; border-radius: 6px; font-size: 16px;")
+    copy_btn.setStyleSheet(
+        "background-color: #3498db; color: white; font-weight: bold; height: 40px; margin-top: 5px; border-radius: 6px; font-size: 16px;")
     copy_btn.clicked.connect(window.copy_to_clipboard)
     comp_layout.addWidget(copy_btn)
 
     read_btn = QPushButton("读取桌面.txt文件到此")
-    read_btn.setStyleSheet("background-color: #34495e; color: white; font-weight: bold; height: 40px; margin-top: 5px; border-radius: 6px; font-size: 16px;")
+    read_btn.setStyleSheet(
+        "background-color: #34495e; color: white; font-weight: bold; height: 40px; margin-top: 5px; border-radius: 6px; font-size: 16px;")
     read_btn.clicked.connect(window.read_from_desktop)
     comp_layout.addWidget(read_btn)
 
     clear_btn = QPushButton("一键清理所有内容")
-    clear_btn.setStyleSheet("background-color: #e74c3c; color: white; font-weight: bold; height: 60px; font-size: 18px; margin-top: 15px; border-radius: 6px;")
+    clear_btn.setStyleSheet(
+        "background-color: #e74c3c; color: white; font-weight: bold; height: 60px; font-size: 18px; margin-top: 15px; border-radius: 6px;")
     clear_btn.clicked.connect(window.clear_all_content)
     comp_layout.addWidget(clear_btn)
 
@@ -468,7 +494,8 @@ def setup_main_ui(window):
     source_tab = QWidget()
     source_layout = QVBoxLayout(source_tab)
     import_btn = QPushButton(" 识别代码并生成界面 (Render to Editor)")
-    import_btn.setStyleSheet("background-color: #8e44ad; color: white; font-weight: bold; height: 40px; margin-top: 5px; border-radius: 6px;")
+    import_btn.setStyleSheet(
+        "background-color: #8e44ad; color: white; font-weight: bold; height: 40px; margin-top: 5px; border-radius: 6px;")
     import_btn.clicked.connect(window.render_to_editor)
     source_layout.addWidget(import_btn)
 
@@ -497,38 +524,42 @@ def setup_main_ui(window):
 
     window.lbl_theme_status = QLabel("<b>当前版式:</b> 无")
     window.lbl_theme_status.setWordWrap(True)
-    window.lbl_theme_status.setStyleSheet("padding: 10px; background: #64b5f6; border: 1px solid #1976d2; border-radius: 5px; font-size: 14px;")
+    window.lbl_theme_status.setStyleSheet(
+        "padding: 10px; background: #64b5f6; border: 1px solid #1976d2; border-radius: 5px; font-size: 14px;")
 
     window.lbl_bf_status = QLabel("<b>Better Footnotes:</b> 关闭")
-    window.lbl_bf_status.setStyleSheet("padding: 10px; background: #e57373; border: 1px solid #d32f2f; border-radius: 5px; margin-top: 5px; font-size: 14px;")
+    window.lbl_bf_status.setStyleSheet(
+        "padding: 10px; background: #e57373; border: 1px solid #d32f2f; border-radius: 5px; margin-top: 5px; font-size: 14px;")
 
     window.lbl_sidebar_status = QLabel("<b>Dark Sidebar:</b> 关闭")
-    window.lbl_sidebar_status.setStyleSheet("padding: 10px; background: #95a5a6; border: 1px solid #7f8c8d; border-radius: 5px; margin-top: 5px; font-size: 14px; color: white;")
+    window.lbl_sidebar_status.setStyleSheet(
+        "padding: 10px; background: #95a5a6; border: 1px solid #7f8c8d; border-radius: 5px; margin-top: 5px; font-size: 14px; color: white;")
 
     window.right_dock_layout.addWidget(window.lbl_theme_status)
     window.right_dock_layout.addWidget(window.lbl_bf_status)
     window.right_dock_layout.addWidget(window.lbl_sidebar_status)
-    
+
     # 目录 (TOC) 包含标题
     window.toc_group_box = QGroupBox("目录 (TOC) 包含标题")
     window.toc_group_layout = QVBoxLayout(window.toc_group_box)
-    
+
     window.lbl_toc_status = QLabel("<b>页面 TOC:</b> 未解析")
-    window.lbl_toc_status.setStyleSheet("padding: 10px; background: #ffe0b2; border: 1px solid #ff9800; border-radius: 5px; margin-bottom: 5px; font-size: 14px; color: red;")
+    window.lbl_toc_status.setStyleSheet(
+        "padding: 10px; background: #ffe0b2; border: 1px solid #ff9800; border-radius: 5px; margin-bottom: 5px; font-size: 14px; color: red;")
     window.toc_group_layout.addWidget(window.lbl_toc_status)
 
     window.lbl_toc_list = QLabel("<i>（暂无目录条目）</i>")
     window.lbl_toc_list.setWordWrap(True)
     window.lbl_toc_list.setStyleSheet("font-size: 12px; color: red; line-height: 1.5;")
     window.toc_group_layout.addWidget(window.lbl_toc_list)
-    
+
     # 添加一个滚动区域以防条目过多
     toc_scroll = QScrollArea()
     toc_scroll.setWidgetResizable(True)
     toc_scroll.setWidget(window.lbl_toc_list)
     toc_scroll.setStyleSheet("QScrollArea { border: none; background: transparent; }")
     window.toc_group_layout.addWidget(toc_scroll)
-    
+
     window.right_dock_layout.addWidget(window.toc_group_box)
     window.right_dock_layout.addStretch()
 

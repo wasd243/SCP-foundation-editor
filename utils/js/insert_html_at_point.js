@@ -1,22 +1,30 @@
 (function () {
+    // 运行时由 Python 字符串替换注入，无需声明
+    var posX = __POS_X__;
+    var posY = __POS_Y__;
+    var safeHtml = __SAFE_HTML__;
+
     var editor = document.getElementById('editor-root');
-    if (!editor) return;
+    if (!editor) {
+        console.error('[insert_html] 找不到 #editor-root，注入中止');
+        return;
+    }
 
-    // 定位光标元素
-    var el = document.elementFromPoint(__POS_X__, __POS_Y__);
+    // 定位点击坐标下的元素
+    var el = document.elementFromPoint(posX, posY);
 
-    // 我们定义哪些元素被认为是"组件"，碰到组件的话，就在它后面插入，或者替换它
-    var compStr = '.scp-component, .acs-box, .rate-module-box, .tabview-box, .collapsible-box, .license-box, .wikidot-table, .div-box, .css-box, .raisa-box, .class-warning-box';
+    // 判断是否点在已有组件上
+    var compStr = '.scp-component, .acs-box, .rate-module-box, .tabview-box, ' +
+        '.collapsible-box, .license-box, .wikidot-table, .div-box, ' +
+        '.css-box, .raisa-box, .class-warning-box';
     var comp = el ? el.closest(compStr) : null;
 
-    // 创建一个临时的 template 元素来将字符串 HTML 解析为真正的 DOM 节点
+    // 将 HTML 字符串解析为真实 DOM 节点片段
     var template = document.createElement('template');
-    template.innerHTML = __SAFE_HTML__.trim();
-
-    // 解析出来的可能包含多个顶级节点（比如一个 div 外加一个结尾的 <p><br></p>）
+    template.innerHTML = safeHtml.trim();
     var frag = template.content;
 
-    // 提取所有 <style> 标签并将它们移动到 <head> 中 (实现 CSS 置顶)
+    // ── CSS 置顶：把 <style> 提升到 <head>（标记了 data-no-hoist 的除外）──
     var styles = frag.querySelectorAll('style');
     styles.forEach(function (styleTag) {
         if (!styleTag.hasAttribute('data-no-hoist')) {
@@ -24,18 +32,28 @@
         }
     });
 
-    // 提取之后剩余的 HTML 将被当做实体节点插入
-    var lastInsertedNode = frag.lastElementChild || frag.lastChild;
+    // ── 修复换行 Bug：插入后追加空段落，确保光标有地方落脚 ──
+    var trailingP = document.createElement('p');
+    trailingP.innerHTML = '<br>';
+    frag.appendChild(trailingP);
 
-    if (comp) {
-        // 如果是点击在某个已有的组件上面，且明确要替换（比如旧版警告逻辑里如果点在 div 上就替换）
-        // 这里为了普遍适用，一律在所选组件之后插入
+    // ── 执行插入 ──
+    if (comp && comp.parentNode) {
+        // 点在已有组件上：在该组件之后插入
         comp.parentNode.insertBefore(frag, comp.nextSibling);
-
-        // 如果你想实现在特定情况下覆盖替换，可以添加额外逻辑判断
-        // if (comp.classList.contains('div-box')) { comp.parentNode.replaceChild(frag, comp); }
     } else {
-        // 如果没有明确点在组件上，就直接附加到末尾
+        // 否则追加到编辑器末尾
         editor.appendChild(frag);
+    }
+
+    // ── 修复换行 Bug：将光标移动到刚插入的尾部段落内 ──
+    var sel = window.getSelection();
+    if (sel && trailingP.isConnected) {
+        var range = document.createRange();
+        range.setStart(trailingP, 0);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+        trailingP.scrollIntoView({block: 'nearest'});
     }
 })();

@@ -253,10 +253,6 @@ def export_html_to_wikidot(html: str, snapshot: dict) -> str:
         return text
     
     body = flatten_sizes(body)
-
-    # 警告：之前这里的临时修复会清除用户正常指定的所有 [[size]] 标签，导致绝对字号无法生成
-    # 现已将其注释，因为 clear_styles.js 已经在 DOM 层面直接移除了 style 属性
-    # body = re.sub(r'\[\[size\s+[^\]]+\]\](.*?)\[\[/size\]\]', r'\1', body, flags=re.DOTALL | re.IGNORECASE)
     
     # 同理清除空的 ##color|...## 颜色标签（保留内容） - 仅清除明显是"无色"的标记
     # 注意：正常用户设置的颜色标签应保留，此处仅在已清除 style 情况下才会产生空标签
