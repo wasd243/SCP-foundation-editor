@@ -13,6 +13,10 @@ from ui.widgets.html_templates import (
 # 导入clearconfirm清理确认
 from ui.widgets.ClearConfirmDialog import ClearConfirmDialog
 
+# 新增：toolbar 内部模块（轻量委派）
+from controllers.toolbar.sync_engine import SyncEngine
+from controllers.toolbar.scanner_manager import ScannerManager
+
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -121,155 +125,38 @@ def handle_open_link_dialog(ui):
 # =========================================================
 def _sync_source_to_editor(ui):
     """
-    将 source_display 内容推送到 CodeMirror。
-    设置 _is_pushing_to_cm 标志，防止 CodeMirror 回调再触发一次同步（循环问题）。
-    已增强鲁棒性：无论 runJavaScript 是否抛出异常，都会在 500ms 后通过 QTimer 释放标志位，防止永久卡死。
+    迁移版：委派给 SyncEngine（集中处理 _is_pushing_to_cm 的设置/释放与 JS 注入）。
+    保证向后兼容：若 ui 上尚未缓存 _sync_engine 实例则创建。
     """
-    import json
-    from PyQt6.QtCore import QTimer
-
-    if getattr(ui, 'source_editor_window', None) is None:
-        return
-    if getattr(ui, 'source_display', None) is None:
-        print("⚠️ 警告：ui.source_display 不存在")
-        return
-
-    code_content = ui.source_display.toPlainText()
-    safe_content = json.dumps(code_content)
-
-    print(f"🚀 [同步→CM] 推送内容长度: {len(code_content)} 字节")
-
-    js_inject = f"""
-(function() {{
-    var content = {safe_content};
-    console.log("🐍 Python->CM 注入，内容长度=" + content.length);
-    if (typeof window.syncToEditor === 'function') {{
-        window.syncToEditor(content);
-    }} else {{
-        console.warn("⏳ syncToEditor 尚未就绪，写入 PENDING_CONTENT");
-        window.PENDING_CONTENT = content;
-    }}
-}})();
-"""
-    # 更安全的执行方式：确保在任何异常情况下都会在 finally 中释放标志
-    page = ui.source_editor_window.browser.page()
     try:
-        ui._is_pushing_to_cm = True
-        try:
-            page.runJavaScript(js_inject)
-        except Exception as e:
-            # 记录但不阻塞，后续 finally 保证释放标志
-            print(f"JS Sync Failed: {e}")
-    finally:
-        # 强制在 500ms 后释放，无论成功与否
-        QTimer.singleShot(500, lambda: setattr(ui, '_is_pushing_to_cm', False))
+        if not hasattr(ui, '_sync_engine') or ui._sync_engine is None:
+            ui._sync_engine = SyncEngine(ui)
+        ui._sync_engine.sync_source_to_editor()
+    except Exception as e:
+        # 保留原有警告风格
+        print(f"_sync_source_to_editor delegated failed: {e}")
 
 
 def _inject_after_load(ui, code_content):
-    """等待页面加载完成后再注入，解决时序断路。"""
-    import json
-    from PyQt6.QtCore import QTimer
-
-    page = ui.source_editor_window.browser.page()
-    safe_content = json.dumps(code_content)
-
-    js_inject = f"""
-(function() {{
-    var content = {safe_content};
-    var MAX_RETRY = 20;
-    var INTERVAL = 150;
-    var attempt = 0;
-
-    function trySync() {{
-        attempt++;
-        console.log("🔄 [重试 #" + attempt + "] 检查 syncToEditor...");
-        if (typeof window.syncToEditor === 'function') {{
-            window.syncToEditor(content);
-            console.log("✅ [重试 #" + attempt + "] 同步成功！");
-            return;
-        }}
-        if (attempt < MAX_RETRY) {{
-            setTimeout(trySync, INTERVAL);
-        }} else {{
-            console.error("❌ 重试耗尽，写入 PENDING_CONTENT 兜底");
-            window.PENDING_CONTENT = content;
-        }}
-    }}
-    trySync();
-}})();
-"""
-
-    def do_inject():
-        print("📡 [loadFinished/Timer] 开始执行注入 JS")
-        # 初始推送也标记一下，防止 CM 回调触发反向写入
-        ui._is_pushing_to_cm = True
-        page.runJavaScript(js_inject)
-        from PyQt6.QtCore import QTimer as _QTimer
-        _QTimer.singleShot(2000, lambda: setattr(ui, '_is_pushing_to_cm', False))
-
+    """
+    迁移版：委派给 SyncEngine.inject_after_load
+    """
     try:
-        page.loadFinished.connect(lambda ok: do_inject())
-    except Exception:
-        pass
-
-    QTimer.singleShot(300, do_inject)
+        if not hasattr(ui, '_sync_engine') or ui._sync_engine is None:
+            ui._sync_engine = SyncEngine(ui)
+        ui._sync_engine.inject_after_load(code_content)
+    except Exception as e:
+        print(f"_inject_after_load delegated failed: {e}")
 
 
 def handle_open_source_dialog(ui):
-    """打开 CodeMirror 源码视窗，并建立双向同步。"""
-    from code_view.main import FoundationEditor
-
-    is_new_window = False
-
-    if not hasattr(ui, 'source_editor_window') or ui.source_editor_window is None:
-        ui.source_editor_window = FoundationEditor()
-        is_new_window = True
-
-        # ── 方向 A：source_display → CodeMirror ──────────────────────
-        # source_display 内容变化时推送到 CM（已有逻辑）
-        ui.source_display.textChanged.connect(lambda: _sync_source_to_editor(ui))
-        print("✅ [source_dialog] 已绑定 A 向：source_display → CodeMirror")
-
-        # ── 方向 B：CodeMirror → source_display ──────────────────────
-        def _on_cm_content_changed(content: str):
-            # 如果是 Python 自己刚推过去的内容触发的回调，直接跳过，防止无限循环
-            if getattr(ui, '_is_pushing_to_cm', False):
-                print("🔁 [防循环] Python 推送期间，跳过 CM→source_display 回写")
-                return
-
-            # 内容相同时也跳过（兜底防止无意义刷新）
-            if ui.source_display.toPlainText() == content:
-                return
-
-            print(f"📨 [CM→source_display] 接收 CM 内容，长度={len(content)} 字节")
-
-            # 阻断 textChanged 信号，防止回写触发再一次 A 向同步
-            ui.source_display.blockSignals(True)
-            try:
-                # 保留滚动位置
-                v = ui.source_display.verticalScrollBar().value()
-                h = ui.source_display.horizontalScrollBar().value()
-                ui.source_display.setPlainText(content)
-                ui.source_display.verticalScrollBar().setValue(v)
-                ui.source_display.horizontalScrollBar().setValue(h)
-            finally:
-                ui.source_display.blockSignals(False)
-
-        ui.source_editor_window.bridge.content_changed.connect(_on_cm_content_changed)
-        print("✅ [source_dialog] 已绑定 B 向：CodeMirror → source_display")
-
-    ui.source_editor_window.show()
-    ui.source_editor_window.activateWindow()
-    ui.source_editor_window.raise_()
-
-    # 执行初始同步（A 方向：把当前内容推入 CM）
-    code_content = ui.source_display.toPlainText()
-    print(f"📤 [source_dialog] 执行初始同步，内容长度={len(code_content)}")
-
-    if is_new_window:
-        _inject_after_load(ui, code_content)
-    else:
-        _sync_source_to_editor(ui)
+    """打开 CodeMirror 源码视窗，并建立双向同步。 委派给 SyncEngine"""
+    try:
+        if not hasattr(ui, '_sync_engine') or ui._sync_engine is None:
+            ui._sync_engine = SyncEngine(ui)
+        ui._sync_engine.handle_open_source_dialog()
+    except Exception as e:
+        print(f"handle_open_source_dialog delegated failed: {e}")
 
 
 def handle_apply_font_size(ui, size_str=None):
@@ -377,10 +264,9 @@ def handle_copy_to_clipboard(ui):
 
 
 def handle_run_scanner(ui):
-    """运行正则扫描并尝试在 CodeMirror 中跳转到第一个匹配行（改为选最近/下一个）."""
+    """运行正则扫描并尝试在 CodeMirror 中跳转（委派到 ScannerManager + SyncEngine）."""
     try:
-        from controllers.scanner.MAIN_SCANNER import scan_code
-        # 尝试获取当前源码光标位置（字符偏移），供后端选择下一个/最近匹配
+        # 尝试获取当前源码光标位置（字符偏移），供后端选择下一个/最近的匹配
         cursor_pos = None
         try:
             if hasattr(ui, 'source_display') and ui.source_display is not None:
@@ -391,7 +277,22 @@ def handle_run_scanner(ui):
             print(f"无法获取 source_display 光标位置: {e}")
             cursor_pos = None
 
-        result = scan_code(ui, cursor_pos=cursor_pos)
+        # 确保存在 ScannerManager 实例
+        if not hasattr(ui, '_scanner_manager') or ui._scanner_manager is None:
+            ui._scanner_manager = ScannerManager()
+
+        code_content = ui.source_display.toPlainText() if hasattr(ui, 'source_display') else ""
+        result = ui._scanner_manager.scan(code_content, cursor_pos=cursor_pos)
+
+        # 把 matches 发给前端（由 SyncEngine 负责 runJavaScript）
+        try:
+            if not hasattr(ui, '_sync_engine') or ui._sync_engine is None:
+                ui._sync_engine = SyncEngine(ui)
+            ui._sync_engine.jump_to_matches(result.get('matches', []), result.get('first_line'))
+        except Exception as e:
+            # 打印但不阻塞主流程
+            print(f"跳转到 matches 失败: {e}")
+
         return result
     except Exception as e:
         print(f"运行扫描器失败: {e}")
