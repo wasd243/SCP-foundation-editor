@@ -1,0 +1,454 @@
+@skip { space }
+@top Document { 
+  element* 
+}
+
+@external tokens inlineTokenizer from "./token.js" {
+  StrongText,
+  EmText,
+  UnderlineText,
+  StrikeText,
+  SupText,
+  SubText,
+  Original,
+  Hr
+}
+
+// 这是一个“黑洞集合”，包含了所有可能的 Token，唯独排除了 Module, HTML 和 Code 的闭合标签
+GenericToken {
+  RawContent | List1 | List2 |
+  DivOpen | DivClose | SpanOpenToken | SpanCloseToken |
+  AlignRightOpenToken | AlignRightCloseToken | AlignLeftOpenToken | AlignLeftCloseToken |
+  AlignCenterOpenToken | AlignCenterCloseToken | NoteOpenToken | NoteCloseToken |
+  SizeOpenToken | SizeCloseToken | CollapsibleOpen | CollapsibleClose |
+  ModuleOpenToken | HTMLOpenToken |
+  IncludeOpen | IncludeBar | includeSeg_ |
+  UserOpen | CodeOpen | FootnoteOpen | FootnoteClose |
+  TabViewOpenToken | TabViewCloseToken | TabOpenToken | TabCloseToken | ImageOpen |
+  TableBar | TableTilde | Blockquote | newline | ForcedNewLine | LinkURL |
+  FootnoteBlock | Title | Hr | StrongText | EmText | UnderlineText | StrikeText |
+  attrPathToken | AttrValue |
+  SupText | SubText | Original | Monospace | Equals |
+  StarChar | BracketChar | Text 
+}
+
+element {
+  DivBlock
+  | Rate
+  | NoteBlock
+  | SizeBlock
+  | SpanBlock
+  | AlignCenter
+  | AlignLeft
+  | AlignRight
+  | IncludeBlock
+  | CollapsibleBlock
+  | CodeBlock
+  | UserBlock
+  | ModuleBlock
+  | FootnoteBlock
+  | Footnote
+  | ImageBlock
+  | TableBar
+  | TableTilde
+  | List1
+  | List2
+  | Hr
+  | HTMLBlock
+  | Blockquote
+  | TabViewBlock
+  | TabBlock
+  | LinkURL
+  | ForcedNewLine
+  | Title
+  | StrongText
+  | EmText
+  | UnderlineText
+  | StrikeText
+  | SupText
+  | SubText
+  | Monospace
+  | Original
+  | StarChar
+  | BracketChar
+  | newline
+  | Text
+}
+
+// ——————————————————————————div——————————————————————————
+DivBlock {
+  DivOpenTag
+  element*
+  DivClose
+}
+
+DivOpenTag {
+  DivOpen AttrList DivTagEnd { _tagEnd }
+}
+// ——————————————————————————div——————————————————————————
+
+
+
+// ——————————————————————————Collapsible——————————————————————————
+CollapsibleBlock {
+  CollapsibleOpenTag
+  element*
+  CollapsibleClose
+}
+
+CollapsibleOpenTag {
+  CollapsibleOpen AttrList CollapsibleTagEnd { _tagEnd }
+}
+// ——————————————————————————Collapsible——————————————————————————
+
+
+
+// ——————————————————————————Code——————————————————————————
+CodeBlock {
+  CodeOpenTag
+  GenericToken*
+  CodeClose
+}
+
+CodeOpenTag {
+  CodeOpen AttrList CodeTagEnd { _tagEnd }
+}
+// ——————————————————————————Code——————————————————————————
+
+
+
+// ——————————————————————————footnote——————————————————————————
+Footnote {
+  FootnoteOpen FootnoteTagEnd {_tagEnd}
+  element*
+  FootnoteClose
+}
+// ——————————————————————————footnote——————————————————————————
+
+
+
+// ——————————————————————————include——————————————————————————
+IncludeBlock {
+  IncludeOpen
+  IncludePath?
+  IncludeParam*
+  IncludeTagEnd { _tagEnd }
+}
+
+IncludeParam {
+  newline* IncludeBar attrPathToken Equals IncludeValue
+}
+
+IncludeValue {
+  (AttrValue | attrPathToken | StarChar | Text | LinkURL | BracketChar)+
+}
+
+IncludePath {
+  IncludePart1
+  | IncludeSimplePath
+}
+
+IncludeSimplePath {
+  includeSimplePath
+}
+
+IncludePart1 {
+  includeSeg_
+  IncludePart2?
+}
+
+IncludePart2 {
+  includeSeg_
+  IncludePart3?
+}
+
+IncludePart3 {
+  includeSeg_
+}
+// ——————————————————————————include——————————————————————————
+
+
+
+// ——————————————————————————image——————————————————————————
+ImageBlock {
+  ImageOpenTag { ImageOpen }
+  AttrList
+  ImageTagEnd { _tagEnd }
+}
+// ——————————————————————————image——————————————————————————
+
+
+
+// ——————————————————————————note——————————————————————————
+NoteBlock {
+  NoteOpenToken
+  element*
+  NoteCloseToken
+}
+// ——————————————————————————note——————————————————————————
+
+
+
+// ——————————————————————————Align——————————————————————————
+AlignCenter {
+  AlignCenterOpenToken
+  element*
+  AlignCenterCloseToken
+}
+
+AlignLeft {
+  AlignLeftOpenToken
+  element*
+  AlignLeftCloseToken
+}
+
+AlignRight {
+  AlignRightOpenToken
+  element*
+  AlignRightCloseToken
+}
+// ——————————————————————————Align——————————————————————————
+
+
+
+// ——————————————————————————span——————————————————————————
+SpanBlock {
+  SpanOpenTag
+  element*
+  SpanCloseToken
+}
+
+SpanOpenTag {
+  SpanOpenToken AttrList SpanTagEnd { _tagEnd }
+}
+// ——————————————————————————span——————————————————————————
+
+
+
+// ——————————————————————————size——————————————————————————
+SizeBlock {
+  SizeOpenTag
+  element*
+  SizeCloseToken
+}
+
+SizeOpenTag {
+  SizeOpenToken AttrList SizeTagEnd { _tagEnd }
+}
+// ——————————————————————————size——————————————————————————
+
+
+
+// ——————————————————————————TabView——————————————————————————
+TabViewBlock {
+  TabViewOpenToken
+  element*
+  TabViewCloseToken
+}
+
+TabBlock {
+  TabOpenTag { TabOpenToken AttrList TabTagEnd { _tagEnd } }
+  element*
+  TabCloseToken
+}
+// ——————————————————————————TabView——————————————————————————
+
+
+// ——————————————————————————User——————————————————————————
+UserBlock {
+  UserOpenTag { UserOpen AttrList UserTagEnd { _tagEnd } }
+}
+// ——————————————————————————User——————————————————————————
+
+
+
+// ——————————————————————————Module——————————————————————————
+ModuleBlock {
+  ModuleOpenTag
+  ModuleContent
+  ModuleCloseToken
+}
+
+// 修正：去掉重复的 ModuleOpenToken，去掉错误的嵌套花括号
+ModuleOpenTag {
+  ModuleOpenToken AttrList ModuleTagEnd { _tagEnd }
+}
+
+// 修正：确保内容节点是一个清晰的容器
+ModuleContent {
+  GenericToken*
+}
+// ——————————————————————————Module——————————————————————————
+
+
+// ——————————————————————————HTML——————————————————————————
+HTMLBlock {
+  HTMLOpenTag
+  HTMLContent
+  HTMLCloseToken
+}
+
+HTMLOpenTag {
+  HTMLOpenToken AttrList HTMLTagEnd { _tagEnd }
+}
+
+HTMLContent {
+  GenericToken*
+}
+// ——————————————————————————HTML——————————————————————————
+
+
+
+AttrList { Attr* }
+
+Attr {
+  attrPathToken Equals AttrValue
+  | attrPathToken
+}
+
+
+@tokens {
+  RawContent { ![\[\n\r]+ | "[" ![\[\n\r]* }
+  // able to identify and highlight "Module Rate"
+  Rate { "[[" $[mM]"odule " $[rR]"ate]]" }
+  DivOpen  { "[[div" }
+  DivClose { "[[/div]]" }
+  SpanOpenToken { "[[span" }
+  SpanCloseToken { "[[/span]]" }
+  AlignRightOpenToken { "[[>]]" }
+  AlignRightCloseToken { "[[/>]]" }
+  AlignLeftOpenToken { "[[<]]" }
+  AlignLeftCloseToken { "[[/<]]" }
+  AlignCenterOpenToken { "[[=]]" }
+  AlignCenterCloseToken { "[[/=]]" }
+  NoteOpenToken { "[[note]]" }
+  NoteCloseToken { "[[/note]]" }
+  SizeOpenToken { "[[size" }
+  SizeCloseToken { "[[/size]]" }
+  CollapsibleOpen  { "[[collapsible" }
+  CollapsibleClose { "[[/collapsible]]" }
+  ModuleOpenToken { "[[module"}
+  ModuleCloseToken { "[[/module]]"}
+  HTMLOpenToken { "[[html" }
+  HTMLCloseToken { "[[/html]]" }
+  // include begin
+  IncludeOpen { "[[include" }
+  IncludeBar { "|" }
+  includeSimplePath { $[a-zA-Z0-9\-_]$[a-zA-Z0-9\-_:./%]* }
+  includeSeg_ { ":" ![ :\[\]\n\r]+ }
+  // include end
+  UserOpen { "[[" "*"? "user" }
+  CodeOpen { "[[code" }
+  CodeClose { "[[/code]]" }
+  FootnoteOpen { "[[footnote" }
+  FootnoteClose { "[[/footnote]]" }
+  TabViewOpenToken  { "[[tabview]]" }
+  TabViewCloseToken { "[[/tabview]]" }
+  TabOpenToken      { "[[tab" }
+  TabCloseToken     { "[[/tab]]" }
+  ImageOpen { "[[" $[>=<]? "image"}
+  _tagEnd   { "]]" }
+  TableBar { "||" }
+  TableTilde { "~" }
+  Blockquote { "> " }
+  newline { $[\n\r] }
+  ForcedNewLine { "@@@@" }
+  LinkURL { "http" "s"? "://" ![ \t\n\r\]]+ }
+  FootnoteBlock { "[[footnoteblock]]" }
+  List1 { "* " }
+  List2 { "# " }
+
+  Title { "+" "+"? "+"? "+"? "+"? "+"? " " ![\n\r]* }
+  // ——————————————————————————常用标记——————————————————————————
+  Monospace     { "{{" (![}\n] | "}" ![}])? (![}\n] | "}" ![}])* "}}" }
+  // ——————————————————————————常用标记——————————————————————————
+
+  // 把路径定义为一个完整的 Token
+  // 允许：字母、数字、冒号、横杠、下划线、点、竖线
+  // 关键：不包含空格和 ]，这样它遇到空格或闭合标签会自动停止
+  attrPathToken { $[a-zA-Z0-9\-_:./%]+ }
+  Equals    { "=" }
+
+  // AttrValue 支持双引号包裹或者不带引号
+  AttrValue { 
+    '"' (!["\n\r])* '"' |   // 双引号包裹的值
+    $[a-zA-Z0-9\-_:./%]+
+  }
+
+  // 同时排除 ] 防止 ]] 被 Text 吞掉
+  // 恢复：] 在外部是普通文本
+  StarChar { "*" }
+  Text { ![\[\]*/\-_^, \t\n\r|~@>=<:#.%]+ }
+  BracketChar { 
+    "[" | "]" | "<" | ">" | "*" | "/" | "\\" | "-" | "_" | 
+    "^" | "," | "|" | "~" | "@" | "=" | ":" | "#" | "." | "%" 
+  }
+  space { $[ \t]+ }
+
+  @precedence {
+    // 1
+    HTMLCloseToken,
+    ModuleCloseToken,
+    _tagEnd,
+    LinkURL,
+    Equals,
+    Blockquote,
+    Rate,
+    AlignCenterOpenToken,
+    AlignCenterCloseToken,
+    AlignLeftOpenToken,
+    AlignLeftCloseToken,
+    AlignRightOpenToken,
+    AlignRightCloseToken,
+    SpanOpenToken,
+    SpanCloseToken,
+    SizeOpenToken,
+    SizeCloseToken,
+    NoteOpenToken,
+    NoteCloseToken,
+    TabViewOpenToken,
+    TabViewCloseToken,
+    TabOpenToken,
+    TabCloseToken,
+    ModuleOpenToken,
+    HTMLOpenToken,
+    IncludeOpen,
+    DivOpen,
+    DivClose,
+    CollapsibleOpen,
+    CollapsibleClose,
+    CodeOpen,
+    CodeClose,
+    UserOpen,
+    FootnoteBlock,
+    FootnoteOpen,
+    FootnoteClose,
+    ImageOpen,
+    
+    // 2
+    TableBar,
+    TableTilde,
+    IncludeBar,
+    includeSeg_,
+    includeSimplePath,
+    ForcedNewLine,
+    newline,
+    BracketChar,
+    StarChar,
+
+    // 3
+    List1,
+    List2,
+    Title, 
+    Monospace, 
+
+    // 4
+    attrPathToken,
+    AttrValue,
+
+    // 5
+    space,
+    RawContent,
+    Text
+  }
+}

@@ -9,10 +9,23 @@ dist/
 # Antigravity
 .agy/
 
+# tests
+code_view/node_modules/
+code_view/esbuild
+code_view/assets/bundle_editor.js
+node_modules/
+
+# packages
+package-lock.json
+package.json
+
 # IDE
 .vscode/
 .idea/
 .github/
+
+# test
+tests/
 
 # FTML
 ftml/
@@ -22,7 +35,6 @@ ftml
 # Virtual environment
 .venv/
 .env/
-.venv/
 
 # Rust
 target/
@@ -35,3 +47,5 @@ Cargo.lock
 Thumbs.db
 # MacOS
 .DS_Store
+# aiderchat
+.aider*

@@ -1,0 +1,425 @@
+/* 基础背景 */
+html, body, #editor-container {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #282c34;
+}
+
+.cm-editor {
+    height: 100%;
+}
+
+.cm-scroller {
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* 强制高亮类 */
+.cm-editor .cm-header {
+    color: #e06c75;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+
+/* 加粗 */
+.cm-editor .cm-strong {
+    color: #abb2bf;
+    font-weight: bold;
+}
+
+
+/* 斜体 */
+.cm-editor .cm-em {
+    color: #abb2bf;
+    font-style: italic;
+}
+
+
+/* 下划线 */
+.cm-editor .cm-underline {
+    color: #abb2bf;
+    text-decoration: underline;
+}
+
+
+/* 删除线 */
+.cm-editor .cm-strikethrough {
+    color: #abb2bf;
+    text-decoration: line-through;
+}
+
+
+/* 上标 */
+.cm-editor .cm-sup {
+    color: #abb2bf;
+    font-size: 0.8em;
+    vertical-align: super;
+}
+
+
+/* 下标 */
+.cm-editor .cm-sub {
+    color: #abb2bf;
+    font-size: 0.8em;
+    vertical-align: sub;
+}
+
+
+/* original_Text */
+.cm-editor .cm-original-text {
+    color: #abb2bf;
+    font-weight: normal !important;
+}
+
+
+/* div */
+.cm-editor .cm-div {
+    color: #E8BF6A;
+}
+
+
+/* collapsible */
+.cm-editor .cm-collapsible {
+    color: #5757ff;
+    font-style: italic;
+}
+
+
+/* code */
+.cm-editor .cm-code {
+    color: #61AFEF;
+}
+
+
+/* footnoteblock */
+.cm-editor .cm-footnote-block {
+    color: #E8BF6A;
+}
+
+/* monospace */
+.cm-editor .cm-monospace {
+    color: #759DCB;
+}
+
+
+/* link */
+.cm-editor .cm-link {
+    color: #61AFEF;
+    font-style: italic;
+    text-decoration: underline;
+    font-weight: lighter;
+}
+
+
+/* footnote */
+.cm-editor .cm-footnote {
+    color: #E8BF6A;
+    font-weight: lighter;
+}
+
+
+/* @@@@ */
+.cm-editor .cm-newline {
+    color: #C678DD;
+    font-weight: bold;
+}
+
+
+/* include */
+.cm-editor .cm-include {
+    color: #61AFEF;
+}
+.cm-editor .cm-include-1 {
+    color: #C678DD;
+}
+.cm-editor .cm-include-2 {
+    color: #E8BF6A;
+}
+.cm-editor .cm-include-3 {
+    color: #98C379;
+}
+
+
+/* hr */
+.cm-editor .cm-hr {
+    color: #E8BF6A;
+}
+
+/* ——————————————————————————表格操作—————————————————————————— */
+.cm-editor .cm-table-header {
+    color: #FFC66D;
+    font-weight: bold;
+}
+.cm-editor .cm-table {
+    color: #FFC66D;
+    font-weight: normal;
+}
+/* ——————————————————————————表格操作—————————————————————————— */
+
+
+/* image */
+.cm-editor .cm-image {
+    color: #E8BF6A;
+    font-style: italic;
+}
+
+
+/* quote */
+.cm-editor .cm-quote {
+    color: #98C379;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+/* tabview */
+.cm-editor .cm-tabview {
+    color: #ff0000;
+    font-style: italic;
+    font-weight: normal;
+}
+.cm-editor .cm-tab {
+    color: #E06C75;
+    font-style: normal;
+}
+
+
+/* module */
+.cm-editor .cm-module {
+    color: #61AFEF;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+/* html */
+.cm-editor .cm-html {
+    color: #FFC66D;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+/* components */
+.cm-editor .cm-components {
+    color: #61AFEF;
+}
+
+
+/* = */
+.cm-editor .cm-equal {
+    color: orange;
+}
+
+
+/* | */
+.cm-editor .cm-line-up {
+    color: #C678DD;
+}
+
+
+/* numbers */
+.cm-editor .cm-num {
+    color: #E06C75;
+}
+
+
+/* user */
+.cm-editor .cm-user {
+    color: #41f4d9;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+/* keyword */
+.cm-editor .cm-keyword {
+    color: #98C379;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+/* note */
+.cm-editor .cm-note {
+    color: #FFC66D;
+    font-style: italic;
+}
+
+
+/* size */
+.cm-editor .cm-size {
+    color: #FFC66D;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+/* center */
+.cm-editor .cm-center {
+    color: #759DCB;
+    font-style: italic;
+}
+
+
+/* left */
+.cm-editor .cm-left {
+    color: #759DCB;
+    font-style: italic;
+}
+
+
+/* right */
+.cm-editor .cm-right {
+    color: #759DCB;
+    font-style: italic;
+}
+
+
+/* list1 */
+.cm-editor .cm-list1 {
+    color: #98C379;
+    font-weight: bold;
+}
+
+
+/* list2 */
+.cm-editor .cm-list2 {
+    color: #98C379;
+    font-weight: bold;
+}
+
+
+/* original text */
+.cm-editor .cm-original-text {
+    color: #FFFFFF;
+}
+
+
+/* rate */
+.cm-editor .cm-rate {
+    color: #E06C75;
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* highlight */
+.cm-editor .cm-Highlight {
+    color: #98C379;
+    font-style: italic;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ====== 颜色相关样式 ====== */
+/* 颜色代码高亮 */
+.cm-editor.cm-color {
+    color: var(--color-value) !important;
+    font-weight: normal;
+}
+
+/* 颜色预览小部件 */
+.cm-editor.cm-color-preview {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 0 4px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background-color: var(--color-value, #ccc);
+    vertical-align: middle;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.cm-editor.cm-color-preview:hover {
+    transform: scale(1.2);
+    border-color: #666;
+}
+
+/* 1. 普通16进制颜色代码高亮 */
+.cm-editor.cm-color {
+    color: #e06c75; /* 默认颜色代码的文本颜色 */
+}
+
+/* 2. 颜色预览小部件样式 */
+.cm-editor.cm-color-preview {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 0 4px 0 0;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.cm-editor.cm-color-preview:hover {
+    transform: scale(1.2);
+    border-color: #666;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 3. Wikidot颜色标签中的文字样式 */
+.cm-editor.cm-wikidot-colored-text {
+    /* 这里不需要设置颜色，因为通过内联样式动态设置 */
+    font-weight: normal;
+}
+
+/* 4. 颜色代码的视觉增强 */
+.cm-editor .cm-color {
+    position: relative;
+    padding: 1px 3px;
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* 5. 为不同的颜色模式添加主题支持 */
+.cm-editor.cm-theme-light .cm-color-preview {
+    border-color: #999;
+}
+
+.cm-editor.cm-theme-dark .cm-color-preview {
+    border-color: #555;
+}
+
+.cm-editor.cm-theme-dark .cm-color {
+    color: #ff6b6b; /* 深色主题下的颜色代码文本颜色 */
+}
+
+/* ====== 颜色相关样式 ====== */

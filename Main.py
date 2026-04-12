@@ -58,20 +58,29 @@
 #  办公室子版式 作者：Woedenaz
 #  链接：https://scp-wiki.wikidot.com/theme:scp-offices-theme
 
-
 #  CSS 样式表（CSS和div模块快捷代码）由：aismallard Jerden Lt Flops EstrellaYoshte Deadly Bread Rounderhouse stormbreath 
 #  Croquembouche Calibold 和 Dr Hormress 汇总，
 #  链接：https://scp-wiki.wikidot.com/scp-style-resource
-#  中文链接：https://scp-wiki-cn.wikidot.com/scp-style-resource 
+#  中文链接：https://scp-wiki-cn.wikidot.com/scp-style-resource
+
+# Main.py
+
 import sys
 import os
+import io
+
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
 from PyQt6.QtWidgets import QApplication
 
 # 从 controllers 包中导入业务主类
-# 确保你已经将原来的 SCPEditor 类移动到了 controllers/main_controller.py
 from controllers.MAIN_CONTROLLER import SCPEditor
 from utils.banner import print_startup_banner
 from utils.logger import *
+
 # 处理终端报错问题
 os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--log-level=3"
 
@@ -88,10 +97,10 @@ log_ok("Editor ready")
 if __name__ == "__main__":
     # 初始化应用
     app = QApplication(sys.argv)
-    
+
     # 实例化主控制器窗口
     window = SCPEditor()
     window.show()
-    
+
     # 进入程序主循环
     sys.exit(app.exec())
