@@ -42,7 +42,9 @@ Cargo.lock
 
 # Windows
 Thumbs.db
+
 # MacOS
 .DS_Store
+
 # aiderchat
 .aider*
