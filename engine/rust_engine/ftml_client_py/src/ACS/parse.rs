@@ -16,26 +16,32 @@ pub fn inject_shivering(text: &str) -> String {
 }
 
 pub fn extract_acs_data(source: &str) -> AcsData {
-    let item = get_arg(source, "item-number");
-    let clearance = get_arg(source, "clearance");
+    let item =
+        get_arg(source, "item-number");
+    let clearance =
+        get_arg(source, "clearance");
     let clr = Regex::new(r"\d+")
         .unwrap()
         .find(&clearance)
         .map(|mat| mat.as_str().to_string())
         .unwrap_or_else(|| "1".to_string());
-    let mut cnt = get_arg(source, "container-class").to_lowercase();
-    let sec = get_arg(source, "secondary-class").to_lowercase();
-    let mut sec_icon = get_arg(source, "secondary-icon");
-    let dsr = get_arg(source, "disruption-class");
-    let rsk = get_arg(source, "risk-class");
+    let mut cnt =
+        get_arg(source, "container-class").to_lowercase();
+    let sec =
+        get_arg(source, "secondary-class").to_lowercase();
+    let mut sec_icon =
+        get_arg(source, "secondary-icon");
+    let dsr =
+        get_arg(source, "disruption-class");
+    let rsk =
+        get_arg(source, "risk-class");
 
     if !sec.is_empty() && sec != "none" {
         cnt = "\u{673a}\u{5bc6}".to_string();
-        if sec_icon.is_empty() {
-            if let Some(icon) = icon_for(&sec) {
+        if sec_icon.is_empty()
+            && let Some(icon) = icon_for(&sec){
                 sec_icon = icon.to_string();
             }
-        }
     }
 
     AcsData {
