@@ -35,7 +35,6 @@ ftml
 
 # Rust
 target/
-Cargo.lock
 
 # git
 .git/
