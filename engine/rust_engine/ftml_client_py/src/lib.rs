@@ -2,6 +2,7 @@
 #![allow(unsafe_op_in_unsafe_fn)]
 
 mod ACS;
+mod AIM;
 
 use pyo3::prelude::*;
 
