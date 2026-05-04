@@ -79,6 +79,7 @@ class ComponentInterceptor:
 
         # 8-B. 登入登出 (Fakeprot)
         # 本质上是一个折叠块，理由和折叠块一样
+        # 在解析模式下的pyftml解析登入登出模块有时会出现问题
         processed_text = process_fakeprot(processed_text, self.store, inner_parser_cb, theme_type)
 
         # 9. 折叠块 (Collapsible) - 拦截解析，生成交互式 UI 外壳
@@ -93,7 +94,7 @@ class ComponentInterceptor:
         # 11. TOC 模块拦截
         processed_text = process_toc(processed_text, self.store, inner_parser_cb, theme_type)
 
-        # 11. CSS 拦截与注入 - 暂时交给 ftml 原生解析，不注入 UUID
+        # 11. CSS 拦截与注入 - 交给 ftml 原生解析，不注入 UUID
         def css_replacer(match):
             pass
         # 跳过正则表达式替换，保留原样
