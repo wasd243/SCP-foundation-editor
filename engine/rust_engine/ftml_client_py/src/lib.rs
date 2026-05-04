@@ -1,6 +1,7 @@
 #![allow(unsafe_op_in_unsafe_fn)]
 mod acs;
 mod aim;
+mod tabview;
 mod license;
 mod image;
 mod themes_div;
@@ -23,6 +24,16 @@ fn process_aim(py: Python<'_>, text: &str, store: &PyAny) -> PyResult<String> {
 #[pyfunction]
 fn process_image(text: &str, store: &PyAny) -> PyResult<String> {
     image::include_image::process_image(text, store)
+}
+
+#[pyfunction]
+fn process_tabview(
+    text: &str,
+    store: &PyAny,
+    inner_parser_cb: &PyAny,
+    theme_type: &str,
+) -> PyResult<String> {
+    tabview::process_tabview(text, store, inner_parser_cb, theme_type)
 }
 
 #[pyfunction]
@@ -73,6 +84,7 @@ fn ftml_client_py(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(process_acs, m)?)?;
     m.add_function(wrap_pyfunction!(process_aim, m)?)?;
     m.add_function(wrap_pyfunction!(process_image, m)?)?;
+    m.add_function(wrap_pyfunction!(process_tabview, m)?)?;
     m.add_function(wrap_pyfunction!(process_license, m)?)?;
     m.add_function(wrap_pyfunction!(process_basalt_divs, m)?)?;
     m.add_function(wrap_pyfunction!(process_collapsible, m)?)?;
