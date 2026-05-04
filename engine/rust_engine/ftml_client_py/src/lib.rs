@@ -3,6 +3,7 @@ mod acs;
 mod aim;
 mod themes_div;
 mod collapsible;
+mod fake_prot;
 
 use pyo3::prelude::*;
 
@@ -38,11 +39,23 @@ fn process_collapsible(
     collapsible::process_collapsible(py, text, store, inner_parser_cb, theme_type)
 }
 
+#[pyfunction]
+fn process_fakeprot(
+    py: Python<'_>,
+    text: &str,
+    store: &PyAny,
+    inner_parser_cb: &PyAny,
+    theme_type: &str,
+) -> PyResult<String> {
+    fake_prot::process_fakeprot(py, text, store, inner_parser_cb, theme_type)
+}
+
 #[pymodule]
 fn ftml_client_py(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(process_acs, m)?)?;
     m.add_function(wrap_pyfunction!(process_aim, m)?)?;
     m.add_function(wrap_pyfunction!(process_basalt_divs, m)?)?;
     m.add_function(wrap_pyfunction!(process_collapsible, m)?)?;
+    m.add_function(wrap_pyfunction!(process_fakeprot, m)?)?;
     Ok(())
 }
