@@ -1,9 +1,16 @@
 use regex::Regex;
 
-use super::model::{BasaltDivData, BasaltDivKind, BASALT_SPECIAL_MAP};
+use super::model::{BASALT_SPECIAL_MAP, BasaltDivData, BasaltDivKind};
 
 pub fn extract_top_div(txt: &str, start_pos: usize) -> Option<(String, String, usize)> {
-    let tag_end = txt[start_pos..].find("]]").map(|offset| start_pos + offset)?;
+    if start_pos >= txt.len() {
+        println!("[PARSER] start_pos >= txt.len()");
+        return None;
+    }
+
+    let tag_end = txt[start_pos..]
+        .find("]]")
+        .map(|offset| start_pos + offset)?;
     let params_str = txt[start_pos + 5..tag_end].trim().to_string();
     let mut depth = 1;
     let mut i = tag_end + 2;
