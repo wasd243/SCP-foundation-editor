@@ -4,7 +4,7 @@ use super::model::{AcsData, icon_for};
 
 pub fn inject_shivering(text: &str) -> String {
     let re = Regex::new(
-        r#"(?s)\[\[div class="Shivering-ACS"\]\]\s*\[\[include :scp-wiki-cn:component:anomaly-class-bar-source(.*?)\]\]\s*\[\[/div\]\]"#,
+        r#"(?s)\[\[div class="Shivering-acs"\]\]\s*\[\[include :scp-wiki-cn:component:anomaly-class-bar-source(.*?)\]\]\s*\[\[/div\]\]"#,
     )
     .unwrap();
 

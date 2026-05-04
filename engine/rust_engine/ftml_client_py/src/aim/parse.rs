@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 use regex::Regex;
 
 #[derive(Debug, Clone)]
