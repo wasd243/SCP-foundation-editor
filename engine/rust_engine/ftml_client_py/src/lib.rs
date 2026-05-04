@@ -1,6 +1,7 @@
 #![allow(unsafe_op_in_unsafe_fn)]
 mod acs;
 mod aim;
+mod license;
 mod image;
 mod themes_div;
 mod collapsible;
@@ -22,6 +23,11 @@ fn process_aim(py: Python<'_>, text: &str, store: &PyAny) -> PyResult<String> {
 #[pyfunction]
 fn process_image(text: &str, store: &PyAny) -> PyResult<String> {
     image::include_image::process_image(text, store)
+}
+
+#[pyfunction]
+fn process_license(text: &str, store: &PyAny) -> PyResult<String> {
+    license::process_license(text, store)
 }
 
 #[pyfunction]
@@ -67,6 +73,7 @@ fn ftml_client_py(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(process_acs, m)?)?;
     m.add_function(wrap_pyfunction!(process_aim, m)?)?;
     m.add_function(wrap_pyfunction!(process_image, m)?)?;
+    m.add_function(wrap_pyfunction!(process_license, m)?)?;
     m.add_function(wrap_pyfunction!(process_basalt_divs, m)?)?;
     m.add_function(wrap_pyfunction!(process_collapsible, m)?)?;
     m.add_function(wrap_pyfunction!(process_fakeprot, m)?)?;
