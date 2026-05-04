@@ -18,9 +18,9 @@ anyhow = "1.0"
 dashmap = "6.0"
 
 # 解析用
-redb = "4.1.0"
+#redb = "4.1.0"
 
 # AST + 高性能解析
-smallvec = "1.13"
-indexmap = "2.0"
+#smallvec = "1.13"
+#indexmap = "2.0"
 regex = "1.12.3"
