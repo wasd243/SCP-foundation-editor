@@ -21,7 +21,7 @@ pub fn normalize_input(input: AcsInput) -> AcsData {
         clearance: extract_clearance(&input.clearance_raw),
         container: escape(&container),
         secondary: escape(&secondary),
-        secondary_icon: escape(&input.secondary_icon_raw.trim()),
+        secondary_icon: escape(input.secondary_icon_raw.trim()),
         disruption: escape(&lower_trim(&input.disruption_raw)),
         risk: escape(&lower_trim(&input.risk_raw)),
         anim_checked: input.anim_checked,
