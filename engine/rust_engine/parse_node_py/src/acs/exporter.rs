@@ -17,13 +17,13 @@ pub fn parse_acs_component(
     shiver_checked: bool,
 ) -> PyResult<String> {
     let input = AcsInput {
-        item: item.to_string(),
-        clearance_raw: clearance_raw.to_string(),
-        secondary_raw: secondary_raw.to_string(),
-        container_raw: container_raw.to_string(),
-        secondary_icon_raw: secondary_icon_raw.to_string(),
-        disruption_raw: disruption_raw.to_string(),
-        risk_raw: risk_raw.to_string(),
+        item: item.into(),
+        clearance_raw: clearance_raw.into(),
+        secondary_raw: secondary_raw.into(),
+        container_raw: container_raw.into(),
+        secondary_icon_raw: secondary_icon_raw.into(),
+        disruption_raw: disruption_raw.into(),
+        risk_raw: risk_raw.into(),
         anim_checked,
         shiver_checked,
     };
