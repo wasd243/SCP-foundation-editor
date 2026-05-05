@@ -15,52 +15,14 @@ NM这个自动CR机器人提示词没弄好给我一大堆没用的建议——w
 
 ### 5. **字符串操作 - 潜在的索引越界**
 
-**位置**: `themes_div/basalt/parse.rs:5-36`
-
+已修复，增加了
 ```rust
-pub fn extract_top_div(txt: &str, start_pos: usize) -> Option<(String, String, usize)> {
-    let tag_end = txt[start_pos..].find("]]").map(|offset| start_pos + offset)?;
-    let params_str = txt[start_pos + 5..tag_end].trim().to_string();  // ❌ 可能越界
-    // ...
-    let inner = txt[tag_end + 2..close_idx].to_string();  // ❌ 可能越界
-}
-```
-
-**风险**:
-- 如果输入格式异常，可能导致 panic
-- 无边界检查
-- 不安全的切片操作
-
-**建议**:
-```rust
-pub fn extract_top_div(txt: &str, start_pos: usize) -> Option<(String, String, usize)> {
-    // 验证 start_pos
-    if start_pos >= txt.len() {
+if start_pos >= txt.len() {
+        println!("[PARSER] start_pos >= txt.len()");
         return None;
     }
-    
-    let tag_end = txt[start_pos..].find("]]")
-        .map(|offset| start_pos + offset)?;
-    
-    // 安全切片 - 检查边界
-    let params_start = start_pos.saturating_add(5);
-    if params_start > tag_end {
-        return None;  // 格式无效
-    }
-    
-    let params_str = txt.get(params_start..tag_end)?
-        .trim()
-        .to_string();
-    
-    // ... 继续处理，使用 .get() 替代直接索引
-    let inner = txt.get(tag_end + 2..close_idx)?
-        .to_string();
-    
-    Some((params_str, inner, close_idx + 8))
-}
 ```
-
-**修复优先级**: 🔴 **立即**
+用于检测越界
 
 ---
 
