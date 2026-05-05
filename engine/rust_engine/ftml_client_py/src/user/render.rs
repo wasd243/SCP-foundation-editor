@@ -1,13 +1,5 @@
 use super::model::{UserData, UserKind};
-
-fn escape_html(value: &str) -> String {
-    value
-        .replace('&', "&amp;")
-        .replace('<', "&lt;")
-        .replace('>', "&gt;")
-        .replace('"', "&quot;")
-        .replace('\'', "&#x27;")
-}
+use html_escape::encode_text;
 
 pub fn render_html(data: &UserData) -> String {
     let (data_type, icon_style, icon_html) = match data.kind {
@@ -23,7 +15,7 @@ pub fn render_html(data: &UserData) -> String {
         ),
     };
 
-    let name = escape_html(&data.name);
+    let name = encode_text(&data.name);
     format!(
         r#"<span class="scp-component user-tag" data-type="{data_type}" data-source-uuid="{{{{uuid}}}}" data-source="{{{{source}}}}" contenteditable="false" style="display:inline-flex; align-items:center; gap:4px; padding:0 2px;"><span class="user-icon" style="{icon_style}">{icon_html}</span><span class="user-name" contenteditable="true" style="color:#b01; font-weight:bold;">{name}</span></span>&#8203;"#,
     )
