@@ -1,3 +1,7 @@
+# NOTE:
+# This component is DOM-driven and tightly coupled with Python parsing logic.
+# Do NOT migrate to Rust (PyO3) — would introduce unnecessary FFI overhead and complexity.
+
 def parse_tabview(node, state, handle_parse_node_func):
     buttons = node.select('.tab-header .tab-btn')
     contents = node.select('.tab-contents .tab-item')

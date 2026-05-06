@@ -1,3 +1,7 @@
+# NOTE:
+# This component is DOM-driven and tightly coupled with Python parsing logic.
+# Do NOT migrate to Rust (PyO3) — would introduce unnecessary FFI overhead and complexity.
+
 def parse_login_logout(node, state, handle_parse_node_func):
     FAKEPROT_CSS = '[[module CSS]]\n.fakeprot .mailform-box .buttons{display:none;}\n.fakeprot + .collapsible-block .collapsible-block-link {padding: 0.1em 0.5em;text-decoration: none;background-color: #F4F4F4;border: 1px solid #AAA;color: #000;}\n.fakeprot + .collapsible-block .collapsible-block-link:hover {background-color: #DDD;color: #000;}\n.fakeprot + .collapsible-block .collapsible-block-link:active {background-color: #DDD;color: #000;}\n.fakeprot + .collapsible-block .collapsible-block-unfolded-link{margin:0.5em 0;text-align: center;}\n.fakeprot + .collapsible-block .collapsible-block-folded{margin:0.5em 0;text-align: center;}\n.fakeprot .passw input[type=text] {text-security:disc;-webkit-text-security:disc;-mox-text-security:disc;}\n.mailform-box td:first-child {width: 80px;}\n[[/module]]'
     id_val_node = node.select_one('.login-id-value')

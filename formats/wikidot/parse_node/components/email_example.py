@@ -1,3 +1,7 @@
+# NOTE:
+# This component is DOM-driven and tightly coupled with Python parsing logic.
+# Do NOT migrate to Rust (PyO3) — would introduce unnecessary FFI overhead and complexity.
+
 def parse_email_example(node, state, handle_parse_node_func):
     show_title = node.select_one('.email-show-title').get_text(strip=True) if node.select_one('.email-show-title') else "访问SCiPNET邮件？一 (1) 封新邮件！"
     hide_title = node.select_one('.email-hide-title').get_text(strip=True) if node.select_one('.email-hide-title') else "回复：主题"
