@@ -3,10 +3,12 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
-mod context;
-mod fallback;
-mod html_ast;
-mod wikidot_post;
+mod ast;
+mod pipeline;
+mod render;
+
+use self::render::Render;
+use self::render::wikitext::WikitextRender;
 
 #[pyfunction]
 pub fn export_html_to_wikidot(
@@ -14,12 +16,17 @@ pub fn export_html_to_wikidot(
     html: &str,
     snapshot: &Bound<'_, PyDict>,
 ) -> PyResult<String> {
-    let primary = catch_unwind(AssertUnwindSafe(|| html_ast::export_from_ast(py, html, snapshot)));
+    let primary = catch_unwind(AssertUnwindSafe(|| {
+        let tree = pipeline::build_export_tree(py, html, snapshot)?;
+        Ok::<String, PyErr>(WikitextRender.render(&tree))
+    }));
     match primary {
         Ok(Ok(code)) => Ok(code),
         Ok(Err(_)) | Err(_) => {
-            let secondary =
-                catch_unwind(AssertUnwindSafe(|| fallback::export_with_fallback(py, html, snapshot)));
+            let secondary = catch_unwind(AssertUnwindSafe(|| {
+                let tree = pipeline::build_fallback_tree(py, html, snapshot)?;
+                Ok::<String, PyErr>(WikitextRender.render(&tree))
+            }));
             match secondary {
                 Ok(Ok(code)) => Ok(code),
                 Ok(Err(_)) => Ok(String::new()),

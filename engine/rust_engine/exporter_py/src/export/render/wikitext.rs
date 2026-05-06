@@ -1,7 +1,51 @@
-use crate::export::context::snapshot_bool;
-use pyo3::prelude::*;
-use pyo3::types::PyDict;
+use crate::export::ast::ExportTree;
+use crate::export::render::Render;
 use std::collections::HashSet;
+
+#[derive(Debug, Default)]
+pub struct WikitextRender;
+
+impl Render for WikitextRender {
+    type Output = String;
+
+    fn render(&self, tree: &ExportTree) -> String {
+        if !tree.has_root {
+            return String::new();
+        }
+
+        let mut head_styles = tree.styles_text();
+        if tree.has_email_example && !head_styles.contains(email_css_block().trim()) {
+            head_styles.push_str(email_css_block());
+        }
+
+        let mut final_code = tree.top_text();
+        final_code.push_str(&cleanup_body(&tree.body_text()));
+        final_code.push_str(&tree.license_text());
+
+        if tree.mono_security {
+            final_code = remove_mono_chinese_braces(&final_code);
+        }
+
+        let mut combined = format!("{}{}", head_styles, final_code);
+        combined = dedup_css_modules(&combined);
+        compress_newlines(combined.trim())
+    }
+}
+
+fn email_css_block() -> &'static str {
+    "[[module CSS]]\n\
+.email-example .collapsible-block-folded a.collapsible-block-link {\n\
+    animation: blink 0.8s ease-in-out infinite alternate;\n\
+}\n\
+@keyframes blink {\n\
+    0% { color: transparent; }\n\
+    50%, 100% { color: #b01; }\n\
+}\n\
+.email {border: solid 2px #000000; width: 88%; padding: 1px 15px; margin: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.5)}\n\
+.email-example a.collapsible-block-link {font-weight: bold;}\n\
+.tofrom {margin-left: 10px; margin-top: 5px; padding: 1px 15px; border-left: solid 3px maroon}\n\
+[[/module]]\n"
+}
 
 fn find_ci(text: &str, needle: &str, start: usize) -> Option<usize> {
     if start >= text.len() {
@@ -105,22 +149,27 @@ fn normalize_document_div_gap(text: &str) -> String {
     out
 }
 
+#[derive(Clone)]
+struct SizeBlock {
+    open: String,
+    content: String,
+}
+
 fn flatten_nested_sizes(text: &str) -> String {
     let mut out = String::new();
     let mut i = 0usize;
     let mut depth = 0usize;
 
     while i < text.len() {
-        if starts_with_ci(text, i, "[[size ")
-            && let Some(close_rel) = text[i..].find("]]") {
-                let end = i + close_rel + 2;
-                if depth == 0 {
-                    out.push_str(&text[i..end]);
-                }
-                depth += 1;
-                i = end;
-                continue;
+        if starts_with_ci(text, i, "[[size ") && let Some(close_rel) = text[i..].find("]]") {
+            let end = i + close_rel + 2;
+            if depth == 0 {
+                out.push_str(&text[i..end]);
             }
+            depth += 1;
+            i = end;
+            continue;
+        }
         if starts_with_ci(text, i, "[[/size]]") {
             if depth > 1 {
                 depth -= 1;
@@ -134,7 +183,6 @@ fn flatten_nested_sizes(text: &str) -> String {
                 continue;
             }
         }
-
         if let Some(ch) = text[i..].chars().next() {
             out.push(ch);
             i += ch.len_utf8();
@@ -142,14 +190,7 @@ fn flatten_nested_sizes(text: &str) -> String {
             break;
         }
     }
-
     out
-}
-
-#[derive(Clone)]
-struct SizeBlock {
-    open: String,
-    content: String,
 }
 
 fn parse_size_block(text: &str, start: usize) -> Option<(usize, SizeBlock)> {
@@ -160,11 +201,13 @@ fn parse_size_block(text: &str, start: usize) -> Option<(usize, SizeBlock)> {
     let open_end = start + open_end_rel + 2;
     let close_start = find_ci(text, "[[/size]]", open_end)?;
     let close_end = close_start + "[[/size]]".len();
-    let block = SizeBlock {
-        open: text[start..open_end].to_string(),
-        content: text[open_end..close_start].to_string(),
-    };
-    Some((close_end, block))
+    Some((
+        close_end,
+        SizeBlock {
+            open: text[start..open_end].to_string(),
+            content: text[open_end..close_start].to_string(),
+        },
+    ))
 }
 
 fn merge_adjacent_size_blocks(text: &str) -> String {
@@ -340,7 +383,7 @@ fn compress_newlines(text: &str) -> String {
     out
 }
 
-pub fn cleanup_body(raw_body: &str) -> String {
+fn cleanup_body(raw_body: &str) -> String {
     let mut body = raw_body.replace("\r\n", "\n").replace('\u{00A0}', " ");
     body = remove_toc_blocks(body);
     body = normalize_image_block_spacing(&body);
@@ -353,19 +396,4 @@ pub fn cleanup_body(raw_body: &str) -> String {
     body = flatten_nested_sizes(&body);
     body = merge_adjacent_size_blocks(&body);
     remove_empty_black_color_tags(&body)
-}
-
-pub fn finalize_output(
-    head_styles_code: String,
-    mut final_code: String,
-    license_code: &str,
-    snapshot: &Bound<'_, PyDict>,
-) -> String {
-    final_code.push_str(license_code);
-    if snapshot_bool(snapshot, "mono_security_on", true) {
-        final_code = remove_mono_chinese_braces(&final_code);
-    }
-    let mut combined = format!("{}{}", head_styles_code, final_code);
-    combined = dedup_css_modules(&combined);
-    compress_newlines(combined.trim())
 }
