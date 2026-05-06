@@ -8,7 +8,5 @@ name = "parse_node_py"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-regex = "1"
 html-escape = "0.2.13"
 pyo3 = { version = "0.22", features = ["extension-module"] }
-url = "2"

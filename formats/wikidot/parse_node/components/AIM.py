@@ -1,12 +1,8 @@
-from .utils import safe_get
+try:
+    import parse_node_py
+    HAS_PARSE_NODE_RUST = True
+except ImportError:
+    HAS_PARSE_NODE_RUST = False
 
-def parse_aim(node, state, handle_parse_node_func):
-    f = lambda d: safe_get(node, f'[data-field="{d}"]')
-    blocks = node.get('data-blocks', '')
-    code = "[[include :scp-wiki-cn:component:advanced-information-methodology\n"
-    if blocks: code += f"|blocks={blocks}\n"
-    code += "|lang=CN\n"
-    if blocks != '!': code += f"|XXXX={f('xxxx')}\n|lv={f('lv')}\n|cc={f('cc')}\n|dc={f('dc')}\n"
-    if blocks != '-': code += f"|site={f('site')}\n|dir={f('dir')}\n|head={f('head')}\n|mtf={f('mtf')}\n"
-    code += "]]\n"
-    return code
+if not HAS_PARSE_NODE_RUST:
+    print("[EXPORTER] 正向解析rust模块缺失，需检查parse_node_py / acs 生成模块 是否被正确导入")
