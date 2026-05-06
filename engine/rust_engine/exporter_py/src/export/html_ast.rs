@@ -1,5 +1,5 @@
-use crate::postprocess::{cleanup_body, finalize_output};
-use crate::theme::{build_theme_and_rate, email_css_block, snapshot_bool};
+use crate::export::context::{build_top_modules, email_css_block, snapshot_bool};
+use crate::export::wikidot_post::{cleanup_body, finalize_output};
 use pyo3::prelude::*;
 use pyo3::types::{PyAny, PyDict};
 use std::collections::HashSet;
@@ -35,20 +35,33 @@ fn get_attr_str(node: &Bound<'_, PyAny>, attr: &str, default: &str) -> PyResult<
     node.call_method1("get", (attr, default))?.extract::<String>()
 }
 
-fn get_field_lic(node: &Bound<'_, PyAny>, field: &str) -> PyResult<String> {
-    let selector = format!(r#"[data-field="{}"]"#, field);
-    let el = node.call_method1("select_one", (selector,))?;
-    if el.is_none() {
-        return Ok(String::new());
+fn fallback_node_text(node: &Bound<'_, PyAny>) -> String {
+    if let Ok(text) = node.call_method0("get_text").and_then(|x| x.extract::<String>()) {
+        return text;
     }
-    let text = el.call_method0("get_text")?.call_method0("strip")?;
-    text.extract::<String>()
+    node.str()
+        .map(|s| s.to_string_lossy().to_string())
+        .unwrap_or_default()
 }
 
-fn parse_license_only(comp_node: &Bound<'_, PyAny>, use_better_footnotes: bool) -> PyResult<String> {
-    let author = get_field_lic(comp_node, "author")?;
-    let translator = get_field_lic(comp_node, "translator")?;
-    let is_original = get_attr_str(comp_node, "data-original", "false")? == "true";
+fn get_field_lic(node: &Bound<'_, PyAny>, field: &str) -> String {
+    let selector = format!(r#"[data-field="{}"]"#, field);
+    match node.call_method1("select_one", (selector,)) {
+        Ok(el) if !el.is_none() => el
+            .call_method0("get_text")
+            .and_then(|x| x.call_method0("strip"))
+            .and_then(|x| x.extract::<String>())
+            .unwrap_or_default(),
+        _ => String::new(),
+    }
+}
+
+fn parse_license_only(comp_node: &Bound<'_, PyAny>, use_better_footnotes: bool) -> String {
+    let author = get_field_lic(comp_node, "author");
+    let translator = get_field_lic(comp_node, "translator");
+    let is_original = get_attr_str(comp_node, "data-original", "false")
+        .map(|v| v == "true")
+        .unwrap_or(false);
 
     let mut base_code = String::new();
     if !use_better_footnotes {
@@ -66,8 +79,6 @@ fn parse_license_only(comp_node: &Bound<'_, PyAny>, use_better_footnotes: bool) 
     }
     base_code.push_str("]]\n=====\n");
 
-    let file_entries = comp_node.call_method1("select", (".file-entry",))?;
-    let total = file_entries.len().unwrap_or(0);
     let fields = [
         ("文件名", "file_name"),
         ("图像名", "img_name"),
@@ -79,43 +90,49 @@ fn parse_license_only(comp_node: &Bound<'_, PyAny>, use_better_footnotes: bool) 
     ];
 
     let mut files_code = String::new();
-    for (idx, entry_item) in file_entries.iter()?.enumerate() {
-        let entry = entry_item?;
-        let mut has_any_field = false;
-        let mut file_text = String::new();
-        let img_name_val = get_field_lic(&entry, "img_name")?;
-        let img_author_val = get_field_lic(&entry, "img_author")?;
+    if let Ok(file_entries) = comp_node.call_method1("select", (".file-entry",)) {
+        let total = file_entries.len().unwrap_or(0);
+        if let Ok(iter) = file_entries.iter() {
+            for (idx, entry_item) in iter.enumerate() {
+                let Ok(entry) = entry_item else {
+                    continue;
+                };
+            let mut has_any_field = false;
+            let mut file_text = String::new();
+            let img_name_val = get_field_lic(&entry, "img_name");
+            let img_author_val = get_field_lic(&entry, "img_author");
 
-        for (label, key) in fields {
-            let val = get_field_lic(&entry, key)?;
-            if val.is_empty() {
-                continue;
-            }
-            has_any_field = true;
-            let mut real_label = label.to_string();
-            if key == "img_author" && img_name_val.is_empty() && !img_author_val.is_empty() {
-                real_label = "作者".to_string();
+            for (label, key) in fields {
+                let val = get_field_lic(&entry, key);
+                if val.is_empty() {
+                    continue;
+                }
+                has_any_field = true;
+                let mut real_label = label.to_string();
+                if key == "img_author" && img_name_val.is_empty() && !img_author_val.is_empty() {
+                    real_label = "作者".to_string();
+                }
+                if real_label == "来源链接" {
+                    file_text.push_str(&format!("> {}：{}\n", real_label, val));
+                } else {
+                    file_text.push_str(&format!("> **{}：**{}\n", real_label, val));
+                }
             }
 
-            if real_label == "来源链接" {
-                file_text.push_str(&format!("> {}：{}\n", real_label, val));
-            } else {
-                file_text.push_str(&format!("> **{}：**{}\n", real_label, val));
-            }
-        }
-
-        if has_any_field {
-            files_code.push_str(&file_text);
-            if idx + 1 < total {
-                files_code.push('\n');
+                if has_any_field {
+                    files_code.push_str(&file_text);
+                    if idx + 1 < total {
+                        files_code.push('\n');
+                    }
+                }
             }
         }
     }
 
-    Ok(format!(
+    format!(
         "{}{}=====\n[[include :scp-wiki-cn:component:license-box-end]]\n",
         base_code, files_code
-    ))
+    )
 }
 
 fn extract_data(
@@ -131,7 +148,6 @@ fn extract_data(
         .getattr("handle_parse_node")?;
 
     let soup = beautiful_soup.call1((html, "html.parser"))?;
-
     let root_kwargs = PyDict::new_bound(py);
     root_kwargs.set_item("id", "editor-root")?;
     let root = soup.call_method("find", (), Some(&root_kwargs))?;
@@ -154,13 +170,18 @@ fn extract_data(
     let empty_state = PyDict::new_bound(py);
     let styles = soup.call_method1("find_all", ("style",))?;
     for style_item in styles.iter()? {
-        let style_tag = style_item?;
-        if get_attr_str(&style_tag, "data-no-hoist", "")? == "true" {
+        let style_tag: Bound<'_, PyAny> = match style_item {
+            Ok(x) => x,
+            Err(_) => continue,
+        };
+        if get_attr_str(&style_tag, "data-no-hoist", "").unwrap_or_default() == "true" {
             continue;
         }
-
-        let parsed = parse_node.call1((style_tag.clone(), empty_state.clone()))?;
-        let css_content = parsed.extract::<String>().unwrap_or_default().trim().to_string();
+        let parsed = parse_node
+            .call1((style_tag.clone(), empty_state.clone()))
+            .and_then(|x| x.extract::<String>())
+            .unwrap_or_default();
+        let css_content = parsed.trim().to_string();
         if !css_content.is_empty()
             && !seen_css_blocks.contains(&css_content)
             && !css_content.contains("[[module Rate]]")
@@ -169,7 +190,7 @@ fn extract_data(
             head_styles_code.push_str(&css_content);
             head_styles_code.push('\n');
         }
-        style_tag.call_method0("decompose")?;
+        let _ = style_tag.call_method0("decompose");
     }
 
     let rate_box = soup.call_method1("select_one", (".rate-module-box",))?;
@@ -177,9 +198,11 @@ fn extract_data(
     let mut rate_hidden = false;
     let mut rate_align = String::new();
     if has_rate_box {
-        rate_hidden = get_attr_str(&rate_box, "data-hidden", "false")? == "true";
-        rate_align = get_attr_str(&rate_box, "data-align", "")?;
-        rate_box.call_method0("decompose")?;
+        rate_hidden = get_attr_str(&rate_box, "data-hidden", "false")
+            .map(|v| v == "true")
+            .unwrap_or(false);
+        rate_align = get_attr_str(&rate_box, "data-align", "").unwrap_or_default();
+        let _ = rate_box.call_method0("decompose");
     }
 
     let parse_state = PyDict::new_bound(py);
@@ -193,44 +216,53 @@ fn extract_data(
         snapshot_bool(snapshot, "line_break_symbol_lock_on", false),
     )?;
 
+    let mut license_code = String::new();
     let attrs = PyDict::new_bound(py);
     attrs.set_item("data-type", "license")?;
     let license_kwargs = PyDict::new_bound(py);
     license_kwargs.set_item("attrs", attrs)?;
-    let license_comps = root.call_method("find_all", (), Some(&license_kwargs))?;
-    let mut license_code = String::new();
-    for comp_item in license_comps.iter()? {
-        let comp = comp_item?;
-        license_code.push_str(&parse_license_only(
-            &comp,
-            snapshot_bool(snapshot, "bf_on", false),
-        )?);
-        comp.call_method0("decompose")?;
+    if let Ok(license_comps) = root.call_method("find_all", (), Some(&license_kwargs)) {
+        for comp_item in license_comps.iter()? {
+            let comp: Bound<'_, PyAny> = match comp_item {
+                Ok(x) => x,
+                Err(_) => continue,
+            };
+            license_code.push_str(&parse_license_only(
+                &comp,
+                snapshot_bool(snapshot, "bf_on", false),
+            ));
+            let _ = comp.call_method0("decompose");
+        }
     }
 
     let contents = root.getattr("contents")?;
-    let mut body_parts: Vec<String> = Vec::new();
+    let mut body_parts = Vec::new();
     for item in contents.iter()? {
-        let c: Bound<'_, PyAny> = item?;
+        let c: Bound<'_, PyAny> = match item {
+            Ok(x) => x,
+            Err(_) => continue,
+        };
         if c.is_instance(&navigable_string)? {
-            let c_str = c.str()?.to_string_lossy().to_string();
-            if c_str.trim().is_empty() {
+            let raw = c.str()?.to_string_lossy().to_string();
+            if raw.trim().is_empty() {
                 continue;
             }
         }
 
         let mut parsed = parse_node
-            .call1((c.clone(), parse_state.clone()))?
-            .extract::<String>()?;
-        let name = match c.getattr("name") {
-            Ok(v) => v.extract::<String>().unwrap_or_default(),
-            Err(_) => String::new(),
-        };
+            .call1((c.clone(), parse_state.clone()))
+            .and_then(|x| x.extract::<String>())
+            .unwrap_or_else(|_| fallback_node_text(&c));
+        let name = c
+            .getattr("name")
+            .ok()
+            .and_then(|x| x.extract::<String>().ok())
+            .unwrap_or_default();
         if BLOCK_TAGS.contains(&name.as_str())
             && !parsed.starts_with('\n')
             && body_parts
                 .last()
-                .map(|s| !s.ends_with('\n'))
+                .map(|s: &String| !s.ends_with('\n'))
                 .unwrap_or(false)
         {
             parsed = format!("\n{}", parsed);
@@ -256,8 +288,7 @@ fn extract_data(
     })
 }
 
-#[pyfunction]
-pub fn export_html_to_wikidot(
+pub fn export_from_ast(
     py: Python<'_>,
     html: &str,
     snapshot: &Bound<'_, PyDict>,
@@ -267,26 +298,22 @@ pub fn export_html_to_wikidot(
         return Ok(String::new());
     }
 
-    let mut final_code = build_theme_and_rate(
+    let mut top = build_top_modules(
         snapshot,
         data.has_rate_box,
         data.rate_hidden,
         &data.rate_align,
         data.has_toc_anchor,
     );
-
-    let mut head_styles_code = data.head_styles_code;
-    if data.has_email_example {
-        let key = email_css_block().trim().to_string();
-        if !head_styles_code.contains(&key) {
-            head_styles_code.push_str(email_css_block());
-        }
+    let mut head_styles = data.head_styles_code;
+    if data.has_email_example && !head_styles.contains(email_css_block().trim()) {
+        head_styles.push_str(email_css_block());
     }
 
-    final_code.push_str(&cleanup_body(&data.raw_body));
+    top.push_str(&cleanup_body(&data.raw_body));
     Ok(finalize_output(
-        head_styles_code,
-        final_code,
+        head_styles,
+        top,
         &data.license_code,
         snapshot,
     ))

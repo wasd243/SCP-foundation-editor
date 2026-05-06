@@ -10,7 +10,7 @@ pub fn snapshot_bool(snapshot: &Bound<'_, PyDict>, key: &str, default: bool) -> 
         .unwrap_or(default)
 }
 
-pub fn build_theme_and_rate(
+pub fn build_top_modules(
     snapshot: &Bound<'_, PyDict>,
     has_rate_box: bool,
     rate_hidden: bool,
@@ -83,15 +83,14 @@ pub fn build_theme_and_rate(
         }
     }
 
-    let mut final_code = format!("{}{}", theme_code, rate_code);
+    let mut code = format!("{}{}", theme_code, rate_code);
     if snapshot_bool(snapshot, "bf_on", false) {
-        final_code.push_str("[[include :scp-wiki-cn:component:betterfootnotes]]\n");
+        code.push_str("[[include :scp-wiki-cn:component:betterfootnotes]]\n");
     }
-    if has_toc_anchor && !final_code.contains("[[toc]]") {
-        final_code.push_str("[[toc]]\n");
+    if has_toc_anchor && !code.contains("[[toc]]") {
+        code.push_str("[[toc]]\n");
     }
-
-    final_code
+    code
 }
 
 pub fn email_css_block() -> &'static str {
