@@ -3,4 +3,10 @@ name = "exporter_py"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+name = "exporter_py"
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
+pyo3 = { version = "0.22", features = ["extension-module"] }
+regex = "1.12.2"

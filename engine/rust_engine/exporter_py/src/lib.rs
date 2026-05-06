@@ -1,14 +1,14 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+#![allow(unsafe_op_in_unsafe_fn)]
+#![allow(clippy::useless_conversion)]
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+mod exporter;
+mod postprocess;
+mod theme;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+use pyo3::prelude::*;
+
+#[pymodule]
+fn exporter_py(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(exporter::export_html_to_wikidot, m)?)?;
+    Ok(())
 }

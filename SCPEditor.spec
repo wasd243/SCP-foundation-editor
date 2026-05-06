@@ -17,7 +17,7 @@ a = Analysis(
     pathex=['.'],
     binaries=[],
     datas=datas,
-    hiddenimports=hiddenimports + ['bs4', 'ftml_py'],
+    hiddenimports=hiddenimports + ['bs4', 'ftml_py', 'exporter_py'],
     excludes=['tkinter', 'matplotlib'],
 )
 
