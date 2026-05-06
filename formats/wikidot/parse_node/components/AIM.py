@@ -1,8 +1,19 @@
-try:
-    import parse_node_py
-    HAS_PARSE_NODE_RUST = True
-except ImportError:
-    HAS_PARSE_NODE_RUST = False
+from .utils import safe_get
+import parse_node_py
 
-if not HAS_PARSE_NODE_RUST:
-    print("[EXPORTER] 正向解析rust模块缺失，需检查parse_node_py / acs 生成模块 是否被正确导入")
+
+def parse_aim(node, state, handle_parse_node_func):
+    get_field = lambda d: safe_get(node, f'[data-field="{d}"]')
+    blocks = node.get('data-blocks', '')
+
+    return parse_node_py.parse_aim_component(
+        blocks,
+        get_field('xxxx'),
+        get_field('lv'),
+        get_field('cc'),
+        get_field('dc'),
+        get_field('site'),
+        get_field('dir'),
+        get_field('head'),
+        get_field('mtf'),
+    )
