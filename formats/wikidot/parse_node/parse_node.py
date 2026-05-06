@@ -2,9 +2,13 @@ import re
 from bs4 import BeautifulSoup, NavigableString
 
 from formats.wikidot.rgb.rgb_to_hex import handle_rgb_to_hex
+from components.table import parse_adv_table
+from components.table import parse_table
+
 
 def rgb_to_hex(rgb_str):
     return handle_rgb_to_hex(rgb_str)
+
 
 def handle_parse_node(node, state):
     """
@@ -15,6 +19,7 @@ def handle_parse_node(node, state):
     :param state: 解析状态字典，用于跨层级记录上下文传递 (例如是否在粗体/斜体内部、是否开启了特殊选项)
     :return: 转换后的 Wikidot 代码字符串
     """
+
     def safe_get(selector, attr='text'):
         el = node.select_one(selector)
         if not el: return ""
@@ -24,57 +29,17 @@ def handle_parse_node(node, state):
     if isinstance(node, NavigableString): return str(node).replace('\u200b', '')
 
     # --- Advanced Wikidot [[table]] export ---
-    if node.get('class') and 'wikidot-adv-table' in node.get('class', []):
-        tbl_style = node.get('data-wd-style', '')
-        tbl_style_part = f' style="{tbl_style}"' if tbl_style else ''
-        lines = [f'[[table{tbl_style_part}]]']
-        all_rows = []
-        for child in node.children:
-            if hasattr(child, 'name'):
-                if child.name == 'tr':
-                    all_rows.append(child)
-                elif child.name in ['tbody', 'thead', 'tfoot']:
-                    all_rows.extend(child.find_all('tr', recursive=False))
-        for tr in all_rows:
-            row_style = tr.get('data-wd-style', '')
-            row_style_part = f' style="{row_style}"' if row_style else ''
-            lines.append(f'[[row{row_style_part}]]')
-            for cell in tr.find_all(['td', 'th'], recursive=False):
-                cell_style = cell.get('data-wd-style', '')
-                cell_style_part = f' style="{cell_style}"' if cell_style else ''
-                inner = ''.join(handle_parse_node(c, state) for c in cell.contents).strip()
-                lines.append(f'[[cell{cell_style_part}]]')
-                if inner: lines.append(inner)
-                lines.append('[[/cell]]')
-            lines.append('[[/row]]')
-        lines.append('[[/table]]')
-        return '\n' + '\n'.join(lines) + '\n'
+    res = parse_adv_table(node, state, handle_parse_node)
+    if res is not None:
+        return res
 
-    if node.name == 'table':
-        lines = []
-        all_rows = []
-        for child in node.children:
-            if child.name == 'tr':
-                all_rows.append(child)
-            elif child.name in ['tbody', 'thead', 'tfoot']:
-                all_rows.extend(child.find_all('tr', recursive=False))
-
-        for tr in all_rows:
-            line_parts = []
-            for cell in tr.find_all(['td', 'th'], recursive=False):
-                colspan = int(cell.get('colspan', '1'))
-                prefix = "||" * colspan
-                content = "".join(handle_parse_node(c, state) for c in cell.contents).strip()
-                content = content.replace('\n', ' _\n')
-                if cell.name == 'th': prefix += "~ "
-                else: prefix += " "
-                line_parts.append(f"{prefix}{content}")
-            lines.append(" ".join(line_parts) + " ||")
-        return "\n" + "\n".join(lines) + "\n"
+    res = parse_table(node, state, handle_parse_node)
+    if res is not None:
+        return res
 
     if node.get('class') and 'scp-component' in node.get('class'):
         c_type = node.get('data-type')
-        
+
         # ==========================================
         # 🟢 本地自定义组件解析区 (SCP Component)
         # 将被包装过的块级自定义组件还原为它本身的 Wikidot 语法。
@@ -82,7 +47,7 @@ def handle_parse_node(node, state):
         # ==========================================
 
         from .components import COMPONENT_PARSERS
-        
+
         parser_func = COMPONENT_PARSERS.get(c_type)
         if parser_func:
             return parser_func(node, state, handle_parse_node)
@@ -113,19 +78,24 @@ def handle_parse_node(node, state):
                 return "\n" * count
             # 保留一个\n作为段落分隔，后面紧连(N-2)个@@@@
             return "\n" + ("@@@@\n" * (count - 2))
+
         content = re.sub(r'\n{2,}', expand_soft_breaks, content)
-        clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
-        if not clean: 
+        clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,',
+                                                                                                        '').strip()
+        if not clean:
             return "\n" if state.get('line_break_symbol_lock') else "\n@@@@\n"
-    
+
     if tag == 'br': return "\n"
     if tag == 'hr': return "\n------\n"
 
     style = node.get('style', '') if hasattr(node, 'get') else ''
     align_mark = ""
-    if 'text-align: right' in style or 'text-align:right' in style: align_mark = ">"
-    elif 'text-align: left' in style or 'text-align:left' in style: align_mark = "<"
-    elif 'text-align: center' in style or 'text-align:center' in style: align_mark = "="
+    if 'text-align: right' in style or 'text-align:right' in style:
+        align_mark = ">"
+    elif 'text-align: left' in style or 'text-align:left' in style:
+        align_mark = "<"
+    elif 'text-align: center' in style or 'text-align:center' in style:
+        align_mark = "="
 
     if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
         level = int(tag[1])
@@ -143,8 +113,10 @@ def handle_parse_node(node, state):
         return clear_title
 
     if tag == 'span' and 'custom-dash' in node.get('class', []):
-        try: count = int(node.get('data-count', '6'))
-        except ValueError: count = 6
+        try:
+            count = int(node.get('data-count', '6'))
+        except ValueError:
+            count = 6
         return f'@{"-" * count}@'
 
     if tag == 'span' and 'toc-anchor-marker' in node.get('class', []):
@@ -165,7 +137,7 @@ def handle_parse_node(node, state):
             res = f"###{color_val[1:]}|{res}##" if color_val.startswith('#') else f"##{color_val}|{res}##"
         size_match = re.search(r'font-size:\s*([^;]+)', style)
         # 字号处理
-        if size_match: 
+        if size_match:
             size_val = size_match.group(1).strip()
             # Wikidot 默认字体大小为 1em 或 medium，其他值都需要显式声明 [[size]] 标签
             default_sizes = ['medium', '1em', 'inherit', 'normal']
@@ -187,19 +159,19 @@ def handle_parse_node(node, state):
         if node.has_attr('color'): res = f"##{node['color']}|{res}##"
         return res
 
-    if tag == 'sup': 
+    if tag == 'sup':
         match = re.fullmatch(r'(\s*)(.*?)(\s*)', content, flags=re.DOTALL)
         if match and match.group(2): return f"{match.group(1)}^^{match.group(2)}^^{match.group(3)}"
         return content
-    if tag == 'sub': 
+    if tag == 'sub':
         match = re.fullmatch(r'(\s*)(.*?)(\s*)', content, flags=re.DOTALL)
         if match and match.group(2): return f"{match.group(1)},,{match.group(2)},,{match.group(3)}"
         return content
-    if tag == 'u': 
+    if tag == 'u':
         match = re.fullmatch(r'(\s*)(.*?)(\s*)', content, flags=re.DOTALL)
         if match and match.group(2): return f"{match.group(1)}__{match.group(2)}__{match.group(3)}"
         return content
-    if tag in ['s', 'strike', 'del']: 
+    if tag in ['s', 'strike', 'del']:
         match = re.fullmatch(r'(\s*)(.*?)(\s*)', content, flags=re.DOTALL)
         if match and match.group(2): return f"{match.group(1)}--{match.group(2)}--{match.group(3)}"
         return content
@@ -229,37 +201,44 @@ def handle_parse_node(node, state):
         # Build parameters for class and style
         params_list = []
         if node.has_attr('class'):
-            cls = " ".join(c for c in node['class'] if c not in ['scp-component', 'div-content', 'div-header', 'basalt-theme', 'bhl-theme', 'shivering-theme', 'raisa-box', 'class-warning-box', 'terminal-001-box', 'terminal-shortcut-box', 'o5-box', 'foundation-bg-box', 'page-note-box'])
-            if cls: params_list.append(f'class="{cls}"')
+            cls = " ".join(c for c in node['class'] if
+                           c not in ['scp-component', 'div-content', 'div-header', 'basalt-theme', 'bhl-theme',
+                                     'shivering-theme', 'raisa-box', 'class-warning-box', 'terminal-001-box',
+                                     'terminal-shortcut-box', 'o5-box', 'foundation-bg-box', 'page-note-box'])
+            if cls:
+                params_list.append(f'class="{cls}"')
             elif not node.has_attr('style'):
                 # If it only had excluded classes and no styling, return raw content
                 res = content
                 if align_mark: return f"[[{align_mark}]]\n{res.strip()}\n[[/{align_mark}]]\n"
                 # 修复：防止连续的基础 div 粘连在一起，为其补充换行符性质
                 return res + "\n" if not res.endswith("\n") else res
-                
+
         if node.has_attr('style') and node['style'].strip():
             # We must strip text-align out since align_mark will handle it
             style_clean = re.sub(r'text-align:\s*(center|left|right);?', '', node['style'])
             if style_clean.strip():
                 params_list.append(f'style="{style_clean.strip()}"')
-            
+
         if params_list:
             params_str = " ".join(params_list)
             res = f"[[div {params_str}]]\n{content}\n[[/div]]\n"
         else:
             # Fallback to pure text cleaning if no useful attributes
-            clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,', '').strip()
-            if not clean: 
+            clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,',
+                                                                                                            '').strip()
+            if not clean:
                 return "\n" if state.get('line_break_symbol_lock') else "\n@@@@\n"
+
             def expand_soft_breaks(match):
                 count = len(match.group(0))
                 if count <= 2 or state.get('line_break_symbol_lock'):
                     return "\n" * count
                 return "\n" + ("@@@@\n" * (count - 2))
+
             res = re.sub(r'\n{2,}', expand_soft_breaks, content) + "\n"
 
-        if align_mark: 
+        if align_mark:
             return f"[[{align_mark}]]\n{res.strip()}\n[[/{align_mark}]]\n"
         return res
 
@@ -274,5 +253,5 @@ def handle_parse_node(node, state):
     if tag == 'style':
         if not content.strip(): return ""
         return f"\n[[module CSS]]\n{content.strip()}\n[[/module]]\n"
-        
+
     return content
