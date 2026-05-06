@@ -111,8 +111,8 @@ fn flatten_nested_sizes(text: &str) -> String {
     let mut depth = 0usize;
 
     while i < text.len() {
-        if starts_with_ci(text, i, "[[size ") {
-            if let Some(close_rel) = text[i..].find("]]") {
+        if starts_with_ci(text, i, "[[size ")
+            && let Some(close_rel) = text[i..].find("]]") {
                 let end = i + close_rel + 2;
                 if depth == 0 {
                     out.push_str(&text[i..end]);
@@ -121,7 +121,6 @@ fn flatten_nested_sizes(text: &str) -> String {
                 i = end;
                 continue;
             }
-        }
         if starts_with_ci(text, i, "[[/size]]") {
             if depth > 1 {
                 depth -= 1;
