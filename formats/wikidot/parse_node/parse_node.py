@@ -179,11 +179,10 @@ def handle_parse_node(node, state):
                 # If it only had excluded classes and no styling, return raw content
                 res = content
                 if align_mark: return f"[[{align_mark}]]\n{res.strip()}\n[[/{align_mark}]]\n"
-                # 修复：防止连续的基础 div 粘连在一起，为其补充换行符性质
+                # 防止连续的基础 div 粘连在一起，为其补充换行符性质
                 return res + "\n" if not res.endswith("\n") else res
 
         if node.has_attr('style') and node['style'].strip():
-            # We must strip text-align out since align_mark will handle it
             style_clean = re.sub(r'text-align:\s*(center|left|right);?', '', node['style'])
             if style_clean.strip():
                 params_list.append(f'style="{style_clean.strip()}"')
@@ -191,20 +190,6 @@ def handle_parse_node(node, state):
         if params_list:
             params_str = " ".join(params_list)
             res = f"[[div {params_str}]]\n{content}\n[[/div]]\n"
-        else:
-            # Fallback to pure text cleaning if no useful attributes
-            clean = content.replace('**', '').replace('//', '').replace('__', '').replace('^^', '').replace(',,',
-                                                                                                            '').strip()
-            if not clean:
-                return "\n" if state.get('line_break_symbol_lock') else "\n@@@@\n"
-
-            def expand_soft_breaks(match):
-                count = len(match.group(0))
-                if count <= 2 or state.get('line_break_symbol_lock'):
-                    return "\n" * count
-                return "\n" + ("@@@@\n" * (count - 2))
-
-            res = re.sub(r'\n{2,}', expand_soft_breaks, content) + "\n"
 
         if align_mark:
             return f"[[{align_mark}]]\n{res.strip()}\n[[/{align_mark}]]\n"
@@ -213,8 +198,8 @@ def handle_parse_node(node, state):
     if tag in ['b', 'strong']: return f"**{content}**" if content.strip() else content
     if tag in ['i', 'em']: return f"//{content}//" if content.strip() else content
     if tag in ['tt', 'code']:
-        # 等宽字处理逻辑：恢复为 {{...}} 格式
-        # 等宽字安全逻辑：如果开启且包含中文，则跳过包裹
+        # 恢复为 {{...}} 格式
+        # 如果开启且包含中文，则跳过包裹
         if state.get('mono_security') and re.search(r'[\u4e00-\u9fa5]', content):
             return content
         return f"{{{{{content}}}}}" if content.strip() else content
