@@ -1,1 +1,0 @@
-//! This file is a placeholder file for future implementation of 2 kinds of image block

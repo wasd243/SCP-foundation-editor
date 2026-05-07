@@ -1,6 +1,0 @@
-PyQt6
-PyQt6-WebEngine
-requests
-beautifulsoup4
-
-pyqt6-sip
