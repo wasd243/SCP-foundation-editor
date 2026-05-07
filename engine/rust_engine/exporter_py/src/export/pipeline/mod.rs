@@ -254,19 +254,8 @@ fn parse_node_with_fallback(
         .and_then(|x| x.extract::<String>())
     {
         Ok(parsed) if !parsed.trim().is_empty() => (NodeSource::ParseNode, parsed),
-        Ok(_) | Err(_) => (NodeSource::FallbackText, to_safe_fallback_wikitext(fallback_node_text(node))),
+        Ok(_) | Err(_) => (NodeSource::FallbackText, fallback_node_text(node)),
     }
-}
-
-fn to_safe_fallback_wikitext(raw: String) -> String {
-    let trimmed = raw.trim();
-    if trimmed.is_empty() {
-        return String::new();
-    }
-    if trimmed.starts_with('<') && trimmed.ends_with('>') {
-        return format!("\n[[html]]\n{}\n[[/html]]\n", trimmed);
-    }
-    raw
 }
 
 fn classify_node_kind(tag_name: &str) -> BodyNodeKind {
