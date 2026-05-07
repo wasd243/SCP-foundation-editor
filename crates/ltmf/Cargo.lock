@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "proto"
+name = "ltmf"
 version = "0.1.0"
