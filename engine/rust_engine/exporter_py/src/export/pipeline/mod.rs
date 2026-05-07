@@ -1,4 +1,4 @@
-use crate::export::ast::ExportTree;
+use crate::export::ast::{BodyNodeKind, ExportTree, NodeSource, TopModuleKind};
 use pyo3::prelude::*;
 use pyo3::types::{PyAny, PyDict};
 use std::collections::HashSet;
@@ -33,8 +33,8 @@ fn build_top_modules(
     rate_hidden: bool,
     rate_align: &str,
     has_toc_anchor: bool,
-) -> Vec<String> {
-    let mut out = Vec::new();
+) -> Vec<(TopModuleKind, String)> {
+    let mut out: Vec<(TopModuleKind, String)> = Vec::new();
 
     if snapshot_bool(snapshot, "basalt_on", false) {
         let mut opts = Vec::new();
@@ -48,11 +48,14 @@ fn build_top_modules(
             opts.push("hidetitle=a");
         }
         if opts.is_empty() {
-            out.push("[[include :scp-wiki-cn:theme:basalt]]\n".to_string());
+            out.push((TopModuleKind::Theme, "[[include :scp-wiki-cn:theme:basalt]]\n".to_string()));
         } else {
-            out.push(format!(
-                "[[include :scp-wiki-cn:theme:basalt 版式设置|{}]]\n",
-                opts.join("|")
+            out.push((
+                TopModuleKind::Theme,
+                format!(
+                    "[[include :scp-wiki-cn:theme:basalt 版式设置|{}]]\n",
+                    opts.join("|")
+                ),
             ));
         }
     } else if snapshot_bool(snapshot, "shiver_on", false) {
@@ -69,42 +72,66 @@ fn build_top_modules(
         } else {
             ""
         };
-        out.push(format!(
-            "[[include :scp-wiki-cn:theme:shivering-night{}]]\n",
-            suffix
+        out.push((
+            TopModuleKind::Theme,
+            format!("[[include :scp-wiki-cn:theme:shivering-night{}]]\n", suffix),
         ));
     } else if snapshot_bool(snapshot, "bhl_on", false) {
-        out.push("[[include :scp-wiki-cn:theme:black-highlighter-theme]]\n".to_string());
+        out.push((
+            TopModuleKind::Theme,
+            "[[include :scp-wiki-cn:theme:black-highlighter-theme]]\n".to_string(),
+        ));
         if snapshot_bool(snapshot, "bhl_sidebar", false) {
-            out.push("[[include :scp-wiki:component:bhl-dark-sidebar]]\n".to_string());
+            out.push((
+                TopModuleKind::Theme,
+                "[[include :scp-wiki:component:bhl-dark-sidebar]]\n".to_string(),
+            ));
         }
         if snapshot_bool(snapshot, "bhl_coll", false) {
-            out.push("[[include :scp-wiki:component:collapsible-sidebar]]\n".to_string());
+            out.push((
+                TopModuleKind::Theme,
+                "[[include :scp-wiki:component:collapsible-sidebar]]\n".to_string(),
+            ));
         }
         if snapshot_bool(snapshot, "bhl_toggle", false) {
-            out.push("[[include :scp-wiki:component:toggle-sidebar-bhl]]\n".to_string());
+            out.push((
+                TopModuleKind::Theme,
+                "[[include :scp-wiki:component:toggle-sidebar-bhl]]\n".to_string(),
+            ));
         }
         if snapshot_bool(snapshot, "bhl_center", false) {
-            out.push("[[include :scp-wiki:component:centered-header-bhl]]\n".to_string());
+            out.push((
+                TopModuleKind::Theme,
+                "[[include :scp-wiki:component:centered-header-bhl]]\n".to_string(),
+            ));
         }
         if snapshot_bool(snapshot, "bhl_office", false) {
-            out.push("[[include :scp-wiki-cn:theme:scp-offices-theme]]\n".to_string());
+            out.push((
+                TopModuleKind::Theme,
+                "[[include :scp-wiki-cn:theme:scp-offices-theme]]\n".to_string(),
+            ));
         }
     }
 
     if has_rate_box && !rate_hidden {
-        out.push(match rate_align {
-            "left" => "[[<]]\n[[module Rate]]\n[[/<]]\n".to_string(),
-            "right" => "[[>]]\n[[module Rate]]\n[[/>]]\n".to_string(),
-            _ => "[[module Rate]]\n".to_string(),
-        });
+        out.push((
+            TopModuleKind::Rate,
+            match rate_align {
+                "left" => "[[<]]\n[[module Rate]]\n[[/<]]\n".to_string(),
+                "right" => "[[>]]\n[[module Rate]]\n[[/>]]\n".to_string(),
+                _ => "[[module Rate]]\n".to_string(),
+            },
+        ));
     }
 
     if snapshot_bool(snapshot, "bf_on", false) {
-        out.push("[[include :scp-wiki-cn:component:betterfootnotes]]\n".to_string());
+        out.push((
+            TopModuleKind::BetterFootnotes,
+            "[[include :scp-wiki-cn:component:betterfootnotes]]\n".to_string(),
+        ));
     }
     if has_toc_anchor {
-        out.push("[[toc]]\n".to_string());
+        out.push((TopModuleKind::Toc, "[[toc]]\n".to_string()));
     }
     out
 }
@@ -205,10 +232,57 @@ fn parse_license_only(comp_node: &Bound<'_, PyAny>, use_better_footnotes: bool) 
 }
 
 fn fallback_node_text(node: &Bound<'_, PyAny>) -> String {
-    node.call_method0("get_text")
+    let plain = node
+        .call_method0("get_text")
         .and_then(|x| x.extract::<String>())
-        .or_else(|_| node.str().map(|s| s.to_string_lossy().to_string()))
+        .unwrap_or_default();
+    if !plain.trim().is_empty() {
+        return plain;
+    }
+    node.str()
+        .map(|s| s.to_string_lossy().to_string())
         .unwrap_or_default()
+}
+
+fn parse_node_with_fallback(
+    parse_node: &Bound<'_, PyAny>,
+    node: &Bound<'_, PyAny>,
+    state: &Bound<'_, PyDict>,
+) -> (NodeSource, String) {
+    match parse_node
+        .call1((node.clone(), state.clone()))
+        .and_then(|x| x.extract::<String>())
+    {
+        Ok(parsed) if !parsed.trim().is_empty() => (NodeSource::ParseNode, parsed),
+        Ok(_) | Err(_) => (NodeSource::FallbackText, to_safe_fallback_wikitext(fallback_node_text(node))),
+    }
+}
+
+fn to_safe_fallback_wikitext(raw: String) -> String {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return String::new();
+    }
+    if trimmed.starts_with('<') && trimmed.ends_with('>') {
+        return format!("\n[[html]]\n{}\n[[/html]]\n", trimmed);
+    }
+    raw
+}
+
+fn classify_node_kind(tag_name: &str) -> BodyNodeKind {
+    match tag_name {
+        "div" | "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "ul" | "ol" | "blockquote"
+        | "table" => BodyNodeKind::Block {
+            tag: tag_name.to_string(),
+        },
+        "span" | "a" | "em" | "strong" | "b" | "i" | "u" | "sup" | "sub" | "code" => {
+            BodyNodeKind::Inline {
+                tag: tag_name.to_string(),
+            }
+        }
+        "" => BodyNodeKind::Text,
+        _ => BodyNodeKind::Unknown,
+    }
 }
 
 pub fn build_export_tree(
@@ -248,17 +322,14 @@ pub fn build_export_tree(
         if get_attr_str(&style_tag, "data-no-hoist", "") == "true" {
             continue;
         }
-        let parsed = parse_node
-            .call1((style_tag.clone(), empty_state.clone()))
-            .and_then(|x| x.extract::<String>())
-            .unwrap_or_default();
+        let (_source, parsed) = parse_node_with_fallback(&parse_node, &style_tag, &empty_state);
         let css_content = parsed.trim().to_string();
         if !css_content.is_empty()
             && !seen_css_blocks.contains(&css_content)
             && !css_content.contains("[[module Rate]]")
         {
             seen_css_blocks.insert(css_content.clone());
-            tree.head_styles.push(format!("{}\n", css_content));
+            tree.push_style(format!("{}\n", css_content));
         }
         let _ = style_tag.call_method0("decompose");
     }
@@ -273,13 +344,15 @@ pub fn build_export_tree(
         let _ = rate_box.call_method0("decompose");
     }
 
-    tree.top_modules = build_top_modules(
+    for (kind, wikidot) in build_top_modules(
         snapshot,
         has_rate_box,
         rate_hidden,
         &rate_align,
         html.contains("data-toc-anchor"),
-    );
+    ) {
+        tree.push_top_module(kind, wikidot);
+    }
 
     tree.has_email_example = !soup
         .call_method1("select_one", (".email-example-box",))?
@@ -296,7 +369,7 @@ pub fn build_export_tree(
                 Ok(x) => x,
                 Err(_) => continue,
             };
-            tree.license_blocks.push(parse_license_only(&comp, use_bf));
+            tree.push_license(parse_license_only(&comp, use_bf));
             let _ = comp.call_method0("decompose");
         }
     }
@@ -322,10 +395,7 @@ pub fn build_export_tree(
             }
         }
 
-        let mut parsed = parse_node
-            .call1((node.clone(), parse_state.clone()))
-            .and_then(|x| x.extract::<String>())
-            .unwrap_or_else(|_| fallback_node_text(&node));
+        let (source, mut parsed) = parse_node_with_fallback(&parse_node, &node, &parse_state);
 
         let tag_name = node
             .getattr("name")
@@ -334,16 +404,11 @@ pub fn build_export_tree(
             .unwrap_or_default();
         if BLOCK_TAGS.contains(&tag_name.as_str())
             && !parsed.starts_with('\n')
-            && tree
-                .body_text()
-                .chars()
-                .last()
-                .map(|c| c != '\n')
-                .unwrap_or(false)
+            && !tree.last_body_ends_with_newline()
         {
             parsed = format!("\n{}", parsed);
         }
-        tree.push_body(parsed);
+        tree.push_body(classify_node_kind(&tag_name), source, parsed);
     }
 
     Ok(tree)
@@ -371,9 +436,12 @@ pub fn build_fallback_tree(
     let mut tree = ExportTree {
         has_root: true,
         mono_security: snapshot_bool(snapshot, "mono_security_on", true),
-        top_modules: build_top_modules(snapshot, false, false, "", html.contains("data-toc-anchor")),
+        top_modules: Vec::new(),
         ..ExportTree::default()
     };
+    for (kind, wikidot) in build_top_modules(snapshot, false, false, "", html.contains("data-toc-anchor")) {
+        tree.push_top_module(kind, wikidot);
+    }
 
     let parse_state = PyDict::new_bound(py);
     parse_state.set_item("better_footnotes", snapshot_bool(snapshot, "bf_on", false))?;
@@ -389,11 +457,13 @@ pub fn build_fallback_tree(
             Ok(x) => x,
             Err(_) => continue,
         };
-        let parsed = parse_node
-            .call1((node.clone(), parse_state.clone()))
-            .and_then(|x| x.extract::<String>())
-            .unwrap_or_else(|_| fallback_node_text(&node));
-        tree.push_body(parsed);
+        let (source, parsed) = parse_node_with_fallback(&parse_node, &node, &parse_state);
+        let tag_name = node
+            .getattr("name")
+            .ok()
+            .and_then(|x| x.extract::<String>().ok())
+            .unwrap_or_default();
+        tree.push_body(classify_node_kind(&tag_name), source, parsed);
     }
 
     Ok(tree)

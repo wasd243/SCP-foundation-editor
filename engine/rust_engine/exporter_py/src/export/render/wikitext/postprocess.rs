@@ -1,51 +1,4 @@
-use crate::export::ast::ExportTree;
-use crate::export::render::Render;
 use std::collections::HashSet;
-
-#[derive(Debug, Default)]
-pub struct WikitextRender;
-
-impl Render for WikitextRender {
-    type Output = String;
-
-    fn render(&self, tree: &ExportTree) -> String {
-        if !tree.has_root {
-            return String::new();
-        }
-
-        let mut head_styles = tree.styles_text();
-        if tree.has_email_example && !head_styles.contains(email_css_block().trim()) {
-            head_styles.push_str(email_css_block());
-        }
-
-        let mut final_code = tree.top_text();
-        final_code.push_str(&cleanup_body(&tree.body_text()));
-        final_code.push_str(&tree.license_text());
-
-        if tree.mono_security {
-            final_code = remove_mono_chinese_braces(&final_code);
-        }
-
-        let mut combined = format!("{}{}", head_styles, final_code);
-        combined = dedup_css_modules(&combined);
-        compress_newlines(combined.trim())
-    }
-}
-
-fn email_css_block() -> &'static str {
-    "[[module CSS]]\n\
-.email-example .collapsible-block-folded a.collapsible-block-link {\n\
-    animation: blink 0.8s ease-in-out infinite alternate;\n\
-}\n\
-@keyframes blink {\n\
-    0% { color: transparent; }\n\
-    50%, 100% { color: #b01; }\n\
-}\n\
-.email {border: solid 2px #000000; width: 88%; padding: 1px 15px; margin: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.5)}\n\
-.email-example a.collapsible-block-link {font-weight: bold;}\n\
-.tofrom {margin-left: 10px; margin-top: 5px; padding: 1px 15px; border-left: solid 3px maroon}\n\
-[[/module]]\n"
-}
 
 fn find_ci(text: &str, needle: &str, start: usize) -> Option<usize> {
     if start >= text.len() {
@@ -57,7 +10,10 @@ fn find_ci(text: &str, needle: &str, start: usize) -> Option<usize> {
 }
 
 fn starts_with_ci(text: &str, index: usize, needle: &str) -> bool {
-    text.get(index..index + needle.len())
+    let Some(end) = index.checked_add(needle.len()) else {
+        return false;
+    };
+    text.get(index..end)
         .map(|s| s.eq_ignore_ascii_case(needle))
         .unwrap_or(false)
 }
@@ -306,7 +262,7 @@ fn contains_cjk(s: &str) -> bool {
     s.chars().any(|c| ('\u{4E00}'..='\u{9FA5}').contains(&c))
 }
 
-fn remove_mono_chinese_braces(text: &str) -> String {
+pub fn remove_mono_chinese_braces(text: &str) -> String {
     let mut out = String::new();
     let mut i = 0usize;
     while let Some(start_rel) = text[i..].find("{{") {
@@ -332,7 +288,7 @@ fn remove_mono_chinese_braces(text: &str) -> String {
     out
 }
 
-fn dedup_css_modules(text: &str) -> String {
+pub fn dedup_css_modules(text: &str) -> String {
     let mut out = String::new();
     let mut i = 0usize;
     let mut seen = HashSet::new();
@@ -366,7 +322,7 @@ fn dedup_css_modules(text: &str) -> String {
     out
 }
 
-fn compress_newlines(text: &str) -> String {
+pub fn compress_newlines(text: &str) -> String {
     let mut out = String::new();
     let mut nl = 0usize;
     for ch in text.chars() {
@@ -383,7 +339,7 @@ fn compress_newlines(text: &str) -> String {
     out
 }
 
-fn cleanup_body(raw_body: &str) -> String {
+pub fn cleanup_body(raw_body: &str) -> String {
     let mut body = raw_body.replace("\r\n", "\n").replace('\u{00A0}', " ");
     body = remove_toc_blocks(body);
     body = normalize_image_block_spacing(&body);
@@ -396,4 +352,30 @@ fn cleanup_body(raw_body: &str) -> String {
     body = flatten_nested_sizes(&body);
     body = merge_adjacent_size_blocks(&body);
     remove_empty_black_color_tags(&body)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn dedup_css_keeps_single_module() {
+        let input = "[[module CSS]]\na{b:c}\n[[/module]]\n[[module css]]\na{b:c}\n[[/module]]";
+        let out = dedup_css_modules(input);
+        assert_eq!(out.matches("[[module CSS]]").count(), 1);
+    }
+
+    #[test]
+    fn cleanup_body_is_idempotent_for_common_cases() {
+        let input = "[[toc]]\n\n[[<]]x[[/<]]\n@@@@\n\n@@@@\n";
+        let once = cleanup_body(input);
+        let twice = cleanup_body(&once);
+        assert_eq!(once, twice);
+    }
+
+    #[test]
+    fn remove_mono_keeps_non_cjk() {
+        let input = "hello {{world}}";
+        assert_eq!(remove_mono_chinese_braces(input), input);
+    }
 }
