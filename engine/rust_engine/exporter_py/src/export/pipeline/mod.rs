@@ -232,16 +232,24 @@ fn parse_license_only(comp_node: &Bound<'_, PyAny>, use_better_footnotes: bool) 
 }
 
 fn fallback_node_text(node: &Bound<'_, PyAny>) -> String {
-    let plain = node
+    node
         .call_method0("get_text")
         .and_then(|x| x.extract::<String>())
-        .unwrap_or_default();
-    if !plain.trim().is_empty() {
-        return plain;
-    }
-    node.str()
-        .map(|s| s.to_string_lossy().to_string())
         .unwrap_or_default()
+}
+
+fn node_log_label(node: &Bound<'_, PyAny>) -> String {
+    let tag = node
+        .getattr("name")
+        .ok()
+        .and_then(|x| x.extract::<String>().ok())
+        .unwrap_or_default();
+    let id = get_attr_str(node, "id", "");
+    if id.is_empty() {
+        format!("<{}>", tag)
+    } else {
+        format!("<{} id=\"{}\">", tag, id)
+    }
 }
 
 fn parse_node_with_fallback(
@@ -254,7 +262,38 @@ fn parse_node_with_fallback(
         .and_then(|x| x.extract::<String>())
     {
         Ok(parsed) if !parsed.trim().is_empty() => (NodeSource::ParseNode, parsed),
-        Ok(_) | Err(_) => (NodeSource::FallbackText, fallback_node_text(node)),
+        Ok(_) => {
+            let fallback = fallback_node_text(node);
+            if fallback.trim().is_empty() {
+                eprintln!(
+                    "[exporter_py] dropped empty parse fallback for node {}",
+                    node_log_label(node)
+                );
+            } else {
+                eprintln!(
+                    "[exporter_py] parse fallback used text for node {}",
+                    node_log_label(node)
+                );
+            }
+            (NodeSource::FallbackText, fallback)
+        }
+        Err(err) => {
+            let fallback = fallback_node_text(node);
+            if fallback.trim().is_empty() {
+                eprintln!(
+                    "[exporter_py] parse failed and fallback empty for node {}: {}",
+                    node_log_label(node),
+                    err
+                );
+            } else {
+                eprintln!(
+                    "[exporter_py] parse failed, fallback used text for node {}: {}",
+                    node_log_label(node),
+                    err
+                );
+            }
+            (NodeSource::FallbackText, fallback)
+        }
     }
 }
 
