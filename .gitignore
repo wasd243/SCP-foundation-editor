@@ -17,7 +17,7 @@ node_modules/
 
 # packages
 package-lock.json
-package.json
+.gitnexus/
 
 # IDE
 .vscode/
@@ -38,14 +38,15 @@ ftml
 
 # Rust
 target/
-Cargo.lock
 
 # git
 .git/
 
 # Windows
 Thumbs.db
+
 # MacOS
 .DS_Store
+
 # aiderchat
 .aider*

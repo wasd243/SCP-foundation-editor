@@ -38,6 +38,7 @@ fn render_wikidot_to_html(source_text: &str) -> PyResult<String> {
     use ftml::render::Render;
     let renderer = ftml::render::html::HtmlRender;
     let html_output = renderer.render(&tree, &page_info, &settings);
+    // println!("{:?}", html_output);
 
     // 8. 返回
     Ok(html_output.body.to_string())

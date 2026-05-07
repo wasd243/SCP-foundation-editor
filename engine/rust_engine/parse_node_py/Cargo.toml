@@ -1,0 +1,12 @@
+[package]
+name = "parse_node_py"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "parse_node_py"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+html-escape = "0.2.13"
+pyo3 = { version = "0.22", features = ["extension-module"] }

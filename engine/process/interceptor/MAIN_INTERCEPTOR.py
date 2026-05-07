@@ -57,6 +57,8 @@ class ComponentInterceptor:
         processed_text = process_footnotes(processed_text, self.store)
 
         # 3. 授权引用
+        # 本质上也是一个include
+        # 这里已经写好了授权引用的 WYSIWYG 没有必要再使用ftml的了
         processed_text = process_license(processed_text, self.store)
 
         # 4. ACS 异常分级
@@ -71,23 +73,28 @@ class ComponentInterceptor:
         # 7. Tabview
         processed_text = process_tabview(processed_text, self.store, inner_parser_cb, theme_type)
 
-        # 8. 用户信息 (User) 
+        # 8. 用户信息 (User)
+        # 这个会触发 fallback 等待 ftml 更新后考虑
         processed_text = process_user(processed_text, self.store)
 
-        # 8-B. 登入登出 (Fakeprot) 
+        # 8-B. 登入登出 (Fakeprot)
+        # 本质上是一个折叠块，理由和折叠块一样
+        # 在解析模式下的pyftml解析登入登出模块有时会出现问题
         processed_text = process_fakeprot(processed_text, self.store, inner_parser_cb, theme_type)
 
         # 9. 折叠块 (Collapsible) - 拦截解析，生成交互式 UI 外壳
+        # ⚠注意：这里的折叠快虽然可以正常渲染但便于 WYSIWYG 注入所以拦截了
         processed_text = process_collapsible(processed_text, self.store, inner_parser_cb, theme_type)
 
         # 10. 玄武岩专用代码 拦截与解析（非玄武岩 div 交由 ftml 原生处理）
+        # 本质上是一个需要include调用的版式里专用的div
         if theme_type == 'basalt' or 'theme:basalt' in text.lower():
             processed_text = process_basalt_divs(processed_text, self.store, inner_parser_cb, theme_type)
 
         # 11. TOC 模块拦截
         processed_text = process_toc(processed_text, self.store, inner_parser_cb, theme_type)
 
-        # 11. CSS 拦截与注入 - 暂时交给 ftml 原生解析，不注入 UUID
+        # 11. CSS 拦截与注入 - 交给 ftml 原生解析，不注入 UUID
         def css_replacer(match):
             pass
         # 跳过正则表达式替换，保留原样

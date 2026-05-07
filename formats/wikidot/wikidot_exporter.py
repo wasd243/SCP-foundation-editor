@@ -7,16 +7,12 @@ def rgb_to_hex(rgb_str):
     """ turn rgb color into format like #000000"""
     return handle_rgb_to_hex(rgb_str)
 
-try:
-    # import parse_node
-    from formats.wikidot.parse_node.parse_node import handle_parse_node
-    def parse_node(node, state):
-        """ parse node into wikidot code"""
-        return handle_parse_node(node, state)
-except ImportError:
-    def parse_node(node, state):
-        """ parse node into wikidot code"""
-        return ""
+from formats.wikidot.parse_node.parse_node import handle_parse_node
+
+
+def parse_node(node, state):
+    """ parse node into wikidot code"""
+    return handle_parse_node(node, state)
 
 def export_html_to_wikidot(html: str, snapshot: dict) -> str:
     """
