@@ -47,3 +47,6 @@ Thumbs.db
 v2.1.0/
 
 targets/
+
+# AI
+.junie/

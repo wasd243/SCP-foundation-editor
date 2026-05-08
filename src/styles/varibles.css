@@ -1,4 +1,6 @@
 :root {
+    --basic-btn-height: 57px;
+
     --color-word-blue: #185abd;
     --color-word-blue-dark: #0f3f8f;
     --color-word-blue-light: #eaf2ff;

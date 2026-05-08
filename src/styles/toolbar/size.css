@@ -1,0 +1,35 @@
+.format-size-button {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid transparent;
+    background: transparent;
+    color: #1f2937;
+
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+
+    top: calc(var(--basic-btn-height) - 50px);
+}
+
+
+.format-size-button:hover {
+    background: #e7edf7;
+    border-color: #b8c7e0;
+}
+
+.format-size-button:active {
+    background: #dbe8ff;
+    border-color: #8aaee8;
+}
+
+.format-size-button.larger {
+    width: 48px;
+    height: 48px;
+    font-weight: bold;
+    font-size: 24px !important;
+    left: 113px;
+}

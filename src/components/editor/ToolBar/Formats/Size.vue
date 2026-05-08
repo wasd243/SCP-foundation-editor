@@ -1,15 +1,7 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Size"
-})
+<script setup lang="ts">
+import Larger from "./Size/Larger.vue";
 </script>
 
 <template>
-
+  <Larger/>
 </template>
-
-<style scoped>
-
-</style>
