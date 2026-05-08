@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 import TopBarHome from "./TopBar/Home.vue";
 import Insert from "./TopBar/Insert.vue";
+import Ribbon from "./TopBar/Ribbon.vue";
 import Settings from "./TopBar/Settings.vue";
 
 type Tab = "home" | "insert" | "settings";
@@ -11,14 +12,22 @@ const activeTab = ref<Tab>("home");
 </script>
 
 <template>
-  <nav class="top-bar" aria-label="Editor sections">
-    <TopBarHome :active="activeTab === 'home'" @select="activeTab = 'home'" />
-    <Insert :active="activeTab === 'insert'" @select="activeTab = 'insert'" />
-    <Settings :active="activeTab === 'settings'" @select="activeTab = 'settings'" />
-  </nav>
+  <header class="editor-top">
+    <nav class="top-bar" aria-label="Editor sections">
+      <TopBarHome :active="activeTab === 'home'" @select="activeTab = 'home'" />
+      <Insert :active="activeTab === 'insert'" @select="activeTab = 'insert'" />
+      <Settings :active="activeTab === 'settings'" @select="activeTab = 'settings'" />
+    </nav>
+
+    <Ribbon :active-tab="activeTab" />
+  </header>
 </template>
 
 <style scoped>
+.editor-top {
+  width: 100%;
+}
+
 .top-bar {
   height: var(--topbar-height);
   display: flex;

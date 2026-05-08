@@ -1,0 +1,97 @@
+:root {
+    --ribbon-bg: #f5f6f8;
+    --ribbon-border: #d6d9de;
+    --ribbon-height: 104px;
+}
+
+.ribbon-page {
+    height: var(--ribbon-height);
+    width: 100%;
+
+    background: var(--ribbon-bg);
+    border-bottom: 1px solid var(--ribbon-border);
+}
+
+.ribbon-layout {
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px 12px 6px;
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+
+.ribbon-group {
+    min-width: 116px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 10px;
+    border-right: 1px solid var(--group-border);
+}
+
+.ribbon-group:first-child {
+    padding-left: 0;
+}
+
+.ribbon-tools {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.ribbon-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(54px, 1fr));
+    gap: 6px;
+}
+
+.ribbon-command {
+    min-width: 54px;
+    min-height: 28px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-main);
+    font: 500 12px var(--font-ui), sans-serif;
+    cursor: pointer;
+}
+
+.ribbon-command:hover {
+    background: var(--button-hover);
+    border-color: var(--color-border);
+}
+
+.ribbon-command:active {
+    background: var(--button-active);
+}
+
+.ribbon-command-large {
+    width: 64px;
+    height: 58px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.ribbon-icon {
+    min-width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--color-bg-surface);
+    color: var(--color-word-blue);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.ribbon-group-label {
+    color: #5f6b7a;
+    font: 500 11px var(--font-ui), sans-serif;
+    text-align: center;
+}
