@@ -8,35 +8,36 @@
 
 <style scoped>
 .top-bar {
-  height: 44px;
+  height: var(--topbar-height);
   display: flex;
   align-items: end;
   gap: 4px;
   padding: 0 12px;
-  background: #f3f6fb;
-  border-bottom: 1px solid #c8d3e6;
+
+  background: var(--color-word-blue);
+  border-bottom: 1px solid var(--color-word-blue-dark);
+  font-family: var(--font-ui),sans-serif;
 }
 
 .top-tab {
-  height: 36px;
+  height: var(--tab-height);
   padding: 0 18px;
+
   border: 0;
-  border-radius: 6px 6px 0 0;
+
   background: transparent;
-  color: #1f3b63;
-  font-size: 14px;
+  color: var(--color-text-on-blue);
+
   font-weight: 600;
   cursor: pointer;
 }
 
 .top-tab:hover {
-  background: #e5eefc;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .top-tab.active {
-  background: #ffffff;
-  color: #0f4c9c;
-  border: 1px solid #c8d3e6;
-  border-bottom-color: #ffffff;
+  background: var(--color-bg-surface);
+  color: var(--color-word-blue);
 }
 </style>
