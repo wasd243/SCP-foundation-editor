@@ -18,6 +18,10 @@
     --ribbon-bg: #f3f4f6;
     --ribbon-border: #d6d9de;
     --ribbon-separator: #6C6B6BFF;
+    --ribbon-dropdown-bg: #ffffff;
+    --ribbon-dropdown-border: #bfc6d1;
+    --ribbon-dropdown-hover: #e7edf7;
+    --ribbon-dropdown-radius: 1px;
 
     --group-border: #d8dce2;
 
