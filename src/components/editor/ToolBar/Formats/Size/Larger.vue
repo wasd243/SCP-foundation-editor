@@ -2,12 +2,12 @@
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-name: "Larger"
+  name: "Larger"
 })
 </script>
 
 <template>
-  $END$
+
 </template>
 
 <style scoped>
