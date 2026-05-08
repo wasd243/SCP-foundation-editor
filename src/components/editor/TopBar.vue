@@ -1,14 +1,20 @@
 <script setup lang="ts">
+import { ref } from "vue";
+
 import TopBarHome from "./TopBar/Home.vue";
 import Insert from "./TopBar/Insert.vue";
 import Settings from "./TopBar/Settings.vue";
+
+type Tab = "home" | "insert" | "settings";
+
+const activeTab = ref<Tab>("home");
 </script>
 
 <template>
   <nav class="top-bar" aria-label="Editor sections">
-    <TopBarHome/>
-    <Insert/>
-    <Settings/>
+    <TopBarHome :active="activeTab === 'home'" @select="activeTab = 'home'" />
+    <Insert :active="activeTab === 'insert'" @select="activeTab = 'insert'" />
+    <Settings :active="activeTab === 'settings'" @select="activeTab = 'settings'" />
   </nav>
 </template>
 

@@ -1,3 +1,10 @@
+<script setup lang="ts">
+defineProps<{ active: boolean }>();
+defineEmits<{ select: [] }>();
+</script>
+
 <template>
-  <button class="top-tab">Insert</button>
+  <button class="top-tab" :class="{ active }" @click="$emit('select')">
+    Insert
+  </button>
 </template>
