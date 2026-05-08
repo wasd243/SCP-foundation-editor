@@ -1,17 +1,11 @@
-import { invoke } from '@tauri-apps/api/core';
+export type FormatCommand = "bold" | "italic" | "underline" | "strike";
 
-export const api = {
-    /**
-     * front -> Rust -> ltmf -> Wikidot
-     */
-    convertToWikidot: async (nodes: any[]): Promise<string> => {
-        return await invoke('export_wikidot', { elements: nodes });
-    },
+export async function runFormatCommand(command: FormatCommand): Promise<void> {
+    console.log("[format command]", command);
 
-    /**
-     * Wikidot -> HTML
-     */
-    parseToHtml: async (source: string): Promise<string> => {
-        return await invoke('wikidot_to_html', { source });
-    }
-};
+    // 以后这里接 TipTap：
+    // editor.chain().focus().toggleBold().run()
+
+    // 或者接 Tauri/Rust：
+    // await invoke("run_format_command", { command });
+}

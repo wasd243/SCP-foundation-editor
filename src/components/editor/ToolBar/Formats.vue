@@ -1,15 +1,7 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Formats"
-})
+<script setup lang="ts">
+import Basic from "./Formats/Basic.vue";
 </script>
 
 <template>
-
+  <Basic/>
 </template>
-
-<style scoped>
-
-</style>

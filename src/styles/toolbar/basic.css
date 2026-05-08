@@ -1,0 +1,56 @@
+:root {
+    --basic-btn-height: 57px;
+}
+
+.format-basic-button {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid transparent;
+    background: transparent;
+    color: #1f2937;
+
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+
+    top: var( --basic-btn-height);
+}
+
+.format-basic-button:hover {
+    background: #e7edf7;
+    border-color: #b8c7e0;
+}
+
+.format-basic-button:active {
+    background: #dbe8ff;
+    border-color: #8aaee8;
+}
+
+.format-basic-button.bold {
+    font-weight: bold;
+    left: 90px;
+}
+
+.format-basic-button.italic {
+    font-style: italic;
+    font-weight: bold;
+    left: 95px;
+}
+
+.format-basic-button.underline {
+    font-weight: bold;
+    left: 100px;
+    text-decoration: underline;
+}
+
+.format-basic-button.strikethrough {
+    font-weight: bold;
+    left: 105px;
+    text-decoration: line-through;
+}
