@@ -8,7 +8,6 @@
     background: transparent;
     color: #1f2937;
 
-    font-size: 14px;
     line-height: 1;
     cursor: pointer;
 
@@ -30,6 +29,6 @@
     width: 48px;
     height: 48px;
     font-weight: bold;
-    font-size: 24px !important;
+    font-size: 24px;
     left: 113px;
 }
