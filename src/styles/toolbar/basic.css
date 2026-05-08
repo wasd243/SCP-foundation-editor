@@ -54,3 +54,13 @@
     left: 105px;
     text-decoration: line-through;
 }
+
+.format-basic-button.sub-s {
+    font-weight: bold;
+    left: 110px;
+}
+
+.format-basic-button.sup-s {
+    font-weight: bold;
+    left: 115px;
+}

@@ -3,6 +3,8 @@ import Bold from "./Basic/Bold.vue";
 import Italic from "./Basic/Italic.vue";
 import Underline from "./Basic/Underline.vue";
 import Strikethrough from "./Basic/Strikethrough.vue";
+import Sub from "./Basic/Sub.vue";
+import Sup from "./Basic/Sup.vue";
 </script>
 
 <template>
@@ -10,4 +12,6 @@ import Strikethrough from "./Basic/Strikethrough.vue";
   <Italic/>
   <Underline/>
   <Strikethrough/>
+  <Sub/>
+  <Sup/>
 </template>
