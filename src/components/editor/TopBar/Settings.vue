@@ -1,15 +1,3 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Settings"
-})
-</script>
-
 <template>
-
+  <button class="top-tab">Settings</button>
 </template>
-
-<style scoped>
-
-</style>

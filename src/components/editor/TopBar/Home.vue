@@ -1,15 +1,3 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Home"
-})
-</script>
-
 <template>
-
+  <button class="top-tab active">Home</button>
 </template>
-
-<style scoped>
-
-</style>

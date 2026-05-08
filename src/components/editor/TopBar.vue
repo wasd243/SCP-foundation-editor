@@ -1,8 +1,14 @@
+<script setup lang="ts">
+import TopBarHome from "./TopBar/Home.vue";
+import Insert from "./TopBar/Insert.vue";
+import Settings from "./TopBar/Settings.vue";
+</script>
+
 <template>
   <nav class="top-bar" aria-label="Editor sections">
-    <button class="top-tab active">Home</button>
-    <button class="top-tab">Insert</button>
-    <button class="top-tab">Settings</button>
+    <TopBarHome/>
+    <Insert/>
+    <Settings/>
   </nav>
 </template>
 
