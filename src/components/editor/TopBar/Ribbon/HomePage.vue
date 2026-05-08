@@ -4,5 +4,6 @@ import Formats from "../../ToolBar/Formats.vue";
 <template>
   <div class="ribbon-layout" data-ribbon-page="home">
     <Formats/>
+    <div class="ribbon-separator"></div>
   </div>
 </template>

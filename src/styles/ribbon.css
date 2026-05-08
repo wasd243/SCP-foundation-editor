@@ -95,3 +95,14 @@
     font: 500 11px var(--font-ui), sans-serif;
     text-align: center;
 }
+
+.ribbon-separator {
+    width: 1px;
+    height: 70px;
+    position: absolute;
+    top: 60px;
+    left: 93px;
+    background: var(--ribbon-separator);
+
+    flex-shrink: 0;
+}
