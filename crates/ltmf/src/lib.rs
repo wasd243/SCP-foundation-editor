@@ -40,7 +40,7 @@ fn container_to_string(c: &Container) -> String {
 
         // 特殊处理 [[div]]
         ContainerType::Div { attributes } => {
-            // 这里以后可以根据 attributes 解析 class 和 style
+            // 这里以后可以根据 attributes 解析 class 和 styles
             format!("[[div]]\n{}\n[[/div]]", inner)
         },
 

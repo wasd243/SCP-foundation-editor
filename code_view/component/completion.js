@@ -42,7 +42,7 @@ export const wikidotCompletionSource = (context) => {
             options: [
                 { label: "<div>", type: "keyword", apply: "<div>\n\n</div>", detail: "块级元素" },
                 { label: "<span>", type: "keyword", apply: "<span></span>", detail: "行内元素" },
-                { label: "<style>", type: "keyword", apply: "<style>\n\n</style>", detail: "样式表" },
+                { label: "<styles>", type: "keyword", apply: "<styles>\n\n</styles>", detail: "样式表" },
                 { label: "class", type: "property", apply: "class=\"\"", detail: "类名" },
             ],
             filter: true
