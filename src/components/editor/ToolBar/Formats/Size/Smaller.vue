@@ -1,15 +1,5 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Smaller"
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-
+  <button class="format-size-button smaller">A˅</button>
 </template>
-
-<style scoped>
-
-</style>

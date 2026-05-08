@@ -12,10 +12,11 @@
     color: #1f2937;
 
     font-size: 16px;
+    font-weight: bold;
     line-height: 1;
     cursor: pointer;
 
-    top: var( --basic-btn-height);
+    top: var(--basic-btn-height);
 }
 
 .format-basic-button:hover {
@@ -29,34 +30,28 @@
 }
 
 .format-basic-button.bold {
-    font-weight: bold;
     left: 90px;
 }
 
 .format-basic-button.italic {
     font-style: italic;
-    font-weight: bold;
     left: 95px;
 }
 
 .format-basic-button.underline {
-    font-weight: bold;
     left: 100px;
     text-decoration: underline;
 }
 
 .format-basic-button.strikethrough {
-    font-weight: bold;
     left: 105px;
     text-decoration: line-through;
 }
 
 .format-basic-button.sub-s {
-    font-weight: bold;
     left: 110px;
 }
 
 .format-basic-button.sup-s {
-    font-weight: bold;
     left: 115px;
 }

@@ -3,6 +3,7 @@
     position: relative;
     align-items: center;
     justify-content: center;
+    font-weight: bold;
 
     border: 1px solid transparent;
     background: transparent;
@@ -11,7 +12,7 @@
     line-height: 1;
     cursor: pointer;
 
-    top: calc(var(--basic-btn-height) - 50px);
+
 }
 
 
@@ -28,7 +29,15 @@
 .format-size-button.larger {
     width: 48px;
     height: 48px;
-    font-weight: bold;
     font-size: 24px;
     left: 113px;
+    top: calc(var(--basic-btn-height) - 50px);
+}
+
+.format-size-button.smaller {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    left: 115px;
+    top: calc(var(--basic-btn-height) - 40px);
 }
