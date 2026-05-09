@@ -9,4 +9,5 @@ export function setEditorAlign(align: EditorTextAlign) {
         .run();
 }
 
+// Empty function for future Tauri/Rust integration
 export function btnAlignIdleInterface() {}
