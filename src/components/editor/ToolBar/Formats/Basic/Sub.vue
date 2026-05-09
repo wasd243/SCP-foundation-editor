@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const emit = defineEmits<{
+  toggle: [];
+}>();
+</script>
 
 <template>
-  <button class="format-basic-button sub-s">X₂</button>
+  <button class="format-basic-button sub-s" type="button" @click="emit('toggle')">X₂</button>
 </template>
