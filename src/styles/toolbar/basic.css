@@ -55,3 +55,8 @@
 .format-basic-button.sup-s {
     left: 115px;
 }
+
+.format-basic-button.quote {
+    left: 125px;
+    border: 1px dashed #666;
+}
