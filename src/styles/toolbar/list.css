@@ -5,6 +5,6 @@
 }
 
 .format-basic-button.list-ul {
-    left: 190px;
+    left: 186px;
     top: calc(var(--basic-btn-height) - 40px);
 }
