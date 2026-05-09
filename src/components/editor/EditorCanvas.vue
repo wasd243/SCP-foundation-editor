@@ -1,6 +1,24 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 import { editorExtensions, setEditor } from "../../stores/editor.ts";
+import ContextMenu from "./ContextMenu.vue";
+
+const contextMenuVisible = ref(false);
+const contextMenuX = ref(0);
+const contextMenuY = ref(0);
+
+function handleContextMenu(event: MouseEvent) {
+  event.preventDefault();
+
+  contextMenuX.value = event.clientX;
+  contextMenuY.value = event.clientY;
+  contextMenuVisible.value = true;
+}
+
+function closeContextMenu() {
+  contextMenuVisible.value = false;
+}
 
 const editor = useEditor({
   extensions: editorExtensions,
@@ -32,8 +50,18 @@ const editor = useEditor({
 </script>
 
 <template>
-  <main class="editor-canvas editor-theme-default">
+  <main
+      class="editor-canvas editor-theme-default"
+      @contextmenu="handleContextMenu"
+      @click="closeContextMenu"
+  >
     <EditorContent :editor="editor" />
+
+    <ContextMenu
+        v-if="contextMenuVisible"
+        :x="contextMenuX"
+        :y="contextMenuY"
+    />
   </main>
 </template>
 

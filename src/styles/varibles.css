@@ -12,6 +12,20 @@
     --color-text-main: #1f2937;
     --color-text-on-blue: #ffffff;
 
+    /* ---Context Menu--- */
+    --context-menu-bg: #ffffff;
+    --context-menu-border: #c8cdd6;
+    --context-menu-shadow: rgba(0, 0, 0, 0.18);
+
+    --context-menu-text: #1f2937;
+    --context-menu-muted: #7a8492;
+
+    --context-menu-hover: #e7edf7;
+    --context-menu-active: #dbe8ff;
+
+    --context-menu-radius: 2px;
+    /* ---Context Menu--- */
+
     --topbar-height: 44px;
     --tab-height: 36px;
 

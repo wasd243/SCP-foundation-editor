@@ -1,0 +1,69 @@
+/* Default Context Menu */
+
+.editor-context-menu {
+    position: fixed;
+    z-index: 9999;
+
+    min-width: 176px;
+    padding: 4px 0;
+
+    background: var(--context-menu-bg);
+    border: 1px solid var(--context-menu-border);
+    border-radius: var(--context-menu-radius);
+    box-shadow: 0 4px 14px var(--context-menu-shadow);
+
+    font-family: var(--font-ui), sans-serif;
+    font-size: 13px;
+    color: var(--context-menu-text);
+
+    user-select: none;
+}
+
+.context-menu-item {
+    height: 30px;
+    padding: 0 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    background: transparent;
+    border: none;
+
+    width: 100%;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.context-menu-item:hover {
+    background: var(--context-menu-hover);
+}
+
+.context-menu-item:active {
+    background: var(--context-menu-active);
+}
+
+.context-menu-item.disabled {
+    color: var(--context-menu-muted);
+    cursor: default;
+}
+
+.context-menu-item.disabled:hover {
+    background: transparent;
+}
+
+.context-menu-shortcut {
+    color: var(--context-menu-muted);
+    font-size: 12px;
+}
+
+.context-menu-separator {
+    height: 1px;
+    margin: 4px 0;
+
+    background: #e1e4ea;
+}

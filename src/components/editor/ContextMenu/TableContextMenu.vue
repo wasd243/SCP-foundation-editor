@@ -1,15 +1,3 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
+<script setup lang="ts"></script>
 
-export default defineComponent({
-  name: "TableContextMenu"
-})
-</script>
-
-<template>
-
-</template>
-
-<style scoped>
-
-</style>
+<template></template>
