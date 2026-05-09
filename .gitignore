@@ -18,6 +18,7 @@ node_modules/
 # packages
 package-lock.json
 .gitnexus/
+ftml/
 
 # IDE
 .vscode/
