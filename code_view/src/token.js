@@ -1,7 +1,7 @@
 import { ExternalTokenizer } from "@lezer/lr"
 import * as Terms from "./parser.terms.js"
 
-// 1. 定义 Term 映射，方便维护
+// 1. Define Term mapping for easier maintenance
 const { 
   StrongText, 
   EmText, 
@@ -13,7 +13,7 @@ const {
   Hr 
 } = Terms
 
-// 2. 字符常量定义
+// 2. Character constants
 const char = {
   asterisk: 42,   // *
   slash: 47,      // /
@@ -27,15 +27,15 @@ const char = {
 };
 
 /**
- * 通用的双符号包裹匹配器 (e.g., **bold**, //italic//)
+ * Generic paired-symbol wrapper matcher (e.g., **bold**, //italic//)
  * @param {input} input Lezer Input stream
- * @param {number} code 字符代码 (如 char.asterisk)
- * @param {number} termId 对应的 Term ID
- * @param {boolean} checkThird 检查第三个字符是否相同（防止 *** 或 /// 误触）
+ * @param {number} code Character code (e.g., char.asterisk)
+ * @param {number} termId Matching Term ID
+ * @param {boolean} checkThird Check whether the third character matches (to avoid *** or /// false positives)
  */
 function scanPair(input, code, termId, checkThird = false) {
   if (input.next == code && input.peek(1) == code) {
-    // 如果设置了 checkThird，则要求第三个字符不能还是同一个符号
+    // If checkThird is enabled, the third character must differ
     if (checkThird && input.peek(2) == code) return false;
 
     let offset = 2;
@@ -44,18 +44,18 @@ function scanPair(input, code, termId, checkThird = false) {
     while (true) {
       let curr = input.peek(offset);
       
-      // 遇到行尾或文档尾，匹配失败
+      // Stop at line end or document end (no match)
       if (curr == -1 || curr == char.newline || curr == char.return) break;
 
-      // 寻找闭合符号
+      // Find closing symbols
       if (curr == code && input.peek(offset + 1) == code) {
         if (hasContent) {
-          // 成功找到闭合且中间有内容
+          // Found a valid close with non-empty content
           for (let i = 0; i < offset + 2; i++) input.advance();
           input.acceptToken(termId);
           return true;
         }
-        break; // 空的内容 (如 ****) 不视为合法标记
+        break; // Empty content (e.g., ****) is not valid markup
       }
       
       hasContent = true;
@@ -68,58 +68,58 @@ function scanPair(input, code, termId, checkThird = false) {
 export const inlineTokenizer = new ExternalTokenizer((input) => {
   const next = input.next;
 
-  // --- 1. 处理 StrongText (**) ---
+  // --- 1. Handle StrongText (**) ---
   if (next == char.asterisk) {
     if (scanPair(input, char.asterisk, StrongText, true)) return;
   }
 
-  // --- 2. 处理 EmText (//) ---
+  // --- 2. Handle EmText (//) ---
   if (next == char.slash) {
     if (scanPair(input, char.slash, EmText, true)) return;
   }
 
-  // --- 3. 处理 SupText (^^) ---
+  // --- 3. Handle SupText (^^) ---
   if (next == char.caret) {
     if (scanPair(input, char.caret, SupText)) return;
   }
 
-  // --- 4. 处理 SubText (,,) ---
+  // --- 4. Handle SubText (,,) ---
   if (next == char.comma) {
     if (scanPair(input, char.comma, SubText)) return;
   }
 
-  // --- 5. 处理 Original (@@) ---
+  // --- 5. Handle Original (@@) ---
   if (next == char.at) {
     if (scanPair(input, char.at, Original)) return;
   }
 
-  // --- 6. 处理 UnderlineText (__) ---
+  // --- 6. Handle UnderlineText (__) ---
   if (next == char.underscore) {
     if (scanPair(input, char.underscore, UnderlineText)) return;
   }
 
-  // --- 7. 处理连字号 (Hr & StrikeText) ---
+  // --- 7. Handle dashes (Hr & StrikeText) ---
   if (next == char.dash) {
     let count = 0;
     while (input.peek(count) == char.dash) count++;
 
-    // A: Hr (4个或更多 -)
+    // A: Hr (4 or more dashes)
     if (count >= 4) {
       for (let i = 0; i < count; i++) input.advance();
       input.acceptToken(Hr);
       return;
     }
 
-    // B: StrikeText (--内容--)
+    // B: StrikeText (--content--)
     if (count == 2) {
-      // 这里不使用 scanPair 是因为需要特殊处理排除 --- 的情况
+      // scanPair isn't used here because --- must be excluded explicitly
       let offset = 2;
       let hasContent = false;
       while (true) {
         let curr = input.peek(offset);
         if (curr == -1 || curr == char.newline || curr == char.return) break;
         if (curr == char.dash && input.peek(offset + 1) == char.dash) {
-          // 确保结尾不是 --- 
+          // Ensure closing token is not ---
           if (input.peek(offset + 2) != char.dash) {
             if (hasContent) {
               for (let i = 0; i < offset + 2; i++) input.advance();

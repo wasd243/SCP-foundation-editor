@@ -1,14 +1,14 @@
-// color_widgets.js - 修复版
+// color_widgets.js - fixed version
 import { EditorView, Decoration } from "@codemirror/view";
 import { RangeSetBuilder } from "@codemirror/state";
 
-// Wikidot颜色标签装饰器扩展
+// Wikidot color-tag decorator extension
 export const wikidotColorExtension = EditorView.decorations.of((view) => {
     const builder = new RangeSetBuilder();
     const text = view.state.doc.toString();
     
-    // 匹配Wikidot颜色标签：###ffffff|文字##
-    // 注意：结束标记是 ##，不是 ###
+    // Match Wikidot color tags: ###ffffff|text##
+    // Note: the closing marker is ##, not ###
     const wikidotColorRegex = /###([0-9a-fA-F]{6})\|([^#]*)##/g;
     let match;
     
@@ -20,13 +20,13 @@ export const wikidotColorExtension = EditorView.decorations.of((view) => {
             const start = match.index;
             const end = start + fullMatch.length;
             
-            // 计算文字内容的开始位置（跳过 ###ffffff|）
-            // "###ffffff|" 总共10个字符：3个# + 6个十六进制字符 + 1个|
+            // Calculate content start position (skip ###ffffff|)
+            // "###ffffff|" has 10 chars: 3 # + 6 hex chars + 1 |
             const colorPartLength = 10;
             const contentStart = start + colorPartLength;
             const contentEnd = contentStart + content.length;
             
-            // 为文字内容部分添加颜色样式
+            // Apply color style to the text content segment
             if (content.length > 0) {
                 builder.add(
                     contentStart,
@@ -40,11 +40,11 @@ export const wikidotColorExtension = EditorView.decorations.of((view) => {
                 );
             }
             
-            console.log(`匹配到Wikidot颜色标签: ${fullMatch}`);
-            console.log(`颜色代码: ${colorCode}, 内容: "${content}"`);
-            console.log(`位置: ${start}-${end}, 内容位置: ${contentStart}-${contentEnd}`);
+            console.log(`Matched Wikidot color tag: ${fullMatch}`);
+            console.log(`Color code: ${colorCode}, content: "${content}"`);
+            console.log(`Range: ${start}-${end}, content range: ${contentStart}-${contentEnd}`);
         } catch (error) {
-            console.error("处理Wikidot颜色标签时出错:", error, match);
+            console.error("Error while processing Wikidot color tag:", error, match);
         }
     }
     

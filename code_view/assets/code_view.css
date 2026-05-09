@@ -1,4 +1,4 @@
-/* 基础背景 */
+/* Base background */
 html, body, #editor-container {
     margin: 0;
     padding: 0;
@@ -19,7 +19,7 @@ html, body, #editor-container {
 }
 
 
-/* 强制高亮类 */
+/* Forced highlight classes */
 .cm-editor .cm-header {
     color: #e06c75;
     font-weight: bold;
@@ -27,35 +27,35 @@ html, body, #editor-container {
 }
 
 
-/* 加粗 */
+/* Bold */
 .cm-editor .cm-strong {
     color: #abb2bf;
     font-weight: bold;
 }
 
 
-/* 斜体 */
+/* Italic */
 .cm-editor .cm-em {
     color: #abb2bf;
     font-style: italic;
 }
 
 
-/* 下划线 */
+/* Underline */
 .cm-editor .cm-underline {
     color: #abb2bf;
     text-decoration: underline;
 }
 
 
-/* 删除线 */
+/* Strikethrough */
 .cm-editor .cm-strikethrough {
     color: #abb2bf;
     text-decoration: line-through;
 }
 
 
-/* 上标 */
+/* Superscript */
 .cm-editor .cm-sup {
     color: #abb2bf;
     font-size: 0.8em;
@@ -63,7 +63,7 @@ html, body, #editor-container {
 }
 
 
-/* 下标 */
+/* Subscript */
 .cm-editor .cm-sub {
     color: #abb2bf;
     font-size: 0.8em;
@@ -151,7 +151,7 @@ html, body, #editor-container {
     color: #E8BF6A;
 }
 
-/* ——————————————————————————表格操作—————————————————————————— */
+/* -------------------- table styling -------------------- */
 .cm-editor .cm-table-header {
     color: #FFC66D;
     font-weight: bold;
@@ -160,7 +160,7 @@ html, body, #editor-container {
     color: #FFC66D;
     font-weight: normal;
 }
-/* ——————————————————————————表格操作—————————————————————————— */
+/* -------------------- table styling -------------------- */
 
 
 /* image */
@@ -345,14 +345,14 @@ html, body, #editor-container {
 
 
 
-/* ====== 颜色相关样式 ====== */
-/* 颜色代码高亮 */
+/* ====== color-related styles ====== */
+/* color code highlighting */
 .cm-editor.cm-color {
     color: var(--color-value) !important;
     font-weight: normal;
 }
 
-/* 颜色预览小部件 */
+/* color preview widget */
 .cm-editor.cm-color-preview {
     display: inline-block;
     width: 12px;
@@ -371,12 +371,12 @@ html, body, #editor-container {
     border-color: #666;
 }
 
-/* 1. 普通16进制颜色代码高亮 */
+/* 1. Generic hex color code highlighting */
 .cm-editor.cm-color {
-    color: #e06c75; /* 默认颜色代码的文本颜色 */
+    color: #e06c75; /* default text color for color codes */
 }
 
-/* 2. 颜色预览小部件样式 */
+/* 2. Color preview widget styles */
 .cm-editor.cm-color-preview {
     display: inline-block;
     width: 12px;
@@ -395,13 +395,13 @@ html, body, #editor-container {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
-/* 3. Wikidot颜色标签中的文字样式 */
+/* 3. Text style inside Wikidot color tags */
 .cm-editor.cm-wikidot-colored-text {
-    /* 这里不需要设置颜色，因为通过内联样式动态设置 */
+    /* No static color needed; color is set dynamically via inline style */
     font-weight: normal;
 }
 
-/* 4. 颜色代码的视觉增强 */
+/* 4. Visual enhancements for color codes */
 .cm-editor .cm-color {
     position: relative;
     padding: 1px 3px;
@@ -409,7 +409,7 @@ html, body, #editor-container {
     background-color: rgba(0, 0, 0, 0.03);
 }
 
-/* 5. 为不同的颜色模式添加主题支持 */
+/* 5. Theme support for different color modes */
 .cm-editor.cm-theme-light .cm-color-preview {
     border-color: #999;
 }
@@ -419,7 +419,7 @@ html, body, #editor-container {
 }
 
 .cm-editor.cm-theme-dark .cm-color {
-    color: #ff6b6b; /* 深色主题下的颜色代码文本颜色 */
+    color: #ff6b6b; /* color code text color in dark theme */
 }
 
-/* ====== 颜色相关样式 ====== */
+/* ====== color-related styles ====== */

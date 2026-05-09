@@ -19,6 +19,10 @@
     border-color: #b8c7e0;
 }
 
+.code-view-frame {
+    display: none;
+}
+
 
 /* Basic buttons formats*/
 .format-basic-button {

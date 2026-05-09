@@ -131,16 +131,24 @@ Footnote {
 IncludeBlock {
   IncludeOpen
   IncludePath?
+  FirstIncludeParam?
   IncludeParam*
+  newline*
   IncludeTagEnd { _tagEnd }
 }
 
+// 特权节点：专门给跟在路径后面的第一个参数使用（不需要 |）
+FirstIncludeParam {
+  attrPathToken Equals IncludeValue?
+}
+
+// 常规节点：后续的参数，严格要求必须以 | 开头
 IncludeParam {
-  newline* IncludeBar attrPathToken Equals IncludeValue
+  newline* IncludeBar attrPathToken Equals IncludeValue?
 }
 
 IncludeValue {
-  (AttrValue | attrPathToken | StarChar | Text | LinkURL | BracketChar)+
+  (AttrValue | attrPathToken | StarChar | Text | LinkURL | BracketChar )+
 }
 
 IncludePath {
@@ -366,7 +374,7 @@ Attr {
   // 把路径定义为一个完整的 Token
   // 允许：字母、数字、冒号、横杠、下划线、点、竖线
   // 关键：不包含空格和 ]，这样它遇到空格或闭合标签会自动停止
-  attrPathToken { $[a-zA-Z0-9\-_:./%]+ }
+  attrPathToken { $[a-zA-Z0-9\-_:./%\u4e00-\u9fa5]+ }
   Equals    { "=" }
 
   // AttrValue 支持双引号包裹或者不带引号

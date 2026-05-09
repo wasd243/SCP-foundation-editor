@@ -17,37 +17,37 @@
  * Copyright (c) 2026 Zichen Wang(wasd243)
  * * --- ATTRIBUTION & THIRD-PARTY COMPONENTS ---
  * 1. Editor Engine: CodeMirror 6 (MIT License) - © Marijn Haverbeke
- * 2. Syntax Patterns: ACS & AIM logic patterns are derived from the
+ * 2. Syntax Patterns: ACS & AIM logic patterns are derived from the 
  * SCP Foundation community under CC BY-SA 3.0.
  * -------------------------------------------------------------------
  */
-import {EditorView, basicSetup} from "codemirror";
-import {EditorState} from "@codemirror/state";
-// Stream导入
-import {syntaxHighlighting, HighlightStyle} from "@codemirror/language";
-// Lezer导入
-import {parser} from "./src/parser.js";
-import {LRLanguage, LanguageSupport} from "@codemirror/language";
-import {parseMixed} from "@lezer/common"
-import {cssLanguage} from "@codemirror/lang-css"
-import {htmlLanguage} from "@codemirror/lang-html"
-import {styleTags, tags as t, Tag} from "@lezer/highlight";
-import {foldNodeProp, foldInside} from "@codemirror/language";
-// 其他导入
-import {foldGutter} from "@codemirror/language";
-import {oneDark} from "@codemirror/theme-one-dark";
-import {autocompletion} from "@codemirror/autocomplete";
-import {keymap} from "@codemirror/view";
-import {indentWithTab} from "@codemirror/commands";
-// 导入颜色预览扩展和事件处理函数
-import {colorPreviewExtension, setupColorPickerHandler} from "./component/color_preview.js";
-import {wikidotColorExtension} from "./component/color_widgets.js";
-// AST测试
-import {syntaxTree} from "@codemirror/language";
+import { EditorView, basicSetup } from "codemirror";
+import { EditorState } from "@codemirror/state";
+// Stream imports
+import { syntaxHighlighting, HighlightStyle } from "@codemirror/language";
+// Lezer imports
+import { parser } from "./src/parser.js";
+import { LRLanguage, LanguageSupport } from "@codemirror/language";
+import { parseMixed } from "@lezer/common"
+import { cssLanguage } from "@codemirror/lang-css"
+import { htmlLanguage} from "@codemirror/lang-html"
+import { styleTags, tags as t, Tag } from "@lezer/highlight";
+import { foldNodeProp, foldInside } from "@codemirror/language";
+// Other imports
+import { foldGutter } from "@codemirror/language";
+import { oneDark } from "@codemirror/theme-one-dark";
+import { autocompletion } from "@codemirror/autocomplete";
+import { keymap } from "@codemirror/view";
+import { indentWithTab } from "@codemirror/commands";
+// Import color preview extension and event handlers
+import { colorPreviewExtension, setupColorPickerHandler } from "./component/color_preview.js";
+import { wikidotColorExtension } from "./component/color_widgets.js";
+// AST debug
+import { syntaxTree } from "@codemirror/language";
 
-// 初始化内容 已删除
+// Initial content removed
 
-// 定义自定义高亮标签，防止 "Unknown highlighting tag" 报错
+// Define custom highlight tags to prevent "Unknown highlighting tag" errors
 const customTags = {
     header: Tag.define(),
     strong: Tag.define(),
@@ -56,7 +56,7 @@ const customTags = {
     strikethrough: Tag.define(),
     module: Tag.define(), // MODULE
     html: Tag.define(), // HTML
-    link: Tag.define(), // 链接🔗
+    link: Tag.define(), // link 🔗
     hr: Tag.define(),
     rate: Tag.define(),
     right: Tag.define(),
@@ -70,33 +70,33 @@ const customTags = {
     list3: Tag.define(),
     list4: Tag.define(),
     quote: Tag.define(),
-    newline_defult: Tag.define(), // IMPORTANT new line defult definition
-    code: Tag.define(), // 用于代码块
+    newline_defult: Tag.define(), // IMPORTANT new line defult defination
+    code: Tag.define(), // for code blocks
     table: Tag.define(),
     table_header: Tag.define(),
-    original_text: Tag.define(), // 用于原始文本
-    image: Tag.define(), // 用于图片
+    original_text: Tag.define(), // for original/raw text
+    image: Tag.define(), // for images
     footnote: Tag.define(),
-    footnote_block: Tag.define(), // 用于脚注块
-    color: Tag.define(),
-    include: Tag.define(), // 用于 [[include ...]] 标签
+    footnote_block: Tag.define(), // for footnote blocks
+    color: Tag.define(), 
+    include: Tag.define(), // for [[include ...]] tags
     include_1: Tag.define(),
     include_2: Tag.define(),
     include_3: Tag.define(),
     num: Tag.define(),
-    keyword: Tag.define(), // 参数
-    scp_wiki: Tag.define(), // 用于特定的主题标签
-    div: Tag.define(), // 用于 [[div ...]] 标签
-    tabview: Tag.define(), // 用于 [[tabview]] 标签
-    tab: Tag.define(), // tabview增强
-    acs: Tag.define(), // 用于ACS
-    equal: Tag.define(), // 用于 = 号
-    line_up: Tag.define(), // 用于|
-    size: Tag.define(), // 用于字体大小标签
-    aim: Tag.define(), // 用于AIM
+    keyword: Tag.define(), // parameter
+    scp_wiki: Tag.define(), // for specific theme tags
+    div: Tag.define(), // for [[div ...]] tags
+    tabview: Tag.define(), // for [[tabview]] tags
+    tab: Tag.define(), // tabview enhancement
+    acs: Tag.define(), // for ACS
+    equal: Tag.define(), // for =
+    line_up: Tag.define(), // for |
+    size: Tag.define(), // for font-size tags
+    aim: Tag.define(), // for AIM
     components: Tag.define(), // ATTRpathToken
-    collapsible: Tag.define(), // 用于可折叠内容
-    monospace: Tag.define(), // 等宽字
+    collapsible: Tag.define(), // for collapsible sections
+    monospace: Tag.define(), // monospace text
     license: Tag.define(), // LICENSE
     note: Tag.define(), // note
     user: Tag.define(), // user
@@ -105,213 +105,213 @@ const customTags = {
 
 const wikidotParser = parser.configure({
     wrap: parseMixed((node, input) => {
-        // 当解析器走到 ModuleContent 节点时
+    // When parser reaches ModuleContent node
         if (node.name === "ModuleContent") {
             const moduleBlock = node.node.parent;
             if (moduleBlock && moduleBlock.name === "ModuleBlock") {
                 const openTag = moduleBlock.getChild("ModuleOpenTag");
                 if (openTag) {
-                    // 直接读取整个 [[module CSS]] 标签的文本
+                    // Read full [[module CSS]] tag text directly
                     const tagText = input.read(openTag.from, openTag.to).toLowerCase();
-
-                    // 排除原生的 Wikidot 模块
+                    
+                    // Exclude native Wikidot modules
                     const nativeModules = ["rate", "listpages", "backlinks"];
                     if (nativeModules.some(m => tagText.includes(m))) {
                         return null;
                     }
 
-                    // 只要标签里写了 css，就开启 CSS 嵌套高亮
+                    // Enable nested CSS highlighting when tag contains css
                     if (tagText.includes("css")) {
                         return {
                             parser: cssLanguage.parser,
-                            overlay: [{from: node.from, to: node.to}]
+                            overlay: [{ from: node.from, to: node.to }]
                         };
                     }
                 }
             }
         }
-
-        // HTML 同理
+        
+        // Same approach for HTML
         if (node.name === "HTMLContent") {
-            return {
+            return { 
                 parser: htmlLanguage.parser,
-                overlay: [{from: node.from, to: node.to}]
+                overlay: [{ from: node.from, to: node.to }] 
             };
         }
         return null;
     }),
     props: [
         styleTags({
-            "Rate": customTags.rate,
-            "IncludeOpen": customTags.include,
-            "IncludePart1": customTags.include_1,
-            "IncludePart2": customTags.include_2,
-            "IncludePart3": customTags.include_3,
-            "IncludeSimplePath": customTags.include_2,
-            "IncludeBar": customTags.line_up,
-            "IncludeValue": customTags.keyword,
-            "IncludeTagEnd": customTags.include,
-            "DivOpen": customTags.div,
-            "DivTagEnd": customTags.div,
-            "DivClose": customTags.div,
-            "CollapsibleOpen": customTags.collapsible,
-            "CollapsibleTagEnd": customTags.collapsible,
-            "CollapsibleClose": customTags.collapsible,
-            "CodeOpen": customTags.code,
-            "CodeTagEnd": customTags.code,
-            "CodeClose": customTags.code,
-            "UserOpen": customTags.user,
-            "UserTagEnd": customTags.user,
-            "FootnoteOpen": customTags.footnote,
-            "FootnoteTagEnd": customTags.footnote,
-            "FootnoteClose": customTags.footnote,
-            "LinkURL": customTags.link,
-            "ImageOpen": customTags.image,
-            "ImageTagEnd": customTags.image,
-            "TabViewOpenToken": customTags.tabview,
-            "TabViewCloseToken": customTags.tabview,
-            "TabOpenToken": customTags.tab,
-            "TabTagEnd": customTags.tab,
-            "TabCloseToken": customTags.tab,
-            "ModuleOpenToken": customTags.module,
-            "ModuleCloseToken": customTags.module,
-            "ModuleTagEnd": customTags.module,
-            "HTMLOpenToken": customTags.html,
-            "HTMLCloseToken": customTags.html,
-            "HTMLTagEnd": customTags.html,
-            "NoteOpenToken": customTags.note,
-            "NoteCloseToken": customTags.note,
-            "SizeOpenToken": customTags.size,
-            "SizeCloseToken": customTags.size,
-            "SizeTagEnd": customTags.size,
-            "AlignCenterOpenToken": customTags.center,
-            "AlignCenterCloseToken": customTags.center,
-            "AlignLeftOpenToken": customTags.left,
-            "AlignLeftCloseToken": customTags.left,
-            "AlignRightOpenToken": customTags.right,
-            "AlignRightCloseToken": customTags.right,
-            "SpanOpenToken": customTags.div, // 这里div和span的颜色一样
-            "SpanCloseToken": customTags.div,
-            "SpanTagEnd": customTags.div,
+            "Rate":                   customTags.rate,
+            "IncludeOpen":            customTags.include,
+            "IncludePart1":           customTags.include_1,
+            "IncludePart2":           customTags.include_2,
+            "IncludePart3":           customTags.include_3,
+            "IncludeSimplePath":      customTags.include_2,
+            "IncludeBar":             customTags.line_up,
+            "IncludeValue":           customTags.keyword,
+            "IncludeTagEnd":          customTags.include,
+            "DivOpen":                customTags.div,
+            "DivTagEnd":              customTags.div,
+            "DivClose":               customTags.div,
+            "CollapsibleOpen":        customTags.collapsible,
+            "CollapsibleTagEnd":      customTags.collapsible,
+            "CollapsibleClose":       customTags.collapsible,
+            "CodeOpen":               customTags.code,
+            "CodeTagEnd":             customTags.code,
+            "CodeClose":              customTags.code,
+            "UserOpen":               customTags.user,
+            "UserTagEnd":             customTags.user,
+            "FootnoteOpen":           customTags.footnote,
+            "FootnoteTagEnd":         customTags.footnote,
+            "FootnoteClose":          customTags.footnote,
+            "LinkURL":                customTags.link,
+            "ImageOpen":              customTags.image,
+            "ImageTagEnd":            customTags.image,
+            "TabViewOpenToken":       customTags.tabview,
+            "TabViewCloseToken":      customTags.tabview,
+            "TabOpenToken":           customTags.tab,
+            "TabTagEnd":              customTags.tab,
+            "TabCloseToken":          customTags.tab,
+            "ModuleOpenToken":        customTags.module,
+            "ModuleCloseToken":       customTags.module,
+            "ModuleTagEnd":           customTags.module,
+            "HTMLOpenToken":          customTags.html,
+            "HTMLCloseToken":         customTags.html,
+            "HTMLTagEnd":             customTags.html,
+            "NoteOpenToken":          customTags.note,
+            "NoteCloseToken":         customTags.note,
+            "SizeOpenToken":          customTags.size,
+            "SizeCloseToken":         customTags.size,
+            "SizeTagEnd":             customTags.size,
+            "AlignCenterOpenToken":   customTags.center,
+            "AlignCenterCloseToken":  customTags.center,
+            "AlignLeftOpenToken":     customTags.left,
+            "AlignLeftCloseToken":    customTags.left,
+            "AlignRightOpenToken":    customTags.right,
+            "AlignRightCloseToken":   customTags.right,
+            "SpanOpenToken":          customTags.div, // div and span share the same color
+            "SpanCloseToken":         customTags.div,
+            "SpanTagEnd":             customTags.div,
 
-            // ——————————————————————————表格操作——————————————————————————
-            "TableTilde": customTags.table_header,
-            "TableBar": customTags.table,
-            // ——————————————————————————表格操作——————————————————————————
-            "List1": customTags.list1,
-            "List2": customTags.list2,
-
-
-            "FootnoteBlock": customTags.footnote_block,
+            // -------------------- table handling --------------------
+            "TableTilde":             customTags.table_header,
+            "TableBar":               customTags.table,
+            // -------------------- table handling --------------------
+            "List1":                  customTags.list1,
+            "List2":                  customTags.list2,
 
 
-            // ——————————————————————————常用标记——————————————————————————
-            "Blockquote": customTags.quote,
-            "Hr": customTags.hr,
-            "Title": customTags.header,
-            "StrongText": customTags.strong,
-            "EmText": customTags.em,
-            "UnderlineText": customTags.underline,
-            "StrikeText": customTags.strikethrough,
-            "SupText": customTags.sup,
-            "SubText": customTags.sub,
-            "Monospace": customTags.monospace,
-            "ForcedNewLine": customTags.newline,
-            "Original": customTags.original_text,
-            // ——————————————————————————常用标记——————————————————————————
-            "newline": customTags.newline_defult,
-            "attrPathToken": customTags.components,
-            "Equals": customTags.equal,
-            "AttrValue": customTags.Highlight,
+            "FootnoteBlock":          customTags.footnote_block,
+
+
+            // -------------------- common markers --------------------
+            "Blockquote":             customTags.quote,
+            "Hr":                     customTags.hr,
+            "Title":                  customTags.header,
+            "StrongText":             customTags.strong,
+            "EmText":                 customTags.em,
+            "UnderlineText":          customTags.underline,
+            "StrikeText":             customTags.strikethrough,
+            "SupText":                customTags.sup,
+            "SubText":                customTags.sub,
+            "Monospace":              customTags.monospace,
+            "ForcedNewLine":          customTags.newline,
+            "Original":               customTags.original_text,
+            // -------------------- common markers --------------------
+            "newline":                customTags.newline_defult,
+            "attrPathToken":          customTags.components,
+            "Equals":                 customTags.equal,
+            "AttrValue":              customTags.Highlight,
         }),
         foldNodeProp.add({
-            "DivBlock": foldInside,
+            "DivBlock":         foldInside,
             "CollapsibleBlock": foldInside,
-            "CodeBlock": foldInside,
-            "TabViewBlock": foldInside,
-            "TabBlock": foldInside,
-            "ModuleBlock": foldInside,
-            "IncludeBlock": foldInside,
-            "HTMLBlock": foldInside,
-            "NoteBlock": foldInside,
-            "SizeBlock": foldInside,
-            "AlignCenter": foldInside,
-            "AlignLeft": foldInside,
-            "AlignRight": foldInside,
-            "SpanBlock": foldInside,
+            "CodeBlock":        foldInside,
+            "TabViewBlock":     foldInside,
+            "TabBlock":         foldInside,
+            "ModuleBlock":      foldInside,
+            "IncludeBlock":     foldInside,
+            "HTMLBlock":        foldInside,
+            "NoteBlock":        foldInside,
+            "SizeBlock":        foldInside,
+            "AlignCenter":      foldInside,
+            "AlignLeft":        foldInside,
+            "AlignRight":       foldInside,
+            "SpanBlock":        foldInside,
         })
     ]
 });
 
 /**
- * 自定义 Wikidot 语法解析器
+ * Custom Wikidot syntax parser
  */
 const wikidotLanguage = LRLanguage.define({
-    name: "wikidot",
-    parser: wikidotParser,
-    languageData: {
-        commentTokens: {block: {open: "[[comment]]", close: "[[/comment]]"}}
-    }
+  name: "wikidot",
+  parser: wikidotParser,
+  languageData: {
+    commentTokens: { block: { open: "[[comment]]", close: "[[/comment]]" } }
+  }
 });
 
 
 const wikidotHighlightStyle = HighlightStyle.define([
-    {tag: customTags.header, class: "cm-header"},
-    {tag: customTags.strong, class: "cm-strong"},
-    {tag: customTags.em, class: "cm-em"},
-    {tag: customTags.underline, class: "cm-underline"},
-    {tag: customTags.strikethrough, class: "cm-strikethrough"},
-    {tag: customTags.link, class: "cm-link"},
-    {tag: customTags.hr, class: "cm-hr"},
-    {tag: customTags.module, class: "cm-module"},
-    {tag: customTags.html, class: "cm-html"},
-    {tag: customTags.rate, class: "cm-rate"},
-    {tag: customTags.right, class: "cm-right"},
-    {tag: customTags.left, class: "cm-left"},
-    {tag: customTags.center, class: "cm-center"},
-    {tag: customTags.sup, class: "cm-sup"},
-    {tag: customTags.sub, class: "cm-sub"},
-    {tag: customTags.components, class: "cm-components"}, // ATTRLIST IMPORTANT
-    {tag: customTags.keyword, class: "cm-keyword"}, // 参数
-    {tag: customTags.newline, class: "cm-newline"},
-    {tag: customTags.newline_defult, class: ""}, // IMPORTANT defult newline defination
-    {tag: customTags.monospace, class: "cm-monospace"},
-    {tag: customTags.list1, class: "cm-list1"},
-    {tag: customTags.list2, class: "cm-list2"},
-    {tag: customTags.list3, class: "cm-list3"},
-    {tag: customTags.list4, class: "cm-list4"},
-    {tag: customTags.num, class: "cm-num"},
-    {tag: customTags.quote, class: "cm-quote"},
-    {tag: customTags.code, class: "cm-code"},
-    {tag: customTags.table, class: "cm-table"},
-    {tag: customTags.table_header, class: "cm-table-header"},
-    {tag: customTags.original_text, class: "cm-original-text"},
-    {tag: customTags.image, class: "cm-image"},
-    {tag: customTags.footnote, class: "cm-footnote"},
-    {tag: customTags.footnote_block, class: "cm-footnote-block"},
-    {tag: customTags.color, class: "cm-color"},
-    {tag: customTags.include, class: "cm-include"},
-    {tag: customTags.include_1, class: "cm-include-1"},
-    {tag: customTags.include_2, class: "cm-include-2"},
-    {tag: customTags.include_3, class: "cm-include-3"},
-    {tag: customTags.scp_wiki, class: "cm-scp-wiki"},
-    {tag: customTags.div, class: "cm-div"},
-    {tag: customTags.tabview, class: "cm-tabview"},
-    {tag: customTags.tab, class: "cm-tab"},
-    {tag: customTags.acs, class: "cm-acs"},
-    {tag: customTags.equal, class: "cm-equal"},
-    {tag: customTags.line_up, class: "cm-line-up"},
-    {tag: customTags.size, class: "cm-size"},
-    {tag: customTags.aim, class: "cm-aim"},
-    {tag: customTags.collapsible, class: "cm-collapsible"},
-    {tag: customTags.note, class: "cm-note"},
-    {tag: customTags.user, class: "cm-user"},
-    {tag: customTags.Highlight, class: "cm-Highlight"},
+    { tag: customTags.header, class: "cm-header" },
+    { tag: customTags.strong, class: "cm-strong" },
+    { tag: customTags.em, class: "cm-em" },
+    { tag: customTags.underline, class: "cm-underline" },
+    { tag: customTags.strikethrough, class: "cm-strikethrough" },
+    { tag: customTags.link, class: "cm-link" },
+    { tag: customTags.hr, class: "cm-hr" },
+    { tag: customTags.module, class: "cm-module"},
+    { tag: customTags.html, class: "cm-html"},
+    { tag: customTags.rate, class: "cm-rate" },
+    { tag: customTags.right, class: "cm-right" },
+    { tag: customTags.left, class: "cm-left" },
+    { tag: customTags.center, class: "cm-center" },
+    { tag: customTags.sup, class: "cm-sup" },
+    { tag: customTags.sub, class: "cm-sub" },
+    { tag: customTags.components, class: "cm-components"}, // ATTRLIST IMPORTANT
+    { tag: customTags.keyword, class: "cm-keyword"}, // parameter
+    { tag: customTags.newline, class: "cm-newline" },
+    { tag: customTags.newline_defult, class: ""}, // IMPORTANT defult newline defination
+    { tag: customTags.monospace, class: "cm-monospace"},
+    { tag: customTags.list1, class: "cm-list1" },
+    { tag: customTags.list2, class: "cm-list2" },
+    { tag: customTags.list3, class: "cm-list3" },
+    { tag: customTags.list4, class: "cm-list4" },
+    { tag: customTags.num, class: "cm-num"},
+    { tag: customTags.quote, class: "cm-quote"},
+    { tag: customTags.code, class: "cm-code"},
+    { tag: customTags.table, class: "cm-table" },
+    { tag: customTags.table_header, class: "cm-table-header" },
+    { tag: customTags.original_text, class: "cm-original-text" },
+    { tag: customTags.image, class: "cm-image" },
+    { tag: customTags.footnote, class: "cm-footnote" },
+    { tag: customTags.footnote_block, class: "cm-footnote-block" },
+    { tag: customTags.color, class: "cm-color" },
+    { tag: customTags.include, class: "cm-include" },
+    { tag: customTags.include_1, class: "cm-include-1"},
+    { tag: customTags.include_2, class: "cm-include-2"},
+    { tag: customTags.include_3, class: "cm-include-3"},
+    { tag: customTags.scp_wiki, class: "cm-scp-wiki" },
+    { tag: customTags.div, class: "cm-div" },
+    { tag: customTags.tabview, class: "cm-tabview" },
+    { tag: customTags.tab, class: "cm-tab" },
+    { tag: customTags.acs, class: "cm-acs" },
+    { tag: customTags.equal, class: "cm-equal" },
+    { tag: customTags.line_up, class: "cm-line-up" },
+    { tag: customTags.size, class: "cm-size" },
+    { tag: customTags.aim, class: "cm-aim" },
+    { tag: customTags.collapsible, class: "cm-collapsible" },
+    { tag: customTags.note, class: "cm-note" },
+    { tag: customTags.user, class: "cm-user" },
+    { tag: customTags.Highlight, class: "cm-Highlight"},
 ]);
 
 /**
- * 改进的自动延续列表逻辑 - 针对Wikidot语法
- * 使用更高优先级确保覆盖默认行为
+ * Improved auto-continue list behavior for Wikidot syntax
+ * Uses higher priority to override default behavior
  */
 const customKeymap = keymap.of([
     {
@@ -319,59 +319,59 @@ const customKeymap = keymap.of([
         run: (view) => {
             const state = view.state;
             const selection = state.selection.main;
-
+            
             if (!selection.empty) return false;
-
+            
             const line = state.doc.lineAt(selection.head);
             const cursorPos = selection.head - line.from;
-
-            // 检查光标是否在行末（或者接近行末）
+            
+            // Check whether cursor is at (or near) line end
             const isAtEndOfLine = cursorPos >= line.text.length - 1;
-
+            
             if (!isAtEndOfLine) {
-                // 如果光标不在行末，让默认行为处理（比如在行中间换行）
+                // If cursor is not at line end, fall back to default behavior
                 return false;
             }
-
-            // Wikidot列表语法：单个*表示无序列表，单个#表示有序列表
-            // 匹配行首的 * 或 #，后面必须跟空格
+            
+            // Wikidot list syntax: * for unordered, # for ordered lists
+            // Match * or # at line start, followed by required whitespace
             const listMatch = line.text.match(/^([*#])\s+/);
-            const list3Match = line.text.match(/^(:.*?:)\s+/); // 定义列表匹配
-
+            const list3Match = line.text.match(/^(:.*?:)\s+/); // definition list match
+            
             if (listMatch || list3Match) {
-                const listMarker = listMatch ? listMatch[1] : list3Match[1]; // * 或 # 或 :
-
-                // 检查是否在空列表项上按回车
+                const listMarker = listMatch ? listMatch[1] : list3Match[1]; // * or # or :
+                
+                // Check whether Enter was pressed on an empty list item
                 const contentAfterMarker = line.text.substring(listMarker.length + 1).trim();
                 const isListItemEmpty = contentAfterMarker === '';
-
+                
                 if (isListItemEmpty) {
-                    // 空列表项：删除当前行的列表标记
+                    // Empty list item: remove marker from current line
                     view.dispatch({
-                        changes: {
-                            from: line.from,
-                            to: line.to,
-                            insert: ""
+                        changes: { 
+                            from: line.from, 
+                            to: line.to, 
+                            insert: "" 
                         },
-                        selection: {anchor: line.from}
+                        selection: { anchor: line.from }
                     });
                     return true;
                 } else {
-                    // 非空列表项：插入新行并延续列表标记
+                    // Non-empty list item: insert new line and continue marker
                     const newLineContent = `\n${listMarker} `;
-
+                    
                     view.dispatch({
-                        changes: {
-                            from: selection.head,
-                            to: selection.head,
-                            insert: newLineContent
+                        changes: { 
+                            from: selection.head, 
+                            to: selection.head, 
+                            insert: newLineContent 
                         },
-                        selection: {anchor: selection.head + newLineContent.length}
+                        selection: { anchor: selection.head + newLineContent.length }
                     });
                     return true;
                 }
             }
-
+            
             return false;
         }
     },
@@ -379,58 +379,53 @@ const customKeymap = keymap.of([
 ]);
 
 /**
- * 自动补全配置
+ * Auto Completion
  */
-import {wikidotCompletionSource} from "./component/completion.js";
-import {foldEffect} from "@codemirror/language/dist/index.js";
+import { wikidotCompletionSource } from "./component/completion.js";
+import { foldEffect } from "@codemirror/language/dist/index.js";
 
-// 3. 初始化编辑器
-// 3. 初始化编辑器
-// ⚠️ 修复：接收外部传入的 container，而不是内部硬编码查找
-// 这样 html 的 window.onload 传进来的容器才能生效，不会产生幽灵实例
-const startEditor = (container) => {
-    // 防御：如果没传 container，尝试自己找；找不到就报错退出
-    const targetContainer = container || document.getElementById("editor-container");
-    if (!targetContainer) {
-        console.error("❌ H2O2 FATAL: 找不到 editor-container，编辑器初始化中止！");
-        return null;
-    }
-
-    // ⚠️ 修复：防止幽灵实例 —— 如果已经初始化过了，直接返回现有实例
-    if (window.editorInstance) {
-        console.warn("⚠️ H2O2: startEditor 被重复调用，返回已有实例，拒绝创建幽灵实例");
-        return window.editorInstance;
-    }
-
+// 3. Initialize editor
+const startEditor = () => {
     const state = EditorState.create({
         doc: "",
         extensions: [
+            // Disable line wrapping
+            EditorView.lineWrapping,
+            // Put customKeymap before basicSetup to ensure priority
             customKeymap,
             basicSetup,
             oneDark,
+            // Custom Wikidot syntax
             wikidotLanguage,
             syntaxHighlighting(wikidotHighlightStyle),
+            // Add Wikidot color tag extension first
             wikidotColorExtension,
+            // Then add generic color preview extension
             colorPreviewExtension,
-            autocompletion({override: [wikidotCompletionSource], selectOnOpen: true}),
-
+            autocompletion({ override: [wikidotCompletionSource], selectOnOpen: true }),
+            
+            // Web version: local-storage auto-save removed
             EditorView.updateListener.of((update) => {
                 if (update.docChanged) {
                     const content = update.state.doc.toString();
-                    if (window.py_Bridge) {
-                        window.py_Bridge.on_code_changed(content);
-                    }
+                    
+                    // Send latest content to userscript via postMessage
+                    window.parent.postMessage({
+                        type: 'h2o2-update',
+                        payload: content
+                    }, '*'); 
                 }
             }),
 
             EditorView.theme({
-                "&": {height: "100%"},
-                "&.cm-focused": {outline: "none"},
-                ".cm-scroller": {
+                "&": { height: "100%" },
+                "&.cm-focused": { outline: "none" },
+                ".cm-scroller": { 
                     fontFamily: "'Cascadia Code', 'Consolas', 'Monaco', 'Courier New', monospace",
                     lineHeight: "1.6",
                     fontSize: "14px"
                 },
+                // Basic styles for color preview
                 ".cm-color-preview": {
                     display: "inline-block",
                     width: "12px",
@@ -447,13 +442,9 @@ const startEditor = (container) => {
                     transform: "scale(1.1)",
                     borderColor: "#888"
                 },
+                // Wikidot color text style
                 ".cm-wikidot-colored-text": {
                     fontWeight: "normal!important",
-                },
-                // 🔴 暴力视觉反馈：同步成功时编辑器边框闪绿
-                "&.sync-flash": {
-                    outline: "3px solid #00ff88 !important",
-                    transition: "outline 0.1s ease"
                 }
             })
         ]
@@ -461,155 +452,63 @@ const startEditor = (container) => {
 
     const editorView = new EditorView({
         state,
-        parent: targetContainer,
-        viewportMargin: Infinity
+        parent: document.getElementById("editor-container"),
+        viewportMargin: 2000
     });
 
-    // AST 调试工具
+    // AST debug
+    // Added after editorView is created in startEditor:
     window._debugAST = () => {
         const tree = syntaxTree(editorView.state);
         tree.cursor().iterate(node => {
             console.log(node.name, editorView.state.sliceDoc(node.from, node.to));
         });
     };
-
+    
+    // Set up color picker event handling
     setupColorPickerHandler(editorView);
-
-    // 挂载到全局
+    
+    // Expose instance globally for index.html button actions
     window.editorInstance = editorView;
 
-    // ============================================================
-    // 🔧 核心修复：syncToEditor 加入暴力视觉反馈 + 防御检查
-    // ============================================================
-    window.syncToEditor = (content) => {
-        if (!editorView) {
-            console.error("❌ syncToEditor: editorView 不存在！");
-            return;
-        }
-        if (typeof content !== 'string') {
-            console.error("❌ syncToEditor: 收到的内容不是字符串，类型为:", typeof content);
-            return;
-        }
-
-        console.log(`📥 H2O2: syncToEditor 被调用，内容长度=${content.length}`);
-
-        // 执行 CodeMirror 事务
-        editorView.dispatch({
-            changes: {
-                from: 0,
-                to: editorView.state.doc.length,
-                insert: content
-            },
-            selection: {anchor: 0}
-        });
-
-        // 🟢 暴力视觉反馈：边框闪绿 + DOM 属性标记
-        const el = editorView.dom;
-        el.style.outline = "3px solid #00ff88";
-        el.style.transition = "outline 0.5s ease";
-        el.setAttribute('data-last-sync', new Date().toISOString());
-        setTimeout(() => {
-            el.style.outline = "";
-        }, 800);
-
-        // 验证：读回写入的内容长度做校验
-        const written = editorView.state.doc.toString();
-        if (written.length !== content.length) {
-            console.error(`❌ H2O2 同步校验失败！期望 ${content.length} 字节，实际写入 ${written.length} 字节`);
-        } else {
-            console.log(`✅ H2O2: 同步校验通过，写入 ${written.length} 字节`);
-        }
-    };
-
-    // 新增：跳转到指定行号（1-based）
-    window.gotoLine = (lineNumber) => {
-        try {
-            if (!window.editorInstance) return;
-            const lv = window.editorInstance;
-            if (typeof lineNumber !== 'number') lineNumber = Number(lineNumber);
-            if (!Number.isFinite(lineNumber) || lineNumber < 1) return;
-            const doc = lv.state.doc;
-            const total = doc.lines;
-            const ln = Math.min(Math.max(1, lineNumber), total);
-            const line = doc.line(ln);
-            const pos = line.from;
-            lv.dispatch({selection: {anchor: pos}});
-            lv.focus();
-            // 小幅视觉反馈
-            lv.dom.style.outline = "2px solid #00aaff";
-            setTimeout(()=> { lv.dom.style.outline = ""; }, 600);
-        } catch (e) {
-            console.error("gotoLine error:", e);
-        }
-    };
-
-    // 新增：接受一组匹配项（带 offset 和 line），前端根据自身的光标位置决定跳转到最近/下一个
-    window.gotoMatchList = (matches) => {
-        try {
-            if (!window.editorInstance) {
-                console.warn("gotoMatchList: editorInstance 不存在，尝试退回到 gotoLine");
-                // 如果 matches 是数组且至少有一项，退回跳第一项
-                if (Array.isArray(matches) && matches.length > 0 && typeof window.gotoLine === 'function') {
-                    window.gotoLine(matches[0].line);
-                }
-                return;
-            }
-
-            // 如果传入的是字符串（JSON），先解析
-            let list = matches;
-            if (typeof matches === 'string') {
-                try { list = JSON.parse(matches); } catch(e) { list = []; }
-            }
-            if (!Array.isArray(list) || list.length === 0) {
-                console.warn("gotoMatchList: matches 无效或为空，忽略");
-                return;
-            }
-
-            const lv = window.editorInstance;
-            const cursorPos = lv.state.selection.main.head; // character offset in document
-
-            // 找到第一个 offset > cursorPos（下一个），若找不到则循环到第一个
-            let chosen = null;
-            for (let i = 0; i < list.length; i++) {
-                const m = list[i];
-                if (typeof m.offset === 'number' && m.offset > cursorPos) {
-                    chosen = m;
-                    break;
-                }
-            }
-            if (!chosen) {
-                // 如果没有更后的，选择第一个
-                chosen = list[0];
-            }
-
-            if (chosen && chosen.line) {
-                window.gotoLine(chosen.line);
-            } else {
-                // 兜底：若没有 line 信息，使用第一项或不动
-                const first = list[0];
-                if (first && first.line) window.gotoLine(first.line);
-            }
-        } catch (e) {
-            console.error("gotoMatchList error:", e);
-        }
-    };
-
-    // 逻辑闭环：消费 Python 提前打包的快递
-    if (window.PENDING_CONTENT) {
-        console.log("📦 H2O2: 发现 PENDING_CONTENT，立即消费");
-        window.syncToEditor(window.PENDING_CONTENT);
-        window.PENDING_CONTENT = null;
-    }
-
-    console.log("✅ H2O2: 编辑器实例创建成功，syncToEditor 已挂载到 window");
     return editorView;
 };
 
-// ⚠️ 修复：只挂载，绝不在这里自动执行！
-// 自动执行会产生幽灵实例，与 html 的 window.onload 发生竞态。
-// 唯一的启动入口是 code_view.html 的 window.onload。
-window.startEditor = startEditor;
+// Listen for init/re-sync requests from the userscript
+window.addEventListener('message', (event) => {
+    // Allow messages from all Wikidot sub-sites
+    const isWikidot = event.origin.endsWith('wikidot.com');
+    
+    if (!isWikidot) return;
+    // Ignore unrelated messages (e.g., noisy extension injections)
+    if (!event.data || event.data.type !== 'h2o2-init') return;
+    
+    console.log("H2O2 Web: Successfully received initial content from Wikidot textarea.");
+    
+    const view = window.editorInstance;
+    if (view) {
+        // Replace full editor content with received textarea payload
+        view.dispatch({
+            changes: { 
+                from: 0, 
+                to: view.state.doc.length, 
+                insert: event.data.payload || ''
+            }
+        });
+    } else {
+        console.warn("H2O2 Web: Received data, but editor instance is not ready yet.");
+    }
+});
 
+// Export editor instance for other scripts
 window.WikidotEditor = {
     startEditor,
+    // Additional public APIs can be added here
 };
+
+// Start editor after DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startEditor);
+} else {
+    startEditor();
+}

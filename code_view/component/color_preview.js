@@ -1,8 +1,8 @@
-// color-preview.js - 改进版
+// color-preview.js - improved version
 import { EditorView, Decoration, WidgetType } from "@codemirror/view";
 import { RangeSetBuilder } from "@codemirror/state";
 
-// 创建颜色预览小部件（放在颜色代码前面）
+// Create a color preview widget (inserted before color code)
 class ColorPreviewWidget extends WidgetType {
   constructor(color) {
     super();
@@ -17,9 +17,9 @@ class ColorPreviewWidget extends WidgetType {
     const span = document.createElement("span");
     span.className = "cm-color-preview";
     span.setAttribute("data-color", this.color);
-    span.title = `点击修改颜色: ${this.color}`;
+    span.title = `Click to change color: ${this.color}`;
     
-    // 设置内联样式，这样CSS可以直接使用
+    // Set inline style so CSS can use the value directly
     span.style.cssText = `
       display: inline-block;
       width: 14px;
@@ -34,10 +34,10 @@ class ColorPreviewWidget extends WidgetType {
       box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     `;
     
-    // 添加点击事件监听器
+    // Add click listener
     span.addEventListener("click", this.handleClick.bind(this));
     
-    // 添加鼠标悬停效果
+    // Add hover effect
     span.addEventListener("mouseenter", () => {
       span.style.transform = "scale(1.1)";
       span.style.borderColor = "#888";
@@ -60,7 +60,7 @@ class ColorPreviewWidget extends WidgetType {
   openColorPicker(element) {
     const color = element.getAttribute("data-color");
     
-    // 创建颜色选择器输入框
+    // Create a color picker input
     const picker = document.createElement("input");
     picker.type = "color";
     picker.value = color;
@@ -75,12 +75,12 @@ class ColorPreviewWidget extends WidgetType {
     picker.addEventListener("change", (e) => {
       const newColor = e.target.value;
       this.updateColorInEditor(color, newColor, element);
-      // 清理
+      // Cleanup
       document.body.removeChild(picker);
     });
     
     picker.addEventListener("blur", () => {
-      // 延迟移除，避免在change事件之前被移除
+      // Delay removal so it doesn't happen before the change event
       setTimeout(() => {
         if (document.body.contains(picker)) {
           document.body.removeChild(picker);
@@ -94,7 +94,7 @@ class ColorPreviewWidget extends WidgetType {
   }
 
   updateColorInEditor(oldColor, newColor, element) {
-    // 通过自定义事件将信息传递给editor.js
+    // Pass data to editor.js via a custom event
     const event = new CustomEvent("colorChange", {
       detail: {
         oldColor: oldColor,
@@ -107,12 +107,12 @@ class ColorPreviewWidget extends WidgetType {
   }
 }
 
-// 颜色高亮和预览扩展
+// Color highlighting and preview extension
 export const colorPreviewExtension = EditorView.decorations.of((view) => {
   const builder = new RangeSetBuilder();
   const text = view.state.doc.toString();
   
-  // 匹配16进制颜色代码
+  // Match hex color codes
   const hexColorRegex = /#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
   let match;
   
@@ -121,13 +121,13 @@ export const colorPreviewExtension = EditorView.decorations.of((view) => {
     const from = match.index;
     const to = from + color.length;
     
-    // 避免重复添加小部件（检查是否已经有一个颜色预览）
-    // 我们可以检查前面的位置是否已经有小部件
+    // Avoid duplicate widgets (check whether a preview already exists)
+    // Check whether a widget is already present before this token
     const line = view.state.doc.lineAt(from);
     const lineText = line.text;
     const colorIndexInLine = from - line.from;
     
-    // 如果颜色前面已经有预览小部件，跳过
+    // Skip if there is already a preview widget before this color
     if (colorIndexInLine > 0) {
       const beforeColor = lineText.substring(0, colorIndexInLine);
       if (beforeColor.trim().endsWith('cm-color-preview')) {
@@ -135,7 +135,7 @@ export const colorPreviewExtension = EditorView.decorations.of((view) => {
       }
     }
     
-    // 在颜色代码前添加预览小部件
+    // Add a preview widget before the color code
     builder.add(
       from,
       from,
@@ -150,20 +150,20 @@ export const colorPreviewExtension = EditorView.decorations.of((view) => {
   return builder.finish();
 });
 
-// 导出函数用于在editor.js中处理颜色更新
+// Export helper used by editor.js to handle color updates
 export function setupColorPickerHandler(editorView) {
   window.addEventListener("colorChange", (event) => {
     const { oldColor, newColor, element } = event.detail;
     
     if (!editorView || !editorView.state) {
-      console.error('编辑器视图未初始化');
+      console.error('Editor view is not initialized');
       return;
     }
     
-    // 找到颜色代码在文档中的位置（精确查找）
+    // Find exact positions of this color code in the document
     const text = editorView.state.doc.toString();
     
-    // 使用正则表达式查找所有匹配的位置
+    // Use regex to find every matching position
     const regex = new RegExp(oldColor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
     let match;
     const matches = [];
@@ -176,15 +176,15 @@ export function setupColorPickerHandler(editorView) {
     }
     
     if (matches.length === 0) {
-      console.warn(`未找到颜色代码: ${oldColor}`);
+      console.warn(`Color code not found: ${oldColor}`);
       return;
     }
     
-    // 尝试确定是哪个匹配项（通常是最接近光标位置的）
+    // Identify the best match (usually nearest to cursor position)
     const selection = editorView.state.selection.main;
     const cursorPos = selection.head;
     
-    // 找到最接近光标的匹配项
+    // Pick the match closest to the cursor
     let bestMatch = matches[0];
     let minDistance = Math.abs(bestMatch.index - cursorPos);
     
@@ -196,27 +196,27 @@ export function setupColorPickerHandler(editorView) {
       }
     }
     
-    // 更新颜色代码
+    // Update the color code
     editorView.dispatch({
       changes: {
         from: bestMatch.index,
         to: bestMatch.index + bestMatch.length,
         insert: newColor
       },
-      // 保持光标位置
+      // Preserve cursor position
       selection: editorView.state.selection
     });
     
-    // 更新预览小部件的颜色
+    // Update preview widget color
     if (element && element.style) {
       element.style.backgroundColor = newColor;
       element.setAttribute('data-color', newColor);
-      element.title = `点击修改颜色: ${newColor}`;
+      element.title = `Click to change color: ${newColor}`;
     }
   });
 }
 
-// 导出辅助函数
+// Export utility function
 export function getAllColorsFromText(text) {
   const colors = [];
   const hexColorRegex = /#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
