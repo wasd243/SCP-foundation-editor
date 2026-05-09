@@ -113,8 +113,19 @@
     top: 110px;
 }
 
+.ribbon-separator.small-2 {
+    height: 25px;
+    left: 600px;
+    top: 110px;
+}
+
 .ribbon-separator.normal-1 {
     height: 76px;
     left: 480px;
     top: 60px;
+}
+
+.ribbon-separator.normal-2 {
+    height: 76px;
+    left: 780px;
 }
