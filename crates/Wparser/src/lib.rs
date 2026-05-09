@@ -28,9 +28,12 @@ pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutp
     let mut wikitext = source_text.to_string();
     ftml::preprocess(&mut wikitext);
 
+    // Tokenize and parse
     let tokens = ftml::tokenize(&wikitext);
     let parsed_result = ftml::parse(&tokens, &page_info, &settings);
 
+    // Convert to AST
+    // This would be the place to output AST and .json
     let (tree, _warnings) = parsed_result.into();
 
     let ast_json = serde_json::to_string_pretty(&tree)
@@ -38,8 +41,12 @@ pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutp
 
     use ftml::render::Render;
 
+    // Render to HTML
     let renderer = ftml::render::html::HtmlRender;
     let html_output = renderer.render(&tree, &page_info, &settings);
+
+    // This is a debug output for the parsed HTML
+    println!("{:?}", html_output);
 
     Ok(FtmlParseOutput {
         html: html_output.body.to_string(),
