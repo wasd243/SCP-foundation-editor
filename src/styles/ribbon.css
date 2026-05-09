@@ -98,11 +98,17 @@
 
 .ribbon-separator {
     width: 1px;
-    height: 70px;
+    height: 76px;
     position: absolute;
     top: 60px;
     left: 93px;
     background: var(--ribbon-separator);
 
     flex-shrink: 0;
+}
+
+.ribbon-separator.small-1 {
+    height: 25px;
+    left: 300px;
+    top: 110px;
 }
