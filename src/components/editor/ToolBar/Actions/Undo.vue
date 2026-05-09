@@ -1,15 +1,5 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Undo"
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-
+  <button class="actions-button undo">↶</button>
 </template>
-
-<style scoped>
-
-</style>

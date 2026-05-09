@@ -1,15 +1,9 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Actions"
-})
+<script setup lang="ts">
+import Redo from "./Actions/Redo.vue";
+import Undo from "./Actions/Undo.vue";
 </script>
 
 <template>
-
+  <Redo/>
+  <Undo/>
 </template>
-
-<style scoped>
-
-</style>

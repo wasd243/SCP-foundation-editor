@@ -16,6 +16,20 @@
 }
 
 .actions-button:hover {
-    background: #e7edf7;
-    border-color: #b8c7e0;
+    background: var(--color-word-blue-dark);
+    border-color: var(--color-word-blue-light);
+}
+
+.actions-button.redo {
+    position: absolute;
+    left: 280px;
+    top: 15px;
+    color: #dbe8ff;
+}
+
+.actions-button.undo {
+    position: absolute;
+    left: 250px;
+    top: 15px;
+    color: #dbe8ff;
 }
