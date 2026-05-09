@@ -60,3 +60,29 @@
 .editor-theme-default .ProseMirror blockquote p:last-child {
     margin-bottom: 0;
 }
+
+.editor-theme-default .ProseMirror table {
+    width: 100%;
+    margin: 0 0 0.8em;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.editor-theme-default .ProseMirror th,
+.editor-theme-default .ProseMirror td {
+    min-width: 1em;
+    padding: 8px 10px;
+    color: #000000;
+    border: 1px solid #000000;
+    vertical-align: top;
+}
+
+.editor-theme-default .ProseMirror th {
+    background: #f3f4f6;
+    font-weight: 700;
+}
+
+.editor-theme-default .ProseMirror th p:last-child,
+.editor-theme-default .ProseMirror td p:last-child {
+    margin-bottom: 0;
+}
