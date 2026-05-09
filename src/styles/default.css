@@ -11,8 +11,42 @@
 
 .editor-theme-default .ProseMirror h1,
 .editor-theme-default .ProseMirror h2,
-.editor-theme-default .ProseMirror h3 {
+.editor-theme-default .ProseMirror h3,
+.editor-theme-default .ProseMirror h4,
+.editor-theme-default .ProseMirror h5,
+.editor-theme-default .ProseMirror h6 {
+    display: block;
+    width: 100%;
     margin: 1em 0 0.5em;
+    font-family: "SimHei", "Microsoft YaHei", Arial, sans-serif;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #000000;
+}
+
+.editor-theme-default .ProseMirror h1 {
+    font-size: 2em;
+    color: #660000;
+}
+
+.editor-theme-default .ProseMirror h2 {
+    font-size: 1.6em;
+}
+
+.editor-theme-default .ProseMirror h3 {
+    font-size: 1.35em;
+}
+
+.editor-theme-default .ProseMirror h4 {
+    font-size: 1.2em;
+}
+
+.editor-theme-default .ProseMirror h5 {
+    font-size: 1.05em;
+}
+
+.editor-theme-default .ProseMirror h6 {
+    font-size: 0.95em;
 }
 
 .editor-theme-default .ProseMirror blockquote {

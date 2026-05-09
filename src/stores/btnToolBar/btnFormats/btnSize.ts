@@ -44,7 +44,7 @@ export function setEditorTitle(title: string) {
         return;
     }
 
-    if (title === "Content") {
+    if (title.toLowerCase() === "content") {
         editor.chain().focus().setParagraph().run();
         return;
     }
