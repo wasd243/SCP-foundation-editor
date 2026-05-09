@@ -1,0 +1,51 @@
+.format-color-button {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+    left: 130px;
+    top: var(--basic-btn-height);
+
+    border: 1px solid transparent;
+    background: transparent;
+
+    color: #ff0000;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.format-color-button:hover {
+    background: #e7edf7;
+    border-color: #b8c7e0;
+}
+
+.format-color-button:active {
+    background: #dbe8ff;
+    border-color: #8aaee8;
+}
+
+.format-color-button.text-color {
+    position: absolute;
+
+    left: 170px;
+    top: 57px;
+}
+
+.format-color-button.highlight-color {
+    position: absolute;
+
+    left: 198px;
+    top: 57px;
+}
+
+.format-color-button:focus {
+    outline: none;
+    box-shadow: none;
+}

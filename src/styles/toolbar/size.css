@@ -12,7 +12,6 @@
     line-height: 1;
     cursor: pointer;
 
-
 }
 
 
@@ -75,7 +74,7 @@
     background: var(--ribbon-dropdown-hover);
 }
 
-.format-size-button-arrow{
+.format-size-button-arrow {
     font-size: 10px;
     line-height: 1;
     opacity: 0.75;
