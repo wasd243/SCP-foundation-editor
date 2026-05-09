@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 import StarterKit from "@tiptap/starter-kit";
+import { setEditor } from "../../stores/editor.ts";
 
 const editor = useEditor({
   extensions: [StarterKit],
   content: "<p>Hello FTML editor.</p>",
+  onCreate: ({ editor }) => setEditor(editor),
+  onDestroy: () => setEditor(null),
 });
 </script>
 
