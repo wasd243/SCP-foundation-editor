@@ -1,9 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
 
-  "productName": "SCP-WYSIWYG",
+  "productName": "SCP-WYSIWYG by wasd243",
   "version": "3.0.0-alpha.1",
-  "author": "wasd243",
   "identifier": "com.wasd243.scpwysiwyg",
 
   "build": {
