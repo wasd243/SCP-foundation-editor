@@ -1,15 +1,6 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
+<script setup lang="ts"></script>
 
-export default defineComponent({
-  name: "CodeView"
-})
-</script>
-
+<!--Use basic.css style for code view button-->
 <template>
-
+  <button class="code-view">&lt;/&gt;</button>
 </template>
-
-<style scoped>
-
-</style>

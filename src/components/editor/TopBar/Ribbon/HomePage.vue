@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import Formats from "../../ToolBar/Formats.vue";
+import CodeView from "../../ToolBar/CodeView.vue";
 </script>
 <template>
   <div class="ribbon-layout" data-ribbon-page="home">
     <Formats/>
+    <CodeView/>
     <div class="ribbon-separator"></div>
     <div class="ribbon-separator small-1"></div>
 

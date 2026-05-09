@@ -1,3 +1,26 @@
+/* Code View formats*/
+.code-view {
+    width: 72px;
+    height: 64px;
+    font-family: monospace;
+    font-size: 32px;
+    font-weight: 700;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+
+    position: fixed;
+    top: 65px;
+    left: 10px;
+}
+
+.code-view:hover {
+    background: #e7edf7;
+    border-color: #b8c7e0;
+}
+
+
+/* Basic buttons formats*/
 .format-basic-button {
     width: 28px;
     height: 28px;
