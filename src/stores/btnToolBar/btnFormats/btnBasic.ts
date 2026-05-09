@@ -28,4 +28,12 @@ export function toggleEditorQuote() {
     getEditor()?.chain().focus().toggleWrap("blockquote").run();
 }
 
+export function insertEditorTable() {
+    getEditor()
+        ?.chain()
+        .focus()
+        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+        .run();
+}
+
 export function btnBasicIdleInterface() {}

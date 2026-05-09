@@ -13,6 +13,7 @@ import { toggleStrikethroughEditor } from "../../../../stores/btnToolBar/btnForm
 import { toggleSubscriptEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnSub.ts";
 import { toggleSuperscriptEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnSup.ts";
 import { toggleQuoteEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnQuote.ts";
+import { insertTableEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnTable.ts";
 import Table from "./Basic/Table.vue";
 
 function toggleBold() {
@@ -43,6 +44,10 @@ function toggleQuote() {
   toggleQuoteEditor();
 }
 
+function insertTable() {
+  insertTableEditor();
+}
+
 function basicIdleInterface() {}
 
 defineExpose({
@@ -58,5 +63,5 @@ defineExpose({
   <Sub @toggle="toggleSubscript"/>
   <Sup @toggle="toggleSuperscript"/>
   <Quote @toggle="toggleQuote"/>
-  <Table/>
+  <Table @insert="insertTable"/>
 </template>
