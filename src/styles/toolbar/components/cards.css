@@ -1,11 +1,26 @@
 .component-gallery {
     position: absolute;
     left: 790px;
-    top: 16px;
+    top: 70px;
 
     display: flex;
     gap: 8px;
+    width: 1050px;
     height: 76px;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.component-gallery::-webkit-scrollbar {
+    height: 6px;
+}
+
+.component-gallery::-webkit-scrollbar-thumb {
+    background: #b8c7e0;
+}
+
+.component-gallery::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .component-card {
@@ -33,4 +48,8 @@
 
 .component-card:active {
     background: #dbe8ff;
+}
+
+.component-card {
+    flex: 0 0 auto;
 }
