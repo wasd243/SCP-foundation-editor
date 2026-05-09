@@ -48,6 +48,9 @@ Thumbs.db
 # OLD
 v2.1.0/
 
+# Vite
+.vite-dev.err.log
+.vite-dev.log
 
 # AI
 .junie/

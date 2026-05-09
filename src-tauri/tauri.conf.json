@@ -3,6 +3,7 @@
 
   "productName": "SCP-WYSIWYG",
   "version": "3.0.0-alpha.1",
+  "author": "wasd243",
   "identifier": "com.wasd243.scpwysiwyg",
 
   "build": {
