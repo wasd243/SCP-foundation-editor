@@ -1,0 +1,5 @@
+/* List use .format button style */
+.format-basic-button.list-ol {
+    left: 180px;
+    top: calc(var(--basic-btn-height) - 40px);
+}

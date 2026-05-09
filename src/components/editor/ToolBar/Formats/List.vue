@@ -1,15 +1,7 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "List"
-})
+<script setup lang="ts">
+import OrderedList from "./List/OrderedList.vue";
 </script>
 
 <template>
-
+  <OrderedList/>
 </template>
-
-<style scoped>
-
-</style>

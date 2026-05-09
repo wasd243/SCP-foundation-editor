@@ -8,5 +8,6 @@ import "./styles/ribbon.css";
 import "./styles/toolbar/basic.css";
 import "./styles/toolbar/size.css";
 import "./styles/toolbar/color.css";
+import "./styles/toolbar/list.css";
 
 createApp(App).mount("#app");
