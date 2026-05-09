@@ -58,5 +58,6 @@
 
 .format-basic-button.quote {
     left: 125px;
+    top: calc(var(--basic-btn-height) - 2px);
     border: 1px dashed #666;
 }

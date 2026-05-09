@@ -49,6 +49,11 @@
     z-index: 10;
 }
 
+.format-title-list {
+    width: 150px;
+    left: 105px;
+}
+
 .format-size-button.list {
     width: 50%;
     height: 26px;
@@ -68,6 +73,10 @@
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
+}
+
+.format-size-button.list.title {
+    width: 130px;
 }
 
 .format-size-button.list:hover {
@@ -96,6 +105,10 @@
     overflow: hidden;
 }
 
+.format-title-menu {
+    width: 80px;
+}
+
 .format-size-menu-item {
     width: 50%;
     height: 24px;
@@ -109,6 +122,10 @@
     font-weight: 500;
     text-align: left;
     cursor: pointer;
+}
+
+.format-title-menu-item {
+    width: 100%;
 }
 
 .format-size-menu-item:hover {
