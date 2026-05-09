@@ -14,5 +14,6 @@ import "./styles/toolbar/components/cards.css";
 import "./styles/toolbar/components/actions.css";
 import "./styles/default.css";
 import "./styles/contextmenu/menudefault.css";
+import "./styles/contextmenu/menutable.css";
 
 createApp(App).mount("#app");

@@ -1,0 +1,21 @@
+/* Table Context Menu */
+
+.table-context-menu {
+    min-width: 188px;
+}
+
+.table-context-menu-item {
+    height: 30px;
+}
+
+.table-context-menu-item.danger {
+    color: #9b1c1c;
+}
+
+.table-context-menu-item.danger:hover {
+    background: #fee2e2;
+}
+
+.table-context-menu-item.danger:active {
+    background: #fecaca;
+}

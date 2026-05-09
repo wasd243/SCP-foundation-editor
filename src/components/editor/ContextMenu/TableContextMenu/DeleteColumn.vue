@@ -1,15 +1,11 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "DeleteColumn"
-})
+<script setup lang="ts">
+const emit = defineEmits<{
+  clickCommand: [];
+}>();
 </script>
 
 <template>
-
+  <button class="context-menu-item table-context-menu-item" type="button" @click="emit('clickCommand')">
+    <span>Delete column</span>
+  </button>
 </template>
-
-<style scoped>
-
-</style>

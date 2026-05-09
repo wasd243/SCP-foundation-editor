@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
-import { editorExtensions, setEditor } from "../../stores/editor.ts";
+import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
 import ContextMenu from "./ContextMenu.vue";
 
 const contextMenuVisible = ref(false);
@@ -10,6 +10,16 @@ const contextMenuY = ref(0);
 
 function handleContextMenu(event: MouseEvent) {
   event.preventDefault();
+
+  const editorInstance = getEditor();
+  const position = editorInstance?.view.posAtCoords({
+    left: event.clientX,
+    top: event.clientY,
+  });
+
+  if (position) {
+    editorInstance?.chain().focus().setTextSelection(position.pos).run();
+  }
 
   contextMenuX.value = event.clientX;
   contextMenuY.value = event.clientY;
