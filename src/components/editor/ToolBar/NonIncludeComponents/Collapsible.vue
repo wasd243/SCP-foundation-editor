@@ -1,15 +1,5 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Collapsible"
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-
+  <button class="component-card">Collapsible</button>
 </template>
-
-<style scoped>
-
-</style>

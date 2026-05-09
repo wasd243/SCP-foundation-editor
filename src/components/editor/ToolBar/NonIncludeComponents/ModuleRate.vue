@@ -1,15 +1,5 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "ModuleRate"
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-
+  <button class="component-card">ModuleRate</button>
 </template>
-
-<style scoped>
-
-</style>

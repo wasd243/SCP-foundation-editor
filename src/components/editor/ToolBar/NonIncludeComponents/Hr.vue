@@ -1,15 +1,5 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "hr"
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-
+  <button class="component-card">Hr</button>
 </template>
-
-<style scoped>
-
-</style>
