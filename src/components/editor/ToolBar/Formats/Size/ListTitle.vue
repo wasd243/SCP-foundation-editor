@@ -2,7 +2,9 @@
 import { ref } from "vue";
 
 const isOpen = ref(false);
-const titles = ["正文", "标题 1", "标题 2"]; // Waiting for data, going to be replaced by API
+// --- Waiting for data, going to be replaced by API ---
+const titles = ["Content", "+1", "++2", "+++3", "++++4", "+++++5", "++++++6"];
+// --- Waiting for data, going to be replaced by API ---
 const selectedTitle = ref(titles[0]);
 
 function toggleList() {
