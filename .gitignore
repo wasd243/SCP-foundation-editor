@@ -31,6 +31,7 @@ ftml/
 
 # Rust
 target/
+gen/
 
 # git
 .git/
@@ -47,7 +48,6 @@ Thumbs.db
 # OLD
 v2.1.0/
 
-targets/
 
 # AI
 .junie/
