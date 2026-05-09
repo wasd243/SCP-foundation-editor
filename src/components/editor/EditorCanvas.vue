@@ -6,6 +6,7 @@ import { setEditor } from "../../stores/editor.ts";
 const editor = useEditor({
   extensions: [StarterKit],
   content: "<p>Hello FTML editor.</p>",
+  // @ts-ignore
   onCreate: ({ editor }) => setEditor(editor),
   onDestroy: () => setEditor(null),
 });
