@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+const emit = defineEmits<{
+  selectTitle: [title: string];
+}>();
+
 const isOpen = ref(false);
 // --- Waiting for data, going to be replaced by API ---
 const titles = ["Content", "+1", "++2", "+++3", "++++4", "+++++5", "++++++6"];
@@ -14,6 +18,7 @@ function toggleList() {
 function selectTitle(title: string) {
   selectedTitle.value = title;
   isOpen.value = false;
+  emit("selectTitle", title);
 }
 </script>
 

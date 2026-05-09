@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+const emit = defineEmits<{
+  selectSize: [size: number];
+}>();
+
 const isOpen = ref(false);
 const fontSizes = [12, 14];
 const selectedSize = ref(fontSizes[0]);
@@ -12,6 +16,7 @@ function toggleList() {
 function selectSize(size: number) {
   selectedSize.value = size;
   isOpen.value = false;
+  emit("selectSize", size);
 }
 </script>
 
