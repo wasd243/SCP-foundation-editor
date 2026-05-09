@@ -9,7 +9,7 @@
     background: transparent;
     cursor: pointer;
 
-    position: fixed;
+    position: absolute;
     top: 65px;
     left: 10px;
 }
