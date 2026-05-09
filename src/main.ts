@@ -10,5 +10,6 @@ import "./styles/toolbar/size.css";
 import "./styles/toolbar/color.css";
 import "./styles/toolbar/list.css";
 import "./styles/toolbar/align.css";
+import "./styles/toolbar/components/cards.css";
 
 createApp(App).mount("#app");

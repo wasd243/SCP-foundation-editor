@@ -1,0 +1,36 @@
+.component-gallery {
+    position: absolute;
+    left: 790px;
+    top: 16px;
+
+    display: flex;
+    gap: 8px;
+    height: 76px;
+}
+
+.component-card {
+    width: 86px;
+    height: 52px;
+
+    border: 1px solid #c8d3e6;
+    background: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 12px;
+    font-weight: 600;
+    color: #1f2937;
+
+    cursor: pointer;
+}
+
+.component-card:hover {
+    background: #e7edf7;
+    border-color: #8aaee8;
+}
+
+.component-card:active {
+    background: #dbe8ff;
+}

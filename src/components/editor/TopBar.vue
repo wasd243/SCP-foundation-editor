@@ -1,3 +1,8 @@
+<!--
+This is the top bar of the editor, including the tabs and the ribbon,all of which are controlled by the Ribbon component.
+All controllers are in the Ribbon pages.
+-->
+
 <script setup lang="ts">
 import { ref } from "vue";
 
