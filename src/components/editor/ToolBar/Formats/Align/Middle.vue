@@ -1,15 +1,5 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Middle"
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-
+  <button class="format-basic-button align-center">≡</button>
 </template>
-
-<style scoped>
-
-</style>
