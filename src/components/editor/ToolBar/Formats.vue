@@ -3,6 +3,7 @@ import Basic from "./Formats/Basic.vue";
 import Size from "./Formats/Size.vue";
 import Color from "./Formats/Color.vue";
 import List from "./Formats/List.vue";
+import Align from "./Formats/Align.vue";
 </script>
 
 <template>
@@ -10,4 +11,5 @@ import List from "./Formats/List.vue";
   <Size/>
   <Color/>
   <List/>
+  <Align/>
 </template>

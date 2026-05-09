@@ -1,15 +1,7 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Align"
-})
+<script setup lang="ts">
+import Left from "./Align/Left.vue";
 </script>
 
 <template>
-
+  <Left/>
 </template>
-
-<style scoped>
-
-</style>

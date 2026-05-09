@@ -1,0 +1,5 @@
+/* Align buttons use basic buttons' styles */
+.format-basic-button.align-left {
+    left: 125px;
+    top: var(--basic-btn-height);
+}

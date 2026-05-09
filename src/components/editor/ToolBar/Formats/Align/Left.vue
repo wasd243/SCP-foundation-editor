@@ -1,15 +1,5 @@
-<script lang="ts">
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: "Left"
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
-
+  <button class="format-basic-button align-left">←</button>
 </template>
-
-<style scoped>
-
-</style>
