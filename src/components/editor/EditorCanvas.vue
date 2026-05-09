@@ -5,10 +5,30 @@ import { editorExtensions, setEditor } from "../../stores/editor.ts";
 const editor = useEditor({
   extensions: editorExtensions,
   content: "<p>Hello FTML editor.</p>",
-  // @ts-ignore
+
+  //@ts-ignore
   onCreate: ({ editor }) => setEditor(editor),
   onDestroy: () => setEditor(null),
+
+  editorProps: {
+    handlePaste(view, event) {
+      const text = event.clipboardData?.getData("text/plain");
+
+      if (!text) {
+        return false;
+      }
+
+      event.preventDefault();
+
+      view.dispatch(
+          view.state.tr.insertText(text)
+      );
+
+      return true;
+    },
+  },
 });
+
 </script>
 
 <template>
