@@ -39,9 +39,6 @@ pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutp
     let ast_json = serde_json::to_string_pretty(&tree)
         .map_err(|err| err.to_string())?;
 
-    // This is a debug output for the parsed AST
-    println!("{:?}", ast_json);
-
     use ftml::render::Render;
 
     // Render to HTML

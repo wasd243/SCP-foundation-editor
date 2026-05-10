@@ -45,10 +45,14 @@ import { wikidotColorExtension } from "./component/color_widgets.js";
 // AST debug
 import { syntaxTree } from "@codemirror/language";
 
-function broadcastCodeViewContent(content) {
-    if (typeof window.broadcastCodeViewContent === "function") {
-        window.broadcastCodeViewContent(content);
-    }
+function postCodeViewContent(content) {
+    window.parent.postMessage(
+        {
+            type: "code-view-content-changed",
+            payload: content,
+        },
+        "*"
+    );
 }
 
 // Define custom highlight tags to prevent "Unknown highlighting tag" errors
@@ -413,7 +417,7 @@ const startEditor = () => {
                 if (update.docChanged) {
                     const content = update.state.doc.toString();
                     
-                    broadcastCodeViewContent(content);
+                    postCodeViewContent(content);
                 }
             }),
 
