@@ -1,3 +1,5 @@
+<!--ContextMenu.vue is for right click context menu-->
+
 <script setup lang="ts">
 import { computed } from "vue";
 import { getEditor } from "../../stores/editor.ts";
