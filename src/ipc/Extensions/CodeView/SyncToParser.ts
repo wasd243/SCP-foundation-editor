@@ -5,13 +5,22 @@ type CodeViewMessage = {
   payload: string;
 };
 
+type ParseOutput = {
+  html: string;
+  ast_json: string;
+};
+
 export function SyncToParser() {
   window.addEventListener("message", async (event: MessageEvent<CodeViewMessage>) => {
     if (event.data?.type !== "code-view-content-changed") return;
 
-    await invoke("parse_wikidot", { sourceText: event.data.payload });
+    const output = await invoke<ParseOutput>("parse_wikidot", { sourceText: event.data.payload });
 
     console.log("[UI] Received\n")
     console.log(event.data.payload);
+
+    window.dispatchEvent(new CustomEvent("code-view-parser-html", {
+      detail: output.html,
+    }));
   });
 }

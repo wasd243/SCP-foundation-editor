@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api/core";
 import { ref } from "vue";
+import RenderSyncHtmlToEditor from "./CodeView/RenderSyncHTMLToEditor.vue";
 
 const isCodeViewOpen = ref(false);
 const codeViewSrc = ref("");
@@ -29,6 +30,7 @@ function closeCodeView() {
   >
     &lt;/&gt;
   </button>
+  <RenderSyncHtmlToEditor />
 
   <Teleport to="body">
     <Transition name="code-view-slide">
