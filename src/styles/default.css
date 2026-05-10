@@ -86,3 +86,14 @@
 .editor-theme-default .ProseMirror td p:last-child {
     margin-bottom: 0;
 }
+
+/* Reset ProseMirror double-spaced paragraphs */
+.editor-theme-default .ProseMirror p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.editor-theme-default.ProseMirror br {
+    line-height: 1;
+}
