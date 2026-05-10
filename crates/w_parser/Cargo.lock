@@ -3,16 +3,6 @@
 version = 4
 
 [[package]]
-name = "Wparser"
-version = "0.1.0"
-dependencies = [
- "ftml",
- "serde",
- "serde_json",
- "time",
-]
-
-[[package]]
 name = "ahash"
 version = "0.7.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1950,6 +1940,16 @@ name = "vlq"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "65dd7eed29412da847b0f78bcec0ac98588165988a8cfe41d4ea1d429f8ccfff"
+
+[[package]]
+name = "w_parser"
+version = "0.1.0"
+dependencies = [
+ "ftml",
+ "serde",
+ "serde_json",
+ "time",
+]
 
 [[package]]
 name = "wasi"

@@ -1,13 +1,13 @@
 # The main wikidot -> HTML parser based on ftml
 
 [package]
-name = "Wparser"
+name = "w_parser"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "Wparser"
-crate-type = ["cdylib"]
+name = "w_parser"
+crate-type = ["rlib", "cdylib"]
 
 [dependencies]
 ftml = { git = "https://github.com/scpwiki/ftml", tag = "v1.40.0" }
