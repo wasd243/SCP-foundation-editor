@@ -45,7 +45,11 @@ import { wikidotColorExtension } from "./component/color_widgets.js";
 // AST debug
 import { syntaxTree } from "@codemirror/language";
 
-// Initial content removed
+function broadcastCodeViewContent(content) {
+    if (typeof window.broadcastCodeViewContent === "function") {
+        window.broadcastCodeViewContent(content);
+    }
+}
 
 // Define custom highlight tags to prevent "Unknown highlighting tag" errors
 const customTags = {
@@ -409,11 +413,7 @@ const startEditor = () => {
                 if (update.docChanged) {
                     const content = update.state.doc.toString();
                     
-                    // Send latest content to userscript via postMessage
-                    window.parent.postMessage({
-                        type: 'h2o2-update',
-                        payload: content
-                    }, '*'); 
+                    broadcastCodeViewContent(content);
                 }
             }),
 

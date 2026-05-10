@@ -1,1 +1,5 @@
-// CodeView.ts is used to handle communication between the Rust library and the WYSIWYG Editor
+import { SyncToParser } from "./CodeView/SyncToParser";
+
+export function CodeView() {
+  SyncToParser();
+}

@@ -181,6 +181,19 @@
     </div>
     <div id="editor-container"></div>
     <!------------------------------------------------tool area---------------------------------------------->
+    <script>
+        let codeViewBroadcastTimer = null;
+
+        window.broadcastCodeViewContent = function(content) {
+            window.clearTimeout(codeViewBroadcastTimer);
+            codeViewBroadcastTimer = window.setTimeout(() => {
+                window.parent.postMessage({
+                    type: "code-view-content-changed",
+                    payload: content
+                }, "*");
+            }, 300);
+        };
+    </script>
     <script type="module" src="assets/bundle_editor.js"></script>
 
     <script>

@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import "vue3-colorpicker/style.css";
+import { connectIpc } from "./ipc/ipc";
 
 import "./styles/global.css"
 import "./styles/varibles.css";
@@ -16,4 +17,5 @@ import "./styles/default.css";
 import "./styles/contextmenu/menudefault.css";
 import "./styles/contextmenu/menutable.css";
 
+connectIpc();
 createApp(App).mount("#app");
