@@ -1,13 +1,21 @@
 <script setup lang="ts">
-const codeViewUrl = "/code_view/index.html";
+import { invoke } from "@tauri-apps/api/core";
 
-function openCodeView() {
-  window.open(codeViewUrl, "_blank", "noopener,noreferrer");
+async function openCodeView() {
+  try {
+    await invoke("open_code_view_window");
+  } catch (error) {
+    console.error(error);
+  }
 }
 </script>
 
-<!--Use basic.css style for code view button-->
 <template>
-  <button class="code-view" type="button" @click="openCodeView">&lt;/&gt;</button>
-  <iframe class="code-view-frame" :src="codeViewUrl" title="Code view"></iframe>
+  <button
+      class="code-view"
+      type="button"
+      @click="openCodeView"
+  >
+    &lt;/&gt;
+  </button>
 </template>
