@@ -232,36 +232,7 @@
                     }, 2000);
                 });
                 return; 
-            } 
-            // --- Added 1: Listen for init signal from Wikidot (userscript) ---
-            window.addEventListener('message', function(event) {
-                // Security check (optional): if (event.origin !== 'https://scpsandboxcn.wikidot.com') return;
-                
-                if (event.data && event.data.type === 'h2o2-init') {
-                    console.log("H2O2: Received initial content from Wikidot");
-                    const view = window.editorInstance;
-                    if (view) {
-                        view.dispatch({
-                            changes: { 
-                                from: 0, 
-                                to: view.state.doc.length, 
-                                insert: event.data.payload 
-                            }
-                        });
-                    }
-                }
-            });
-        
-            // --- Added 2: Listen to editor changes and sync back to Wikidot in real time ---
-            // Uses custom event 'editorContentChanged' defined in editor.js
-            window.addEventListener('editorContentChanged', function(e) {
-                if (window.parent !== window) {
-                    window.parent.postMessage({
-                        type: 'h2o2-update',
-                        payload: e.detail.content
-                    }, '*');
-                }
-            });
+            }
             
             // --- Core update section ---
             if (type === 'init') {
