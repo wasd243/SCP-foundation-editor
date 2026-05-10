@@ -1,5 +1,6 @@
-use std::borrow::Cow;
+//! w_parser is the main wikidot -> HTML parser based on ftml
 
+use std::borrow::Cow;
 use serde::Serialize;
 
 use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
@@ -32,7 +33,7 @@ pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutp
     let mut wikitext = source_text.to_string();
     ftml::preprocess(&mut wikitext);
 
-    // Intercept module rate
+    // Intercept unsupported Wikidot runtime blocks before FTML tokenization.
     wikitext = rate_interceptor(&wikitext);
 
     // Tokenize and parse
