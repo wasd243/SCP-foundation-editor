@@ -2,6 +2,10 @@ use std::borrow::Cow;
 
 use serde::Serialize;
 
+use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
+
+mod ftml_interceptor;
+
 #[derive(Serialize)]
 pub struct FtmlParseOutput {
     pub html: String,
@@ -27,6 +31,9 @@ pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutp
 
     let mut wikitext = source_text.to_string();
     ftml::preprocess(&mut wikitext);
+
+    // Intercept module rate
+    wikitext = rate_interceptor(&wikitext);
 
     // Tokenize and parse
     let tokens = ftml::tokenize(&wikitext);

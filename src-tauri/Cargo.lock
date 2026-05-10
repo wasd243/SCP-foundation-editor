@@ -4785,6 +4785,7 @@ name = "w_parser"
 version = "0.1.0"
 dependencies = [
  "ftml",
+ "regex",
  "serde",
  "serde_json",
  "time",
