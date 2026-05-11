@@ -15,6 +15,7 @@ import { toggleSuperscriptEditor } from "../../../../stores/btnToolBar/btnFormat
 import { toggleQuoteEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnQuote.ts";
 import { insertTableEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnTable.ts";
 import Table from "./Basic/Table.vue";
+import Hr from "./Basic/Hr.vue";
 
 function toggleBold() {
   toggleBoldEditor();
@@ -64,4 +65,5 @@ defineExpose({
   <Sup @toggle="toggleSuperscript"/>
   <Quote @toggle="toggleQuote"/>
   <Table @insert="insertTable"/>
+  <Hr/>
 </template>

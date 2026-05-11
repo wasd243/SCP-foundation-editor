@@ -6,9 +6,10 @@
     align-items: center;
     justify-content: center;
 
-    position: relative;
-    left: 130px;
-    top: var(--basic-btn-height);
+    position: absolute;
+    z-index: 1;
+    left: 440px;
+    top: 110px;
 
     border: 1px solid transparent;
     background: transparent;

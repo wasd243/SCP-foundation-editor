@@ -10,7 +10,7 @@ export type DOMReplacer = (context: DOMReplaceContext) => Node | null;
 
 const domReplacer: DOMReplacer[] = [
   ...alignReplacer,
-  // Replace collapsible content for TipTap empty line
+  // Replace collapsible blocks
   ...collapsibleReplacer,
 ];
 
