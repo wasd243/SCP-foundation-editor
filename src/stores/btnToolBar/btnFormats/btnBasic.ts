@@ -36,4 +36,12 @@ export function insertEditorTable() {
         .run();
 }
 
+export function insertEditorHorizontalRule() {
+    getEditor()
+        ?.chain()
+        .focus()
+        .setHorizontalRule()
+        .run();
+}
+
 export function btnBasicIdleInterface() {}

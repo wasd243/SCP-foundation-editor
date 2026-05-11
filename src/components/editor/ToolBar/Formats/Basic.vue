@@ -14,6 +14,7 @@ import { toggleSubscriptEditor } from "../../../../stores/btnToolBar/btnFormats/
 import { toggleSuperscriptEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnSup.ts";
 import { toggleQuoteEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnQuote.ts";
 import { insertTableEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnTable.ts";
+import { insertHorizontalRuleEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnHr.ts";
 import Table from "./Basic/Table.vue";
 import Hr from "./Basic/Hr.vue";
 
@@ -49,6 +50,10 @@ function insertTable() {
   insertTableEditor();
 }
 
+function insertHorizontalRule() {
+  insertHorizontalRuleEditor();
+}
+
 function basicIdleInterface() {}
 
 defineExpose({
@@ -65,5 +70,5 @@ defineExpose({
   <Sup @toggle="toggleSuperscript"/>
   <Quote @toggle="toggleQuote"/>
   <Table @insert="insertTable"/>
-  <Hr/>
+  <Hr @insert="insertHorizontalRule"/>
 </template>

@@ -1,7 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const emit = defineEmits<{
+  insert: [];
+}>();
+</script>
 
 <template>
-  <button class="format-basic-button hr">
+  <button class="format-basic-button hr" type="button" @click="emit('insert')">
     <!--This is a hardcoded svg file for the hr-->
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       <line
