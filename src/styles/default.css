@@ -101,11 +101,23 @@
 /* Collapsible */
 .editor-theme-default .ProseMirror [data-type="details"],
 .editor-theme-default .ProseMirror details {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
     margin: 0 0 0.8em;
+}
+
+.editor-theme-default .ProseMirror [data-type="details"][style*="text-align: center"] {
+    justify-content: center;
+}
+
+.editor-theme-default .ProseMirror [data-type="details"][style*="text-align: right"] {
+    justify-content: flex-end;
 }
 
 .editor-theme-default .ProseMirror [data-type="details"] > button {
     display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
     width: 1.25em;
@@ -128,7 +140,8 @@
 }
 
 .editor-theme-default .ProseMirror [data-type="details"] > div {
-    display: inline;
+    display: block;
+    text-align: inherit;
 }
 
 .editor-theme-default .ProseMirror [data-type="detailsSummary"],
