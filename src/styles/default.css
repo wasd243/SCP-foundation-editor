@@ -97,3 +97,62 @@
 .editor-theme-default.ProseMirror br {
     line-height: 1;
 }
+
+/* Collapsible */
+.editor-theme-default .ProseMirror [data-type="details"],
+.editor-theme-default .ProseMirror details {
+    margin: 0 0 0.8em;
+}
+
+.editor-theme-default .ProseMirror [data-type="details"] > button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25em;
+    height: 1.25em;
+    margin: 0 6px 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.editor-theme-default .ProseMirror [data-type="details"] > button::before {
+    content: "▸";
+}
+
+.editor-theme-default .ProseMirror [data-type="details"].is-open > button::before {
+    content: "▾";
+}
+
+.editor-theme-default .ProseMirror [data-type="details"] > div {
+    display: inline;
+}
+
+.editor-theme-default .ProseMirror [data-type="detailsSummary"],
+.editor-theme-default .ProseMirror summary {
+    display: inline;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.editor-theme-default .ProseMirror [data-type="detailsContent"],
+.editor-theme-default .ProseMirror details > div[data-type="detailsContent"] {
+    margin-top: 6px;
+    padding-left: 12px;
+    border-left: 2px solid #d8d8d8;
+}
+
+.editor-theme-default .ProseMirror [data-type="details"].is-open [data-type="detailsContent"] {
+    display: block;
+}
+
+.editor-theme-default .ProseMirror summary::marker {
+    display: none;
+}
+
+.editor-theme-default .ProseMirror summary::-webkit-details-marker {
+    display: none;
+}

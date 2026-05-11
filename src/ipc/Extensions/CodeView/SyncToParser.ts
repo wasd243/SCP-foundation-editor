@@ -21,6 +21,7 @@ export function SyncToParser() {
     console.log(event.data.payload);
 
     window.dispatchEvent(new CustomEvent("code-view-parser-html", {
+      // Replace wj formats <div> classes into TipTap formats for render
       detail: scanDOMandReplace(output.html),
     }));
   });

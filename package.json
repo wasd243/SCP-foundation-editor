@@ -11,6 +11,7 @@
   "dependencies": {
     "@tauri-apps/api": "^2.11.0",
     "@tiptap/core": "^3.22.5",
+    "@tiptap/extension-details": "^3.22.5",
     "@tiptap/extension-table": "^3.22.5",
     "@tiptap/extension-table-cell": "^3.22.5",
     "@tiptap/extension-table-header": "^3.22.5",

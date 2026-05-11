@@ -6,7 +6,7 @@ export const TextAlignExtension = Extension.create({
     addGlobalAttributes() {
         return [
             {
-                types: ["heading", "paragraph"],
+                types: ["heading", "paragraph", "details", "detailsSummary", "detailsContent"],
                 attributes: {
                     textAlign: {
                         default: null,

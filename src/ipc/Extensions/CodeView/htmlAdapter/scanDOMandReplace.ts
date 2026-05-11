@@ -1,4 +1,5 @@
 import { alignReplacer } from "./Components/Align";
+import { collapsibleReplacer } from "./Components/Collapsible";
 
 export type DOMReplaceContext = {
   element: Element;
@@ -9,6 +10,8 @@ export type DOMReplacer = (context: DOMReplaceContext) => Node | null;
 
 const domReplacer: DOMReplacer[] = [
   ...alignReplacer,
+  // Replace collapsible content for TipTap empty line
+  ...collapsibleReplacer,
 ];
 
 export function scanDOMandReplace(html: string, handlers = domReplacer): string {
