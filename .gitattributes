@@ -1,0 +1,19 @@
+# Normalize line endings
+* text=auto
+
+# Main languages
+*.rs   linguist-language=Rust
+*.vue  linguist-language=Vue
+*.ts   linguist-language=TypeScript
+*.js   linguist-language=JavaScript
+*.css  linguist-language=CSS
+*.html linguist-language=HTML
+*.py   linguist-language=Python
+
+# Ignore generated/minified files
+dist/** linguist-generated=true
+*.min.js linguist-generated=true
+
+# Ignore dependencies
+node_modules/** linguist-vendored
+target/** linguist-vendored
