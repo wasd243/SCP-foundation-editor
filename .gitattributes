@@ -14,6 +14,12 @@
 dist/** linguist-generated=true
 *.min.js linguist-generated=true
 
+# Ignore embedded/legacy codeview assets
+public/code_view/** linguist-generated=true
+
+# Ignore plain JS files for stats
+# *.js linguist-generated=true
+
 # Ignore dependencies
 node_modules/** linguist-vendored
 target/** linguist-vendored
