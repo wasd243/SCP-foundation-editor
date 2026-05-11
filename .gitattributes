@@ -5,7 +5,6 @@
 *.rs   linguist-language=Rust
 *.vue  linguist-language=Vue
 *.ts   linguist-language=TypeScript
-*.js   linguist-language=JavaScript
 *.css  linguist-language=CSS
 *.html linguist-language=HTML
 *.py   linguist-language=Python
@@ -18,7 +17,7 @@ dist/** linguist-generated=true
 public/code_view/** linguist-generated=true
 
 # Ignore plain JS files for stats
-# *.js linguist-generated=true
+*.js linguist-generated=true
 
 # Ignore dependencies
 node_modules/** linguist-vendored
