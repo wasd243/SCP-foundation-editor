@@ -171,3 +171,65 @@
     display: none;
 }
 /* ---Collapsible end--- */
+
+/* ---Tabview start--- */
+.editor-theme-default .ProseMirror .wj-tabs {
+    display: block;
+    margin: 10px 0 14px;
+    border: 1px solid #8b8b8b;
+    background: #f7f7f7;
+}
+
+.editor-theme-default .ProseMirror .wj-tabs-button-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -1px -1px 0;
+    border-bottom: 5px solid #333333;
+    background: #ffffff;
+}
+
+.editor-theme-default .ProseMirror .wj-tabs-button {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 4px 17px 5px;
+    box-sizing: border-box;
+    border: 1px solid #9f9f9f;
+    border-bottom: 0;
+    background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 48%, #d2d2d2 100%);
+    color: #202020;
+    font-family: "Microsoft YaHei", Arial, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1.15;
+    cursor: default;
+    user-select: none;
+}
+
+.editor-theme-default .ProseMirror .wj-tabs-button + .wj-tabs-button {
+    margin-left: -1px;
+}
+
+.editor-theme-default .ProseMirror .wj-tabs-button[aria-selected="true"] {
+    border-color: #5f0707;
+    background: linear-gradient(to bottom, #9a1111 0%, #800707 100%);
+    color: #ffffff;
+}
+
+.editor-theme-default .ProseMirror .wj-tabs-panel-list {
+    min-height: 67px;
+    padding: 16px 7px;
+    box-sizing: border-box;
+    background: #f7f7f7;
+}
+
+.editor-theme-default .ProseMirror .wj-tabs-panel[hidden] {
+    display: none;
+}
+
+.editor-theme-default .ProseMirror .wj-tabs-panel p {
+    margin: 0;
+    line-height: 1.35;
+}
+/* ---Tabview end--- */

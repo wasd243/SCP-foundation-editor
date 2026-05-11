@@ -9,6 +9,7 @@ import { DetailsExtension } from "./extensions/DetailsE.ts";
 import { DetailsContentExtension } from "./extensions/DetailsContentE.ts";
 import { FontSizeExtension } from "./extensions/FontSizeE.ts";
 import { TableExtensions } from "./extensions/TableE.ts";
+import { TabViewExtensions } from "./extensions/TabViewE.ts";
 import { TextAlignExtension } from "./extensions/TextAlignE.ts";
 import { TextColorExtension } from "./extensions/TextColorE.ts";
 
@@ -23,4 +24,5 @@ export const editorExtensions = [
     TextColorExtension,
     FontSizeExtension,
     ...TableExtensions,
+    ...TabViewExtensions,
 ];
