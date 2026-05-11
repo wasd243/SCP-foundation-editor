@@ -38,6 +38,8 @@ export function setEditorAlign(align: EditorTextAlign) {
         })
         .updateAttributes("paragraph", { textAlign: align })
         .updateAttributes("heading", { textAlign: align })
+
+        // Special case for collapsible blocks
         .updateAttributes("details", { textAlign: align })
         .updateAttributes("detailsSummary", { textAlign: align })
         .updateAttributes("detailsContent", { textAlign: align })

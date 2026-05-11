@@ -15,6 +15,7 @@ function syncAlign(element: HTMLElement, align: string | null) {
     element.style.textAlign = align;
 }
 
+// Details Extension for collapsible blocks
 export const DetailsExtension = Details.extend({
     addNodeView() {
         return ({ editor, node, HTMLAttributes }) => {
