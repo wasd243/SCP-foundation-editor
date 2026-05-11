@@ -1,6 +1,8 @@
 # SCP Foundation Editor
 ### SCP 基金会中文文档编辑器
 
+### *版本重构中，计划使用TipTap用于新版本编辑器*
+
 > 一个用于编写 **SCP Wikidot 文档** 的辅助编辑器，旨在简化 SCP 文档的编辑流程并提升写作体验。
 
 ![License](https://img.shields.io/badge/license-AGPL_3.0-blue)
