@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { scanDOMandReplace } from "./htmlAdapter";
 
 type CodeViewMessage = {
   type: "code-view-content-changed";
@@ -20,7 +21,7 @@ export function SyncToParser() {
     console.log(event.data.payload);
 
     window.dispatchEvent(new CustomEvent("code-view-parser-html", {
-      detail: output.html,
+      detail: scanDOMandReplace(output.html),
     }));
   });
 }
