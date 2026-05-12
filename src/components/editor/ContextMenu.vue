@@ -5,6 +5,7 @@ import { computed } from "vue";
 import { getEditor } from "../../stores/editor.ts";
 import DefaultContextMenu from "./ContextMenu/DefaultContextMenu.vue";
 import TableContextMenu from "./ContextMenu/TableContextMenu.vue";
+import TabViewContextMenu from "./ContextMenu/TabViewContextMenu.vue";
 
 defineProps<{
   x: number;
@@ -12,6 +13,7 @@ defineProps<{
 }>();
 
 const isTableMenu = computed(() => getEditor()?.isActive("table") ?? false);
+const isTabViewMenu = computed(() => getEditor()?.isActive("tabView") ?? false);
 </script>
 
 <template>
@@ -22,7 +24,8 @@ const isTableMenu = computed(() => getEditor()?.isActive("table") ?? false);
       top: `${y}px`,
     }"
   >
-    <TableContextMenu v-if="isTableMenu"/>
+    <TabViewContextMenu v-if="isTabViewMenu"/>
+    <TableContextMenu v-else-if="isTableMenu"/>
     <DefaultContextMenu v-else/>
   </div>
 </template>
