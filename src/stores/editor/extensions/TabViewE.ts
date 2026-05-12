@@ -83,6 +83,21 @@ function NoEnterInTabViewButton(editor: Editor) {
     });
 }
 
+function selectionInsideTabViewPanel(editor: Editor) {
+    const { $from, $to } = editor.state.selection;
+    const positions = [$from, $to];
+
+    return positions.some(($pos) => {
+        for (let depth = $pos.depth; depth > 0; depth -= 1) {
+            if ($pos.node(depth).type.name === "tabViewPanel") {
+                return true;
+            }
+        }
+
+        return false;
+    });
+}
+
 export const TabViewExtension = Node.create({
     name: "tabView",
     group: "block",
@@ -196,6 +211,7 @@ export const TabViewPanelExtension = Node.create({
     name: "tabViewPanel",
     content: "block+",
     defining: true,
+    isolating: true,
 
     addAttributes: addPreservedAttributes,
 
@@ -205,6 +221,16 @@ export const TabViewPanelExtension = Node.create({
 
     renderHTML({ HTMLAttributes }) {
         return ["div", mergeAttributes(HTMLAttributes), 0];
+    },
+
+    addKeyboardShortcuts() {
+        return {
+            Enter: () => {
+                if (!selectionInsideTabViewPanel(this.editor)) return false;
+
+                return this.editor.commands.splitBlock();
+            },
+        };
     },
 });
 

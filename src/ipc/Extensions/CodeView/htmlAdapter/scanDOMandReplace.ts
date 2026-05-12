@@ -1,5 +1,6 @@
 import { alignReplacer } from "./Components/Align";
 import { collapsibleReplacer } from "./Components/Collapsible";
+import { tabViewReplacer } from "./Components/TabView";
 
 export type DOMReplaceContext = {
   element: Element;
@@ -12,6 +13,7 @@ const domReplacer: DOMReplacer[] = [
   ...alignReplacer,
   // Replace collapsible blocks
   ...collapsibleReplacer,
+  ...tabViewReplacer,
 ];
 
 export function scanDOMandReplace(html: string, handlers = domReplacer): string {
