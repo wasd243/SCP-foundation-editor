@@ -3,14 +3,14 @@ import AddTab from "./TabViewContextMenu/AddTab.vue";
 import DeleteTabView from "./TabViewContextMenu/DeleteTabView.vue";
 // All connection should be done with TabView.ts
 import { addTabInTipTapEditor } from "../../../stores/btnContextMenu/TabView.ts";
-import { deleteEditorTabView } from "../../../stores/btnContextMenu/TabView/btnDeleteTabView.ts";
+import { deleteTabViewInTipTapEditor} from "../../../stores/btnContextMenu/TabView.ts";
 
 function addTabInEditor() {
   addTabInTipTapEditor();
 }
 
 function deleteTabView() {
-  deleteEditorTabView();
+  deleteTabViewInTipTapEditor();
 }
 </script>
 
