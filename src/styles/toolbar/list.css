@@ -1,10 +1,10 @@
 /* List use .format button style */
 .format-basic-button.list-ol {
-    left: 180px;
+    left: 190px;
     top: calc(var(--basic-btn-height) - 40px);
 }
 
 .format-basic-button.list-ul {
-    left: 186px;
+    left: 195px;
     top: calc(var(--basic-btn-height) - 40px);
 }

@@ -1,12 +1,12 @@
 /* Align buttons use basic buttons' styles */
 .format-basic-button.align-left {
-    left: 125px;
+    left: 132px;
 }
 
 .format-basic-button.align-right {
-    left: 130px;
+    left: 135px;
 }
 
 .format-basic-button.align-center {
-    left: 135px;
+    left: 140px;
 }

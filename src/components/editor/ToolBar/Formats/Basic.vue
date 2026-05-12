@@ -17,6 +17,7 @@ import { insertTableEditor } from "../../../../stores/btnToolBar/btnFormats/btnB
 import { insertHorizontalRuleEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnHr.ts";
 import Table from "./Basic/Table.vue";
 import Hr from "./Basic/Hr.vue";
+import Collapsible from "./Basic/Collapsible.vue";
 
 function toggleBold() {
   toggleBoldEditor();
@@ -71,4 +72,5 @@ defineExpose({
   <Quote @toggle="toggleQuote"/>
   <Table @insert="insertTable"/>
   <Hr @insert="insertHorizontalRule"/>
+  <Collapsible/>
 </template>
