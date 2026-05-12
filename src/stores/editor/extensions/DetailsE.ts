@@ -1,4 +1,4 @@
-import { mergeAttributes } from "@tiptap/core";
+import { Mark, mergeAttributes } from "@tiptap/core";
 import { Details } from "@tiptap/extension-details";
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import type { ViewMutationRecord } from "@tiptap/pm/view";
@@ -14,6 +14,38 @@ function syncAlign(element: HTMLElement, align: string | null) {
     element.classList.add(`align-${align}`);
     element.style.textAlign = align;
 }
+
+export const CollapsibleShowTextMark = Mark.create({
+    name: "collapsibleShowText",
+
+    parseHTML() {
+        return [
+            {
+                tag: "span.wj-collapsible-show-text",
+            },
+        ];
+    },
+
+    renderHTML({ HTMLAttributes }) {
+        return ["span", mergeAttributes(HTMLAttributes, { class: "wj-collapsible-show-text" }), 0];
+    },
+});
+
+export const CollapsibleHideTextMark = Mark.create({
+    name: "collapsibleHideText",
+
+    parseHTML() {
+        return [
+            {
+                tag: "span.wj-collapsible-hide-text",
+            },
+        ];
+    },
+
+    renderHTML({ HTMLAttributes }) {
+        return ["span", mergeAttributes(HTMLAttributes, { class: "wj-collapsible-hide-text" }), 0];
+    },
+});
 
 // Details Extension for collapsible blocks
 export const DetailsExtension = Details.extend({
@@ -89,3 +121,8 @@ export const DetailsExtension = Details.extend({
         };
     },
 });
+
+export const CollapsibleTextExtensions = [
+    CollapsibleShowTextMark,
+    CollapsibleHideTextMark,
+];

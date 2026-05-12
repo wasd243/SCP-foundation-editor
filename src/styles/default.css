@@ -152,6 +152,27 @@
     cursor: pointer;
 }
 
+.editor-theme-default .ProseMirror .wj-collapsible-show-text,
+.editor-theme-default .ProseMirror .wj-collapsible-hide-text {
+    display: inline;
+    min-width: 1em;
+}
+
+.editor-theme-default .ProseMirror [data-type="details"] .wj-collapsible-hide-text,
+.editor-theme-default .ProseMirror details:not([open]) .wj-collapsible-hide-text {
+    display: none;
+}
+
+.editor-theme-default .ProseMirror [data-type="details"].is-open .wj-collapsible-show-text,
+.editor-theme-default .ProseMirror details[open] .wj-collapsible-show-text {
+    display: none;
+}
+
+.editor-theme-default .ProseMirror [data-type="details"].is-open .wj-collapsible-hide-text,
+.editor-theme-default .ProseMirror details[open] .wj-collapsible-hide-text {
+    display: inline;
+}
+
 .editor-theme-default .ProseMirror [data-type="detailsContent"],
 .editor-theme-default .ProseMirror details > div[data-type="detailsContent"] {
     margin-top: 6px;
