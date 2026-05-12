@@ -13,7 +13,24 @@ defineProps<{
 }>();
 
 const isTableMenu = computed(() => getEditor()?.isActive("table") ?? false);
-const isTabViewMenu = computed(() => getEditor()?.isActive("tabView") ?? false);
+
+const isTabViewMenu = computed(() => {
+  const editor = getEditor();
+  if (!editor) return false;
+
+  const { $from, $to } = editor.state.selection;
+  const positions = [$from, $to];
+
+  return positions.some(($pos) => {
+    for (let depth = $pos.depth; depth > 0; depth -= 1) {
+      if ($pos.node(depth).type.name === "tabView") {
+        return true;
+      }
+    }
+
+    return false;
+  });
+});
 </script>
 
 <template>
