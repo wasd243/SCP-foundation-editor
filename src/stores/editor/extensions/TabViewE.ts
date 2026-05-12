@@ -1,8 +1,11 @@
 import { mergeAttributes, Node } from "@tiptap/core";
 import type { Editor } from "@tiptap/core";
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
+import type { ResolvedPos } from "@tiptap/pm/model";
 import { Plugin } from "@tiptap/pm/state";
-import type { Transaction } from "@tiptap/pm/state";
+import type { EditorState, Transaction } from "@tiptap/pm/state";
+
+const TAB_VIEW_BUTTON_MAX_LABEL_LENGTH = 80;
 
 const preservedAttributes = [
     "class",
@@ -48,6 +51,82 @@ function limitToParentWidth(element: HTMLElement) {
     element.style.minWidth = "0";
     element.style.maxWidth = "100%";
     element.style.boxSizing = "border-box";
+}
+
+function createBoundedNodeView(tagName: string) {
+    return ({ node, HTMLAttributes }: { node: ProseMirrorNode; HTMLAttributes: Record<string, string | null> }) => {
+        const dom = document.createElement(tagName);
+        const syncNode = (currentNode: ProseMirrorNode) => {
+            syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, currentNode.attrs));
+            limitToParentWidth(dom);
+        };
+
+        syncNode(node);
+
+        return {
+            dom,
+            contentDOM: dom,
+            update: (updatedNode: ProseMirrorNode) => {
+                if (updatedNode.type !== node.type) return false;
+
+                syncNode(updatedNode);
+
+                return true;
+            },
+        };
+    };
+}
+
+function countChars(text: string) {
+    return Array.from(text).length;
+}
+
+function findTabViewButton($pos: ResolvedPos) {
+    for (let depth = $pos.depth; depth > 0; depth -= 1) {
+        const node = $pos.node(depth);
+
+        if (node.type.name === "tabViewButton") {
+            return {
+                node,
+                pos: $pos.before(depth),
+            };
+        }
+    }
+
+    return null;
+}
+
+function getSelectedTabViewButtonTextLength(state: EditorState, button: { node: ProseMirrorNode; pos: number }) {
+    const { from, to } = state.selection;
+    const buttonStart = button.pos + 1;
+    const buttonEnd = button.pos + button.node.nodeSize - 1;
+    const selectedFrom = Math.max(from, buttonStart);
+    const selectedTo = Math.min(to, buttonEnd);
+
+    if (selectedTo <= selectedFrom) {
+        return 0;
+    }
+
+    return countChars(state.doc.textBetween(selectedFrom, selectedTo));
+}
+
+function shouldBlockTabViewButtonInput(state: EditorState, inputText: string) {
+    const { $from, $to } = state.selection;
+    const fromButton = findTabViewButton($from);
+    const toButton = findTabViewButton($to);
+
+    if (!fromButton && !toButton) {
+        return false;
+    }
+
+    if (!fromButton || !toButton || fromButton.pos !== toButton.pos) {
+        return true;
+    }
+
+    const selectedLength = getSelectedTabViewButtonTextLength(state, fromButton);
+    const nextLength = countChars(fromButton.node.textContent) - selectedLength + countChars(inputText);
+
+    return nextLength > TAB_VIEW_BUTTON_MAX_LABEL_LENGTH;
 }
 
 function switchTabViewTab(
@@ -133,25 +212,7 @@ export const TabViewExtension = Node.create({
     },
 
     addNodeView() {
-        return ({ node, HTMLAttributes }) => {
-            const dom = document.createElement("wj-tabs");
-
-            syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, node.attrs));
-            limitToParentWidth(dom);
-
-            return {
-                dom,
-                contentDOM: dom,
-                update: (updatedNode) => {
-                    if (updatedNode.type !== this.type) return false;
-
-                    syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, updatedNode.attrs));
-                    limitToParentWidth(dom);
-
-                    return true;
-                },
-            };
-        };
+        return createBoundedNodeView("wj-tabs");
     },
 
     addKeyboardShortcuts() {
@@ -200,6 +261,12 @@ export const TabViewExtension = Node.create({
 
                         return true;
                     },
+                    handleTextInput: (view, _from, _to, text) => shouldBlockTabViewButtonInput(view.state, text),
+                    handlePaste: (view, event) => {
+                        const text = event.clipboardData?.getData("text/plain") ?? "";
+
+                        return text.length > 0 && shouldBlockTabViewButtonInput(view.state, text);
+                    },
                 },
             }),
         ];
@@ -221,25 +288,7 @@ export const TabViewButtonListExtension = Node.create({
     },
 
     addNodeView() {
-        return ({ node, HTMLAttributes }) => {
-            const dom = document.createElement("div");
-
-            syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, node.attrs));
-            limitToParentWidth(dom);
-
-            return {
-                dom,
-                contentDOM: dom,
-                update: (updatedNode) => {
-                    if (updatedNode.type !== this.type) return false;
-
-                    syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, updatedNode.attrs));
-                    limitToParentWidth(dom);
-
-                    return true;
-                },
-            };
-        };
+        return createBoundedNodeView("div");
     },
 });
 
@@ -303,25 +352,7 @@ export const TabViewPanelListExtension = Node.create({
     },
 
     addNodeView() {
-        return ({ node, HTMLAttributes }) => {
-            const dom = document.createElement("div");
-
-            syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, node.attrs));
-            limitToParentWidth(dom);
-
-            return {
-                dom,
-                contentDOM: dom,
-                update: (updatedNode) => {
-                    if (updatedNode.type !== this.type) return false;
-
-                    syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, updatedNode.attrs));
-                    limitToParentWidth(dom);
-
-                    return true;
-                },
-            };
-        };
+        return createBoundedNodeView("div");
     },
 });
 
@@ -342,25 +373,7 @@ export const TabViewPanelExtension = Node.create({
     },
 
     addNodeView() {
-        return ({ node, HTMLAttributes }) => {
-            const dom = document.createElement("div");
-
-            syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, node.attrs));
-            limitToParentWidth(dom);
-
-            return {
-                dom,
-                contentDOM: dom,
-                update: (updatedNode) => {
-                    if (updatedNode.type !== this.type) return false;
-
-                    syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, updatedNode.attrs));
-                    limitToParentWidth(dom);
-
-                    return true;
-                },
-            };
-        };
+        return createBoundedNodeView("div");
     },
 
     addKeyboardShortcuts() {

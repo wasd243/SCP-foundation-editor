@@ -1,5 +1,5 @@
-import { findParentNode, Mark, mergeAttributes } from "@tiptap/core";
-import { Details, DetailsSummary } from "@tiptap/extension-details";
+import { Mark, mergeAttributes } from "@tiptap/core";
+import { Details } from "@tiptap/extension-details";
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import type { ViewMutationRecord } from "@tiptap/pm/view";
 
@@ -13,16 +13,6 @@ function syncAlign(element: HTMLElement, align: string | null) {
 
     element.classList.add(`align-${align}`);
     element.style.textAlign = align;
-}
-
-function limitToParentWidth(element: HTMLElement) {
-    element.style.width = "100%";
-    element.style.minWidth = "0";
-    element.style.maxWidth = "100%";
-    element.style.boxSizing = "border-box";
-    element.style.overflowX = "auto";
-    element.style.overflowWrap = "anywhere";
-    element.style.wordBreak = "break-word";
 }
 
 export const CollapsibleShowTextMark = Mark.create({
@@ -79,8 +69,6 @@ export const DetailsExtension = Details.extend({
             };
 
             syncNodeAttributes(node);
-            limitToParentWidth(dom);
-            limitToParentWidth(content);
 
             toggle.type = "button";
             dom.append(toggle);
@@ -130,54 +118,6 @@ export const DetailsExtension = Details.extend({
                     return true;
                 },
             };
-        };
-    },
-});
-
-export const DetailsSummaryExtension = DetailsSummary.extend({
-    addKeyboardShortcuts() {
-        const deleteEmptyDetails = (key: "Backspace" | "Delete") => {
-            const { state, view } = this.editor;
-            const { selection } = state;
-            const detailsSummary = findParentNode(node => node.type === this.type)(selection);
-
-            if (!detailsSummary) {
-                return false;
-            }
-
-            if (detailsSummary.node.textContent.length > 0) {
-                const { $from, empty } = selection;
-                const summaryStart = detailsSummary.pos + 1;
-                const summaryEnd = detailsSummary.pos + detailsSummary.node.nodeSize - 1;
-
-                return empty && (key === "Backspace" ? $from.pos === summaryStart : $from.pos === summaryEnd);
-            }
-
-            const details = findParentNode(node => node.type.name === "details")(selection);
-
-            if (!details) {
-                return true;
-            }
-
-            const paragraph = state.schema.nodes.paragraph?.createAndFill();
-            const transaction = state.doc.childCount === 1 && paragraph
-                ? state.tr.replaceWith(details.pos, details.pos + details.node.nodeSize, paragraph)
-                : state.tr.delete(details.pos, details.pos + details.node.nodeSize);
-
-            transaction.scrollIntoView();
-            view.dispatch(transaction);
-
-            return true;
-        };
-
-        return {
-            Enter: () => {
-                const detailsSummary = findParentNode(node => node.type === this.type)(this.editor.state.selection);
-
-                return Boolean(detailsSummary);
-            },
-            Backspace: () => deleteEmptyDetails("Backspace"),
-            Delete: () => deleteEmptyDetails("Delete"),
         };
     },
 });

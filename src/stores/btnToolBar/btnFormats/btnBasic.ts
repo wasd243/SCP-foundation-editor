@@ -1,4 +1,4 @@
-import { TextSelection } from "@tiptap/pm/state";
+import { DOMSerializer } from "@tiptap/pm/model";
 import { getEditor } from "../../editor.ts";
 
 export function toggleEditorBold() {
@@ -60,44 +60,20 @@ export function insertEditorCollapsible() {
         return;
     }
 
-    const { schema } = state;
-    const detailsType = schema.nodes.details;
-    const detailsSummaryType = schema.nodes.detailsSummary;
-    const detailsContentType = schema.nodes.detailsContent;
-    const paragraphType = schema.nodes.paragraph;
-    const showTextMark = schema.marks.collapsibleShowText;
-    const hideTextMark = schema.marks.collapsibleHideText;
-
-    if (!detailsType || !detailsSummaryType || !detailsContentType || !paragraphType || !showTextMark || !hideTextMark) {
-        return;
-    }
-
-    if (!range.parent.canReplaceWith(range.startIndex, range.endIndex, detailsType)) {
-        return;
-    }
-
     const slice = state.doc.slice(range.start, range.end);
-    const content = detailsContentType.contentMatch.matchFragment(slice.content)
-        ? slice.content
-        : paragraphType.createAndFill();
+    const serializedContent = document.createElement("div");
 
-    if (!content) {
-        return;
-    }
+    serializedContent.appendChild(DOMSerializer.fromSchema(state.schema).serializeFragment(slice.content));
 
-    const summaryNode = detailsSummaryType.create(null, [
-        schema.text("+", [showTextMark.create()]),
-        schema.text("-", [hideTextMark.create()]),
-    ]);
-    const contentNode = detailsContentType.create(null, content);
-    const detailsNode = detailsType.create(null, [summaryNode, contentNode]);
-    const transaction = state.tr.replaceRangeWith(range.start, range.end, detailsNode);
-
-    transaction.setSelection(TextSelection.create(transaction.doc, range.start + 2));
-    transaction.scrollIntoView();
-
-    editor.view.dispatch(transaction);
-    editor.commands.focus();
+    editor
+        .chain()
+        .focus()
+        .insertContentAt(
+            { from: range.start, to: range.end },
+            `<details><summary><span class="wj-collapsible-show-text">+展开</span><span class="wj-collapsible-hide-text">-关闭</span></summary><div data-type="detailsContent">${serializedContent.innerHTML || "<p></p>"}</div></details>`,
+        )
+        .setTextSelection(range.start + 2)
+        .run();
 }
 
 export function btnBasicIdleInterface() {}
