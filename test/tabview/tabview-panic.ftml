@@ -1,0 +1,16 @@
+[!--Panic ftml parser--]
+
+[[tabview]]
+[[tab 123]]
+[[/tab]]
+[[tab adsfas]]
+[[tabview]]
+[[tab 123]]
+sadfsadf
+[[/tab]]
+[[tab dsaf]]
+asdfasdf
+[[/tab]]
+[[/tabview]]
+[[/tab]]
+[[/tabview]]

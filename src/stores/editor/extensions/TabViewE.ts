@@ -1,4 +1,5 @@
 import { mergeAttributes, Node } from "@tiptap/core";
+import type { Editor } from "@tiptap/core";
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import { Plugin } from "@tiptap/pm/state";
 import type { Transaction } from "@tiptap/pm/state";
@@ -67,6 +68,21 @@ function switchTabViewTab(
     return true;
 }
 
+function NoEnterInTabViewButton(editor: Editor) {
+    const { $from, $to } = editor.state.selection;
+    const positions = [$from, $to];
+
+    return positions.some(($pos) => {
+        for (let depth = $pos.depth; depth > 0; depth -= 1) {
+            if ($pos.node(depth).type.name === "tabViewButton") {
+                return true;
+            }
+        }
+
+        return false;
+    });
+}
+
 export const TabViewExtension = Node.create({
     name: "tabView",
     group: "block",
@@ -80,6 +96,12 @@ export const TabViewExtension = Node.create({
 
     renderHTML({ HTMLAttributes }) {
         return ["wj-tabs", mergeAttributes(HTMLAttributes), 0];
+    },
+
+    addKeyboardShortcuts() {
+        return {
+            Enter: () => NoEnterInTabViewButton(this.editor),
+        };
     },
 
     addProseMirrorPlugins() {
