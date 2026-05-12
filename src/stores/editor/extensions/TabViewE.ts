@@ -1,4 +1,7 @@
 import { mergeAttributes, Node } from "@tiptap/core";
+import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
+import { Plugin } from "@tiptap/pm/state";
+import type { Transaction } from "@tiptap/pm/state";
 
 const preservedAttributes = [
     "class",
@@ -27,6 +30,43 @@ function addPreservedAttributes() {
     );
 }
 
+function switchTabViewTab(
+    tabView: ProseMirrorNode,
+    tabViewPos: number,
+    buttonId: string,
+    panelId: string,
+    tr: Transaction,
+) {
+    const buttonList = tabView.child(0);
+    const panelList = tabView.child(1);
+    const buttonListPos = tabViewPos + 1;
+    const panelListPos = buttonListPos + buttonList.nodeSize;
+    let hasButton = false;
+
+    buttonList.forEach((button, offset) => {
+        if (button.attrs.id === buttonId) {
+            hasButton = true;
+        }
+
+        tr.setNodeMarkup(buttonListPos + 1 + offset, undefined, {
+            ...button.attrs,
+            "aria-selected": button.attrs.id === buttonId ? "true" : "false",
+            tabindex: button.attrs.id === buttonId ? "0" : "-1",
+        }, button.marks);
+    });
+
+    if (!hasButton) return false;
+
+    panelList.forEach((panel, offset) => {
+        tr.setNodeMarkup(panelListPos + 1 + offset, undefined, {
+            ...panel.attrs,
+            hidden: panel.attrs.id === panelId ? null : "",
+        }, panel.marks);
+    });
+
+    return true;
+}
+
 export const TabViewExtension = Node.create({
     name: "tabView",
     group: "block",
@@ -40,6 +80,47 @@ export const TabViewExtension = Node.create({
 
     renderHTML({ HTMLAttributes }) {
         return ["wj-tabs", mergeAttributes(HTMLAttributes), 0];
+    },
+
+    addProseMirrorPlugins() {
+        return [
+            new Plugin({
+                props: {
+                    handleClick: (view, _pos, event) => {
+                        if (event.button !== 0) return false;
+
+                        const target = event.target as HTMLElement | null;
+                        const button = target?.closest("wj-tabs-button");
+                        if (!button) return false;
+
+                        const buttonId = button.getAttribute("id");
+                        const panelId = button.getAttribute("aria-controls");
+                        if (!buttonId || !panelId) return false;
+
+                        const tr = view.state.tr;
+                        let changed = false;
+
+                        view.state.doc.descendants((node, pos) => {
+                            if (node.type.name !== "tabView") return true;
+
+                            if (switchTabViewTab(node, pos, buttonId, panelId, tr)) {
+                                changed = true;
+                                return false;
+                            }
+
+                            return true;
+                        });
+
+                        if (!changed) return false;
+
+                        event.preventDefault();
+                        view.dispatch(tr);
+
+                        return true;
+                    },
+                },
+            }),
+        ];
     },
 });
 
