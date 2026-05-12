@@ -15,6 +15,16 @@ function syncAlign(element: HTMLElement, align: string | null) {
     element.style.textAlign = align;
 }
 
+function limitToParentWidth(element: HTMLElement) {
+    element.style.width = "100%";
+    element.style.minWidth = "0";
+    element.style.maxWidth = "100%";
+    element.style.boxSizing = "border-box";
+    element.style.overflowX = "auto";
+    element.style.overflowWrap = "anywhere";
+    element.style.wordBreak = "break-word";
+}
+
 export const CollapsibleShowTextMark = Mark.create({
     name: "collapsibleShowText",
 
@@ -69,6 +79,8 @@ export const DetailsExtension = Details.extend({
             };
 
             syncNodeAttributes(node);
+            limitToParentWidth(dom);
+            limitToParentWidth(content);
 
             toggle.type = "button";
             dom.append(toggle);

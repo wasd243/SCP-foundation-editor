@@ -31,6 +31,25 @@ function addPreservedAttributes() {
     );
 }
 
+function syncPreservedAttributes(element: HTMLElement, attributes: Record<string, string | null>) {
+    preservedAttributes.forEach((name) => {
+        element.removeAttribute(name);
+
+        const value = attributes[name];
+
+        if (value !== null && value !== undefined) {
+            element.setAttribute(name, value);
+        }
+    });
+}
+
+function limitToParentWidth(element: HTMLElement) {
+    element.style.width = "100%";
+    element.style.minWidth = "0";
+    element.style.maxWidth = "100%";
+    element.style.boxSizing = "border-box";
+}
+
 function switchTabViewTab(
     tabView: ProseMirrorNode,
     tabViewPos: number,
@@ -113,6 +132,28 @@ export const TabViewExtension = Node.create({
         return ["wj-tabs", mergeAttributes(HTMLAttributes), 0];
     },
 
+    addNodeView() {
+        return ({ node, HTMLAttributes }) => {
+            const dom = document.createElement("wj-tabs");
+
+            syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, node.attrs));
+            limitToParentWidth(dom);
+
+            return {
+                dom,
+                contentDOM: dom,
+                update: (updatedNode) => {
+                    if (updatedNode.type !== this.type) return false;
+
+                    syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, updatedNode.attrs));
+                    limitToParentWidth(dom);
+
+                    return true;
+                },
+            };
+        };
+    },
+
     addKeyboardShortcuts() {
         return {
             Enter: () => NoEnterInTabViewButton(this.editor),
@@ -129,6 +170,10 @@ export const TabViewExtension = Node.create({
                         const target = event.target as HTMLElement | null;
                         const button = target?.closest("wj-tabs-button");
                         if (!button) return false;
+
+                        if (button.getAttribute("aria-selected") === "true") {
+                            return false;
+                        }
 
                         const buttonId = button.getAttribute("id");
                         const panelId = button.getAttribute("aria-controls");
@@ -174,6 +219,28 @@ export const TabViewButtonListExtension = Node.create({
     renderHTML({ HTMLAttributes }) {
         return ["div", mergeAttributes(HTMLAttributes), 0];
     },
+
+    addNodeView() {
+        return ({ node, HTMLAttributes }) => {
+            const dom = document.createElement("div");
+
+            syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, node.attrs));
+            limitToParentWidth(dom);
+
+            return {
+                dom,
+                contentDOM: dom,
+                update: (updatedNode) => {
+                    if (updatedNode.type !== this.type) return false;
+
+                    syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, updatedNode.attrs));
+                    limitToParentWidth(dom);
+
+                    return true;
+                },
+            };
+        };
+    },
 });
 
 export const TabViewButtonExtension = Node.create({
@@ -190,6 +257,35 @@ export const TabViewButtonExtension = Node.create({
     renderHTML({ HTMLAttributes }) {
         return ["wj-tabs-button", mergeAttributes(HTMLAttributes), 0];
     },
+
+    addNodeView() {
+        return ({ node, HTMLAttributes }) => {
+            const dom = document.createElement("wj-tabs-button");
+            const label = document.createElement("span");
+
+            label.className = "wj-tabs-button-label";
+            dom.append(label);
+
+            const syncButton = (currentNode: ProseMirrorNode) => {
+                syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, currentNode.attrs));
+                dom.title = currentNode.textContent || currentNode.attrs["aria-label"] || "";
+            };
+
+            syncButton(node);
+
+            return {
+                dom,
+                contentDOM: label,
+                update: (updatedNode) => {
+                    if (updatedNode.type !== this.type) return false;
+
+                    syncButton(updatedNode);
+
+                    return true;
+                },
+            };
+        };
+    },
 });
 
 export const TabViewPanelListExtension = Node.create({
@@ -204,6 +300,28 @@ export const TabViewPanelListExtension = Node.create({
 
     renderHTML({ HTMLAttributes }) {
         return ["div", mergeAttributes(HTMLAttributes), 0];
+    },
+
+    addNodeView() {
+        return ({ node, HTMLAttributes }) => {
+            const dom = document.createElement("div");
+
+            syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, node.attrs));
+            limitToParentWidth(dom);
+
+            return {
+                dom,
+                contentDOM: dom,
+                update: (updatedNode) => {
+                    if (updatedNode.type !== this.type) return false;
+
+                    syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, updatedNode.attrs));
+                    limitToParentWidth(dom);
+
+                    return true;
+                },
+            };
+        };
     },
 });
 
@@ -221,6 +339,28 @@ export const TabViewPanelExtension = Node.create({
 
     renderHTML({ HTMLAttributes }) {
         return ["div", mergeAttributes(HTMLAttributes), 0];
+    },
+
+    addNodeView() {
+        return ({ node, HTMLAttributes }) => {
+            const dom = document.createElement("div");
+
+            syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, node.attrs));
+            limitToParentWidth(dom);
+
+            return {
+                dom,
+                contentDOM: dom,
+                update: (updatedNode) => {
+                    if (updatedNode.type !== this.type) return false;
+
+                    syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, updatedNode.attrs));
+                    limitToParentWidth(dom);
+
+                    return true;
+                },
+            };
+        };
     },
 
     addKeyboardShortcuts() {
