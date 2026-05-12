@@ -15,6 +15,7 @@ import { toggleSuperscriptEditor } from "../../../../stores/btnToolBar/btnFormat
 import { toggleQuoteEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnQuote.ts";
 import { insertTableEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnTable.ts";
 import { insertHorizontalRuleEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnHr.ts";
+import { insertCollapsibleEditor } from "../../../../stores/btnToolBar/btnFormats/btnBasic/btnCollapsible.ts";
 import Table from "./Basic/Table.vue";
 import Hr from "./Basic/Hr.vue";
 import Collapsible from "./Basic/Collapsible.vue";
@@ -55,6 +56,10 @@ function insertHorizontalRule() {
   insertHorizontalRuleEditor();
 }
 
+function insertCollapsible() {
+  insertCollapsibleEditor();
+}
+
 function basicIdleInterface() {}
 
 defineExpose({
@@ -72,5 +77,5 @@ defineExpose({
   <Quote @toggle="toggleQuote"/>
   <Table @insert="insertTable"/>
   <Hr @insert="insertHorizontalRule"/>
-  <Collapsible/>
+  <Collapsible @insert="insertCollapsible"/>
 </template>

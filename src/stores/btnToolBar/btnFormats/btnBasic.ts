@@ -44,4 +44,12 @@ export function insertEditorHorizontalRule() {
         .run();
 }
 
+export function insertEditorCollapsible() {
+    getEditor()
+        ?.chain()
+        .focus()
+        .setDetails()
+        .run();
+}
+
 export function btnBasicIdleInterface() {}
