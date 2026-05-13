@@ -10,10 +10,27 @@ function createTabViewContent(buttonId: string, panelId: string) {
     );
 }
 
+function selectionInsideTabView() {
+    const selection = getEditor()?.state.selection;
+
+    if (!selection) {
+        return false;
+    }
+
+    for (let depth = selection.$from.depth; depth > 0; depth -= 1) {
+        if (selection.$from.node(depth).type.name === "tabView") {
+            return true;
+        }
+    }
+
+    // No TabView insertion in another Tabview
+    return false;
+}
+
 export function insertEditorTabView() {
     const editor = getEditor();
 
-    if (!editor) {
+    if (!editor || selectionInsideTabView()) {
         return;
     }
 
