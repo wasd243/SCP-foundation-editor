@@ -2,10 +2,11 @@
 import { findParentNode, Mark, mergeAttributes } from "@tiptap/core";
 import { Details, DetailsSummary } from "@tiptap/extension-details";
 import { Fragment, type Node as ProseMirrorNode } from "@tiptap/pm/model";
-import { Plugin } from "@tiptap/pm/state";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
 import type { ViewMutationRecord } from "@tiptap/pm/view";
 
 const EMPTY_COLLAPSIBLE_TEXT = "\u200B";
+const detailsSummaryNormalizeKey = new PluginKey("detailsSummaryNormalize");
 
 function syncAlign(element: HTMLElement, align: string | null) {
     element.classList.remove("align-left", "align-center", "align-right", "align-justify");
@@ -225,7 +226,31 @@ export const DetailsSummaryExtension = DetailsSummary.extend({
     addProseMirrorPlugins() {
         return [
             new Plugin({
-                appendTransaction: (_transactions, _oldState, newState) => {
+                key: detailsSummaryNormalizeKey,
+                props: {
+                    handleDOMEvents: {
+                        compositionend: view => {
+                            setTimeout(() => {
+                                if (view.isDestroyed) {
+                                    return;
+                                }
+
+                                view.dispatch(view.state.tr.setMeta(detailsSummaryNormalizeKey, { normalize: true }));
+                            }, 0);
+
+                            return false;
+                        },
+                    },
+                },
+                appendTransaction: (transactions, _oldState, newState) => {
+                    const shouldNormalize = transactions.some(transaction => transaction.docChanged
+                        || transaction.getMeta(detailsSummaryNormalizeKey)?.normalize);
+                    const hasCompositionChange = transactions.some(transaction => transaction.getMeta("composition"));
+
+                    if (!shouldNormalize || this.editor.view.composing || hasCompositionChange) {
+                        return null;
+                    }
+
                     const { schema } = newState;
                     const showTextMark = schema.marks.collapsibleShowText;
                     const hideTextMark = schema.marks.collapsibleHideText;
