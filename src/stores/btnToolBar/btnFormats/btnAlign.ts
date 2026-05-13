@@ -5,7 +5,7 @@ export function setEditorAlign(align: EditorTextAlign) {
         ?.chain()
         .focus()
         .command(({ state, tr }) => {
-            const targetTypes = new Set(["details", "detailsSummary", "detailsContent"]);
+            const targetTypes = new Set(["paragraph", "heading", "detailsSummary"]);
             const touchedPositions = new Set<number>();
 
             function updateNode(pos: number) {
@@ -21,28 +21,25 @@ export function setEditorAlign(align: EditorTextAlign) {
                 }, node.marks);
             }
 
-            state.doc.nodesBetween(state.selection.from, state.selection.to, (node, pos) => {
-                if (targetTypes.has(node.type.name)) {
-                    updateNode(pos);
-                }
-            });
+            if (state.selection.empty) {
+                for (let depth = state.selection.$from.depth; depth > 0; depth -= 1) {
+                    const node = state.selection.$from.node(depth);
 
-            for (let depth = state.selection.$from.depth; depth > 0; depth -= 1) {
-                const node = state.selection.$from.node(depth);
-                if (targetTypes.has(node.type.name)) {
-                    updateNode(state.selection.$from.before(depth));
+                    if (targetTypes.has(node.type.name)) {
+                        updateNode(state.selection.$from.before(depth));
+                        break;
+                    }
                 }
+            } else {
+                state.doc.nodesBetween(state.selection.from, state.selection.to, (node, pos) => {
+                    if (targetTypes.has(node.type.name)) {
+                        updateNode(pos);
+                    }
+                });
             }
 
             return true;
         })
-        .updateAttributes("paragraph", { textAlign: align })
-        .updateAttributes("heading", { textAlign: align })
-
-        // Special case for collapsible blocks
-        .updateAttributes("details", { textAlign: align })
-        .updateAttributes("detailsSummary", { textAlign: align })
-        .updateAttributes("detailsContent", { textAlign: align })
         .run();
 }
 

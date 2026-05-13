@@ -105,6 +105,9 @@
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     margin: 0 0 0.8em;
 }
 
@@ -143,6 +146,10 @@
 
 .editor-theme-default .ProseMirror [data-type="details"] > div {
     display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
     text-align: inherit;
 }
 
@@ -180,6 +187,9 @@
 .editor-theme-default .ProseMirror [data-type="detailsContent"],
 .editor-theme-default .ProseMirror details > div[data-type="detailsContent"] {
     margin-left: calc(-1.25em - 6px);
+    width: calc(100% + 1.25em + 6px);
+    max-width: calc(100% + 1.25em + 6px);
+    box-sizing: border-box;
     padding-left: 0;
     border-left: 2px solid #dddddd;
 }
