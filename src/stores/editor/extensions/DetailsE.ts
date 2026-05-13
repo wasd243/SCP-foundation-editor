@@ -27,6 +27,24 @@ function getSummaryText(summary: ProseMirrorNode) {
     return stripEmptyCollapsibleText(summary.textContent);
 }
 
+function countNestedDetails(node: ProseMirrorNode, hasDetailsAncestor = false): number {
+    let nestedDetailsCount = 0;
+
+    node.forEach(child => {
+        const isDetailsNode = child.type.name === "details";
+
+        if (isDetailsNode && hasDetailsAncestor) {
+            nestedDetailsCount += 1;
+        }
+
+        if (child.childCount > 0) {
+            nestedDetailsCount += countNestedDetails(child, hasDetailsAncestor || isDetailsNode);
+        }
+    });
+
+    return nestedDetailsCount;
+}
+
 export const CollapsibleShowTextMark = Mark.create({
     name: "collapsibleShowText",
     inclusive: false,
@@ -66,6 +84,26 @@ export const CollapsibleHideTextMark = Mark.create({
 // Details Extension for collapsible blocks
 export const DetailsExtension = Details.extend({
     selectable: false,
+
+    addProseMirrorPlugins() {
+        const parentPlugins = this.parent?.() ?? [];
+
+        return [
+            ...parentPlugins,
+            new Plugin({
+                filterTransaction: (transaction, state) => {
+                    if (!transaction.docChanged) {
+                        return true;
+                    }
+
+                    const previousNestedDetailsCount = countNestedDetails(state.doc);
+                    const nextNestedDetailsCount = countNestedDetails(transaction.doc);
+
+                    return nextNestedDetailsCount <= previousNestedDetailsCount;
+                },
+            }),
+        ];
+    },
 
     addNodeView() {
         return ({ editor, node, HTMLAttributes }) => {
