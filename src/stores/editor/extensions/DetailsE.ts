@@ -1,5 +1,5 @@
-import { Mark, mergeAttributes } from "@tiptap/core";
-import { Details } from "@tiptap/extension-details";
+import { findParentNode, Mark, mergeAttributes } from "@tiptap/core";
+import { Details, DetailsSummary } from "@tiptap/extension-details";
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import type { ViewMutationRecord } from "@tiptap/pm/view";
 
@@ -118,6 +118,54 @@ export const DetailsExtension = Details.extend({
                     return true;
                 },
             };
+        };
+    },
+});
+
+export const DetailsSummaryExtension = DetailsSummary.extend({
+    addKeyboardShortcuts() {
+        const deleteEmptyDetails = (key: "Backspace" | "Delete") => {
+            const { state, view } = this.editor;
+            const { selection } = state;
+            const detailsSummary = findParentNode(node => node.type === this.type)(selection);
+
+            if (!detailsSummary) {
+                return false;
+            }
+
+            if (detailsSummary.node.textContent.length > 0) {
+                const { $from, empty } = selection;
+                const summaryStart = detailsSummary.pos + 1;
+                const summaryEnd = detailsSummary.pos + detailsSummary.node.nodeSize - 1;
+
+                return empty && (key === "Backspace" ? $from.pos === summaryStart : $from.pos === summaryEnd);
+            }
+
+            const details = findParentNode(node => node.type.name === "details")(selection);
+
+            if (!details) {
+                return true;
+            }
+
+            const paragraph = state.schema.nodes.paragraph?.createAndFill();
+            const transaction = state.doc.childCount === 1 && paragraph
+                ? state.tr.replaceWith(details.pos, details.pos + details.node.nodeSize, paragraph)
+                : state.tr.delete(details.pos, details.pos + details.node.nodeSize);
+
+            transaction.scrollIntoView();
+            view.dispatch(transaction);
+
+            return true;
+        };
+
+        return {
+            Enter: () => {
+                const detailsSummary = findParentNode(node => node.type === this.type)(this.editor.state.selection);
+
+                return Boolean(detailsSummary);
+            },
+            Backspace: () => deleteEmptyDetails("Backspace"),
+            Delete: () => deleteEmptyDetails("Delete"),
         };
     },
 });
