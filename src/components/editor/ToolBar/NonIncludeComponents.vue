@@ -14,6 +14,7 @@ import Users from "./NonIncludeComponents/Users.vue";
 
 <template>
   <div class="component-gallery">
+    <TabView/>
     <Code/>
     <cssModule/>
     <divBlock/>
@@ -22,7 +23,6 @@ import Users from "./NonIncludeComponents/Users.vue";
     <ModuleRate/>
     <Note/>
     <SiteURLs/>
-    <TabView/>
     <URLs/>
     <Users/>
   </div>
