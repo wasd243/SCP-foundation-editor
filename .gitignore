@@ -29,9 +29,10 @@ ftml/
 .venv/
 .env/
 
-# Rust
+# Rust and Tauri
 target/
 gen/
+icons/
 
 # git
 .git/

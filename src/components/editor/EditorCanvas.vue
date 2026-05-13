@@ -77,9 +77,11 @@ const editor = useEditor({
 
 <style scoped>
 .editor-canvas {
-  min-height: calc(100vh - 105px);
+  height: calc(100vh - 105px);
+  overflow-y: auto;
   padding: 32px 0;
   background: #f2f3f5;
+  box-sizing: border-box;
 }
 
 :deep(.ProseMirror) {
