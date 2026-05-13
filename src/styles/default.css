@@ -130,7 +130,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: inherit;
+    color: var(--wikidot-red);
     font: inherit;
     cursor: pointer;
     user-select: none;
@@ -148,6 +148,7 @@
     display: block;
     flex: 1 1 auto;
     min-width: 0;
+    width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     text-align: inherit;
@@ -155,33 +156,14 @@
 
 .editor-theme-default .ProseMirror [data-type="detailsSummary"],
 .editor-theme-default .ProseMirror summary {
-    display: inline-block;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
     min-width: 1em;
     min-height: 1.2em;
     font-weight: 700;
     color: var(--wikidot-red);
     cursor: pointer;
-}
-
-.editor-theme-default .ProseMirror .wj-collapsible-show-text,
-.editor-theme-default .ProseMirror .wj-collapsible-hide-text {
-    display: inline-block;
-    min-width: 1em;
-}
-
-.editor-theme-default .ProseMirror [data-type="details"] .wj-collapsible-hide-text,
-.editor-theme-default .ProseMirror details:not([open]) .wj-collapsible-hide-text {
-    display: none;
-}
-
-.editor-theme-default .ProseMirror [data-type="details"].is-open .wj-collapsible-show-text,
-.editor-theme-default .ProseMirror details[open] .wj-collapsible-show-text {
-    display: none;
-}
-
-.editor-theme-default .ProseMirror [data-type="details"].is-open .wj-collapsible-hide-text,
-.editor-theme-default .ProseMirror details[open] .wj-collapsible-hide-text {
-    display: inline;
 }
 
 .editor-theme-default .ProseMirror [data-type="detailsContent"],
