@@ -1,12 +1,22 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api/core";
-import { ref } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 import RenderSyncHtmlToEditor from "./CodeView/RenderSyncHTMLToEditor.vue";
+import { setCodeViewIframe } from "../../../ipc/Extensions/CodeView/SyncToParser";
 
 const isCodeViewOpen = ref(false);
 const codeViewSrc = ref("");
+const codeViewIframe = ref<HTMLIFrameElement | null>(null);
 
 defineExpose({});
+
+watch(codeViewIframe, iframe => {
+  setCodeViewIframe(iframe);
+});
+
+onBeforeUnmount(() => {
+  setCodeViewIframe(null);
+});
 
 async function openCodeView() {
   try {
@@ -46,6 +56,7 @@ function closeCodeView() {
           &times;
         </button>
         <iframe
+            ref="codeViewIframe"
             class="code-view-frame"
             :src="codeViewSrc"
             title="Code View"
