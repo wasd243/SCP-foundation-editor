@@ -274,3 +274,116 @@
     line-height: 1.35;
 }
 /* ---Tabview end--- */
+
+/* =============================
+   Wikidot-style footnotes start
+   ============================= */
+
+.editor-theme-default .wj-footnote-ref {
+    position: relative;
+    display: inline-block;
+    color: #000000;
+    cursor: pointer;
+    font-size: 0.75em;
+    line-height: 1;
+    vertical-align: super;
+}
+
+.editor-theme-default .wj-footnote-ref-marker {
+    display: inline;
+    color: #000000;
+    background: transparent;
+    border: none;
+    font: inherit;
+}
+
+.editor-theme-default .wj-footnote-ref-marker::after {
+    content: ".";
+}
+
+.editor-theme-default .wj-footnote-ref-tooltip {
+    position: absolute;
+    left: 50%;
+    bottom: 1.6em;
+    z-index: 20;
+    display: block;
+    min-width: 120px;
+    max-width: 260px;
+    padding: 4px 6px;
+    box-sizing: border-box;
+    border: 1px solid #000000;
+    background: #ffffff;
+    color: #000000;
+    font-size: 11px;
+    line-height: 1.3;
+    text-align: left;
+    white-space: normal;
+    vertical-align: baseline;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%);
+}
+
+.editor-theme-default .wj-footnote-ref:hover .wj-footnote-ref-tooltip,
+.editor-theme-default .wj-footnote-ref:focus-within .wj-footnote-ref-tooltip {
+    opacity: 1;
+}
+
+.editor-theme-default .wj-footnote-ref-tooltip-label {
+    display: block;
+    margin-bottom: 2px;
+    font-weight: bold;
+}
+
+.editor-theme-default .wj-footnote-ref-contents {
+    display: block;
+}
+
+.editor-theme-default .wj-footnote-list {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 16px 0 0;
+    padding: 8px 0 0;
+    background: transparent;
+    border: none;
+    color: #000000;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.editor-theme-default .wj-footnote-list .wj-title {
+    color: #000000;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.editor-theme-default .wj-footnote-list ol {
+    margin: 0;
+    padding-left: 24px;
+}
+
+.editor-theme-default .wj-footnote-list-item {
+    color: #000000;
+    background: transparent;
+    border: none;
+}
+
+.editor-theme-default .wj-footnote-list-item-marker {
+    color: #000000;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+}
+
+.editor-theme-default .wj-footnote-sep {
+    color: #000000;
+}
+
+.editor-theme-default .wj-footnote-list-item-contents {
+    color: #000000;
+}
+/* =============================
+   Wikidot-style footnotes end
+   ============================= */

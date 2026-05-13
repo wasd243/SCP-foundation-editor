@@ -9,6 +9,7 @@ import { TableExtensions } from "./extensions/TableE.ts";
 import { TabViewExtensions } from "./extensions/TabViewE.ts";
 import { TextAlignExtension } from "./extensions/TextAlignE.ts";
 import { TextColorExtension } from "./extensions/TextColorE.ts";
+import { WJTagExtension } from "./extensions/WJtagsE.ts";
 
 export const editorExtensions = [
     StarterKit,
@@ -22,4 +23,5 @@ export const editorExtensions = [
     FontSizeExtension,
     ...TableExtensions,
     ...TabViewExtensions,
+    WJTagExtension,
 ];
