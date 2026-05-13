@@ -1,0 +1,56 @@
+{
+  "type": "tabView",
+  "content": [
+    {
+      "type": "tabViewButtonList",
+      "attrs": {
+        "class": "wj-tabs-button-list",
+        "role": "tablist"
+      },
+      "content": [
+        {
+          "type": "tabViewButton",
+          "attrs": {
+            "class": "wj-tabs-button",
+            "id": "__BUTTON_ID__",
+            "role": "tab",
+            "aria-label": "Tab 1",
+            "aria-selected": "true",
+            "aria-controls": "__PANEL_ID__",
+            "tabindex": "0"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "Tab 1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tabViewPanelList",
+      "attrs": {
+        "class": "wj-tabs-panel-list"
+      },
+      "content": [
+        {
+          "type": "tabViewPanel",
+          "attrs": {
+            "class": "wj-tabs-panel",
+            "id": "__PANEL_ID__",
+            "role": "tabpanel",
+            "aria-labelledby": "__BUTTON_ID__",
+            "tabindex": "0",
+            "hidden": null
+          },
+          "content": [
+            {
+              "type": "paragraph"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

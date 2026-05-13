@@ -1,5 +1,14 @@
 import { getEditor } from "../../editor.ts";
 import { createTabId } from "../../btnContextMenu/TabView/createTabId.ts";
+import tabViewTemplate from "../../json/tabview.json";
+
+function createTabViewContent(buttonId: string, panelId: string) {
+    return JSON.parse(
+        JSON.stringify(tabViewTemplate)
+            .replaceAll("__BUTTON_ID__", buttonId)
+            .replaceAll("__PANEL_ID__", panelId),
+    );
+}
 
 export function insertEditorTabView() {
     const editor = getEditor();
@@ -15,61 +24,6 @@ export function insertEditorTabView() {
     editor
         .chain()
         .focus()
-        .insertContent({
-            type: "tabView",
-            content: [
-                {
-                    type: "tabViewButtonList",
-                    attrs: {
-                        class: "wj-tabs-button-list",
-                        role: "tablist",
-                    },
-                    content: [
-                        {
-                            type: "tabViewButton",
-                            attrs: {
-                                class: "wj-tabs-button",
-                                id: buttonId,
-                                role: "tab",
-                                "aria-label": "Tab 1",
-                                "aria-selected": "true",
-                                "aria-controls": panelId,
-                                tabindex: "0",
-                            },
-                            content: [
-                                {
-                                    type: "text",
-                                    text: "Tab 1",
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    type: "tabViewPanelList",
-                    attrs: {
-                        class: "wj-tabs-panel-list",
-                    },
-                    content: [
-                        {
-                            type: "tabViewPanel",
-                            attrs: {
-                                class: "wj-tabs-panel",
-                                id: panelId,
-                                role: "tabpanel",
-                                "aria-labelledby": buttonId,
-                                tabindex: "0",
-                                hidden: null,
-                            },
-                            content: [
-                                {
-                                    type: "paragraph",
-                                },
-                            ],
-                        },
-                    ],
-                },
-            ],
-        })
+        .insertContent(createTabViewContent(buttonId, panelId))
         .run();
 }
