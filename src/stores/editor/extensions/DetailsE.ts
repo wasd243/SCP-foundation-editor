@@ -27,6 +27,38 @@ function getSummaryText(summary: ProseMirrorNode) {
     return stripEmptyCollapsibleText(summary.textContent);
 }
 
+function hasIncompleteSummaryToggleText(summary: ProseMirrorNode) {
+    let showText = "";
+    let hideText = "";
+
+    summary.descendants(child => {
+        if (!child.isText) {
+            return true;
+        }
+
+        const cleanText = stripEmptyCollapsibleText(child.text ?? "");
+        if (cleanText.length === 0) {
+            return true;
+        }
+
+        const hasShowMark = child.marks.some(mark => mark.type.name === "collapsibleShowText");
+        const hasHideMark = child.marks.some(mark => mark.type.name === "collapsibleHideText");
+
+        if (hasShowMark && !hasHideMark) {
+            showText += cleanText;
+            return true;
+        }
+
+        if (hasHideMark && !hasShowMark) {
+            hideText += cleanText;
+        }
+
+        return true;
+    });
+
+    return showText.length === 0 || hideText.length === 0;
+}
+
 function countNestedDetails(node: ProseMirrorNode, hasDetailsAncestor = false): number {
     let nestedDetailsCount = 0;
 
@@ -300,12 +332,17 @@ export const DetailsSummaryExtension = DetailsSummary.extend({
                 return false;
             }
 
-            if (getSummaryText(detailsSummary.node).length > 0) {
-                const { $from, empty } = selection;
-                const summaryStart = detailsSummary.pos + 1;
-                const summaryEnd = detailsSummary.pos + detailsSummary.node.nodeSize - 1;
+            const { $from, empty } = selection;
+            const summaryStart = detailsSummary.pos + 1;
+            const summaryEnd = detailsSummary.pos + detailsSummary.node.nodeSize - 1;
+            const atBoundary = empty && (key === "Backspace" ? $from.pos === summaryStart : $from.pos === summaryEnd);
 
-                return empty && (key === "Backspace" ? $from.pos === summaryStart : $from.pos === summaryEnd);
+            if (hasIncompleteSummaryToggleText(detailsSummary.node)) {
+                if (!atBoundary) {
+                    return false;
+                }
+            } else if (getSummaryText(detailsSummary.node).length > 0) {
+                return atBoundary;
             }
 
             const details = findParentNode(node => node.type.name === "details")(selection);
