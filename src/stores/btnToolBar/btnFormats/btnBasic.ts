@@ -70,7 +70,7 @@ export function insertEditorCollapsible() {
         .focus()
         .insertContentAt(
             { from: range.start, to: range.end },
-            `<details><summary><span class="wj-collapsible-show-text">+展开</span><span class="wj-collapsible-hide-text">-关闭</span></summary><div data-type="detailsContent">${serializedContent.innerHTML || "<p></p>"}</div></details>`,
+            `<details><summary><span class="wj-collapsible-show-text">+</span><span class="wj-collapsible-hide-text">-</span></summary><div data-type="detailsContent">${serializedContent.innerHTML || "<p></p>"}</div></details>`,
         )
         .setTextSelection(range.start + 2)
         .run();

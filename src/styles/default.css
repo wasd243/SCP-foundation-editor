@@ -130,6 +130,7 @@
     color: inherit;
     font: inherit;
     cursor: pointer;
+    user-select: none;
 }
 
 .editor-theme-default .ProseMirror [data-type="details"] > button::before {
@@ -147,14 +148,16 @@
 
 .editor-theme-default .ProseMirror [data-type="detailsSummary"],
 .editor-theme-default .ProseMirror summary {
-    display: inline;
+    display: inline-block;
+    min-width: 1em;
+    min-height: 1.2em;
     font-weight: 700;
     cursor: pointer;
 }
 
 .editor-theme-default .ProseMirror .wj-collapsible-show-text,
 .editor-theme-default .ProseMirror .wj-collapsible-hide-text {
-    display: inline;
+    display: inline-block;
     min-width: 1em;
 }
 
