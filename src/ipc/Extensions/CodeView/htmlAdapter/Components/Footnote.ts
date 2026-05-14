@@ -12,7 +12,9 @@ function copyAttributes(source: Element, target: HTMLElement) {
 }
 
 function replaceFootnoteInlineTag({ element }: DOMReplaceContext): Node | null {
-  if (!footnoteInlineTags.has(element.tagName.toLowerCase())) return null;
+  const tagName = element.tagName.toLowerCase();
+
+  if (!footnoteInlineTags.has(tagName)) return null;
 
   const span = document.createElement("span");
 
@@ -20,6 +22,10 @@ function replaceFootnoteInlineTag({ element }: DOMReplaceContext): Node | null {
 
   while (element.firstChild) {
     span.appendChild(element.firstChild);
+  }
+
+  if (tagName === "wj-footnote-list-item-marker") {
+    span.textContent = "";
   }
 
   return span;
