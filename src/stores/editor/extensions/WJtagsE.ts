@@ -299,6 +299,9 @@ function findDescendantFootnoteKey(node: ProseMirrorNode, className: string): st
 type FootnoteSyncContext = {
     listItemKey: string | null;
     refKey: string | null;
+    parentListNode: ProseMirrorNode | null;
+    parentListPos: number | null;
+    parentListChildCount: number;
 };
 
 type FootnoteContentNode = {
@@ -307,28 +310,96 @@ type FootnoteContentNode = {
     key: string | null;
 };
 
+type FootnoteListItemNode = FootnoteContentNode & {
+    parentListNode: ProseMirrorNode | null;
+    parentListPos: number | null;
+    parentListChildCount: number;
+};
+
+type FootnoteDocumentInfo = {
+    refKeys: Set<string>;
+    sources: FootnoteContentNode[];
+    targets: FootnoteContentNode[];
+    listItems: FootnoteListItemNode[];
+};
+
+function normalizeFootnoteMarkerText(text: string) {
+    return text.trim().replace(/\.$/, "");
+}
+
+function findDescendantFootnoteText(node: ProseMirrorNode, className: string): string | null {
+    let text: string | null = null;
+
+    node.descendants(child => {
+        if (!nodeHasClass(child, className)) {
+            return true;
+        }
+
+        text = normalizeFootnoteMarkerText(child.textContent);
+
+        return !text;
+    });
+
+    return text;
+}
+
+function getFootnoteKeyFromMarker(node: ProseMirrorNode, markerClassName: string): string | null {
+    return (
+        getFootnoteKey(node) ??
+        findDescendantFootnoteKey(node, markerClassName) ??
+        findDescendantFootnoteText(node, markerClassName)
+    );
+}
+
+function getOwnFootnoteMarkerKey(node: ProseMirrorNode): string | null {
+    return getFootnoteKey(node) ?? normalizeFootnoteMarkerText(node.textContent);
+}
+
 function collectFootnoteContentNodes(
     node: ProseMirrorNode,
     pos: number,
     context: FootnoteSyncContext,
-    sources: FootnoteContentNode[],
-    targets: FootnoteContentNode[],
+    info: FootnoteDocumentInfo,
 ) {
     const currentContext = { ...context };
 
+    if (node.type.name === "orderedList") {
+        currentContext.parentListNode = node;
+        currentContext.parentListPos = pos;
+        currentContext.parentListChildCount = node.childCount;
+    }
+
     if (nodeHasClass(node, "wj-footnote-list-item")) {
-        currentContext.listItemKey = getFootnoteKey(node) ?? currentContext.listItemKey;
+        const listItemKey = getFootnoteKeyFromMarker(node, "wj-footnote-list-item-marker");
+
+        currentContext.listItemKey = listItemKey ?? currentContext.listItemKey;
+
+        info.listItems.push({
+            node,
+            pos,
+            key: listItemKey,
+            parentListNode: currentContext.parentListNode,
+            parentListPos: currentContext.parentListPos,
+            parentListChildCount: currentContext.parentListChildCount,
+        });
     }
 
     if (nodeHasClass(node, "wj-footnote-ref")) {
         currentContext.refKey =
-            getFootnoteKey(node) ??
-            findDescendantFootnoteKey(node, "wj-footnote-ref-marker") ??
+            getFootnoteKeyFromMarker(node, "wj-footnote-ref-marker") ??
             currentContext.refKey;
     }
 
+    if (nodeHasClass(node, "wj-footnote-ref-marker")) {
+        const markerKey = getOwnFootnoteMarkerKey(node);
+
+        if (markerKey) {
+            info.refKeys.add(markerKey);
+        }
+    }
+
     if (nodeHasClass(node, "wj-footnote-list-item-contents")) {
-        sources.push({
+        info.sources.push({
             node,
             pos,
             key: getFootnoteKey(node) ?? currentContext.listItemKey,
@@ -336,7 +407,7 @@ function collectFootnoteContentNodes(
     }
 
     if (nodeHasClass(node, "wj-footnote-ref-contents")) {
-        targets.push({
+        info.targets.push({
             node,
             pos,
             key: getFootnoteKey(node) ?? currentContext.refKey,
@@ -346,28 +417,104 @@ function collectFootnoteContentNodes(
     node.forEach((child, offset) => {
         const childPos = pos + 1 + offset;
 
-        collectFootnoteContentNodes(child, childPos, currentContext, sources, targets);
+        collectFootnoteContentNodes(child, childPos, currentContext, info);
     });
+}
+
+function collectFootnoteDocumentInfo(doc: ProseMirrorNode): FootnoteDocumentInfo {
+    const info: FootnoteDocumentInfo = {
+        refKeys: new Set(),
+        sources: [],
+        targets: [],
+        listItems: [],
+    };
+
+    collectFootnoteContentNodes(
+        doc,
+        -1,
+        {
+            listItemKey: null,
+            refKey: null,
+            parentListNode: null,
+            parentListPos: null,
+            parentListChildCount: 0,
+        },
+        info,
+    );
+
+    return info;
+}
+
+function getDeletedFootnoteRefKeys(oldDoc: ProseMirrorNode, newDoc: ProseMirrorNode) {
+    const oldRefKeys = collectFootnoteDocumentInfo(oldDoc).refKeys;
+    const newRefKeys = collectFootnoteDocumentInfo(newDoc).refKeys;
+
+    return Array.from(oldRefKeys).filter(key => !newRefKeys.has(key));
+}
+
+function getFootnoteListItemDeletionRanges(listItems: FootnoteListItemNode[], deletedRefKeys: string[]) {
+    const deletedKeySet = new Set(deletedRefKeys);
+    const itemsToDelete = listItems.filter(item => item.key && deletedKeySet.has(item.key));
+    const itemsByParentList = new Map<number, FootnoteListItemNode[]>();
+    const ranges: Array<{ from: number; to: number }> = [];
+
+    itemsToDelete.forEach(item => {
+        if (item.parentListPos === null) {
+            ranges.push({ from: item.pos, to: item.pos + item.node.nodeSize });
+            return;
+        }
+
+        const siblings = itemsByParentList.get(item.parentListPos) ?? [];
+        siblings.push(item);
+        itemsByParentList.set(item.parentListPos, siblings);
+    });
+
+    itemsByParentList.forEach(siblings => {
+        const [firstSibling] = siblings;
+
+        if (
+            firstSibling.parentListNode &&
+            firstSibling.parentListPos !== null &&
+            siblings.length >= firstSibling.parentListChildCount
+        ) {
+            ranges.push({
+                from: firstSibling.parentListPos,
+                to: firstSibling.parentListPos + firstSibling.parentListNode.nodeSize,
+            });
+            return;
+        }
+
+        siblings.forEach(item => {
+            ranges.push({ from: item.pos, to: item.pos + item.node.nodeSize });
+        });
+    });
+
+    return ranges.sort((left, right) => right.from - left.from);
 }
 
 function createFootnoteSyncPlugin() {
     return new Plugin({
         key: new PluginKey("wjFootnoteSync"),
-        appendTransaction(transactions, _oldState, newState) {
+        appendTransaction(transactions, oldState, newState) {
             if (!transactions.some(transaction => transaction.docChanged)) {
                 return null;
             }
 
-            const sources: FootnoteContentNode[] = [];
-            const targets: FootnoteContentNode[] = [];
+            const newFootnoteInfo = collectFootnoteDocumentInfo(newState.doc);
+            const deletedRefKeys = getDeletedFootnoteRefKeys(oldState.doc, newState.doc);
+            const deletionRanges = getFootnoteListItemDeletionRanges(newFootnoteInfo.listItems, deletedRefKeys);
 
-            collectFootnoteContentNodes(
-                newState.doc,
-                -1,
-                { listItemKey: null, refKey: null },
-                sources,
-                targets,
-            );
+            if (deletionRanges.length > 0) {
+                const transaction = newState.tr;
+
+                deletionRanges.forEach(range => {
+                    transaction.delete(range.from, range.to);
+                });
+
+                return transaction;
+            }
+
+            const { sources, targets } = newFootnoteInfo;
 
             if (sources.length === 0 || targets.length === 0) {
                 return null;
