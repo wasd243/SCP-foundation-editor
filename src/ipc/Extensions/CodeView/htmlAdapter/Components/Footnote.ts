@@ -19,6 +19,7 @@ function replaceFootnoteInlineTag({ element }: DOMReplaceContext): Node | null {
   const span = document.createElement("span");
 
   copyAttributes(element, span);
+  span.setAttribute("contenteditable", "false");
 
   while (element.firstChild) {
     span.appendChild(element.firstChild);
@@ -27,6 +28,27 @@ function replaceFootnoteInlineTag({ element }: DOMReplaceContext): Node | null {
   return span;
 }
 
+function makeFootnoteListTitleNonEditable({ element }: DOMReplaceContext): Node | null {
+  const tagName = element.tagName.toLowerCase();
+  if (tagName !== "wj-title") return null;
+
+  const inFootnoteList = element.closest("wj-footnote-list");
+  if (!inFootnoteList) return null;
+
+  element.setAttribute("contenteditable", "false");
+  return null;
+}
+
+function makeFootnoteListItemContentsEditable({ element }: DOMReplaceContext): Node | null {
+  const tagName = element.tagName.toLowerCase();
+  if (tagName !== "wj-footnote-list-item-contents") return null;
+
+  element.setAttribute("contenteditable", "true");
+  return null;
+}
+
 export const footnoteReplacer: DOMReplacer[] = [
   replaceFootnoteInlineTag,
+  makeFootnoteListTitleNonEditable,
+  makeFootnoteListItemContentsEditable,
 ];
