@@ -24,10 +24,6 @@ function replaceFootnoteInlineTag({ element }: DOMReplaceContext): Node | null {
     span.appendChild(element.firstChild);
   }
 
-  if (tagName === "wj-footnote-list-item-marker") {
-    span.textContent = "";
-  }
-
   return span;
 }
 

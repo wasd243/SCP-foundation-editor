@@ -361,15 +361,18 @@
 .editor-theme-default .wj-footnote-list ol {
     margin: 0;
     padding-left: 24px;
+    list-style: none;
 }
 
 .editor-theme-default .wj-footnote-list-item {
+    display: block;
     color: #000000;
     background: transparent;
     border: none;
 }
 
 .editor-theme-default .wj-footnote-list-item-marker {
+    display: inline;
     color: #000000;
     background: transparent;
     border: none;
