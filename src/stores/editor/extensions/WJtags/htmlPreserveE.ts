@@ -112,6 +112,30 @@ const ignoredRootTags = new Set([
     "html",
 ]);
 
+const dedicatedExtensionTags = new Set([
+    "details",
+    "summary",
+    "wj-tabs",
+    "wj-tabs-button",
+]);
+
+const dedicatedExtensionClassNames = new Set([
+    "wj-tabs-button-list",
+    "wj-tabs-panel-list",
+    "wj-tabs-panel",
+]);
+
+const dedicatedExtensionClassPrefixes = [
+    "wj-collapsible-",
+    "wj-tabs-",
+];
+
+const dedicatedExtensionDataTypes = new Set([
+    "details",
+    "detailsContent",
+    "detailsSummary",
+]);
+
 export const preservedGlobalAttributes = [
     "class",
     "id",
@@ -183,6 +207,18 @@ function shouldPreserveNativeElement(element: HTMLElement) {
     return isFootnoteListOrderedElement(element) || isFootnoteListItemElement(element);
 }
 
+function isDedicatedExtensionElement(element: HTMLElement) {
+    const tagName = element.tagName.toLowerCase();
+
+    if (dedicatedExtensionTags.has(tagName)) return true;
+    if (dedicatedExtensionDataTypes.has(element.getAttribute("data-type") ?? "")) return true;
+
+    return Array.from(element.classList).some(className =>
+        dedicatedExtensionClassNames.has(className) ||
+        dedicatedExtensionClassPrefixes.some(prefix => className.startsWith(prefix)),
+    );
+}
+
 function isNativeTipTapElement(element: HTMLElement) {
     if (shouldPreserveNativeElement(element)) return false;
 
@@ -193,6 +229,7 @@ function shouldPreserveElement(element: HTMLElement) {
     const tagName = element.tagName.toLowerCase();
 
     if (ignoredRootTags.has(tagName)) return false;
+    if (isDedicatedExtensionElement(element)) return false;
 
     return !isNativeTipTapElement(element);
 }
