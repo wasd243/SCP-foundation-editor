@@ -15,10 +15,10 @@ import Users from "./NonIncludeComponents/Users.vue";
 <template>
   <div class="component-gallery">
     <TabView/>
+    <Footnotes/>
     <Code/>
     <cssModule/>
     <divBlock/>
-    <Footnotes/>
     <Image/>
     <ModuleRate/>
     <Note/>
