@@ -59,7 +59,12 @@ function makeFootnoteListItemContentsEditable({ element }: DOMReplaceContext): N
   if (!hasClass(element, "wj-footnote-list-item-contents")) return null;
 
   const inFootnoteListItem = element.closest("li.wj-footnote-list-item");
-  element.setAttribute("contenteditable", inFootnoteListItem ? "true" : "false");
+
+  if (inFootnoteListItem) {
+    element.removeAttribute("contenteditable");
+  } else {
+    element.setAttribute("contenteditable", "false");
+  }
 
   return null;
 }

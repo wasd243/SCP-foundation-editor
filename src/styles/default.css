@@ -388,6 +388,12 @@
 .editor-theme-default .wj-footnote-list-item-contents {
     color: #000000;
 }
+
+.editor-theme-default .wj-footnote-list-item-contents:empty {
+    display: inline-block;
+    min-width: 1ch;
+    min-height: 1em;
+}
 /* =============================
    Wikidot-style footnotes end
    ============================= */

@@ -1,7 +1,7 @@
 // WJtagsE.ts keeps Wikijump/FTML-generated HTML from being dropped by TipTap's schema.
 import { Extension, Node } from "@tiptap/core";
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
-import { Plugin, PluginKey } from "@tiptap/pm/state";
+import { Plugin, PluginKey, TextSelection } from "@tiptap/pm/state";
 
 type HTMLAttributes = Record<string, string>;
 
@@ -87,6 +87,7 @@ const textBlockTags = new Set([
     "figcaption",
     "footer",
     "header",
+    "li",
     "main",
     "nav",
     "section",
@@ -176,7 +177,25 @@ function hasBlockChild(element: HTMLElement) {
     return Array.from(element.children).some(isBlockElement);
 }
 
+function hasElementClass(element: HTMLElement, className: string) {
+    return element.classList.contains(className);
+}
+
+function isFootnoteListOrderedElement(element: HTMLElement) {
+    return element.tagName.toLowerCase() === "ol" && Boolean(element.closest(".wj-footnote-list"));
+}
+
+function isFootnoteListItemElement(element: HTMLElement) {
+    return element.tagName.toLowerCase() === "li" && hasElementClass(element, "wj-footnote-list-item");
+}
+
+function shouldPreserveNativeElement(element: HTMLElement) {
+    return isFootnoteListOrderedElement(element) || isFootnoteListItemElement(element);
+}
+
 function isNativeTipTapElement(element: HTMLElement) {
+    if (shouldPreserveNativeElement(element)) return false;
+
     return tiptapNativeTags.has(element.tagName.toLowerCase());
 }
 
@@ -256,10 +275,44 @@ function getNodeAttribute(node: ProseMirrorNode, name: string): string | null {
     return typeof value === "string" ? value : null;
 }
 
-function nodeHasClass(node: ProseMirrorNode, className: string) {
-    const classAttribute = getNodeAttribute(node, "class");
+function getNodeTagName(node: ProseMirrorNode): string | null {
+    const tagName = node.attrs.tagName;
 
-    return classAttribute?.split(/\s+/).includes(className) ?? false;
+    return typeof tagName === "string" ? tagName : null;
+}
+
+function getNodeClassAttribute(node: ProseMirrorNode) {
+    return getNodeAttribute(node, "class") ?? "";
+}
+
+function nodeHasClass(node: ProseMirrorNode, className: string) {
+    const classAttribute = getNodeClassAttribute(node);
+
+    return classAttribute.split(/\s+/).includes(className);
+}
+
+function removeHTMLAttribute(node: ProseMirrorNode, attributeName: string) {
+    const attributes = getNodeHTMLAttributes(node);
+    const htmlAttributes = { ...attributes };
+
+    delete htmlAttributes[attributeName];
+
+    if (node.attrs.htmlAttributes && typeof node.attrs.htmlAttributes === "object") {
+        return {
+            ...node.attrs,
+            htmlAttributes,
+        };
+    }
+
+    return htmlAttributes;
+}
+
+function sanitizeFootnoteContentsNode(node: ProseMirrorNode) {
+    return node.type.create(
+        removeHTMLAttribute(node, "contenteditable"),
+        node.content,
+        node.marks,
+    );
 }
 
 function normalizeFootnoteKey(value: string | null): string | null {
@@ -323,8 +376,210 @@ type FootnoteDocumentInfo = {
     listItems: FootnoteListItemNode[];
 };
 
+type FootnoteListItemRepair =
+    | { type: "replace"; from: number; to: number; node: ProseMirrorNode }
+    | { type: "insert"; pos: number; node: ProseMirrorNode };
+
 function normalizeFootnoteMarkerText(text: string) {
     return text.trim().replace(/\.$/, "");
+}
+
+function hasDescendantClass(node: ProseMirrorNode, className: string) {
+    let found = false;
+
+    node.descendants(child => {
+        if (nodeHasClass(child, className)) {
+            found = true;
+            return false;
+        }
+
+        return true;
+    });
+
+    return found;
+}
+
+function hasBlockFootnoteContentsNode(node: ProseMirrorNode) {
+    let found = false;
+
+    node.descendants(child => {
+        if (nodeHasClass(child, "wj-footnote-list-item-contents") && !child.isInline) {
+            found = true;
+            return false;
+        }
+
+        return true;
+    });
+
+    return found;
+}
+
+function createEmptyFootnoteContentsNode(schema: ProseMirrorNode["type"]["schema"]) {
+    const inlineTag = schema.nodes.wjInlineTag;
+
+    if (!inlineTag) return null;
+
+    return inlineTag.create({
+        tagName: "span",
+        htmlAttributes: {
+            class: "wj-footnote-list-item-contents",
+        },
+    });
+}
+
+function createFootnoteContentsNode(
+    schema: ProseMirrorNode["type"]["schema"],
+    sourceNode: ProseMirrorNode,
+    content: ProseMirrorNode[],
+) {
+    const inlineTag = schema.nodes.wjInlineTag;
+
+    if (!inlineTag) return null;
+
+    const htmlAttributes = {
+        ...getNodeHTMLAttributes(sourceNode),
+        class: getNodeClassAttribute(sourceNode) || "wj-footnote-list-item-contents",
+    } as HTMLAttributes;
+
+    delete htmlAttributes.contenteditable;
+
+    return inlineTag.create({
+        tagName: "span",
+        htmlAttributes,
+    }, content);
+}
+
+function collectInlineNodes(node: ProseMirrorNode, schema: ProseMirrorNode["type"]["schema"], output: ProseMirrorNode[]) {
+    node.forEach(child => {
+        if (child.isText) {
+            output.push(child);
+            return;
+        }
+
+        if (nodeHasClass(child, "wj-footnote-list-item-contents")) {
+            if (child.isInline && getNodeTagName(child) === "span") {
+                output.push(sanitizeFootnoteContentsNode(child));
+                return;
+            }
+
+            const content: ProseMirrorNode[] = [];
+            collectInlineNodes(child, schema, content);
+
+            const contentsNode = createFootnoteContentsNode(schema, child, content);
+            if (contentsNode) {
+                output.push(contentsNode);
+            }
+            return;
+        }
+
+        if (child.isInline) {
+            output.push(child);
+            return;
+        }
+
+        collectInlineNodes(child, schema, output);
+    });
+}
+
+function createFootnoteListItemNode(schema: ProseMirrorNode["type"]["schema"], node: ProseMirrorNode) {
+    const textBlockTag = schema.nodes.wjTextBlockTag;
+
+    if (!textBlockTag) return null;
+
+    const content: ProseMirrorNode[] = [];
+    collectInlineNodes(node, schema, content);
+
+    if (!content.some(child => nodeHasClass(child, "wj-footnote-list-item-contents"))) {
+        const emptyContents = createEmptyFootnoteContentsNode(schema);
+
+        if (emptyContents) {
+            content.push(emptyContents);
+        }
+    }
+
+    return textBlockTag.create({
+        tagName: "li",
+        htmlAttributes: getNodeHTMLAttributes(node),
+    }, content);
+}
+
+function getFootnoteListItemRepairs(doc: ProseMirrorNode) {
+    const repairs: FootnoteListItemRepair[] = [];
+    const schema = doc.type.schema;
+
+    doc.descendants((node, pos) => {
+        if (!nodeHasClass(node, "wj-footnote-list-item")) {
+            return true;
+        }
+
+        const shouldReplace =
+            node.type.name !== "wjTextBlockTag" ||
+            getNodeTagName(node) !== "li" ||
+            hasBlockFootnoteContentsNode(node);
+
+        if (shouldReplace) {
+            const replacement = createFootnoteListItemNode(schema, node);
+
+            if (replacement) {
+                repairs.push({
+                    type: "replace",
+                    from: pos,
+                    to: pos + node.nodeSize,
+                    node: replacement,
+                });
+            }
+
+            return false;
+        }
+
+        if (!hasDescendantClass(node, "wj-footnote-list-item-contents")) {
+            const emptyContents = createEmptyFootnoteContentsNode(schema);
+
+            if (emptyContents) {
+                repairs.push({
+                    type: "insert",
+                    pos: pos + node.nodeSize - 1,
+                    node: emptyContents,
+                });
+            }
+        }
+
+        return false;
+    });
+
+    return repairs.sort((left, right) => {
+        const leftPos = left.type === "replace" ? left.from : left.pos;
+        const rightPos = right.type === "replace" ? right.from : right.pos;
+
+        return rightPos - leftPos;
+    });
+}
+
+function findClosestEmptyFootnoteContentsSelection(doc: ProseMirrorNode, pos: number) {
+    let closestDistance = Number.POSITIVE_INFINITY;
+    let closestPos: number | null = null;
+
+    doc.descendants((node, nodePos) => {
+        if (!nodeHasClass(node, "wj-footnote-list-item-contents")) {
+            return true;
+        }
+
+        if (node.content.size > 0) {
+            return false;
+        }
+
+        const selectionPos = nodePos + 1;
+        const distance = Math.abs(selectionPos - pos);
+
+        if (distance < closestDistance) {
+            closestDistance = distance;
+            closestPos = selectionPos;
+        }
+
+        return false;
+    });
+
+    return closestPos;
 }
 
 function findDescendantFootnoteText(node: ProseMirrorNode, className: string): string | null {
@@ -363,7 +618,7 @@ function collectFootnoteContentNodes(
 ) {
     const currentContext = { ...context };
 
-    if (node.type.name === "orderedList") {
+    if (node.type.name === "orderedList" || getNodeTagName(node) === "ol") {
         currentContext.parentListNode = node;
         currentContext.parentListPos = pos;
         currentContext.parentListChildCount = node.childCount;
@@ -500,6 +755,36 @@ function createFootnoteSyncPlugin() {
                 return null;
             }
 
+            const footnoteListItemRepairs = getFootnoteListItemRepairs(newState.doc);
+
+            if (footnoteListItemRepairs.length > 0) {
+                const transaction = newState.tr;
+
+                footnoteListItemRepairs.forEach(repair => {
+                    if (repair.type === "replace") {
+                        transaction.replaceWith(repair.from, repair.to, repair.node);
+                        return;
+                    }
+
+                    transaction.insert(repair.pos, repair.node);
+                });
+
+                const selectionPos = findClosestEmptyFootnoteContentsSelection(
+                    transaction.doc,
+                    transaction.selection.from,
+                );
+
+                if (selectionPos !== null) {
+                    try {
+                        transaction.setSelection(TextSelection.create(transaction.doc, selectionPos));
+                    } catch {
+                        // Keep ProseMirror's mapped selection if the browser produced an invalid edge position.
+                    }
+                }
+
+                return transaction;
+            }
+
             const newFootnoteInfo = collectFootnoteDocumentInfo(newState.doc);
             const deletedRefKeys = getDeletedFootnoteRefKeys(oldState.doc, newState.doc);
             const deletionRanges = getFootnoteListItemDeletionRanges(newFootnoteInfo.listItems, deletedRefKeys);
@@ -553,9 +838,10 @@ function createFootnoteSyncPlugin() {
     });
 }
 
+// High priority to prevent TipTap change <span> to <p>
 const WJBlockTagExtension = Node.create({
     name: "wjBlockTag",
-    priority: 1,
+    priority: 1000,
     group: "block",
     content: "block*",
     defining: true,
@@ -566,7 +852,7 @@ const WJBlockTagExtension = Node.create({
         return [
             {
                 tag: "*",
-                priority: 1,
+                priority: 1000,
                 getAttrs: element => {
                     if (!(element instanceof HTMLElement) || !shouldPreserveBlockElement(element)) {
                         return false;
@@ -581,9 +867,10 @@ const WJBlockTagExtension = Node.create({
     renderHTML: renderPreservedElement,
 });
 
+// High priority to prevent TipTap change <span> to <p>
 const WJTextBlockTagExtension = Node.create({
     name: "wjTextBlockTag",
-    priority: 1,
+    priority: 1000,
     group: "block",
     content: "inline*",
     defining: true,
@@ -594,7 +881,7 @@ const WJTextBlockTagExtension = Node.create({
         return [
             {
                 tag: "*",
-                priority: 1,
+                priority: 1000,
                 getAttrs: element => {
                     if (!(element instanceof HTMLElement) || !shouldPreserveTextBlockElement(element)) {
                         return false;
