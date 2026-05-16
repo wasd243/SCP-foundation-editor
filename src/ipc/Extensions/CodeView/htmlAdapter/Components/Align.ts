@@ -14,6 +14,8 @@ function replaceAlign({ element, children }: DOMReplaceContext): Node | null {
   let aligned = false;
 
   children.forEach(child => {
+    if (!(child instanceof HTMLElement)) return;
+
     const tagName = child.tagName.toLowerCase();
 
     if (tagName === "p") {
