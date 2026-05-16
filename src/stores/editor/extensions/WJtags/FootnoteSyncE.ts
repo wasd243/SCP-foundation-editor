@@ -9,6 +9,7 @@ import {
     getDeletedFootnoteRefKeys,
     getFootnoteListItemDeletionRanges,
     getFootnoteListItemRepairs,
+    renumberFootnotes,
     type FootnoteContentNode,
 } from "./FootnoteE";
 
@@ -61,7 +62,15 @@ export function createFootnoteSyncPlugin() {
                     transaction.delete(range.from, range.to);
                 });
 
+                renumberFootnotes(transaction);
+
                 return transaction;
+            }
+
+            const renumberTransaction = newState.tr;
+
+            if (renumberFootnotes(renumberTransaction)) {
+                return renumberTransaction;
             }
 
             const { sources, targets } = newFootnoteInfo;

@@ -1,4 +1,5 @@
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
+import type { Transaction } from "@tiptap/pm/state";
 
 import {
     getNodeAttribute,
@@ -49,6 +50,15 @@ export type FootnoteListItemRepair =
     | { type: "replace"; from: number; to: number; node: ProseMirrorNode }
     | { type: "insert"; pos: number; node: ProseMirrorNode };
 
+type FootnoteRenumberContext = {
+    listItemKey: string | null;
+    refKey: string | null;
+};
+
+type FootnoteRenumberOperation =
+    | { type: "replace"; from: number; to: number; node: ProseMirrorNode }
+    | { type: "setNodeMarkup"; pos: number; node: ProseMirrorNode; attrs: Record<string, unknown> };
+
 function sanitizeFootnoteContentsNode(node: ProseMirrorNode) {
     return node.type.create(
         removeHTMLAttribute(node, "contenteditable"),
@@ -73,6 +83,25 @@ function getFootnoteKey(node: ProseMirrorNode): string | null {
     }
 
     return null;
+}
+
+function setNodeHTMLAttributes(node: ProseMirrorNode, attributes: HTMLAttributes) {
+    const htmlAttributes = {
+        ...getNodeHTMLAttributes(node),
+        ...attributes,
+    };
+
+    if (node.attrs.htmlAttributes && typeof node.attrs.htmlAttributes === "object") {
+        return {
+            ...node.attrs,
+            htmlAttributes,
+        };
+    }
+
+    return {
+        ...node.attrs,
+        ...htmlAttributes,
+    };
 }
 
 function findDescendantFootnoteKey(node: ProseMirrorNode, className: string): string | null {
@@ -162,6 +191,24 @@ function createEmptyFootnoteContentsNode(schema: ProseMirrorNode["type"]["schema
     });
 }
 
+function createFootnoteSeparatorNode(schema: ProseMirrorNode["type"]["schema"], sourceNode: ProseMirrorNode | null) {
+    const inlineTag = schema.nodes.wjInlineTag;
+
+    if (!inlineTag) return null;
+
+    const htmlAttributes = sourceNode
+        ? {
+            ...getNodeHTMLAttributes(sourceNode),
+            class: getNodeClassAttribute(sourceNode) || "wj-footnote-sep",
+        } as HTMLAttributes
+        : { class: "wj-footnote-sep" };
+
+    return inlineTag.create({
+        tagName: "span",
+        htmlAttributes,
+    }, [schema.text(".")]);
+}
+
 function createFootnoteContentsNode(
     schema: ProseMirrorNode["type"]["schema"],
     sourceNode: ProseMirrorNode,
@@ -197,6 +244,21 @@ function findFootnoteContentsNode(node: ProseMirrorNode) {
     });
 
     return contentsNode;
+}
+
+function findFootnoteSeparatorNode(node: ProseMirrorNode) {
+    let separatorNode: ProseMirrorNode | null = null;
+
+    node.descendants(child => {
+        if (!nodeHasClass(child, "wj-footnote-sep")) {
+            return true;
+        }
+
+        separatorNode = child;
+        return false;
+    });
+
+    return separatorNode;
 }
 
 function collectFootnoteChromeNodes(node: ProseMirrorNode, output: ProseMirrorNode[]) {
@@ -313,6 +375,210 @@ export function getFootnoteListItemRepairs(doc: ProseMirrorNode) {
 
         return rightPos - leftPos;
     });
+}
+
+function createFootnoteNumberingMap(doc: ProseMirrorNode) {
+    const numberingMap = new Map<string, string>();
+
+    doc.descendants(node => {
+        if (!nodeHasClass(node, "wj-footnote-ref")) {
+            return true;
+        }
+
+        const key = getFootnoteKeyFromMarker(node, "wj-footnote-ref-marker");
+
+        if (key && !numberingMap.has(key)) {
+            numberingMap.set(key, String(numberingMap.size + 1));
+        }
+
+        return false;
+    });
+
+    if (numberingMap.size > 0) {
+        return numberingMap;
+    }
+
+    doc.descendants(node => {
+        if (!nodeHasClass(node, "wj-footnote-list-item")) {
+            return true;
+        }
+
+        const key = getFootnoteKeyFromMarker(node, "wj-footnote-list-item-marker");
+
+        if (key && !numberingMap.has(key)) {
+            numberingMap.set(key, String(numberingMap.size + 1));
+        }
+
+        return false;
+    });
+
+    return numberingMap;
+}
+
+function createTextOnlyNode(node: ProseMirrorNode, text: string) {
+    return node.type.create(node.attrs, [node.type.schema.text(text)], node.marks);
+}
+
+function createFootnoteRefMarkerNode(node: ProseMirrorNode, footnoteId: string) {
+    const attrs = setNodeHTMLAttributes(node, {
+        "aria-label": `Footnote ${footnoteId}.`,
+        "data-id": footnoteId,
+    });
+
+    return node.type.create(attrs, [node.type.schema.text(footnoteId)], node.marks);
+}
+
+function createFootnoteListMarkerNode(node: ProseMirrorNode, footnoteId: string) {
+    const separatorNode = createFootnoteSeparatorNode(node.type.schema, findFootnoteSeparatorNode(node));
+    const content = separatorNode
+        ? [node.type.schema.text(footnoteId), separatorNode]
+        : [node.type.schema.text(footnoteId)];
+
+    return node.type.create(node.attrs, content, node.marks);
+}
+
+function maybePushReplacement(
+    operations: FootnoteRenumberOperation[],
+    node: ProseMirrorNode,
+    pos: number,
+    replacement: ProseMirrorNode,
+) {
+    if (node.eq(replacement)) {
+        return;
+    }
+
+    operations.push({
+        type: "replace",
+        from: pos,
+        to: pos + node.nodeSize,
+        node: replacement,
+    });
+}
+
+function maybePushAttributeUpdate(
+    operations: FootnoteRenumberOperation[],
+    node: ProseMirrorNode,
+    pos: number,
+    attributes: HTMLAttributes,
+) {
+    if (Object.entries(attributes).every(([name, value]) => getNodeAttribute(node, name) === value)) {
+        return;
+    }
+
+    operations.push({
+        type: "setNodeMarkup",
+        pos,
+        node,
+        attrs: setNodeHTMLAttributes(node, attributes),
+    });
+}
+
+function collectFootnoteRenumberOperations(
+    node: ProseMirrorNode,
+    pos: number,
+    numberingMap: Map<string, string>,
+    context: FootnoteRenumberContext,
+    operations: FootnoteRenumberOperation[],
+) {
+    const currentContext = { ...context };
+
+    if (nodeHasClass(node, "wj-footnote-ref")) {
+        currentContext.refKey =
+            getFootnoteKeyFromMarker(node, "wj-footnote-ref-marker") ??
+            currentContext.refKey;
+    }
+
+    if (nodeHasClass(node, "wj-footnote-list-item")) {
+        currentContext.listItemKey =
+            getFootnoteKeyFromMarker(node, "wj-footnote-list-item-marker") ??
+            currentContext.listItemKey;
+
+        const nextListItemKey = currentContext.listItemKey
+            ? numberingMap.get(currentContext.listItemKey)
+            : null;
+
+        if (nextListItemKey) {
+            maybePushAttributeUpdate(operations, node, pos, { "data-id": nextListItemKey });
+        }
+    }
+
+    if (nodeHasClass(node, "wj-footnote-ref-marker")) {
+        const key = getOwnFootnoteMarkerKey(node) ?? currentContext.refKey;
+        const nextRefKey = key ? numberingMap.get(key) : null;
+
+        if (nextRefKey) {
+            maybePushReplacement(operations, node, pos, createFootnoteRefMarkerNode(node, nextRefKey));
+        }
+    }
+
+    if (nodeHasClass(node, "wj-footnote-ref-tooltip-label")) {
+        const nextRefKey = currentContext.refKey ? numberingMap.get(currentContext.refKey) : null;
+
+        if (nextRefKey) {
+            maybePushReplacement(operations, node, pos, createTextOnlyNode(node, `Footnote ${nextRefKey}.`));
+        }
+    }
+
+    if (nodeHasClass(node, "wj-footnote-list-item-marker")) {
+        const key = getOwnFootnoteMarkerKey(node) ?? currentContext.listItemKey;
+        const nextListItemKey = key ? numberingMap.get(key) : null;
+
+        if (nextListItemKey) {
+            maybePushReplacement(operations, node, pos, createFootnoteListMarkerNode(node, nextListItemKey));
+        }
+    }
+
+    node.forEach((child, offset) => {
+        collectFootnoteRenumberOperations(
+            child,
+            pos + offset + 1,
+            numberingMap,
+            currentContext,
+            operations,
+        );
+    });
+}
+
+function getFootnoteRenumberOperations(doc: ProseMirrorNode) {
+    const numberingMap = createFootnoteNumberingMap(doc);
+    const operations: FootnoteRenumberOperation[] = [];
+
+    if (numberingMap.size === 0) {
+        return operations;
+    }
+
+    collectFootnoteRenumberOperations(
+        doc,
+        -1,
+        numberingMap,
+        {
+            listItemKey: null,
+            refKey: null,
+        },
+        operations,
+    );
+
+    return operations.sort((left, right) => {
+        const leftPos = left.type === "replace" ? left.from : left.pos;
+        const rightPos = right.type === "replace" ? right.from : right.pos;
+
+        return rightPos - leftPos;
+    });
+}
+
+export function renumberFootnotes(transaction: Transaction) {
+    const operations = getFootnoteRenumberOperations(transaction.doc);
+
+    operations.forEach(operation => {
+        if (operation.type === "replace") {
+            transaction.replaceWith(operation.from, operation.to, operation.node);
+            return;
+        }
+
+        transaction.setNodeMarkup(operation.pos, undefined, operation.attrs, operation.node.marks);
+    });
+
+    return operations.length > 0;
 }
 
 export function findClosestEmptyFootnoteContentsSelection(doc: ProseMirrorNode, pos: number) {
