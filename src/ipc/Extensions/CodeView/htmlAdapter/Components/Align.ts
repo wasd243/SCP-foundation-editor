@@ -3,27 +3,39 @@ import type { DOMReplaceContext, DOMReplacer } from "../scanDOMandReplace";
 function replaceAlign({ element, children }: DOMReplaceContext): Node | null {
   if (!(element instanceof HTMLDivElement)) return null;
 
-  // List for allowed aligns
+  // List for allowed aligning
   const allowedAligns = ["left", "right", "center"];
 
   if (!allowedAligns.includes(element.style.textAlign)) {
     return null;
   }
 
-  if (!(children[0] instanceof HTMLElement)) return null;
-
   const align = element.style.textAlign;
-  const child = children[0] as HTMLElement;
+  let aligned = false;
 
-  // List for allowed elements
-  const allowedElements = ["p", "details"];
+  children.forEach(child => {
+    const tagName = child.tagName.toLowerCase();
 
-  if (!allowedElements.includes(child.tagName.toLowerCase())) return null;
+    if (tagName === "p") {
+      child.style.textAlign = align;
+      aligned = true;
+      return;
+    }
 
-  child.style.textAlign = align;
+    if (tagName === "details") {
+      const summary = child.querySelector("summary.wj-collapsible-button");
+
+      if (summary instanceof HTMLElement) {
+        summary.style.textAlign = align;
+        aligned = true;
+      }
+    }
+  });
+
+  if (!aligned) return null;
 
   if (element.childNodes.length === 1) {
-    return child;
+    return element.firstChild;
   }
 
   const fragment = document.createDocumentFragment();
