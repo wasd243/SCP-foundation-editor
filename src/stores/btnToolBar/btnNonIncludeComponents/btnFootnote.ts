@@ -1,8 +1,8 @@
-import type { JSONContent } from "@tiptap/core";
-import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
-import type { Transaction } from "@tiptap/pm/state";
+import type {JSONContent} from "@tiptap/core";
+import type {Node as ProseMirrorNode} from "@tiptap/pm/model";
+import type {Transaction} from "@tiptap/pm/state";
 
-import { getEditor } from "../../editor.ts";
+import {getEditor} from "../../editor.ts";
 import footnoteTemplate from "../../json/footnote.json";
 
 type FootnoteTemplate = {
@@ -148,7 +148,7 @@ function findTopLevelFootnoteList(doc: ProseMirrorNode): PositionedNode | null {
         const node = doc.child(index);
 
         if (nodeHasClass(node, "wj-footnote-list")) {
-            return { node, pos: offset };
+            return {node, pos: offset};
         }
 
         offset += node.nodeSize;
@@ -165,7 +165,7 @@ function findDescendantByTagName(node: ProseMirrorNode, tagName: string, basePos
         const childPos = basePos + offset + 1;
 
         if (getNodeTagName(child) === tagName) {
-            return { node: child, pos: childPos };
+            return {node: child, pos: childPos};
         }
 
         const descendant = findDescendantByTagName(child, tagName, childPos);
@@ -209,7 +209,7 @@ function upsertFootnoteListItem(footnoteId: string) {
         return;
     }
 
-    const { state, view } = editor;
+    const {state, view} = editor;
     const bookmark = state.selection.getBookmark();
     const tr = state.tr;
     const footnoteList = findTopLevelFootnoteList(tr.doc);

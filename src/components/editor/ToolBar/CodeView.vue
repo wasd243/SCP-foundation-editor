@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { invoke } from "@tauri-apps/api/core";
-import { onBeforeUnmount, ref, watch } from "vue";
+import {invoke} from "@tauri-apps/api/core";
+import {onBeforeUnmount, ref, watch} from "vue";
 import RenderSyncHtmlToEditor from "./CodeView/RenderSyncHTMLToEditor.vue";
-import { setCodeViewIframe } from "../../../ipc/Extensions/CodeView/SyncToParser";
+import {setCodeViewIframe} from "../../../ipc/Extensions/CodeView/SyncToParser";
 
 const isCodeViewOpen = ref(false);
 const codeViewSrc = ref("");
@@ -40,7 +40,7 @@ function closeCodeView() {
   >
     &lt;/&gt;
   </button>
-  <RenderSyncHtmlToEditor />
+  <RenderSyncHtmlToEditor/>
 
   <Teleport to="body">
     <Transition name="code-view-slide">

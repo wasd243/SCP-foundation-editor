@@ -1,7 +1,7 @@
 // `FootnoteSyncE.ts` is a plugin that synchronizes footnote content from `[[footnoteblock]]` to `wj-footnote` elements.
 
-import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
-import { Plugin, PluginKey, TextSelection } from "@tiptap/pm/state";
+import type {Node as ProseMirrorNode} from "@tiptap/pm/model";
+import {Plugin, PluginKey, TextSelection} from "@tiptap/pm/state";
 
 import {
     collectFootnoteDocumentInfo,
@@ -77,7 +77,7 @@ export function createFootnoteSyncPlugin() {
                 return renumberTransaction;
             }
 
-            const { sources, targets } = newFootnoteInfo;
+            const {sources, targets} = newFootnoteInfo;
 
             if (sources.length === 0 || targets.length === 0) {
                 return null;

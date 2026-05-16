@@ -351,6 +351,8 @@
     color: #000000;
     font-size: 13px;
     line-height: 1.35;
+    border-top: 1px var(--wikidot-red) solid;
+    border-bottom: 1px var(--wikidot-red) solid;
 }
 
 .editor-theme-default .wj-footnote-list .wj-title {

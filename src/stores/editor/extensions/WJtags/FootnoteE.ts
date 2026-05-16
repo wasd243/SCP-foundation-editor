@@ -7,7 +7,6 @@ import {
     getNodeHTMLAttributes,
     getNodeTagName,
     nodeHasClass,
-    removeHTMLAttribute,
     type HTMLAttributes,
 } from "./htmlPreserveE";
 
@@ -58,14 +57,6 @@ type FootnoteRenumberContext = {
 type FootnoteRenumberOperation =
     | { type: "replace"; from: number; to: number; node: ProseMirrorNode }
     | { type: "setNodeMarkup"; pos: number; node: ProseMirrorNode; attrs: Record<string, unknown> };
-
-function sanitizeFootnoteContentsNode(node: ProseMirrorNode) {
-    return node.type.create(
-        removeHTMLAttribute(node, "contenteditable"),
-        node.content,
-        node.marks,
-    );
-}
 
 function normalizeFootnoteKey(value: string | null): string | null {
     if (!value) return null;
@@ -187,6 +178,7 @@ function createEmptyFootnoteContentsNode(schema: ProseMirrorNode["type"]["schema
         tagName: "span",
         htmlAttributes: {
             class: "wj-footnote-list-item-contents",
+            contenteditable: "false",
         },
     });
 }
@@ -222,8 +214,6 @@ function createFootnoteContentsNode(
         ...getNodeHTMLAttributes(sourceNode),
         class: getNodeClassAttribute(sourceNode) || "wj-footnote-list-item-contents",
     } as HTMLAttributes;
-
-    delete htmlAttributes.contenteditable;
 
     return inlineTag.create({
         tagName: "span",
