@@ -212,6 +212,7 @@ function isDedicatedExtensionElement(element: HTMLElement) {
 
     if (dedicatedExtensionTags.has(tagName)) return true;
     if (dedicatedExtensionDataTypes.has(element.getAttribute("data-type") ?? "")) return true;
+    if (tagName === "div" && element.style.textAlign) return true;
 
     return Array.from(element.classList).some(className =>
         dedicatedExtensionClassNames.has(className) ||

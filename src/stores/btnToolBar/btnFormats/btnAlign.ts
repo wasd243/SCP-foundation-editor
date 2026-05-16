@@ -1,5 +1,18 @@
 import { getEditor, type EditorTextAlign } from "../../editor.ts";
 
+function setTextAlignStyle(style: unknown, align: EditorTextAlign) {
+    const declarations = typeof style === "string"
+        ? style
+            .split(";")
+            .map(declaration => declaration.trim())
+            .filter(declaration => declaration && !/^text-align\s*:/i.test(declaration))
+        : [];
+
+    declarations.push(`text-align: ${align}`);
+
+    return `${declarations.join("; ")};`;
+}
+
 export function setEditorAlign(align: EditorTextAlign) {
     getEditor()
         ?.chain()
@@ -18,6 +31,7 @@ export function setEditorAlign(align: EditorTextAlign) {
                 tr.setNodeMarkup(pos, undefined, {
                     ...node.attrs,
                     textAlign: align,
+                    style: setTextAlignStyle(node.attrs.style, align),
                 }, node.marks);
             }
 

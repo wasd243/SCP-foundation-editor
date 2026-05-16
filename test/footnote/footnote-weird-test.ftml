@@ -1,0 +1,9 @@
+[[>]]
+Ali[[footnote]]This is a footnote[[/footnote]]gned content
+[[collapsible show="+f" hide="-f"]]
+fff[[footnote]]f1f1f1[[/footnote]]
+[[footnote]]This is a footnote[[/footnote]]f2f2f2
+f[[footnote]]f3[[/footnote]]
+[[footnote]]f4[[/footnote]]
+[[/collapsible]]
+[[/>]]
