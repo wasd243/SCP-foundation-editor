@@ -84,7 +84,8 @@
         "attrs": {
           "tagName": "div",
           "htmlAttributes": {
-            "class": "wj-title"
+            "class": "wj-title",
+            "contenteditable": "false"
           }
         },
         "content": [
@@ -127,28 +128,29 @@
           "htmlAttributes": {
             "class": "wj-footnote-list-item-marker",
             "type": "button",
-            "role": "link"
+            "role": "link",
+            "contenteditable": "false"
           }
         },
         "content": [
           {
             "type": "text",
             "text": "__FOOTNOTE_ID__"
-          }
-        ]
-      },
-      {
-        "type": "wjInlineTag",
-        "attrs": {
-          "tagName": "span",
-          "htmlAttributes": {
-            "class": "wj-footnote-sep"
-          }
-        },
-        "content": [
+          },
           {
-            "type": "text",
-            "text": "."
+            "type": "wjInlineTag",
+            "attrs": {
+              "tagName": "span",
+              "htmlAttributes": {
+                "class": "wj-footnote-sep"
+              }
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "."
+              }
+            ]
           }
         ]
       },

@@ -55,6 +55,14 @@ function makeFootnoteListTitleReadOnly({ element }: DOMReplaceContext): Node | n
   return null;
 }
 
+function makeFootnoteListSeparatorReadOnly({ element }: DOMReplaceContext): Node | null {
+  if (!hasClass(element, "wj-footnote-sep")) return null;
+  if (!element.closest(".wj-footnote-list-item")) return null;
+
+  element.setAttribute("contenteditable", "false");
+  return null;
+}
+
 function makeFootnoteListItemContentsEditable({ element }: DOMReplaceContext): Node | null {
   if (!hasClass(element, "wj-footnote-list-item-contents")) return null;
 
@@ -74,5 +82,6 @@ export const footnoteReplacer: DOMReplacer[] = [
   makeFootnoteRefReadOnly,
   makeFootnoteRefChromeReadOnly,
   makeFootnoteListTitleReadOnly,
+  makeFootnoteListSeparatorReadOnly,
   makeFootnoteListItemContentsEditable,
 ];
