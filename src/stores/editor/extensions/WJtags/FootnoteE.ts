@@ -125,6 +125,30 @@ function hasBlockFootnoteContentsNode(node: ProseMirrorNode) {
     return found;
 }
 
+function isFootnoteListChromeNode(node: ProseMirrorNode) {
+    return nodeHasClass(node, "wj-footnote-list-item-marker") ||
+        nodeHasClass(node, "wj-footnote-sep");
+}
+
+function isMeaningfulLooseText(node: ProseMirrorNode) {
+    return node.isText && node.textContent.length > 0;
+}
+
+function hasLooseFootnoteListItemContent(node: ProseMirrorNode) {
+    let found = false;
+
+    node.forEach(child => {
+        if (found) return;
+        if (nodeHasClass(child, "wj-footnote-list-item-contents")) return;
+        if (isFootnoteListChromeNode(child)) return;
+        if (isMeaningfulLooseText(child) || child.isInline) {
+            found = true;
+        }
+    });
+
+    return found;
+}
+
 function createEmptyFootnoteContentsNode(schema: ProseMirrorNode["type"]["schema"]) {
     const inlineTag = schema.nodes.wjInlineTag;
 
@@ -160,35 +184,55 @@ function createFootnoteContentsNode(
     }, content);
 }
 
-function collectInlineNodes(node: ProseMirrorNode, schema: ProseMirrorNode["type"]["schema"], output: ProseMirrorNode[]) {
+function findFootnoteContentsNode(node: ProseMirrorNode) {
+    let contentsNode: ProseMirrorNode | null = null;
+
+    node.descendants(child => {
+        if (!nodeHasClass(child, "wj-footnote-list-item-contents")) {
+            return true;
+        }
+
+        contentsNode = child;
+        return false;
+    });
+
+    return contentsNode;
+}
+
+function collectFootnoteChromeNodes(node: ProseMirrorNode, output: ProseMirrorNode[]) {
     node.forEach(child => {
-        if (child.isText) {
-            output.push(child);
-            return;
-        }
-
         if (nodeHasClass(child, "wj-footnote-list-item-contents")) {
-            if (child.isInline && getNodeTagName(child) === "span") {
-                output.push(sanitizeFootnoteContentsNode(child));
-                return;
-            }
-
-            const content: ProseMirrorNode[] = [];
-            collectInlineNodes(child, schema, content);
-
-            const contentsNode = createFootnoteContentsNode(schema, child, content);
-            if (contentsNode) {
-                output.push(contentsNode);
-            }
             return;
         }
 
-        if (child.isInline) {
+        if (isFootnoteListChromeNode(child)) {
             output.push(child);
             return;
         }
 
-        collectInlineNodes(child, schema, output);
+        if (!child.isInline) {
+            collectFootnoteChromeNodes(child, output);
+        }
+    });
+}
+
+function collectFootnoteBodyInlineNodes(node: ProseMirrorNode, output: ProseMirrorNode[]) {
+    node.forEach(child => {
+        if (nodeHasClass(child, "wj-footnote-list-item-contents")) {
+            collectFootnoteBodyInlineNodes(child, output);
+            return;
+        }
+
+        if (isFootnoteListChromeNode(child)) {
+            return;
+        }
+
+        if (child.isText || child.isInline) {
+            output.push(child);
+            return;
+        }
+
+        collectFootnoteBodyInlineNodes(child, output);
     });
 }
 
@@ -198,14 +242,18 @@ function createFootnoteListItemNode(schema: ProseMirrorNode["type"]["schema"], n
     if (!textBlockTag) return null;
 
     const content: ProseMirrorNode[] = [];
-    collectInlineNodes(node, schema, content);
+    const bodyContent: ProseMirrorNode[] = [];
+    const sourceContentsNode = findFootnoteContentsNode(node);
 
-    if (!content.some(child => nodeHasClass(child, "wj-footnote-list-item-contents"))) {
-        const emptyContents = createEmptyFootnoteContentsNode(schema);
+    collectFootnoteChromeNodes(node, content);
+    collectFootnoteBodyInlineNodes(node, bodyContent);
 
-        if (emptyContents) {
-            content.push(emptyContents);
-        }
+    const contentsNode = sourceContentsNode
+        ? createFootnoteContentsNode(schema, sourceContentsNode, bodyContent)
+        : createEmptyFootnoteContentsNode(schema);
+
+    if (contentsNode) {
+        content.push(contentsNode);
     }
 
     return textBlockTag.create({
@@ -226,7 +274,8 @@ export function getFootnoteListItemRepairs(doc: ProseMirrorNode) {
         const shouldReplace =
             node.type.name !== "wjTextBlockTag" ||
             getNodeTagName(node) !== "li" ||
-            hasBlockFootnoteContentsNode(node);
+            hasBlockFootnoteContentsNode(node) ||
+            hasLooseFootnoteListItemContent(node);
 
         if (shouldReplace) {
             const replacement = createFootnoteListItemNode(schema, node);

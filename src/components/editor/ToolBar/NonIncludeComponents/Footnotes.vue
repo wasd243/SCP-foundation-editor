@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { insertEditorFootnote } from "../../../../stores/btnToolBar/btnNonIncludeComponents/btnFootnote.ts";
+</script>
 
 <template>
-  <button class="component-card">
+  <button class="component-card" type="button" @click="insertEditorFootnote">
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       <text
           x="5"
