@@ -12,6 +12,11 @@ type FootnoteTemplate = {
     listItem: JSONContent;
 };
 
+type PositionedNode = {
+    node: ProseMirrorNode;
+    pos: number;
+};
+
 const footnoteKeyAttributes = [
     "data-footnote-id",
     "footnote-id",
@@ -136,37 +141,47 @@ function getNextFootnoteId() {
     return String(maxFootnoteId + 1);
 }
 
-function findTopLevelFootnoteList(doc: ProseMirrorNode) {
-    let footnoteList: { node: ProseMirrorNode; pos: number } | null = null;
+function findTopLevelFootnoteList(doc: ProseMirrorNode): PositionedNode | null {
+    let offset = 0;
 
-    doc.forEach((node, offset) => {
-        if (footnoteList || !nodeHasClass(node, "wj-footnote-list")) {
-            return;
+    for (let index = 0; index < doc.childCount; index += 1) {
+        const node = doc.child(index);
+
+        if (nodeHasClass(node, "wj-footnote-list")) {
+            return { node, pos: offset };
         }
 
-        footnoteList = { node, pos: offset };
-    });
+        offset += node.nodeSize;
+    }
 
-    return footnoteList;
+    return null;
 }
 
-function findFootnoteOrderedList(footnoteList: { node: ProseMirrorNode; pos: number }) {
-    let orderedList: { node: ProseMirrorNode; pos: number } | null = null;
+function findDescendantByTagName(node: ProseMirrorNode, tagName: string, basePos: number): PositionedNode | null {
+    let offset = 0;
 
-    footnoteList.node.descendants((node, pos) => {
-        if (orderedList || getNodeTagName(node) !== "ol") {
-            return true;
+    for (let index = 0; index < node.childCount; index += 1) {
+        const child = node.child(index);
+        const childPos = basePos + offset + 1;
+
+        if (getNodeTagName(child) === tagName) {
+            return { node: child, pos: childPos };
         }
 
-        orderedList = {
-            node,
-            pos: footnoteList.pos + pos + 1,
-        };
+        const descendant = findDescendantByTagName(child, tagName, childPos);
 
-        return false;
-    });
+        if (descendant) {
+            return descendant;
+        }
 
-    return orderedList;
+        offset += child.nodeSize;
+    }
+
+    return null;
+}
+
+function findFootnoteOrderedList(footnoteList: PositionedNode): PositionedNode | null {
+    return findDescendantByTagName(footnoteList.node, "ol", footnoteList.pos);
 }
 
 function moveFootnoteListToBottom(doc: ProseMirrorNode, tr: Transaction) {
