@@ -10,12 +10,7 @@ function underFootnoteListContentEditableFalse(
     { element }: DOMReplaceContext
 ): Node | null {
 
-    if (element.closest(".wj-footnote-list")) {
-        element.setAttribute("contenteditable", "false");
-        return null;
-    }
-
-    if (element.tagName.toLowerCase() !== "p") {
+    if (element.tagName !== "P") {
         return null;
     }
 
