@@ -4,7 +4,7 @@ function replaceAlign({ element, children }: DOMReplaceContext): Node | null {
   if (!(element instanceof HTMLDivElement)) return null;
 
   // List for allowed aligns
-  const allowedAligns = ["left", "right", "center", "justify"];
+  const allowedAligns = ["left", "right", "center"];
 
   if (!allowedAligns.includes(element.style.textAlign)) {
     return null;
@@ -22,7 +22,17 @@ function replaceAlign({ element, children }: DOMReplaceContext): Node | null {
 
   child.style.textAlign = align;
 
-  return child;
+  if (element.childNodes.length === 1) {
+    return child;
+  }
+
+  const fragment = document.createDocumentFragment();
+
+  while (element.firstChild) {
+    fragment.appendChild(element.firstChild);
+  }
+
+  return fragment;
 }
 
 export const alignReplacer: DOMReplacer[] = [
