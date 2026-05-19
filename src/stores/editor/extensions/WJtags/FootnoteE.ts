@@ -154,6 +154,10 @@ function isMeaningfulLooseText(node: ProseMirrorNode) {
     return node.isText && node.textContent.length > 0;
 }
 
+// This function is used when Prose Mirror changes footnote edit area into normal <p></p> text
+// Do not delete this function unless Prose Mirror would not change contenteditable type
+// ---------------------------------------------------------------------------------------------------------------------
+// if the user deletes all texts in the footnote edit area, Prose Mirror would change it into <p></p>
 function hasLooseFootnoteListItemContent(node: ProseMirrorNode) {
     let found = false;
 
