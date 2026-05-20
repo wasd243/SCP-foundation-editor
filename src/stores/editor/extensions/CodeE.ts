@@ -1,4 +1,4 @@
-import { mergeAttributes } from "@tiptap/core";
+import {mergeAttributes, undoInputRule} from "@tiptap/core";
 import { CodeBlockLowlight } from "@tiptap/extension-code-block-lowlight";
 import { common, createLowlight } from "lowlight";
 
@@ -127,7 +127,7 @@ export const CodeBlockLowlightExtension = CodeBlockLowlight.extend({
                 const position = getNodePosition();
                 const language = normalizeLanguage(languageInput.value);
 
-                if (position === null) return;
+                if (position === null || position === undefined) return;
 
                 editor.view.dispatch(
                     editor.view.state.tr.setNodeMarkup(position, undefined, {
