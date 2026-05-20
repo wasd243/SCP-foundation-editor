@@ -30,8 +30,7 @@ export function SyncToParser() {
         throw new Error("Parser returned malformed HTML output.");
       }
 
-      console.log("[UI] Received\n")
-      console.log(event.data.payload);
+      console.log("[UI] Received");
 
       window.dispatchEvent(new CustomEvent("code-view-parser-html", {
         // Replace wj formats <div> classes into TipTap formats for render

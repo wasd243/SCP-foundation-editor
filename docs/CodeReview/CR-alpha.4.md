@@ -37,7 +37,7 @@ Parser output is applied with `setContent(html)`, replacing the entire TipTap do
 
 **Recommendation:** Store the editor instance in a reactive store/ref or pass selection-derived state into the context menu when it opens.
 
-### 4. Right-click selection handling ignores valid position `0` (TODO)
+### ~4. Right-click selection handling ignores valid position `0`~ _DONE_
 
 `posAtCoords()` can return a position object whose `pos` is `0`. The current truthy check uses `if (position)`, so it is safe for the object itself, but it does not validate whether `position.pos` is a usable text selection position before calling `setTextSelection`. Edge positions can throw in ProseMirror depending on document structure.
 
@@ -45,7 +45,7 @@ Parser output is applied with `setContent(html)`, replacing the entire TipTap do
 
 **Recommendation:** Validate the returned position against the current document and handle selection failures gracefully.
 
-### 5. Footnote list movement uses positions from a pre-delete document (TODO)
+### ~5. Footnote list movement uses positions from a pre-delete document~ _DONE_
 
 `moveFootnoteListToBottom()` finds the footnote list in the current doc, deletes it, then inserts `footnoteList.node` at `tr.doc.content.size`. Because the transaction document changes after deletion, this path should be carefully tested for mapping correctness, especially when the footnote list is not the final node.
 
@@ -56,7 +56,7 @@ Parser output is applied with `setContent(html)`, replacing the entire TipTap do
 
 ## Security and Data Safety
 
-### 1. Parser HTML is assigned through `innerHTML` and then inserted into the editor (NOT PLANNED)
+### ~1. Parser HTML is assigned through `innerHTML` and then inserted into the editor (NOT PLANNED)~
 
 The parser result is passed to `scanDOMandReplace()`, assigned into `template.innerHTML`, returned as HTML, and then inserted into TipTap with `setContent`. If parser output can contain unsafe tags or attributes, this creates an XSS/security risk in the Tauri webview.
 
@@ -66,7 +66,7 @@ The parser result is passed to `scanDOMandReplace()`, assigned into `template.in
 
 **Recommendation:** Sanitize parser output with an allowlist before DOM insertion and before `setContent`. Consider stripping scripts, event-handler attributes, dangerous URLs, and unexpected inline styles.
 
-### 2. Attribute preservation is broad and includes inline styles
+### ~2. Attribute preservation is broad and includes inline styles (NOT PLANNED)~
 
 The HTML preservation layer keeps attributes including `style`, `id`, `role`, `type`, and ARIA fields. Combined with preserved arbitrary tags, unsafe or layout-breaking content can persist inside the editor.
 
@@ -76,7 +76,7 @@ The HTML preservation layer keeps attributes including `style`, `id`, `role`, `t
 
 **Recommendation:** Narrow preserved attributes per tag and sanitize style values. Avoid preserving attributes that are not required for FTML round-tripping.
 
-### 3. Code-view iframe is not sandboxed (TODO)
+### 3. Code-view iframe is not sandboxed (TODO later)
 
 The code-view panel renders an iframe with a dynamic `src` and no `sandbox`, `allow`, or origin restrictions in markup. Message handling checks origin/source, but the iframe itself still has broad capabilities.
 
@@ -87,7 +87,7 @@ The code-view panel renders an iframe with a dynamic `src` and no `sandbox`, `al
 
 ## Reliability and Error Handling
 
-### 1. Production console logging leaks editor content (TODO)
+### ~1. Production console logging leaks editor content~ _DONE_
 
 `SyncToParser()` logs the full code-view payload every time content changes. This can expose user-authored page content in developer tools/log captures and may be expensive for large documents.
 
