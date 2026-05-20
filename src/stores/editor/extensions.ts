@@ -2,6 +2,7 @@ import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
 
 import { BasicExtensions } from "./extensions/btnBasicE.ts";
+import { CodeBlockLowlightExtension } from "./extensions/CodeE.ts";
 import { DetailsExtension, DetailsSummaryExtension } from "./extensions/DetailsE.ts";
 import { DetailsContentExtension } from "./extensions/DetailsContentE.ts";
 import { FontSizeExtension } from "./extensions/FontSizeE.ts";
@@ -12,8 +13,11 @@ import { TextColorExtension } from "./extensions/TextColorE.ts";
 import { WJTagExtension } from "./extensions/WJtagsE.ts";
 
 export const editorExtensions = [
-    StarterKit,
+    StarterKit.configure({
+        codeBlock: false,
+    }),
     Underline,
+    CodeBlockLowlightExtension,
     DetailsExtension,
     DetailsSummaryExtension,
     DetailsContentExtension,

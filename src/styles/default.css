@@ -62,6 +62,87 @@
     margin-bottom: 0;
 }
 
+/* ---Code block start--- */
+.editor-theme-default .ProseMirror pre.wj-code {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 10px 0 14px;
+    padding: 0;
+    overflow: hidden;
+    color: #1f2937;
+    background: #f8fafc;
+    border: 1px solid #b8c2cc;
+    border-radius: 3px;
+    font-family: Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.45;
+    white-space: pre;
+}
+
+.editor-theme-default .ProseMirror pre.wj-code::before {
+    content: attr(data-language);
+    display: block;
+    min-height: 28px;
+    box-sizing: border-box;
+    padding: 6px 10px;
+    color: #333333;
+    background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 100%);
+    border-bottom: 1px solid #b8c2cc;
+    font-family: "Microsoft YaHei", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    text-transform: lowercase;
+}
+
+.editor-theme-default .ProseMirror pre.wj-code:not([data-language])::before {
+    content: "code";
+}
+
+.editor-theme-default .ProseMirror pre.wj-code code {
+    display: block;
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    overflow-x: auto;
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    white-space: pre;
+    tab-size: 4;
+}
+
+.editor-theme-default .ProseMirror pre.wj-code .hljs-keyword,
+.editor-theme-default .ProseMirror pre.wj-code .hljs-selector-tag,
+.editor-theme-default .ProseMirror pre.wj-code .hljs-title.function_ {
+    color: #7c2d12;
+}
+
+.editor-theme-default .ProseMirror pre.wj-code .hljs-string,
+.editor-theme-default .ProseMirror pre.wj-code .hljs-attr,
+.editor-theme-default .ProseMirror pre.wj-code .hljs-symbol {
+    color: #166534;
+}
+
+.editor-theme-default .ProseMirror pre.wj-code .hljs-number,
+.editor-theme-default .ProseMirror pre.wj-code .hljs-literal,
+.editor-theme-default .ProseMirror pre.wj-code .hljs-built_in {
+    color: #1d4ed8;
+}
+
+.editor-theme-default .ProseMirror pre.wj-code .hljs-comment {
+    color: #6b7280;
+    font-style: italic;
+}
+
+.editor-theme-default .ProseMirror pre.wj-code.ProseMirror-selectednode {
+    outline: 2px solid var(--wikidot-red);
+}
+
+/* ---Code block end--- */
+
 .editor-theme-default .ProseMirror table {
     width: 100%;
     margin: 0 0 0.8em;
