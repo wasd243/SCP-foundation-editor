@@ -150,7 +150,7 @@ The editor instance is stored in a module-level variable and imported throughout
 
 **Recommendation:** Move editor state to a Vue/Pinia store or provide/inject pattern, exposing typed commands rather than allowing every module to pull the raw editor.
 
-### 2. Repeated polling logic exists for editor readiness (TODO)
+### ~2. Repeated polling logic exists for editor readiness~ _DONE_
 
 Both title and font-size dropdowns poll every 100ms until the editor exists, then register similar `selectionUpdate` and `transaction` listeners. This duplicates lifecycle code and can be fragile if more controls follow the same pattern.
 
