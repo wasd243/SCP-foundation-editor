@@ -63,7 +63,7 @@
 }
 
 /* ---Code block start--- */
-.editor-theme-default .ProseMirror pre.wj-code {
+.editor-theme-default .ProseMirror .wj-code {
     display: block;
     width: 100%;
     max-width: 100%;
@@ -79,6 +79,37 @@
     font-size: 13px;
     line-height: 1.45;
     white-space: pre;
+}
+
+.editor-theme-default .ProseMirror .wj-code-panel {
+    display: flex;
+    align-items: center;
+    min-height: 28px;
+    box-sizing: border-box;
+    padding: 4px 8px;
+    background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 100%);
+    border-bottom: 1px solid #b8c2cc;
+}
+
+.editor-theme-default .ProseMirror .wj-code-language-input {
+    width: 160px;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 2px 4px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #333333;
+    font-family: "Microsoft YaHei", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    outline: none;
+}
+
+.editor-theme-default .ProseMirror .wj-code-language-input:focus {
+    border-color: #9ca3af;
+    background: #ffffff;
 }
 
 .editor-theme-default .ProseMirror pre.wj-code::before {
@@ -101,7 +132,7 @@
     content: "code";
 }
 
-.editor-theme-default .ProseMirror pre.wj-code code {
+.editor-theme-default .ProseMirror .wj-code code {
     display: block;
     min-width: 100%;
     box-sizing: border-box;
@@ -114,30 +145,30 @@
     tab-size: 4;
 }
 
-.editor-theme-default .ProseMirror pre.wj-code .hljs-keyword,
-.editor-theme-default .ProseMirror pre.wj-code .hljs-selector-tag,
-.editor-theme-default .ProseMirror pre.wj-code .hljs-title.function_ {
+.editor-theme-default .ProseMirror .wj-code .hljs-keyword,
+.editor-theme-default .ProseMirror .wj-code .hljs-selector-tag,
+.editor-theme-default .ProseMirror .wj-code .hljs-title.function_ {
     color: #7c2d12;
 }
 
-.editor-theme-default .ProseMirror pre.wj-code .hljs-string,
-.editor-theme-default .ProseMirror pre.wj-code .hljs-attr,
-.editor-theme-default .ProseMirror pre.wj-code .hljs-symbol {
+.editor-theme-default .ProseMirror .wj-code .hljs-string,
+.editor-theme-default .ProseMirror .wj-code .hljs-attr,
+.editor-theme-default .ProseMirror .wj-code .hljs-symbol {
     color: #166534;
 }
 
-.editor-theme-default .ProseMirror pre.wj-code .hljs-number,
-.editor-theme-default .ProseMirror pre.wj-code .hljs-literal,
-.editor-theme-default .ProseMirror pre.wj-code .hljs-built_in {
+.editor-theme-default .ProseMirror .wj-code .hljs-number,
+.editor-theme-default .ProseMirror .wj-code .hljs-literal,
+.editor-theme-default .ProseMirror .wj-code .hljs-built_in {
     color: #1d4ed8;
 }
 
-.editor-theme-default .ProseMirror pre.wj-code .hljs-comment {
+.editor-theme-default .ProseMirror .wj-code .hljs-comment {
     color: #6b7280;
     font-style: italic;
 }
 
-.editor-theme-default .ProseMirror pre.wj-code.ProseMirror-selectednode {
+.editor-theme-default .ProseMirror .wj-code.ProseMirror-selectednode {
     outline: 2px solid var(--wikidot-red);
 }
 
