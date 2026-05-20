@@ -10,7 +10,7 @@ The editor code is functional in broad structure, but several areas need hardeni
 
 ## Correctness and Runtime Behavior
 
-### 1. Parser IPC has no failure handling (TODO)
+### ~1. Parser IPC has no failure handling (TODO)~ _DONE_
 
 `SyncToParser()` awaits `parse_wikidot` directly inside a global message listener without `try/catch`. If the Tauri command rejects or returns malformed data, the listener will fail silently at runtime and no user-facing recovery path exists.
 

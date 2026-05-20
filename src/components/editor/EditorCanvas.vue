@@ -17,8 +17,16 @@ function handleContextMenu(event: MouseEvent) {
     top: event.clientY,
   });
 
-  if (position) {
-    editorInstance?.chain().focus().setTextSelection(position.pos).run();
+  if (editorInstance && position && Number.isInteger(position.pos)) {
+    const docSize = editorInstance.state.doc.content.size;
+
+    if (position.pos >= 0 && position.pos <= docSize) {
+      try {
+        editorInstance.chain().focus().setTextSelection(position.pos).run();
+      } catch {
+        // Keep the context menu available even when ProseMirror rejects an edge position.
+      }
+    }
   }
 
   contextMenuX.value = event.clientX;
