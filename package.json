@@ -11,6 +11,7 @@
   "dependencies": {
     "@tauri-apps/api": "^2.11.0",
     "@tiptap/core": "^3.22.5",
+    "@tiptap/extension-code-block-lowlight": "^3.22.5",
     "@tiptap/extension-details": "^3.22.5",
     "@tiptap/extension-image": "^3.22.5",
     "@tiptap/extension-link": "^3.22.5",
@@ -22,6 +23,7 @@
     "@tiptap/pm": "^3.22.5",
     "@tiptap/starter-kit": "^3.22.5",
     "@tiptap/vue-3": "^3.22.5",
+    "lowlight": "^3.3.0",
     "pinia": "^2.1.0",
     "vue": "^3.4.0",
     "vue3-colorpicker": "^2.3.0"
