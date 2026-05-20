@@ -23,14 +23,24 @@ export function SyncToParser() {
     if (event.origin !== window.location.origin) return;
     if (event.data?.type !== "code-view-content-changed") return;
 
-    const output = await invoke<ParseOutput>("parse_wikidot", { sourceText: event.data.payload });
+    try {
+      const output = await invoke<ParseOutput>("parse_wikidot", { sourceText: event.data.payload });
 
-    console.log("[UI] Received\n")
-    console.log(event.data.payload);
+      if (typeof output.html !== "string") {
+        throw new Error("Parser returned malformed HTML output.");
+      }
 
-    window.dispatchEvent(new CustomEvent("code-view-parser-html", {
-      // Replace wj formats <div> classes into TipTap formats for render
-      detail: scanDOMandReplace(output.html),
-    }));
+      console.log("[UI] Received\n")
+      console.log(event.data.payload);
+
+      window.dispatchEvent(new CustomEvent("code-view-parser-html", {
+        // Replace wj formats <div> classes into TipTap formats for render
+        detail: scanDOMandReplace(output.html),
+      }));
+    } catch (error) {
+      window.dispatchEvent(new CustomEvent("code-view-parser-error", {
+        detail: error instanceof Error ? error.message : "Failed to parse code-view content.",
+      }));
+    }
   });
 }
