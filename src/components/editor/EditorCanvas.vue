@@ -1,26 +1,41 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
+import { getContextMenuFlags, type ContextMenuFlags } from "../../stores/editor/contextMenuFlags.ts";
 import ContextMenu from "./ContextMenu.vue";
 
 const contextMenuVisible = ref(false);
 const contextMenuX = ref(0);
 const contextMenuY = ref(0);
+const contextMenuKey = ref(0);
+const contextMenuFlags = ref<ContextMenuFlags>({ showTabView: false, showTable: false });
 
 function handleContextMenu(event: MouseEvent) {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+
+  if (event.target.closest(".editor-context-menu")) {
+    return;
+  }
+
   event.preventDefault();
+  event.stopPropagation();
 
   const editorInstance = getEditor();
   const position = editorInstance?.view.posAtCoords({
     left: event.clientX,
     top: event.clientY,
   });
+  let clickPos: number | null = null;
 
   if (editorInstance && position && Number.isInteger(position.pos)) {
     const docSize = editorInstance.state.doc.content.size;
 
     if (position.pos >= 0 && position.pos <= docSize) {
+      clickPos = position.pos;
+
       try {
         editorInstance.chain().focus().setTextSelection(position.pos).run();
       } catch {
@@ -29,14 +44,37 @@ function handleContextMenu(event: MouseEvent) {
     }
   }
 
+  if (editorInstance) {
+    contextMenuFlags.value = getContextMenuFlags(editorInstance, clickPos, event.target);
+  } else {
+    contextMenuFlags.value = { showTabView: false, showTable: false };
+  }
+
+  contextMenuKey.value += 1;
   contextMenuX.value = event.clientX;
   contextMenuY.value = event.clientY;
   contextMenuVisible.value = true;
 }
 
-function closeContextMenu() {
+function closeContextMenuOnPointerDown(event: PointerEvent) {
+  if (!contextMenuVisible.value || event.button !== 0) {
+    return;
+  }
+
+  if (event.target instanceof Element && event.target.closest(".editor-context-menu")) {
+    return;
+  }
+
   contextMenuVisible.value = false;
 }
+
+onMounted(() => {
+  window.addEventListener("pointerdown", closeContextMenuOnPointerDown, true);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("pointerdown", closeContextMenuOnPointerDown, true);
+});
 
 const editor = useEditor({
   extensions: editorExtensions,
@@ -47,6 +85,12 @@ const editor = useEditor({
   onDestroy: () => setEditor(null),
 
   editorProps: {
+    handleDOMEvents: {
+      contextmenu: (_view, event) => {
+        handleContextMenu(event);
+        return true;
+      },
+    },
     handlePaste(view, event) {
       const text = event.clipboardData?.getData("text/plain");
 
@@ -68,19 +112,20 @@ const editor = useEditor({
 </script>
 
 <template>
-  <main
-      class="editor-canvas editor-theme-default"
-      @contextmenu="handleContextMenu"
-      @click="closeContextMenu"
-  >
-    <EditorContent :editor="editor" />
+  <main class="editor-canvas editor-theme-default">
+    <EditorContent :editor="editor"/>
+  </main>
 
+  <Teleport to="body">
     <ContextMenu
         v-if="contextMenuVisible"
+        :key="contextMenuKey"
         :x="contextMenuX"
         :y="contextMenuY"
+        :show-tab-view="contextMenuFlags.showTabView"
+        :show-table="contextMenuFlags.showTable"
     />
-  </main>
+  </Teleport>
 </template>
 
 <style scoped>

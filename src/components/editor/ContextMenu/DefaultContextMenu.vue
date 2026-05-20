@@ -5,7 +5,7 @@ import Paste from "./DefaultContextMenu/Paste.vue";
 </script>
 
 <template>
-  <div class="editor-context-menu">
+  <div class="context-menu-section">
     <Copy/>
     <Paste/>
     <div class="context-menu-separator"></div>

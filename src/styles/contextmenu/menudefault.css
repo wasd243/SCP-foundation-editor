@@ -61,6 +61,10 @@
     font-size: 12px;
 }
 
+.context-menu-section {
+    display: block;
+}
+
 .context-menu-separator {
     height: 1px;
     margin: 4px 0;

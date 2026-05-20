@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DefaultContextMenu from "./DefaultContextMenu.vue";
 import AddColumn from "./TableContextMenu/AddColumn.vue";
 import AddRow from "./TableContextMenu/AddRow.vue";
 import DeleteColumn from "./TableContextMenu/DeleteColumn.vue";
@@ -29,10 +30,18 @@ function deleteRow() {
 function deleteTable() {
   deleteEditorTable();
 }
+
+defineProps<{
+  includeDefault?: boolean;
+}>();
 </script>
 
 <template>
   <div class="table-context-menu">
+    <template v-if="includeDefault !== false">
+      <DefaultContextMenu/>
+      <div class="context-menu-separator"></div>
+    </template>
     <AddColumn @click-command="addColumn"/>
     <AddRow @click-command="addRow"/>
     <div class="context-menu-separator"></div>
