@@ -140,6 +140,7 @@ export const CodeBlockLowlightExtension = CodeBlockLowlight.extend({
             return {
                 dom,
                 contentDOM,
+                stopEvent: event => event.target === languageInput,
                 update: updatedNode => {
                     if (updatedNode.type !== currentNode.type) return false;
 
