@@ -1,4 +1,4 @@
-import { getEditor } from "../../editor.ts";
+import {getEditor} from "../../editor.ts";
 
 export function toggleEditorBold() {
     getEditor()?.chain().focus().toggleMark("bold").run();
@@ -32,7 +32,7 @@ export function insertEditorTable() {
     getEditor()
         ?.chain()
         .focus()
-        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+        .insertTable({rows: 2, cols: 2, withHeaderRow: true})
         .run();
 }
 
@@ -58,4 +58,5 @@ export function insertEditorCollapsible() {
         .run();
 }
 
-export function btnBasicIdleInterface() {}
+export function btnBasicIdleInterface() {
+}

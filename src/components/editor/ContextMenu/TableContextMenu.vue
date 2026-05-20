@@ -38,10 +38,6 @@ defineProps<{
 
 <template>
   <div class="table-context-menu">
-    <template v-if="includeDefault !== false">
-      <DefaultContextMenu/>
-      <div class="context-menu-separator"></div>
-    </template>
     <AddColumn @click-command="addColumn"/>
     <AddRow @click-command="addRow"/>
     <div class="context-menu-separator"></div>
