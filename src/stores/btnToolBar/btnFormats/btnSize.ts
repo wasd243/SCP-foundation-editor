@@ -72,14 +72,18 @@ export function setEditorTitle(title: string) {
         return;
     }
 
+    const { head } = editor.state.selection;
+
+    const chain = editor
+        .chain()
+        .focus()
+        .setTextSelection(head);
+
     if (title.toLowerCase() === "content") {
-        editor.chain().focus().setParagraph().run();
+        chain.setParagraph().run();
         return;
     }
 
-    // Convert title numbers to heading level
     const level = Math.min(6, Math.max(1, title.length - 1)) as Level;
-    editor.chain().focus().toggleHeading({ level }).run();
+    chain.setHeading({ level }).run();
 }
-
-export function btnSizeIdleInterface() {}
