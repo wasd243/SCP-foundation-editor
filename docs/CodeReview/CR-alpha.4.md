@@ -129,7 +129,7 @@ The copy context-menu item uses `document.execCommand("copy")`, which is depreca
 
 **Recommendation:** Validate `event instanceof CustomEvent` and `typeof event.detail === "string"` before applying content.
 
-### 3. Preserved attributes use broad records and casts (Temparatory Ignore, waiting to fix)
+### 3. Preserved attributes use broad records and casts (Temporary Ignore, waiting to fix)
 
 The HTML preservation code converts arbitrary DOM attributes into generic records and casts node attributes back to records. This is flexible but hides schema mistakes and malformed attributes.
 
@@ -181,7 +181,7 @@ Global styles are imported in `main.ts`, while `App.vue` imports `global.css` ag
 
 ## Feature Completeness and UX
 
-### 1. Several toolbar cards are placeholders with no behavior (NOT PLANNED)
+### ~~1. Several toolbar cards are placeholders with no behavior (NOT PLANNED)~~
 
 Multiple non-include toolbar components render buttons but do not perform any action. They also omit `type="button"`, which can cause accidental form submission if these components are ever rendered inside a form.
 
@@ -196,7 +196,7 @@ Multiple non-include toolbar components render buttons but do not perform any ac
 
 **Recommendation:** Disable unfinished buttons with explanatory labels/tooltips, or hide them until implemented.
 
-### 2. Code block feature exposes a TODO alert
+### ~~2. Code block feature exposes a TODO alert (NOT PLANNED)~~
 
 The Code card calls a `TODO_code` function and shows a blocking `alert()` instead of integrating with editor commands or being disabled.
 
@@ -204,7 +204,7 @@ The Code card calls a `TODO_code` function and shows a blocking `alert()` instea
 
 **Recommendation:** Replace the alert with a real command, a disabled state, or a non-blocking notification.
 
-### 3. Toolbar controls do not expose disabled/active states consistently (TODO)
+### ~~3. Toolbar controls do not expose disabled/active states consistently (TODO)~~ _Not necessary_
 
 Toolbar actions call editor commands directly but generally do not disable themselves when the editor is unavailable or when a command cannot run.
 
@@ -215,7 +215,7 @@ Toolbar actions call editor commands directly but generally do not disable thems
 
 ## Accessibility
 
-### 1. Icon-only buttons lack accessible labels (Not Planned)
+### ~~1. Icon-only buttons lack accessible labels (Not Planned)~~ _Not necessary_
 
 The code-view button displays only `</>` and the close button displays only `×`. Neither has an `aria-label`, so screen-reader users may not get meaningful names.
 
@@ -224,7 +224,7 @@ The code-view button displays only `</>` and the close button displays only `×`
 
 **Recommendation:** Add `aria-label` or visually hidden text for icon-only controls.
 
-### 2. Dropdown menus lack full combobox/menu semantics (Not Planned)
+### ~~2. Dropdown menus lack full combobox/menu semantics (Not Planned)~~ _Not necessary_
 
 The title and font-size dropdowns expose `aria-expanded`, but the menu/list items do not include roles, relationship attributes, keyboard navigation, or outside-click behavior.
 
