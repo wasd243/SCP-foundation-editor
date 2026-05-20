@@ -8,15 +8,16 @@
     border: 1px solid transparent;
     background: transparent;
     cursor: pointer;
-
-    position: absolute;
-    top: 65px;
-    left: 10px;
 }
 
-.code-view:hover {
+.code-view:hover:not(:disabled) {
     background: #e7edf7;
     border-color: #b8c7e0;
+}
+
+.code-view:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
 }
 
 .code-view-frame {

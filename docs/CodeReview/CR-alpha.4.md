@@ -95,7 +95,7 @@ The code-view panel renders an iframe with a dynamic `src` and no `sandbox`, `al
 
 **Recommendation:** Remove these logs or guard them behind a development-only debug flag that redacts large content.
 
-### 2. Code-view open errors are only logged (TODO)
+### ~2. Code-view open errors are only logged~ _DONE_
 
 When `open_code_view_window` fails, the UI only writes to `console.error`; there is no visible error state, retry guidance, or disabled/loading state.
 
