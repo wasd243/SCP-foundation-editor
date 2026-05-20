@@ -1,6 +1,7 @@
 // WJtagsE.ts keeps Wikijump/FTML-generated HTML from being dropped by TipTap's schema.
 import { Extension } from "@tiptap/core";
 
+import { createFootnoteRefFormatGuardPlugin } from "./WJtags/FootnoteRefFormatGuardE";
 import { createFootnoteSyncPlugin } from "./WJtags/FootnoteSyncE";
 import {
     nativeAttributeTypes,
@@ -43,6 +44,7 @@ export const WJTagExtension = Extension.create({
     addProseMirrorPlugins() {
         return [
             createFootnoteSyncPlugin(),
+            createFootnoteRefFormatGuardPlugin(),
         ];
     },
 });

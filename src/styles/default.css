@@ -286,9 +286,17 @@
     display: inline-block;
     color: #000000;
     cursor: pointer;
-    font-size: 0.75em;
+    font-size: var(--wj-footnote-ref-font-size, 12px);
+    font-weight: normal;
+    font-style: normal;
     line-height: 1;
     vertical-align: super;
+}
+
+.editor-theme-default :is(h1, h2, h3, h4, h5, h6) .wj-footnote-ref {
+    font-size: var(--wj-footnote-ref-font-size, 12px);
+    font-weight: normal;
+    font-style: normal;
 }
 
 .editor-theme-default .wj-footnote-ref-marker {
@@ -296,7 +304,14 @@
     color: var(--wikidot-red);
     background: transparent;
     border: none;
-    font: inherit;
+    font-size: 1em;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+}
+
+.editor-theme-default .wj-footnote-ref [style*="font-size"] {
+    font-size: 1em !important;
 }
 
 .editor-theme-default .wj-footnote-ref-marker::after {

@@ -1,4 +1,5 @@
 import { getEditor } from "../../editor.ts";
+import { isInsideFootnoteRef } from "../../editor/extensions/WJtags/FootnoteRefFormatGuardE.ts";
 import type { Level } from "@tiptap/extension-heading";
 
 const defaultFontSize = 16;
@@ -22,10 +23,37 @@ function normalizeFontSize(size: number) {
 }
 
 export function setEditorFontSize(size: number) {
-    getEditor()
-        ?.chain()
+    const editor = getEditor();
+    const markType = editor?.schema.marks.fontSize;
+
+    if (!editor || !markType) {
+        return;
+    }
+
+    const mark = markType.create({ size: `${normalizeFontSize(size)}px` });
+    const { from, to } = editor.state.selection;
+    let applied = false;
+
+    editor
+        .chain()
         .focus()
-        .setMark("fontSize", { size: `${normalizeFontSize(size)}px` })
+        .command(({ tr, dispatch }) => {
+            tr.doc.nodesBetween(from, to, (node, pos) => {
+                if (!node.isText || isInsideFootnoteRef(tr.doc.resolve(pos))) {
+                    return;
+                }
+
+                tr.addMark(pos, pos + node.nodeSize, mark);
+                applied = true;
+            });
+
+            if (!applied || !dispatch) {
+                return applied;
+            }
+
+            dispatch(tr);
+            return true;
+        })
         .run();
 }
 

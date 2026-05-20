@@ -1,3 +1,10 @@
+[[module css]]
+.test {
+    color: red;
+    border: 1px solid red;
+}
+[[/module]]
+
 测试文本
 test
 test测试文本
@@ -49,6 +56,10 @@ Aligned content
 123123
 测试文本test
 [[/note]]
+
+[[div class="test"]]
+This is a test 这是div测试文本test
+[[/div]]
 
 @@@@
 
