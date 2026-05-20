@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import DefaultContextMenu from "./DefaultContextMenu.vue";
 import AddColumn from "./TableContextMenu/AddColumn.vue";
 import AddRow from "./TableContextMenu/AddRow.vue";
 import DeleteColumn from "./TableContextMenu/DeleteColumn.vue";
