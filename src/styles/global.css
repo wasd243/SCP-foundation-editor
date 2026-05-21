@@ -10,6 +10,12 @@ body,
     overflow: hidden;
 }
 
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
 /* Styles for color picker */
 .color-picker-wrapper {
     position: absolute;

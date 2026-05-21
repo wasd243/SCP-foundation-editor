@@ -31,7 +31,7 @@
     height: 28px;
 
     display: flex;
-    position: relative;
+    position: absolute;
     align-items: center;
     justify-content: center;
 
@@ -44,7 +44,7 @@
     line-height: 1;
     cursor: pointer;
 
-    top: var(--basic-btn-height);
+    top: calc(var(--basic-btn-height) + 7px);
 }
 
 .format-basic-button:hover {
@@ -58,46 +58,45 @@
 }
 
 .format-basic-button.bold {
-    left: 90px;
+    left: var(--basic-btn-left);
 }
 
 .format-basic-button.italic {
     font-style: italic;
-    left: 95px;
+    left: calc(var(--basic-btn-left) + 28px);
 }
 
 .format-basic-button.underline {
-    left: 100px;
+    left: calc(var(--basic-btn-left) + 56px);
     text-decoration: underline;
 }
 
 .format-basic-button.strikethrough {
-    left: 105px;
+    left: calc(var(--basic-btn-left) + 84px);
     text-decoration: line-through;
 }
 
 .format-basic-button.sub-s {
-    left: 110px;
+    left: calc(var(--basic-btn-left) + 112px);
 }
 
 .format-basic-button.sup-s {
-    left: 115px;
+    left: calc(var(--basic-btn-left) + 140px);
 }
 
 .format-basic-button.quote {
-    left: 125px;
-    top: calc(var(--basic-btn-height) - 2px);
+    left: calc(var(--basic-btn-left) + 180px);
     border: 1px dashed #666;
 }
 
 .format-basic-button.table {
-    left: 130px;
+    left: calc(var(--basic-btn-left) + 220px);
 }
 
 .format-basic-button.hr {
-    left: 130px;
+    left: calc(var(--basic-btn-left) + 260px);
 }
 
 .format-basic-button.collapsible {
-    left: 135px;
+    left: calc(var(--basic-btn-left) + 300px);
 }

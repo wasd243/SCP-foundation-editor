@@ -1,5 +1,9 @@
 :root {
+    /* This variable is used for basic buttons top: position */
     --basic-btn-height: 57px;
+
+    /* This variable is used for basic buttons left: position */
+    --basic-btn-left: 100px;
 
     --color-word-blue: #185abd;
     --color-word-blue-dark: #0f3f8f;
@@ -29,6 +33,7 @@
     --topbar-height: 44px;
     --tab-height: 36px;
 
+    /* Ribbon */
     --ribbon-bg: #f3f4f6;
     --ribbon-border: #d6d9de;
     --ribbon-separator: #6C6B6BFF;
@@ -36,6 +41,8 @@
     --ribbon-dropdown-border: #bfc6d1;
     --ribbon-dropdown-hover: #e7edf7;
     --ribbon-dropdown-radius: 1px;
+    --ribbon-separator-top: 25px;
+    /* Ribbon */
 
     --group-border: #d8dce2;
 
@@ -52,6 +59,12 @@
 
     /* Wikidot gray */
     --wikidot-gray: #999393;
+
+    /* Default card position used for component gallery */
+    --default-card-positon: 25px;
+
+    /* Default code view position is used for code input button */
+    --default-code-view-positon: 20px;
 
     --font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
