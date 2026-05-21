@@ -1,6 +1,6 @@
 .format-size-button {
     display: flex;
-    position: relative;
+    position: absolute;
     align-items: center;
     justify-content: center;
     font-weight: bold;
@@ -26,34 +26,33 @@
 }
 
 .format-size-button.larger {
-    position: absolute;
     width: 32px;
     height: 32px;
     font-size: 16px;
     left: 330px;
-    top: calc(var(--basic-btn-height) + 10px);
+    top: calc(var(--basic-btn-height) - 35px);
 }
 
 .format-size-button.smaller {
-    position: absolute;
     width: 32px;
     height: 32px;
     font-size: 16px;
     left: 360px;
-    top: calc(var(--basic-btn-height) + 10px);
+    top: calc(var(--basic-btn-height) - 35px);
 }
 
 .format-size-list {
     width: 100px;
     position: absolute;
     left: 245px;
-    top: calc(var(--basic-btn-height) + 15px);
+    top: calc(var(--basic-btn-height) - 35px);
     z-index: 10;
 }
 
 .format-title-list {
     width: 150px;
     left: 105px;
+    top: calc(var(--basic-btn-height) - 35px);
 }
 
 .format-size-button.list {

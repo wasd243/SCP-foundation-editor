@@ -80,7 +80,6 @@ const editor = useEditor({
   extensions: editorExtensions,
   content: "<p>Hello FTML editor.</p>",
 
-  //@ts-ignore
   onCreate: ({ editor }) => setEditor(editor),
   onDestroy: () => setEditor(null),
 
@@ -130,7 +129,9 @@ const editor = useEditor({
 
 <style scoped>
 .editor-canvas {
-  height: calc(100vh - 105px);
+  height: calc(100vh - var(--topbar-height) - var(--ribbon-height));
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   padding: 32px 0;
   background: #f2f3f5;

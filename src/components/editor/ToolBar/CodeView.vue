@@ -113,7 +113,7 @@ function closeCodeView() {
 <style scoped>
 .code-view-controls {
   position: absolute;
-  top: 65px;
+  top: var(--default-code-view-positon);
   left: 10px;
   display: flex;
   flex-direction: column;

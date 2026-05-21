@@ -33,6 +33,9 @@ const activeTab = ref<Tab>("home");
 <style scoped>
 .editor-top {
   width: 100%;
+  position: relative;
+  z-index: 20;
+  flex: 0 0 auto;
 }
 
 .top-bar {

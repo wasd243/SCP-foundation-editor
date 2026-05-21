@@ -1,7 +1,7 @@
 .component-gallery {
     position: absolute;
     left: 790px;
-    top: 70px;
+    top: var(--default-card-positon);
 
     display: flex;
     gap: 8px;
