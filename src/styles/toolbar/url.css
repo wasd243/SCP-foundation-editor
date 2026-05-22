@@ -1,0 +1,50 @@
+/*
+url.css use basic buttons' styles
+variables:
+--basic-btn-left
+--basic-btn-height
+*/
+.format-basic-button.url-link {
+    left: calc(var(--basic-btn-left) + 520px);
+    z-index: 2;
+}
+
+.format-basic-button.url-link img {
+    display: block;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+.format-url-site {
+    width: 260px;
+    height: 26px;
+    position: absolute;
+    /* Hard code position for URL renderer */
+    left: 1500px;
+    top: 150px;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 8px;
+    box-sizing: border-box;
+
+    border: 1px solid var(--ribbon-dropdown-border);
+    border-radius: var(--ribbon-dropdown-radius);
+    background: var(--ribbon-dropdown-bg);
+    color: #1f2937;
+
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+}
+
+.format-url-site.is-empty {
+    visibility: hidden;
+}

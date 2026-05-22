@@ -8,7 +8,6 @@ import ModuleRate from "./NonIncludeComponents/ModuleRate.vue";
 import Note from "./NonIncludeComponents/Note.vue";
 import SiteURLs from "./NonIncludeComponents/SiteURLs.vue";
 import TabView from "./NonIncludeComponents/TabView.vue";
-import URLs from "./NonIncludeComponents/URLs.vue";
 import Users from "./NonIncludeComponents/Users.vue";
 </script>
 
@@ -23,7 +22,6 @@ import Users from "./NonIncludeComponents/Users.vue";
     <ModuleRate/>
     <Note/>
     <SiteURLs/>
-    <URLs/>
     <Users/>
   </div>
 </template>

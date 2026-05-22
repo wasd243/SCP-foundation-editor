@@ -1,4 +1,5 @@
 import Underline from "@tiptap/extension-underline";
+import Link from "@tiptap/extension-link";
 import StarterKit from "@tiptap/starter-kit";
 
 import { BasicExtensions } from "./extensions/btnBasicE.ts";
@@ -17,6 +18,9 @@ export const editorExtensions = [
         codeBlock: false,
     }),
     Underline,
+    Link.configure({
+        openOnClick: false,
+    }),
     CodeBlockLowlightExtension,
     DetailsExtension,
     DetailsSummaryExtension,
