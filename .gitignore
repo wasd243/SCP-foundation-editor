@@ -56,3 +56,6 @@ v2.1.0/
 # AI
 .junie/
 ai_generation_assets/
+
+# DO NOT IGNORE: Assets
+!src/assets/icons/
