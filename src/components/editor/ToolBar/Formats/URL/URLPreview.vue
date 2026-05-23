@@ -23,7 +23,7 @@ useEditorSubscription(renderCurrentUrl);
 
 <template>
   <div
-    class="format-url-site"
+    class="format-url-preview"
     :class="{ 'is-empty': !hasUrl }"
     :title="currentUrl"
     aria-live="polite"

@@ -6,7 +6,6 @@ import Footnotes from "./NonIncludeComponents/Footnotes.vue";
 import Image from "./NonIncludeComponents/Image.vue";
 import ModuleRate from "./NonIncludeComponents/ModuleRate.vue";
 import Note from "./NonIncludeComponents/Note.vue";
-import SiteURLs from "./NonIncludeComponents/SiteURLs.vue";
 import TabView from "./NonIncludeComponents/TabView.vue";
 import Users from "./NonIncludeComponents/Users.vue";
 </script>
@@ -21,7 +20,6 @@ import Users from "./NonIncludeComponents/Users.vue";
     <Image/>
     <ModuleRate/>
     <Note/>
-    <SiteURLs/>
     <Users/>
   </div>
 </template>

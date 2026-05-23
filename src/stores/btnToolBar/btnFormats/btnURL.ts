@@ -1,5 +1,6 @@
 import {getEditor} from "../../editor.ts";
 
+// This function is used to normalize URLs which entered by user but without `http` or `https` begin
 function normalizeUrl(url: string) {
     const trimmedUrl = url.trim();
 
@@ -24,9 +25,30 @@ export function getCurrentEditorLinkHref() {
     return editor.getAttributes("link").href as string | undefined;
 }
 
-export function insertEditorLink(rawUrl: string) {
+type LinkClass = "active";
+
+type LinkOptions = {
+    class?: LinkClass;
+    normalize?: boolean;
+    leadingSlash?: boolean;
+    promptLabel?: string;
+};
+
+function createLinkAttributes(href: string, options: LinkOptions = {}) {
+    return {
+        href,
+        ...(options.class ? { class: options.class } : {}),
+    };
+}
+
+function ensureLeadingSlash(href: string) {
+    return href.startsWith("/") ? href : `/${href}`;
+}
+
+export function insertEditorLink(rawUrl: string, options: LinkOptions = {}) {
     const editor = getEditor();
-    const href = normalizeUrl(rawUrl);
+    const normalizedHref = options.normalize === false ? rawUrl : normalizeUrl(rawUrl);
+    const href = options.leadingSlash ? ensureLeadingSlash(normalizedHref) : normalizedHref;
 
     if (!editor || !href) {
         return;
@@ -37,6 +59,8 @@ export function insertEditorLink(rawUrl: string) {
     const chain = editor.chain().focus();
 
     if (empty && !currentHref) {
+        const attrs = createLinkAttributes(href, options);
+
         chain
             .insertContent({
                 type: "text",
@@ -44,7 +68,7 @@ export function insertEditorLink(rawUrl: string) {
                 marks: [
                     {
                         type: "link",
-                        attrs: { href },
+                        attrs,
                     },
                 ],
             })
@@ -54,17 +78,17 @@ export function insertEditorLink(rawUrl: string) {
 
     chain
         .extendMarkRange("link")
-        .setLink({ href })
+        .setLink(createLinkAttributes(href, options))
         .run();
 }
 
-export function promptEditorLink() {
+export function promptEditorLink(options: LinkOptions = {}) {
     const currentHref = getCurrentEditorLinkHref();
-    const url = window.prompt("URL", currentHref ?? "");
+    const url = window.prompt(options.promptLabel ?? "Enter URL", currentHref ?? "");
 
     if (url === null) {
         return;
     }
 
-    insertEditorLink(url);
+    insertEditorLink(url, options);
 }

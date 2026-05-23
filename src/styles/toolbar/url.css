@@ -16,7 +16,21 @@ variables:
     pointer-events: none;
 }
 
-.format-url-site {
+.format-basic-button.url-site {
+    left: calc(var(--basic-btn-left) + 560px);
+    width: 48px;
+    z-index: 2;
+}
+
+.format-basic-button.url-site img {
+    display: block;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+/* URL preview */
+.format-url-preview {
     width: 260px;
     height: 26px;
     position: absolute;
@@ -45,6 +59,6 @@ variables:
     pointer-events: none;
 }
 
-.format-url-site.is-empty {
+.format-url-preview.is-empty {
     visibility: hidden;
 }
