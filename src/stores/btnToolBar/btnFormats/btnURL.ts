@@ -45,10 +45,23 @@ function ensureLeadingSlash(href: string) {
     return href.startsWith("/") ? href : `/${href}`;
 }
 
+// When the user entering a page name, the <a href=""> part must begin with `/`
+// But the user needs a page name render without `/`
+// So this part we need to remove the leading `/`
+// And keep the leading `/` in href attribute
+function createInsertedLinkText(href: string, rawUrl: string, options: LinkOptions = {}) {
+    if (!options.leadingSlash) {
+        return href;
+    }
+
+    return rawUrl.replace(/^\/+/, "") || href;
+}
+
 export function insertEditorLink(rawUrl: string, options: LinkOptions = {}) {
     const editor = getEditor();
     const normalizedHref = options.normalize === false ? rawUrl : normalizeUrl(rawUrl);
     const href = options.leadingSlash ? ensureLeadingSlash(normalizedHref) : normalizedHref;
+    const insertedText = createInsertedLinkText(href, rawUrl, options);
 
     if (!editor || !href) {
         return;
@@ -64,7 +77,7 @@ export function insertEditorLink(rawUrl: string, options: LinkOptions = {}) {
         chain
             .insertContent({
                 type: "text",
-                text: href,
+                text: insertedText,
                 marks: [
                     {
                         type: "link",
