@@ -18,3 +18,4 @@
 //! recognize them as editor components.
 
 pub mod module_rate;
+pub mod note;
