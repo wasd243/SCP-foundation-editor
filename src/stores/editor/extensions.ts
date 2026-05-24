@@ -1,13 +1,13 @@
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import StarterKit from "@tiptap/starter-kit";
-import Image from "@tiptap/extension-image";
 
 import { BasicExtensions } from "./extensions/btnBasicE.ts";
 import { CodeBlockLowlightExtension } from "./extensions/CodeE.ts";
 import { DetailsExtension, DetailsSummaryExtension } from "./extensions/DetailsE.ts";
 import { DetailsContentExtension } from "./extensions/DetailsContentE.ts";
 import { FontSizeExtension } from "./extensions/FontSizeE.ts";
+import { ImageExtension } from "./extensions/ImageE.ts";
 import { TableExtensions } from "./extensions/TableE.ts";
 import { TabViewExtensions } from "./extensions/TabViewE.ts";
 import { TextAlignExtension } from "./extensions/TextAlignE.ts";
@@ -22,7 +22,7 @@ export const editorExtensions = [
     Link.configure({
         openOnClick: false,
     }),
-    Image.configure({
+    ImageExtension.configure({
         inline: false,
         allowBase64: false,
     }),

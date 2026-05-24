@@ -11,6 +11,8 @@ export type DOMReplaceContext = {
 
 export type DOMReplacer = (context: DOMReplaceContext) => Node | null;
 
+const crossoriginAttributeRegex = /\s+crossorigin(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?/gi;
+
 const domReplacer: DOMReplacer[] = [
   ...codeReplacer,
   ...alignReplacer,
@@ -22,7 +24,7 @@ const domReplacer: DOMReplacer[] = [
 
 export function scanDOMandReplace(html: string, handlers = domReplacer): string {
   const template = document.createElement("template");
-  template.innerHTML = html;
+  template.innerHTML = html.replace(crossoriginAttributeRegex, "");
 
   template.content.querySelectorAll("*").forEach((element) => {
     const context = {

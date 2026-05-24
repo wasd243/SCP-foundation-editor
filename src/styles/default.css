@@ -553,6 +553,55 @@
     display: block;
 }
 
+.editor-theme-default .ProseMirror div.image-container,
+.editor-theme-default .ProseMirror div:has(> img.image) {
+    display: block;
+    max-width: 100%;
+}
+
+.editor-theme-default .ProseMirror div.image-container.alignleft,
+.editor-theme-default .ProseMirror div.left:has(> img),
+.editor-theme-default .ProseMirror div:has(> img.left) {
+    text-align: left;
+}
+
+.editor-theme-default .ProseMirror div.image-container.aligncenter,
+.editor-theme-default .ProseMirror div.center:has(> img),
+.editor-theme-default .ProseMirror div:has(> img.center) {
+    text-align: center;
+}
+
+.editor-theme-default .ProseMirror div.image-container.alignright,
+.editor-theme-default .ProseMirror div.right:has(> img),
+.editor-theme-default .ProseMirror div:has(> img.right) {
+    text-align: right;
+}
+
+.editor-theme-default .ProseMirror div.image-container.aligncenter > img,
+.editor-theme-default .ProseMirror div.center > img,
+.editor-theme-default .ProseMirror div:has(> img.center) > img {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.editor-theme-default .ProseMirror div.image-container.alignright > img,
+.editor-theme-default .ProseMirror div.right > img,
+.editor-theme-default .ProseMirror div:has(> img.right) > img {
+    margin-left: auto;
+}
+
+.editor-theme-default .ProseMirror div.image-container.floatleft,
+.editor-theme-default .ProseMirror div.floatleft:has(> img) {
+    float: left;
+    margin: 0 1em 0.8em 0;
+}
+
+.editor-theme-default .ProseMirror div.image-container.floatright,
+.editor-theme-default .ProseMirror div.floatright:has(> img) {
+    float: right;
+    margin: 0 0 0.8em 1em;
+}
+
 /* =============================
    Wikidot-style image end
    ============================= */
