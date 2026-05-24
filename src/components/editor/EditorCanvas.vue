@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
 import { getContextMenuFlags, type ContextMenuFlags } from "../../stores/editor/contextMenuFlags.ts";
+import { alertNoteExternalParserMarkers } from "../../stores/editor/noteExternalParserGuard.ts";
 import ContextMenu from "./ContextMenu.vue";
 
 const contextMenuVisible = ref(false);
@@ -80,7 +81,11 @@ const editor = useEditor({
   extensions: editorExtensions,
   content: "<p>Hello FTML editor.</p>",
 
-  onCreate: ({ editor }) => setEditor(editor),
+  onCreate: ({ editor }) => {
+    setEditor(editor);
+    alertNoteExternalParserMarkers(editor);
+  },
+  onUpdate: ({ editor }) => alertNoteExternalParserMarkers(editor),
   onDestroy: () => setEditor(null),
 
   editorProps: {
