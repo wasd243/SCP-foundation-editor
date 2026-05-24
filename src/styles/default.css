@@ -603,6 +603,11 @@
     margin: 0 0 0.8em 1em;
 }
 
+.editor-theme-default .ProseMirror-selectednode {
+    border: var(--color-word-blue) solid 2px;
+    border-radius: 4px;
+}
+
 /* =============================
    Wikidot-style image end
    =============================

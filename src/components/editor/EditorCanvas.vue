@@ -145,7 +145,7 @@ const editor = useEditor({
 
 :deep(.ProseMirror) {
   width: min(900px, calc(100vw - 96px));
-  min-height: 900px;
+  min-height: 2000px;
   margin: 0 auto;
   padding: 48px 56px;
   box-sizing: border-box;
