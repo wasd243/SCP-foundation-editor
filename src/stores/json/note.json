@@ -1,0 +1,14 @@
+{
+  "type": "wjBlockTag",
+  "attrs": {
+    "tagName": "div",
+    "htmlAttributes": {
+      "class": "wj-note"
+    }
+  },
+  "content": [
+    {
+      "type": "paragraph"
+    }
+  ]
+}

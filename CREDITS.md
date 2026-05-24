@@ -11,7 +11,10 @@
     - COLLECTION: Iconpark Duotone Icons
     - LICENSE: Apache License
 
----
+- Note Icon: [SvgRepo](https://www.svgrepo.com/svg/509175/note)
+    - AUTHOR: Orchid
+    - COLLECTION: Orchid Line Interface Icons
+    - LICENSE: MIT License
 
 ## Libraries
 - TipTap

@@ -41,6 +41,11 @@
     cursor: pointer;
 }
 
+.component-card img {
+    width: 24px;
+    height: 24px;
+}
+
 .component-card:hover {
     background: #e7edf7;
     border-color: #8aaee8;
