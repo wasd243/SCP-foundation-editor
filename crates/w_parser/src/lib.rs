@@ -9,6 +9,7 @@ use crate::ftml_interceptor::note::note_parser::note_parser;
 use crate::ftml_interceptor::note::note_cleaner::note_cleaner;
 
 mod ftml_interceptor;
+mod resourcepack_includer;
 
 #[derive(Serialize)]
 pub struct FtmlParseOutput {
