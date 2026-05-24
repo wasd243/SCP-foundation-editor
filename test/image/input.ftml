@@ -1,0 +1,32 @@
+[[image https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg]]
+image preview test BASIC
+
+LEFT
+[[<image https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg
+width="200px"
+height="200px"
+]]
+
+RIGHT
+[[>image https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg
+width="200px"
+height="200px"
+]]
+
+CENTER
+[[=image https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg
+width="200px"
+height="200px"
+]]
+
+FLOAT LEFT
+[[f<image https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg
+width="200px"
+height="200px"
+]]
+
+FLOAT RIGHT
+[[f>image https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg
+width="200px"
+height="200px"
+]]

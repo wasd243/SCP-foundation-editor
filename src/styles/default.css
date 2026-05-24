@@ -542,3 +542,17 @@
 /* =============================
    Wikidot-style footnotes end
    ============================= */
+
+/* =============================
+   Wikidot-style image begin
+   ============================= */
+
+.editor-theme-default .ProseMirror img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* =============================
+   Wikidot-style image end
+   ============================= */

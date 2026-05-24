@@ -1,6 +1,7 @@
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
 
 import { BasicExtensions } from "./extensions/btnBasicE.ts";
 import { CodeBlockLowlightExtension } from "./extensions/CodeE.ts";
@@ -20,6 +21,10 @@ export const editorExtensions = [
     Underline,
     Link.configure({
         openOnClick: false,
+    }),
+    Image.configure({
+        inline: false,
+        allowBase64: false,
     }),
     CodeBlockLowlightExtension,
     DetailsExtension,
