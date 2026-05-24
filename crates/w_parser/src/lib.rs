@@ -6,9 +6,9 @@ use serde::Serialize;
 use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
 use crate::ftml_interceptor::note::note_interceptor::note_interceptor;
 use crate::ftml_interceptor::note::note_parser::note_parser;
+use crate::ftml_interceptor::note::note_cleaner::note_cleaner;
 
 mod ftml_interceptor;
-mod ftml_panic_blocker;
 
 #[derive(Serialize)]
 pub struct FtmlParseOutput {
@@ -61,6 +61,7 @@ pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutp
     let mut html_output = renderer.render(&tree, &page_info, &settings);
 
     html_output.body = note_parser(&html_output.body);
+    html_output.body = note_cleaner(&html_output.body);
 
     // This is a debug output for the parsed HTML
     println!("{:?}", html_output);
