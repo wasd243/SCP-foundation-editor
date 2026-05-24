@@ -1,12 +1,14 @@
 //! w_parser is the main wikidot -> HTML parser based on ftml
 
-use std::borrow::Cow;
 use serde::Serialize;
+use std::borrow::Cow;
+use std::path::PathBuf;
 
 use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
+use crate::ftml_interceptor::note::note_cleaner::note_cleaner;
 use crate::ftml_interceptor::note::note_interceptor::note_interceptor;
 use crate::ftml_interceptor::note::note_parser::note_parser;
-use crate::ftml_interceptor::note::note_cleaner::note_cleaner;
+use crate::resourcepack_includer::ResourcepackIncluder;
 
 mod ftml_interceptor;
 mod resourcepack_includer;
@@ -18,6 +20,13 @@ pub struct FtmlParseOutput {
 }
 
 pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutput, String> {
+    render_wikidot_to_html_and_ast_with_resourcepack(source_text, "resourcepack")
+}
+
+pub fn render_wikidot_to_html_and_ast_with_resourcepack(
+    source_text: &str,
+    resourcepack_root: impl Into<PathBuf>,
+) -> Result<FtmlParseOutput, String> {
     let settings = ftml::settings::WikitextSettings::from_mode(
         ftml::settings::WikitextMode::Page,
         ftml::layout::Layout::Wikidot,
@@ -34,7 +43,19 @@ pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutp
         language: Cow::Borrowed("cn"),
     };
 
-    let mut wikitext = source_text.to_string();
+    let (mut wikitext, _included_pages) = ftml::include(
+        source_text,
+        &settings,
+        ResourcepackIncluder::new(resourcepack_root),
+        || {
+            std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                "resourcepack includer returned mismatched include results",
+            )
+        },
+    )
+    .map_err(|err| err.to_string())?;
+
     ftml::preprocess(&mut wikitext);
 
     // Intercept unsupported Wikidot runtime blocks before FTML tokenization.
@@ -52,8 +73,7 @@ pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutp
     // This would be the place to output AST and .json
     let (tree, _warnings) = parsed_result.into();
 
-    let ast_json = serde_json::to_string_pretty(&tree)
-        .map_err(|err| err.to_string())?;
+    let ast_json = serde_json::to_string_pretty(&tree).map_err(|err| err.to_string())?;
 
     use ftml::render::Render;
 

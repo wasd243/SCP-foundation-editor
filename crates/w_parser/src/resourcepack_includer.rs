@@ -25,8 +25,7 @@ impl ResourcepackIncluder {
         let page_ref = include.page_ref().to_string();
 
         let safe_path = page_ref
-            .replace(':', "/")
-            .replace('\\', "/")
+            .replace([':', '\\'], "/")
             .trim_start_matches('/')
             .to_string();
 
