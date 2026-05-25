@@ -572,13 +572,33 @@
     text-align: center;
 }
 
+.editor-theme-default .ProseMirror div.image-container.aligncenter {
+    margin-right: auto;
+    margin-left: auto;
+}
+
 .editor-theme-default .ProseMirror div.image-container.alignright,
 .editor-theme-default .ProseMirror div.right:has(> img),
 .editor-theme-default .ProseMirror div:has(> img.right) {
     text-align: right;
 }
 
+.editor-theme-default .ProseMirror div.image-container.alignright {
+    margin-left: auto;
+}
+
+.editor-theme-default .ProseMirror div.image-container[data-editor-include="component:image-block"].alignleft {
+    float: left;
+    margin: 0 1em 0.8em 0;
+}
+
+.editor-theme-default .ProseMirror div.image-container[data-editor-include="component:image-block"].alignright {
+    float: right;
+    margin: 0 0 0.8em 1em;
+}
+
 .editor-theme-default .ProseMirror div.image-container.aligncenter > img,
+.editor-theme-default .ProseMirror div.image-container.aligncenter img,
 .editor-theme-default .ProseMirror div.center > img,
 .editor-theme-default .ProseMirror div:has(> img.center) > img {
     margin-right: auto;
@@ -586,6 +606,7 @@
 }
 
 .editor-theme-default .ProseMirror div.image-container.alignright > img,
+.editor-theme-default .ProseMirror div.image-container.alignright img,
 .editor-theme-default .ProseMirror div.right > img,
 .editor-theme-default .ProseMirror div:has(> img.right) > img {
     margin-left: auto;
@@ -607,8 +628,16 @@
     border: var(--color-word-blue) solid 2px;
     border-radius: 4px;
 }
+/* ~_EDITOR_IMMUTABLE_THEME_END_~ */
 
+.editor-theme-default .ProseMirror div.image-container[data-editor-include="component:image-block"] .scp-image-caption {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 0.35em 0.5em;
+    border: var(--wikidot-gray) solid 1px;
+}
 /* =============================
    Wikidot-style image end
-   =============================
-   ~_EDITOR_IMMUTABLE_THEME_END_~ */
+   ============================= */

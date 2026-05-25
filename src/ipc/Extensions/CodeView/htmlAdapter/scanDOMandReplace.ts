@@ -2,6 +2,7 @@ import { alignReplacer } from "./Components/Align";
 import { codeReplacer } from "./Components/Code";
 import { collapsibleReplacer } from "./Components/Collapsible";
 import { footnoteReplacer } from "./Components/Footnote";
+import { imageBlockReplacer } from "./Components/ImageBlock";
 import { tabViewReplacer } from "./Components/TabView";
 
 export type DOMReplaceContext = {
@@ -15,6 +16,7 @@ const crossoriginAttributeRegex = /\s+crossorigin(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^
 
 const domReplacer: DOMReplacer[] = [
   ...codeReplacer,
+  ...imageBlockReplacer,
   ...alignReplacer,
   ...footnoteReplacer,
   // Replace collapsible blocks

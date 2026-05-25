@@ -1,6 +1,7 @@
 import Image, { type ImageOptions } from "@tiptap/extension-image";
 import { mergeAttributes } from "@tiptap/core";
 import type { DOMOutputSpec } from "@tiptap/pm/model";
+import { createDeleteImageBlockPlugin } from "./deleteImageBlockE";
 
 type HTMLAttributes = Record<string, string>;
 type RenderAttributes = Record<string, unknown>;
@@ -146,5 +147,12 @@ export const ImageExtension = Image.extend<ImageOptions>({
         }
 
         return image;
+    },
+
+    addProseMirrorPlugins() {
+        return [
+            ...(this.parent?.() ?? []),
+            createDeleteImageBlockPlugin(),
+        ];
     },
 });
