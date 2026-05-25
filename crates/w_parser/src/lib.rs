@@ -41,6 +41,10 @@ pub fn render_wikidot_to_html_with_resourcepack(
         language: Cow::Borrowed("cn"),
     };
 
+    let mut wikitext = source_text.to_string();
+
+    ftml::preprocess(&mut wikitext);
+
     // Includer
     let (mut wikitext, _included_pages) = ftml::include(
         source_text,
@@ -55,7 +59,7 @@ pub fn render_wikidot_to_html_with_resourcepack(
     )
     .map_err(|err| err.to_string())?;
 
-    ftml::preprocess(&mut wikitext);
+    println!("[PASSED]{}", wikitext);
 
     // Intercept unsupported Wikidot runtime blocks before FTML tokenization.
     // Module rate will be intercepted because ftml is not supported yet.
@@ -66,6 +70,9 @@ pub fn render_wikidot_to_html_with_resourcepack(
 
     // Tokenize and parse
     let tokens = ftml::tokenize(&wikitext);
+
+    println!("{:#?}", tokens);
+
     let parsed_result = ftml::parse(&tokens, &page_info, &settings);
 
     // Convert to AST
@@ -84,7 +91,7 @@ pub fn render_wikidot_to_html_with_resourcepack(
     html_output.body = note_cleaner(&html_output.body);
 
     // This is a debug output for the parsed HTML
-    println!("{:?}", html_output);
+    println!("{:#?}", html_output);
 
     Ok(FtmlParseOutput {
         html: html_output.body.to_string(),
