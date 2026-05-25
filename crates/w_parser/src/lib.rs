@@ -21,11 +21,7 @@ pub struct FtmlParseOutput {
     pub ast_json: String,
 }
 
-pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutput, String> {
-    render_wikidot_to_html_and_ast_with_resourcepack(source_text, DEFAULT_RESOURCEPACK_ROOT)
-}
-
-pub fn render_wikidot_to_html_and_ast_with_resourcepack(
+pub fn render_wikidot_to_html_with_resourcepack(
     source_text: &str,
     resourcepack_root: impl Into<PathBuf>,
 ) -> Result<FtmlParseOutput, String> {
@@ -94,4 +90,9 @@ pub fn render_wikidot_to_html_and_ast_with_resourcepack(
         html: html_output.body.to_string(),
         ast_json,
     })
+}
+
+// Final handler to tauri
+pub fn render_wikidot_to_html(source_text: &str) -> Result<FtmlParseOutput, String> {
+    render_wikidot_to_html_with_resourcepack(source_text, DEFAULT_RESOURCEPACK_ROOT)
 }
