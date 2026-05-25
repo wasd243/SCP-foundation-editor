@@ -7,33 +7,75 @@ use std::path::{Path, PathBuf};
 
 #[derive(Debug)]
 pub struct ResourcepackIncluder {
-    component_root: PathBuf,
+    root: PathBuf,
 }
 
 impl ResourcepackIncluder {
     pub fn new(root: impl Into<PathBuf>) -> Self {
-        Self {
-            component_root: root.into().join("includes").join("component"),
-        }
+        Self { root: root.into() }
     }
 
     fn include_path(&self, include: &IncludeRef<'_>) -> PathBuf {
-        // Example page_ref display:
-        // component:image-block
-        //
-        // Convert to:
-        // resourcepack/includes/component/image-block.ftml
+        let page_ref = include.page_ref();
+        let page = page_ref.page();
+        let branch = self.branch_name(page_ref);
+        let file_name = self.file_name(page);
 
-        let page = include.page_ref().page();
-        let file_name = page
-            .rsplit(':')
+        match branch {
+            Some(branch) => self
+                .root
+                .join("includes")
+                .join("branch")
+                .join(branch)
+                .join(format!("{file_name}.ftml")),
+            None => self
+                .root
+                .join("includes")
+                .join("component")
+                .join(format!("{file_name}.ftml")),
+        }
+    }
+
+    fn branch_name(&self, page_ref: &PageRef) -> Option<&'static str> {
+        if matches!(page_ref.site(), Some("component")) {
+            return None;
+        }
+
+        if let Some(site) = page_ref.site().and_then(Self::site_branch) {
+            return Some(site);
+        }
+
+        Self::page_branch(page_ref.page())
+    }
+
+    fn site_branch(site: &str) -> Option<&'static str> {
+        match site {
+            "scp-wiki-cn" => Some("CN"),
+            "scp-wiki" => Some("EN"),
+            _ => None,
+        }
+    }
+
+    fn page_branch(page: &str) -> Option<&'static str> {
+        let prefix = page.split(':').next().unwrap_or(page);
+
+        if prefix == "scp-wiki-cn" || prefix.starts_with("scp-wiki-cn-") {
+            Some("CN")
+        } else if prefix == "scp-wiki" || prefix.starts_with("scp-wiki-")
+        {
+            Some("EN")
+        } else {
+            None
+        }
+    }
+
+    fn file_name(&self, page: &str) -> String {
+        page.rsplit(':')
             .next()
             .unwrap_or(page)
             .replace(['/', '\\'], "")
             .trim_start_matches('.')
-            .to_string();
-
-        self.component_root.join(format!("{file_name}.ftml"))
+            .to_string()
     }
 
     fn read_include_file(&self, path: &Path) -> Option<String> {

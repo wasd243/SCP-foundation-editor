@@ -13,6 +13,8 @@ use crate::resourcepack_includer::ResourcepackIncluder;
 mod ftml_interceptor;
 mod resourcepack_includer;
 
+const DEFAULT_RESOURCEPACK_ROOT: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack");
+
 #[derive(Serialize)]
 pub struct FtmlParseOutput {
     pub html: String,
@@ -20,7 +22,7 @@ pub struct FtmlParseOutput {
 }
 
 pub fn render_wikidot_to_html_and_ast(source_text: &str) -> Result<FtmlParseOutput, String> {
-    render_wikidot_to_html_and_ast_with_resourcepack(source_text, "resourcepack")
+    render_wikidot_to_html_and_ast_with_resourcepack(source_text, DEFAULT_RESOURCEPACK_ROOT)
 }
 
 pub fn render_wikidot_to_html_and_ast_with_resourcepack(
