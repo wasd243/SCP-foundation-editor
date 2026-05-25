@@ -65,8 +65,6 @@ pub fn render_wikidot_to_html_with_resourcepack(
     )
     .map_err(|err| err.to_string())?;
 
-    println!("[PASSING]{}", wikitext);
-
     // Intercept unsupported Wikidot runtime blocks before FTML tokenization.
     // Module rate will be intercepted because ftml is not supported yet.
     wikitext = rate_interceptor(&wikitext);
