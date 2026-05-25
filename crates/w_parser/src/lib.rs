@@ -8,6 +8,12 @@ use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
 use crate::ftml_interceptor::note::note_cleaner::note_cleaner;
 use crate::ftml_interceptor::note::note_interceptor::note_interceptor;
 use crate::ftml_interceptor::note::note_parser::note_parser;
+
+use crate::ftml_interceptor::preprocess_interceptor::{
+    unused_variable_interceptor::unused_variable_interceptor,
+    unused_newline_interceptor::unused_newline_interceptor,
+};
+
 use crate::resourcepack_includer::ResourcepackIncluder;
 
 mod ftml_interceptor;
@@ -59,19 +65,27 @@ pub fn render_wikidot_to_html_with_resourcepack(
     )
     .map_err(|err| err.to_string())?;
 
-    println!("[PASSED]{}", wikitext);
+    println!("[PASSING]{}", wikitext);
 
     // Intercept unsupported Wikidot runtime blocks before FTML tokenization.
     // Module rate will be intercepted because ftml is not supported yet.
     wikitext = rate_interceptor(&wikitext);
+
     // Note blocks are not supported yet, so they are intercepted here.
     // Intercept first, then parse after ftml output HTML.
     wikitext = note_interceptor(&wikitext);
 
+    // Include blocks:
+    // Sometimes preprocessing leaves malformed wikitext after include expansion.
+    // Then FTML tokenization receives incorrect content,
+    // and the parser falls back to normal text parsing.
+    wikitext = unused_variable_interceptor(&wikitext);
+    wikitext = unused_newline_interceptor(&wikitext);
+
+    println!("[PASSED]{}", wikitext);
+
     // Tokenize and parse
     let tokens = ftml::tokenize(&wikitext);
-
-    println!("{:#?}", tokens);
 
     let parsed_result = ftml::parse(&tokens, &page_info, &settings);
 
