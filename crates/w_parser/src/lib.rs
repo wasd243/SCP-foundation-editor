@@ -53,7 +53,7 @@ pub fn render_wikidot_to_html_with_resourcepack(
 
     // Includer
     let (mut wikitext, _included_pages) = ftml::include(
-        source_text,
+        &wikitext,
         &settings,
         ResourcepackIncluder::new(resourcepack_root),
         || {
