@@ -16,6 +16,20 @@
 //! These FTML-supported blocks do not need Rust interception, but their
 //! rendered HTML may still need TypeScript-side DOM replacement so TipTap can
 //! recognize them as editor components.
+//!
+//! Preprocess interceptor:
+//! FTML parses wikitext in the following pipeline:
+//! preprocessing -> tokenization -> parse
+//!
+//! However, several malformed patterns may appear after preprocessing,
+//! especially when include-expanded wikitext is involved.
+//!
+//! So this interceptor normalizes the generated wikitext before tokenization.
+//!
+//! Current fixes:
+//! - unresolved variables
+//! - malformed newlines (\n)
 
 pub mod module_rate;
 pub mod note;
+pub mod preprocess_interceptor;
