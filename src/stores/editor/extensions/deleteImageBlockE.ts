@@ -1,5 +1,6 @@
 import type { Node as ProseMirrorNode, ResolvedPos } from "@tiptap/pm/model";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
+import type { EditorView } from "@tiptap/pm/view";
 
 import { getNodeAttribute, nodeHasClass } from "./WJtags/htmlPreserveE";
 
@@ -18,6 +19,10 @@ function isImageBlockNode(node: ProseMirrorNode) {
 
 function isImageCaptionNode(node: ProseMirrorNode) {
     return nodeHasClass(node, "scp-image-caption");
+}
+
+function isElementInsideImageCaption(element: EventTarget | null) {
+    return element instanceof Element && Boolean(element.closest(".scp-image-caption"));
 }
 
 function isImageNode(node: ProseMirrorNode) {
@@ -74,7 +79,7 @@ function selectionEndsAtCaptionBoundary($pos: ResolvedPos, caption: PositionedNo
     return $pos.pos === caption.pos + caption.node.nodeSize - 1;
 }
 
-function shouldBlockCaptionBoundaryDelete(key: "Backspace" | "Delete", $pos: ResolvedPos) {
+function BlockCaptionBoundaryDelete(key: "Backspace" | "Delete", $pos: ResolvedPos) {
     const caption = findCaptionAncestor($pos);
 
     if (!caption) return false;
@@ -132,6 +137,13 @@ function isSelectionInsideCaption($from: ResolvedPos, $to: ResolvedPos) {
     return fromCaption.pos === toCaption.pos;
 }
 
+function BlockCaptionEnter(view: EditorView, event: KeyboardEvent) {
+    return event.key === "Enter" && (
+        isElementInsideImageCaption(event.target) ||
+        isSelectionInsideCaption(view.state.selection.$from, view.state.selection.$to)
+    );
+}
+
 function normalizeCaptionPaste(text: string) {
     return text.replace(/\s*\r?\n\s*/g, " ");
 }
@@ -167,7 +179,7 @@ export function createDeleteImageBlockPlugin() {
         },
         props: {
             handleKeyDown(view, event) {
-                if (event.key === "Enter" && isSelectionInsideCaption(view.state.selection.$from, view.state.selection.$to)) {
+                if (BlockCaptionEnter(view, event)) {
                     event.preventDefault();
                     return true;
                 }
@@ -175,7 +187,7 @@ export function createDeleteImageBlockPlugin() {
                 if (
                     (event.key === "Backspace" || event.key === "Delete") &&
                     view.state.selection.empty &&
-                    shouldBlockCaptionBoundaryDelete(event.key, view.state.selection.$from)
+                    BlockCaptionBoundaryDelete(event.key, view.state.selection.$from)
                 ) {
                     event.preventDefault();
                     return true;
