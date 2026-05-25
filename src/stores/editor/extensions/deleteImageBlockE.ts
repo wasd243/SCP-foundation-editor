@@ -122,7 +122,14 @@ function getImageBlocksWithoutImages(doc: ProseMirrorNode) {
 }
 
 function isSelectionInsideCaption($from: ResolvedPos, $to: ResolvedPos) {
-    return Boolean(findCaptionAncestor($from) && findCaptionAncestor($to));
+    const fromCaption = findCaptionAncestor($from);
+    const toCaption = findCaptionAncestor($to);
+
+    if (!fromCaption || !toCaption) {
+        return false;
+    }
+
+    return fromCaption.pos === toCaption.pos;
 }
 
 function normalizeCaptionPaste(text: string) {
