@@ -26,7 +26,8 @@
     "lowlight": "3.3.0",
     "pinia": "^2.1.0",
     "vue": "^3.4.0",
-    "vue3-colorpicker": "^2.3.0"
+    "vue3-colorpicker": "^2.3.0",
+    "vue3-moveable": "^0.28.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",

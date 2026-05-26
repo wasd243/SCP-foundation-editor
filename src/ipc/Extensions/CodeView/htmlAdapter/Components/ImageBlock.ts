@@ -22,6 +22,7 @@ function replaceImageBlock({ element }: DOMReplaceContext): Node | null {
   element.setAttribute("contenteditable", "false");
   element.setAttribute("draggable", "true");
   element.querySelectorAll(".scp-image-caption").forEach(caption => {
+    caption.classList.add(alignClass);
     caption.setAttribute("contenteditable", "true");
   });
 

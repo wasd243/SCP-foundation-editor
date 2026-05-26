@@ -552,7 +552,6 @@
     max-width: 100%;
     height: auto;
     display: block;
-    border: var(--wikidot-gray) solid 1px;
 }
 
 .editor-theme-default .ProseMirror div.image-container,

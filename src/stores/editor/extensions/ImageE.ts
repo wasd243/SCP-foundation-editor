@@ -1,7 +1,10 @@
-import Image, { type ImageOptions } from "@tiptap/extension-image";
-import { mergeAttributes } from "@tiptap/core";
-import type { DOMOutputSpec } from "@tiptap/pm/model";
-import { createDeleteImageBlockPlugin } from "./deleteImageBlockE";
+import Image, {type ImageOptions} from "@tiptap/extension-image";
+import {mergeAttributes} from "@tiptap/core";
+import type {DOMOutputSpec} from "@tiptap/pm/model";
+import {Plugin, PluginKey} from "@tiptap/pm/state";
+import type {EditorView} from "@tiptap/pm/view";
+import {createDeleteImageBlockPlugin} from "./deleteImageBlockE";
+import {ref} from "vue";
 
 type HTMLAttributes = Record<string, string>;
 type RenderAttributes = Record<string, unknown>;
@@ -9,6 +12,7 @@ type RenderAttributes = Record<string, unknown>;
 const wrapperAttributeName = "wrapperAttributes";
 const imageAttributeName = "imageAttributes";
 const removedAttributeRegex = /^crossorigin$/i;
+const imageMoveableTargetKey = new PluginKey("imageMoveableTarget");
 
 function getElementAttributes(element: HTMLElement): HTMLAttributes {
     return Object.fromEntries(
@@ -83,6 +87,81 @@ function hasWrapper(value: unknown) {
     return value !== null && value !== undefined;
 }
 
+export const selectedImageBlockElement = ref<HTMLElement | null>(null);
+
+function isImageContainerDiv(element: HTMLElement) {
+    return element.tagName.toLowerCase() === "div" && element.classList.contains("image-container");
+}
+
+function findImageContainer(element: HTMLElement) {
+    let current: HTMLElement | null = element;
+
+    while (current) {
+        if (isImageContainerDiv(current)) {
+            return current;
+        }
+
+        current = current.parentElement;
+    }
+
+    return null;
+}
+
+function updateMoveableTarget(view: EditorView) {
+    const selected = view.dom.querySelector("img.ProseMirror-selectednode");
+
+    if (selected instanceof HTMLElement) {
+        selectedImageBlockElement.value = findImageContainer(selected) ?? selected;
+        return;
+    }
+
+    if (
+        selectedImageBlockElement.value &&
+        view.dom.contains(selectedImageBlockElement.value) &&
+        isImageContainerDiv(selectedImageBlockElement.value)
+    ) {
+        return;
+    }
+
+    selectedImageBlockElement.value = null;
+}
+
+function updateMoveableTargetFromPointerDown(_view: EditorView, event: Event) {
+    const target = event.target;
+
+    if (!(target instanceof HTMLElement)) {
+        selectedImageBlockElement.value = null;
+        return false;
+    }
+
+    selectedImageBlockElement.value = findImageContainer(target);
+    return false;
+}
+
+function createImageMoveableTargetPlugin() {
+
+    console.log("[ImageE] createImageMoveableTargetPlugin Active");
+
+    return new Plugin({
+        key: imageMoveableTargetKey,
+        props: {
+            handleDOMEvents: {
+                pointerdown: updateMoveableTargetFromPointerDown,
+            },
+        },
+        view(view) {
+            updateMoveableTarget(view);
+
+            return {
+                update: updateMoveableTarget,
+                destroy() {
+                    selectedImageBlockElement.value = null;
+                },
+            };
+        },
+    });
+}
+
 export const ImageExtension = Image.extend<ImageOptions>({
     priority: 1100,
 
@@ -153,6 +232,7 @@ export const ImageExtension = Image.extend<ImageOptions>({
         return [
             ...(this.parent?.() ?? []),
             createDeleteImageBlockPlugin(),
+            createImageMoveableTargetPlugin(),
         ];
     },
 });
