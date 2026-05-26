@@ -597,6 +597,18 @@
     margin: 0 0 0.8em 1em;
 }
 
+.editor-theme-default .ProseMirror div.image-container[data-editor-include="component:image-block"] {
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.editor-theme-default .ProseMirror div.image-container[data-editor-include="component:image-block"] > img {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+}
+
 .editor-theme-default .ProseMirror div.image-container.aligncenter > img,
 .editor-theme-default .ProseMirror div.image-container.aligncenter img,
 .editor-theme-default .ProseMirror div.center > img,
@@ -632,10 +644,20 @@
 
 .editor-theme-default .ProseMirror div.image-container[data-editor-include="component:image-block"] .scp-image-caption {
     display: block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
     box-sizing: border-box;
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    clear: none;
+    float: none;
     margin: 0;
     padding: 0.35em 0.5em;
+    background: rgba(255, 255, 255, 0.9);
     border: var(--wikidot-gray) solid 1px;
 }
 /* =============================

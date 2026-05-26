@@ -5,7 +5,7 @@ const alignmentClassMap = new Map([
   ["block-right", "alignright"],
   ["block-center", "aligncenter"],
 ]);
-
+const plainImageAlignmentClassNames = ["alignleft", "alignright", "aligncenter"];
 function replaceImageBlock({ element }: DOMReplaceContext): Node | null {
   if (!(element instanceof HTMLDivElement)) return null;
   if (!element.classList.contains("scp-image-block")) return null;
@@ -29,6 +29,17 @@ function replaceImageBlock({ element }: DOMReplaceContext): Node | null {
   return element;
 }
 
+function markPlainImageContainerNoResize({ element }: DOMReplaceContext): Node | null {
+  if (!(element instanceof HTMLDivElement)) return null;
+  if (!element.classList.contains("image-container")) return null;
+  if (element.hasAttribute("data-editor-include")) return null;
+  if (!plainImageAlignmentClassNames.some(className => element.classList.contains(className))) return null;
+
+  element.setAttribute("data-editor-no-resize", "true");
+  return element;
+}
+
 export const imageBlockReplacer: DOMReplacer[] = [
   replaceImageBlock,
+  markPlainImageContainerNoResize,
 ];

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 import Moveable from "vue3-moveable";
 import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
@@ -15,6 +15,9 @@ const contextMenuKey = ref(0);
 const contextMenuFlags = ref<ContextMenuFlags>({ showTabView: false, showTable: false });
 const imageAlignmentClasses = ["alignleft", "alignright", "aligncenter"];
 let captionAlignmentWatchdogId: ReturnType<typeof window.setInterval> | null = null;
+const selectedImageResizable = computed(() =>
+    selectedImageBlockElement.value?.getAttribute("data-editor-no-resize") !== "true"
+);
 
 function handleContextMenu(event: MouseEvent) {
   if (!(event.target instanceof Element)) {
@@ -246,6 +249,22 @@ onMounted(() => {
         caption.classList.add(alignClass);
       }
     });
+
+    root.querySelectorAll("div.image-container").forEach(container => {
+      if (!(container instanceof HTMLElement)) {
+        return;
+      }
+
+      const noResizePlainAlignedImage =
+          imageAlignmentClasses.some(className => container.classList.contains(className)) &&
+          !container.hasAttribute("data-editor-include");
+
+      if (noResizePlainAlignedImage) {
+        container.setAttribute("data-editor-no-resize", "true");
+      } else {
+        container.removeAttribute("data-editor-no-resize");
+      }
+    });
   }, 1000);
 });
 
@@ -301,7 +320,7 @@ const editor = useEditor({
 
     <Moveable
         :target="selectedImageBlockElement || undefined"
-        :resizable="true"
+        :resizable="selectedImageResizable"
         :draggable="false"
         :keepRatio="true"
         :renderDirections="['nw', 'ne', 'sw', 'se', 'n', 'w', 's', 'e']"
