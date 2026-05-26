@@ -4,6 +4,7 @@ import type { ResolvedPos } from "@tiptap/pm/model";
 export type ContextMenuFlags = {
   showTabView: boolean;
   showTable: boolean;
+  showImage: boolean;
 };
 
 const TAB_VIEW_NODE_NAMES = new Set([
@@ -37,23 +38,29 @@ function flagsFromResolvedPos($pos: ResolvedPos): ContextMenuFlags {
     }
   }
 
-  return { showTabView, showTable };
+  return { showTabView, showTable, showImage: false };
 }
 
 function flagsFromDomTarget(target: EventTarget | null | undefined): ContextMenuFlags {
   if (!(target instanceof Element)) {
-    return { showTabView: false, showTable: false };
+    return { showTabView: false, showTable: false, showImage: false };
   }
+
+  const imageContainer= target.closest(".image-container");
 
   return {
     showTabView: Boolean(target.closest("wj-tabs")),
     showTable: Boolean(target.closest("table")),
+    showImage: imageContainer
+        ? !imageContainer.hasAttribute("data-editor-include")
+        : false,
   };
 }
 function mergeFlags(a: ContextMenuFlags, b: ContextMenuFlags): ContextMenuFlags {
   return {
     showTabView: a.showTabView || b.showTabView,
     showTable: a.showTable || b.showTable,
+    showImage: a.showImage || b.showImage,
   };
 }
 
@@ -81,5 +88,6 @@ export function getContextMenuFlags(
   return mergeFlags(flags, {
     showTabView: editor.isActive("tabView") || editor.isActive("tabViewPanel"),
     showTable: editor.isActive("table"),
+    showImage: false,
   });
 }

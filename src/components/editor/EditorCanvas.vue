@@ -1,23 +1,20 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
-import Moveable from "vue3-moveable";
 import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
 import { getContextMenuFlags, type ContextMenuFlags } from "../../stores/editor/contextMenuFlags.ts";
 import { alertNoteExternalParserMarkers } from "../../stores/editor/noteExternalParserGuard.ts";
 import { selectedImageBlockElement } from "../../stores/editor/extensions/ImageE.ts";
 import ContextMenu from "./ContextMenu.vue";
+import EditorCanvasMoveable from "./EditorCanvas/Moveable.vue";
 
 const contextMenuVisible = ref(false);
 const contextMenuX = ref(0);
 const contextMenuY = ref(0);
 const contextMenuKey = ref(0);
-const contextMenuFlags = ref<ContextMenuFlags>({ showTabView: false, showTable: false });
+const contextMenuFlags = ref<ContextMenuFlags>({ showTabView: false, showTable: false, showImage: false });
 const imageAlignmentClasses = ["alignleft", "alignright", "aligncenter"];
 let captionAlignmentWatchdogId: ReturnType<typeof window.setInterval> | null = null;
-const selectedImageResizable = computed(() =>
-    selectedImageBlockElement.value?.getAttribute("data-editor-no-resize") !== "true"
-);
 
 function handleContextMenu(event: MouseEvent) {
   if (!(event.target instanceof Element)) {
@@ -30,6 +27,12 @@ function handleContextMenu(event: MouseEvent) {
 
   event.preventDefault();
   event.stopPropagation();
+
+  const imageContainer = getImageContainerTarget(event.target as HTMLElement);
+
+  if (imageContainer && !imageContainer.hasAttribute("data-editor-include")) {
+    selectedImageBlockElement.value = imageContainer;
+  }
 
   const editorInstance = getEditor();
   const position = editorInstance?.view.posAtCoords({
@@ -55,7 +58,7 @@ function handleContextMenu(event: MouseEvent) {
   if (editorInstance) {
     contextMenuFlags.value = getContextMenuFlags(editorInstance, clickPos, event.target);
   } else {
-    contextMenuFlags.value = { showTabView: false, showTable: false };
+    contextMenuFlags.value = { showTabView: false, showTable: false, showImage: false };
   }
 
   contextMenuKey.value += 1;
@@ -96,130 +99,6 @@ function getImageContainerTarget(element: HTMLElement) {
   }
 
   return findImageContainerParent(element);
-}
-
-function findNodePositionByElement(element: HTMLElement) {
-  const editorInstance = getEditor();
-
-  if (!editorInstance) {
-    return null;
-  }
-
-  let position: number | null = null;
-
-  editorInstance.state.doc.descendants((_node, pos) => {
-    if (editorInstance.view.nodeDOM(pos) === element) {
-      position = pos;
-      return false;
-    }
-
-    return true;
-  });
-
-  return position;
-}
-
-function setSizeStyle(styleText: unknown, width: string, height: string) {
-  const element = document.createElement("div");
-
-  element.style.cssText = typeof styleText === "string" ? styleText : "";
-  element.style.width = width;
-  element.style.height = height;
-
-  return element.style.cssText;
-}
-
-function updateImageContainerNodeStyle(container: HTMLElement, width: string, height: string) {
-  const editorInstance = getEditor();
-  const position = findNodePositionByElement(container);
-
-  if (!editorInstance || position === null) {
-    return;
-  }
-
-  const node = editorInstance.state.doc.nodeAt(position);
-
-  if (!node || !node.attrs.htmlAttributes || typeof node.attrs.htmlAttributes !== "object") {
-    return;
-  }
-
-  const htmlAttributes = node.attrs.htmlAttributes as Record<string, unknown>;
-
-  editorInstance.view.dispatch(
-      editorInstance.state.tr.setNodeMarkup(position, undefined, {
-        ...node.attrs,
-        htmlAttributes: {
-          ...htmlAttributes,
-          style: setSizeStyle(htmlAttributes.style, width, height),
-        },
-      }, node.marks)
-  );
-}
-
-function syncImageContainerSize(container: HTMLElement, width: string, height: string) {
-  const img = container.querySelector("img") as HTMLElement | null;
-
-  container.style.width = width;
-  container.style.height = height;
-
-  if (!img) {
-    return;
-  }
-
-  img.style.width = width;
-  img.style.height = height;
-}
-
-function setEditorDomObserverEnabled(enabled: boolean) {
-  const editorInstance = getEditor();
-  //@ts-ignore
-  const domObserver = editorInstance?.view.domObserver as {
-    start?: () => void;
-    stop?: () => void;
-  } | undefined;
-
-  if (enabled) {
-    domObserver?.start?.();
-  } else {
-    domObserver?.stop?.();
-  }
-}
-
-function onImageResizeStart() {
-  setEditorDomObserverEnabled(false);
-}
-
-function onImageResize(e: any) {
-  const target = e.target as HTMLElement;
-  const width = `${e.width}px`;
-  const height = `${e.height}px`;
-  const container = getImageContainerTarget(target);
-
-  if (container) {
-    syncImageContainerSize(container, width, height);
-    return;
-  }
-
-  target.style.width = width;
-  target.style.height = height;
-}
-
-function onImageResizeEnd(e: any) {
-  const width = `${Math.round(e.lastEvent?.width ?? e.target.offsetWidth)}px`;
-  const height = `${Math.round(e.lastEvent?.height ?? e.target.offsetHeight)}px`;
-  const target = e.target as HTMLElement;
-  const container = getImageContainerTarget(target);
-
-  if (container) {
-    syncImageContainerSize(container, width, height);
-    updateImageContainerNodeStyle(container, width, height);
-    setEditorDomObserverEnabled(true);
-    return;
-  }
-
-  target.style.width = width;
-  target.style.height = height;
-  setEditorDomObserverEnabled(true);
 }
 
 onMounted(() => {
@@ -317,17 +196,7 @@ const editor = useEditor({
 <template>
   <main class="editor-canvas editor-theme-default">
     <EditorContent :editor="editor"/>
-
-    <Moveable
-        :target="selectedImageBlockElement || undefined"
-        :resizable="selectedImageResizable"
-        :draggable="false"
-        :keepRatio="false"
-        :renderDirections="['nw', 'ne', 'sw', 'se', 'n', 'w', 's', 'e']"
-        @resizeStart="onImageResizeStart"
-        @resize="onImageResize"
-        @resizeEnd="onImageResizeEnd"
-    />
+    <EditorCanvasMoveable/>
   </main>
 
   <Teleport to="body">
@@ -338,6 +207,7 @@ const editor = useEditor({
         :y="contextMenuY"
         :show-tab-view="contextMenuFlags.showTabView"
         :show-table="contextMenuFlags.showTable"
+        :show-image="contextMenuFlags.showImage"
     />
   </Teleport>
 </template>
