@@ -38,7 +38,13 @@ pub fn normalize_component_images(html: &str) -> String {
     }
 
     let mut out = Vec::new();
-    document.serialize(&mut out).unwrap();
+    if let Ok(body) = document.select_first("body") {
+        for child in body.as_node().children() {
+            child.serialize(&mut out).unwrap();
+        }
+    } else {
+        document.serialize(&mut out).unwrap();
+    }
 
     String::from_utf8(out).unwrap()
 }
