@@ -17,6 +17,7 @@ import "./styles/default.css";
 import "./styles/contextmenu/menudefault.css";
 import "./styles/contextmenu/menutable.css";
 import "./styles/toolbar/url.css";
+import "./styles/toolbar/insertion.css";
 
 connectIpc();
 createApp(App).mount("#app");

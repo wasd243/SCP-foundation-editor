@@ -133,6 +133,10 @@ Ribbon Separator Begin
 .ribbon-separator.normal-2 {
     left: 780px;
 }
+
+.ribbon-separator.insertion-normal-1 {
+    left: 150px;
+}
 /*
 ==============================
 Ribbon Separator End

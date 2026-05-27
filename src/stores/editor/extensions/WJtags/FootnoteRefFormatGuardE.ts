@@ -6,6 +6,7 @@ import type { Transaction } from "@tiptap/pm/state";
 import { nodeHasClass } from "./htmlPreserveE";
 
 const footnoteRefClass = "wj-footnote-ref";
+const footnoteRefContentsClass = "wj-footnote-ref-contents";
 
 const marksBlockedInsideFootnoteRef = new Set([
     "fontSize",
@@ -33,6 +34,16 @@ export function isInsideFootnoteRef($pos: ResolvedPos) {
     return false;
 }
 
+function isInsideFootnoteRefContents($pos: ResolvedPos) {
+    for (let depth = $pos.depth; depth > 0; depth -= 1) {
+        if (nodeHasClass($pos.node(depth), footnoteRefContentsClass)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function removeBlockedMarksInFootnoteRefs(transaction: Transaction) {
     const { doc } = transaction;
     let changed = false;
@@ -42,7 +53,9 @@ function removeBlockedMarksInFootnoteRefs(transaction: Transaction) {
             return;
         }
 
-        if (!isInsideFootnoteRef(doc.resolve(pos))) {
+        const $pos = doc.resolve(pos);
+
+        if (!isInsideFootnoteRef($pos) || isInsideFootnoteRefContents($pos)) {
             return;
         }
 

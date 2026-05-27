@@ -19,6 +19,9 @@ public/code_view/** linguist-generated=true
 # Ignore plain JS files for stats
 *.js linguist-generated=true
 
+# Ignore test output files
+output.html linguist-generated=true
+
 # Ignore dependencies
 node_modules/** linguist-vendored
 target/** linguist-vendored

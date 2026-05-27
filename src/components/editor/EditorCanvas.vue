@@ -4,13 +4,17 @@ import { useEditor, EditorContent } from "@tiptap/vue-3";
 import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
 import { getContextMenuFlags, type ContextMenuFlags } from "../../stores/editor/contextMenuFlags.ts";
 import { alertNoteExternalParserMarkers } from "../../stores/editor/noteExternalParserGuard.ts";
+import { selectedImageBlockElement } from "../../stores/editor/extensions/ImageE.ts";
 import ContextMenu from "./ContextMenu.vue";
+import EditorCanvasMoveable from "./EditorCanvas/Moveable.vue";
 
 const contextMenuVisible = ref(false);
 const contextMenuX = ref(0);
 const contextMenuY = ref(0);
 const contextMenuKey = ref(0);
-const contextMenuFlags = ref<ContextMenuFlags>({ showTabView: false, showTable: false });
+const contextMenuFlags = ref<ContextMenuFlags>({ showTabView: false, showTable: false, showImage: false });
+const imageAlignmentClasses = ["alignleft", "alignright", "aligncenter"];
+let captionAlignmentWatchdogId: ReturnType<typeof window.setInterval> | null = null;
 
 function handleContextMenu(event: MouseEvent) {
   if (!(event.target instanceof Element)) {
@@ -23,6 +27,12 @@ function handleContextMenu(event: MouseEvent) {
 
   event.preventDefault();
   event.stopPropagation();
+
+  const imageContainer = getImageContainerTarget(event.target as HTMLElement);
+
+  if (imageContainer && !imageContainer.hasAttribute("data-editor-include")) {
+    selectedImageBlockElement.value = imageContainer;
+  }
 
   const editorInstance = getEditor();
   const position = editorInstance?.view.posAtCoords({
@@ -48,7 +58,7 @@ function handleContextMenu(event: MouseEvent) {
   if (editorInstance) {
     contextMenuFlags.value = getContextMenuFlags(editorInstance, clickPos, event.target);
   } else {
-    contextMenuFlags.value = { showTabView: false, showTable: false };
+    contextMenuFlags.value = { showTabView: false, showTable: false, showImage: false };
   }
 
   contextMenuKey.value += 1;
@@ -69,12 +79,80 @@ function closeContextMenuOnPointerDown(event: PointerEvent) {
   contextMenuVisible.value = false;
 }
 
+function findImageContainerParent(element: HTMLElement) {
+  let parent = element.parentElement;
+
+  while (parent) {
+    if (parent.tagName.toLowerCase() === "div" && parent.classList.contains("image-container")) {
+      return parent;
+    }
+
+    parent = parent.parentElement;
+  }
+
+  return null;
+}
+
+function getImageContainerTarget(element: HTMLElement) {
+  if (element.tagName.toLowerCase() === "div" && element.classList.contains("image-container")) {
+    return element;
+  }
+
+  return findImageContainerParent(element);
+}
+
 onMounted(() => {
   window.addEventListener("pointerdown", closeContextMenuOnPointerDown, true);
+  captionAlignmentWatchdogId = window.setInterval(() => {
+    const root = getEditor()?.view.dom;
+
+    if (!root) {
+      return;
+    }
+
+    root.querySelectorAll(".scp-image-caption").forEach(caption => {
+      if (!(caption instanceof HTMLElement)) {
+        return;
+      }
+
+      if (imageAlignmentClasses.some(className => caption.classList.contains(className))) {
+        return;
+      }
+
+      const imageContainer = findImageContainerParent(caption);
+      const alignClass = imageContainer
+          ? imageAlignmentClasses.find(className => imageContainer.classList.contains(className))
+          : null;
+
+      if (alignClass) {
+        caption.classList.add(alignClass);
+      }
+    });
+
+    root.querySelectorAll("div.image-container").forEach(container => {
+      if (!(container instanceof HTMLElement)) {
+        return;
+      }
+
+      const noResizePlainAlignedImage =
+          imageAlignmentClasses.some(className => container.classList.contains(className)) &&
+          !container.hasAttribute("data-editor-include");
+
+      if (noResizePlainAlignedImage) {
+        container.setAttribute("data-editor-no-resize", "true");
+      } else {
+        container.removeAttribute("data-editor-no-resize");
+      }
+    });
+  }, 1000);
 });
 
 onUnmounted(() => {
   window.removeEventListener("pointerdown", closeContextMenuOnPointerDown, true);
+  if (captionAlignmentWatchdogId !== null) {
+    window.clearInterval(captionAlignmentWatchdogId);
+    captionAlignmentWatchdogId = null;
+  }
 });
 
 const editor = useEditor({
@@ -118,6 +196,7 @@ const editor = useEditor({
 <template>
   <main class="editor-canvas editor-theme-default">
     <EditorContent :editor="editor"/>
+    <EditorCanvasMoveable/>
   </main>
 
   <Teleport to="body">
@@ -128,6 +207,7 @@ const editor = useEditor({
         :y="contextMenuY"
         :show-tab-view="contextMenuFlags.showTabView"
         :show-table="contextMenuFlags.showTable"
+        :show-image="contextMenuFlags.showImage"
     />
   </Teleport>
 </template>
@@ -141,11 +221,12 @@ const editor = useEditor({
   padding: 32px 0;
   background: #f2f3f5;
   box-sizing: border-box;
+  position: relative;
 }
 
 :deep(.ProseMirror) {
   width: min(900px, calc(100vw - 96px));
-  min-height: 900px;
+  min-height: 2000px;
   margin: 0 auto;
   padding: 48px 56px;
   box-sizing: border-box;

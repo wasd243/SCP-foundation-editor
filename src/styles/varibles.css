@@ -5,6 +5,12 @@
     /* This variable is used for basic buttons left: position */
     --basic-btn-left: 100px;
 
+    /* This variable is used for insertion buttons top: position */
+    --insertion-btn-height: 20px;
+
+    /* This variable is used for insertion buttons left: position */
+    --insertion-btn-left: 20px;
+
     --color-word-blue: #185abd;
     --color-word-blue-dark: #0f3f8f;
     --color-word-blue-light: #eaf2ff;

@@ -4,12 +4,14 @@
 import TableContextMenu from "./ContextMenu/TableContextMenu.vue";
 import TabViewContextMenu from "./ContextMenu/TabViewContextMenu.vue";
 import DefaultContextMenu from "./ContextMenu/DefaultContextMenu.vue";
+import ImageContextMenu from "./ContextMenu/ImageContextMenu.vue";
 
 defineProps<{
   x: number;
   y: number;
   showTabView: boolean;
   showTable: boolean;
+  showImage: boolean;
 }>();
 </script>
 
@@ -22,6 +24,7 @@ defineProps<{
     }"
   >
     <TabViewContextMenu v-if="showTabView"/>
+    <ImageContextMenu v-else-if="showImage"/>
     <DefaultContextMenu v-else/>
     <template v-if="showTable">
       <div v-if="showTabView" class="context-menu-separator"/>
