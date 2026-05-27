@@ -94,18 +94,28 @@ function updateImageContainerNodeStyle(container: HTMLElement, width: string, he
 
   const node = editorInstance.state.doc.nodeAt(position);
 
-  if (!node || !node.attrs.htmlAttributes || typeof node.attrs.htmlAttributes !== "object") {
+  if (!node) {
     return;
   }
 
-  const htmlAttributes = node.attrs.htmlAttributes as Record<string, unknown>;
+  const attrsName = node.attrs.htmlAttributes && typeof node.attrs.htmlAttributes === "object"
+      ? "htmlAttributes"
+      : node.attrs.wrapperAttributes && typeof node.attrs.wrapperAttributes === "object"
+          ? "wrapperAttributes"
+          : null;
+
+  if (!attrsName) {
+    return;
+  }
+
+  const sizeAttributes = node.attrs[attrsName] as Record<string, unknown>;
 
   editorInstance.view.dispatch(
       editorInstance.state.tr.setNodeMarkup(position, undefined, {
         ...node.attrs,
-        htmlAttributes: {
-          ...htmlAttributes,
-          style: setSizeStyle(htmlAttributes.style, width, height),
+        [attrsName]: {
+          ...sizeAttributes,
+          style: setSizeStyle(sizeAttributes.style, width, height),
         },
       }, node.marks)
   );
