@@ -15,9 +15,11 @@ use crate::ftml_interceptor::preprocess_interceptor::{
 };
 
 use crate::resourcepack_includer::ResourcepackIncluder;
+use crate::ftml_normalizer::image_normalizer::normalize_images;
 
 mod ftml_interceptor;
 mod resourcepack_includer;
+mod ftml_normalizer;
 
 const DEFAULT_RESOURCEPACK_ROOT: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack");
 
@@ -80,8 +82,6 @@ pub fn render_wikidot_to_html_with_resourcepack(
     wikitext = unused_variable_interceptor(&wikitext);
     wikitext = unused_newline_interceptor(&wikitext);
 
-    println!("[PASSED]{}", wikitext);
-
     // Tokenize and parse
     let tokens = ftml::tokenize(&wikitext);
 
@@ -101,6 +101,8 @@ pub fn render_wikidot_to_html_with_resourcepack(
 
     html_output.body = note_parser(&html_output.body);
     html_output.body = note_cleaner(&html_output.body);
+
+    html_output.body = normalize_images(&html_output.body);
 
     // This is a debug output for the parsed HTML
     println!("{:#?}", html_output);
