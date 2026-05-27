@@ -13,8 +13,6 @@ const contextMenuX = ref(0);
 const contextMenuY = ref(0);
 const contextMenuKey = ref(0);
 const contextMenuFlags = ref<ContextMenuFlags>({ showTabView: false, showTable: false, showImage: false });
-const imageAlignmentClasses = ["alignleft", "alignright", "aligncenter"];
-let captionAlignmentWatchdogId: ReturnType<typeof window.setInterval> | null = null;
 
 function handleContextMenu(event: MouseEvent) {
   if (!(event.target instanceof Element)) {
@@ -103,56 +101,10 @@ function getImageContainerTarget(element: HTMLElement) {
 
 onMounted(() => {
   window.addEventListener("pointerdown", closeContextMenuOnPointerDown, true);
-  captionAlignmentWatchdogId = window.setInterval(() => {
-    const root = getEditor()?.view.dom;
-
-    if (!root) {
-      return;
-    }
-
-    root.querySelectorAll(".scp-image-caption").forEach(caption => {
-      if (!(caption instanceof HTMLElement)) {
-        return;
-      }
-
-      if (imageAlignmentClasses.some(className => caption.classList.contains(className))) {
-        return;
-      }
-
-      const imageContainer = findImageContainerParent(caption);
-      const alignClass = imageContainer
-          ? imageAlignmentClasses.find(className => imageContainer.classList.contains(className))
-          : null;
-
-      if (alignClass) {
-        caption.classList.add(alignClass);
-      }
-    });
-
-    root.querySelectorAll("div.image-container").forEach(container => {
-      if (!(container instanceof HTMLElement)) {
-        return;
-      }
-
-      const noResizePlainAlignedImage =
-          imageAlignmentClasses.some(className => container.classList.contains(className)) &&
-          !container.hasAttribute("data-editor-include");
-
-      if (noResizePlainAlignedImage) {
-        container.setAttribute("data-editor-no-resize", "true");
-      } else {
-        container.removeAttribute("data-editor-no-resize");
-      }
-    });
-  }, 1000);
 });
 
 onUnmounted(() => {
   window.removeEventListener("pointerdown", closeContextMenuOnPointerDown, true);
-  if (captionAlignmentWatchdogId !== null) {
-    window.clearInterval(captionAlignmentWatchdogId);
-    captionAlignmentWatchdogId = null;
-  }
 });
 
 const editor = useEditor({
