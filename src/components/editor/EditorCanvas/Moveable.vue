@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import VueMoveable from "vue3-moveable";
 import { getEditor } from "../../../stores/editor.ts";
 import { selectedImageBlockElement } from "../../../stores/editor/extensions/ImageE.ts";
@@ -9,6 +9,8 @@ const imageFloatPositionClasses = ["floatleft", "floatright"];
 const imagePositionClasses = [...imageAlignmentClasses, ...imageFloatPositionClasses];
 const imagePositionGuideVisible = ref(false);
 const imagePositionPreview = ref<"left" | "center" | "right" | null>(null);
+const imagePositionDragHandle = ref<HTMLElement | null>(null);
+const imagePositionDragHandleStyle = ref<Record<string, string>>({});
 const selectedImageResizable = computed(() =>
     selectedImageBlockElement.value?.getAttribute("data-editor-no-resize") !== "true"
 );
@@ -21,6 +23,22 @@ const selectedImageDraggable = computed(() =>
         selectedImageBlockElement.value?.classList.contains("aligncenter")
     )
 );
+
+function updateImagePositionDragHandle() {
+  const target = selectedImageBlockElement.value;
+
+  if (!target || !selectedImageDraggable.value) {
+    imagePositionDragHandleStyle.value = {};
+    return;
+  }
+
+  const rect = target.getBoundingClientRect();
+
+  imagePositionDragHandleStyle.value = {
+    left: `${rect.left + rect.width / 2}px`,
+    top: `${rect.top + rect.height / 2}px`,
+  };
+}
 
 function findImageContainerParent(element: HTMLElement) {
   let parent = element.parentElement;
@@ -249,6 +267,7 @@ function onImageResizeStart() {
 
 function onImageDragStart() {
   setEditorDomObserverEnabled(false);
+  updateImagePositionDragHandle();
   imagePositionGuideVisible.value = true;
 }
 
@@ -279,6 +298,7 @@ function onImageDragEnd(e: any) {
   imagePositionGuideVisible.value = false;
   imagePositionPreview.value = null;
   setEditorDomObserverEnabled(true);
+  updateImagePositionDragHandle();
 }
 
 function onImageResize(e: any) {
@@ -289,11 +309,13 @@ function onImageResize(e: any) {
 
   if (container) {
     syncImageContainerSize(container, width, height);
+    updateImagePositionDragHandle();
     return;
   }
 
   target.style.width = width;
   target.style.height = height;
+  updateImagePositionDragHandle();
 }
 
 function onImageResizeEnd(e: any) {
@@ -306,13 +328,33 @@ function onImageResizeEnd(e: any) {
     syncImageContainerSize(container, width, height);
     updateImageContainerNodeStyle(container, width, height);
     setEditorDomObserverEnabled(true);
+    updateImagePositionDragHandle();
     return;
   }
 
   target.style.width = width;
   target.style.height = height;
   setEditorDomObserverEnabled(true);
+  updateImagePositionDragHandle();
 }
+
+watch(selectedImageBlockElement, () => {
+  nextTick(updateImagePositionDragHandle);
+});
+
+watch(selectedImageDraggable, () => {
+  nextTick(updateImagePositionDragHandle);
+});
+
+onMounted(() => {
+  window.addEventListener("resize", updateImagePositionDragHandle);
+  window.addEventListener("scroll", updateImagePositionDragHandle, true);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateImagePositionDragHandle);
+  window.removeEventListener("scroll", updateImagePositionDragHandle, true);
+});
 </script>
 
 <template>
@@ -334,10 +376,20 @@ function onImageResizeEnd(e: any) {
     />
   </div>
 
+  <div
+      v-show="selectedImageDraggable"
+      ref="imagePositionDragHandle"
+      class="image-position-drag-handle"
+      :style="imagePositionDragHandleStyle"
+      title="Move image position"
+  />
+
   <VueMoveable
       :target="selectedImageBlockElement || undefined"
       :resizable="selectedImageResizable"
       :draggable="selectedImageDraggable"
+      :dragTarget="imagePositionDragHandle || undefined"
+      :dragTargetSelf="false"
       :keepRatio="false"
       :renderDirections="['nw', 'ne', 'sw', 'se', 'n', 'w', 's', 'e']"
       @dragStart="onImageDragStart"
@@ -387,4 +439,24 @@ function onImageResizeEnd(e: any) {
 .image-position-guide-right {
   left: 85%;
 }
+
+.image-position-drag-handle {
+  position: fixed;
+  z-index: 10000;
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: var(--wikidot-red);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+  cursor: grab;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+}
+
+.image-position-drag-handle:active {
+  cursor: grabbing;
+}
+
 </style>
