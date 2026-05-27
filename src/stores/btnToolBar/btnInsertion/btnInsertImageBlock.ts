@@ -4,7 +4,7 @@ import { getEditor } from "../../editor.ts";
 import { alertUnsupportedImageUrl, isSupportedImageUrl } from "./btnInsertImage.ts";
 
 const defaultImageBlockWidth = "200px";
-const defaultImageBlockCaption = "CPATION";
+const defaultImageBlockCaption = "CAPTION";
 
 function createImageBlockContent(src: string): JSONContent {
     return {
