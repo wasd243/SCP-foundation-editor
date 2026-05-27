@@ -8,5 +8,8 @@ SCP Foundation successfully occupied the WYSIWYG editor.
 - image-block rendering success
 - CSS alignment mostly fixed
 - TODO: `[[include]]` rendering pipeline
-- TODO: explainer implementation
-- TODO: `[[include]]` class adapter
+- ~~TODO: explainer implementation~~
+- ~~TODO: `[[include]]` class adapter~~
+
+## 2026-05-27
+Article rendering pipeline is working.
