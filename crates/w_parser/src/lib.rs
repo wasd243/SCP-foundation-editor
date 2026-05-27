@@ -14,6 +14,7 @@ use crate::ftml_interceptor::preprocess_interceptor::{
     unused_newline_interceptor::unused_newline_interceptor,
 };
 
+use crate::ftml_normalizer::include_normalizer::component_image_normalizer::normalize_component_images;
 use crate::resourcepack_includer::ResourcepackIncluder;
 use crate::ftml_normalizer::image_normalizer::normalize_images;
 
@@ -103,6 +104,7 @@ pub fn render_wikidot_to_html_with_resourcepack(
     html_output.body = note_cleaner(&html_output.body);
 
     html_output.body = normalize_images(&html_output.body);
+    html_output.body = normalize_component_images(&html_output.body);
 
     // This is a debug output for the parsed HTML
     println!("{:#?}", html_output);

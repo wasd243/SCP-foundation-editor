@@ -200,14 +200,18 @@
     margin-bottom: 0;
 }
 
-/* Reset ProseMirror double-spaced paragraphs */
+/* PM hard paragraphs represent Wikidot paragraph breaks; soft breaks stay inside the same line flow. */
 .editor-theme-default .ProseMirror p {
-    margin: 0;
+    margin: 0 0 1.2em;
     padding: 0;
     line-height: 1.2;
 }
 
-.editor-theme-default.ProseMirror br {
+.editor-theme-default .ProseMirror p:last-child {
+    margin-bottom: 0;
+}
+
+.editor-theme-default .ProseMirror br {
     line-height: 1;
 }
 
@@ -450,15 +454,15 @@
     bottom: 1.6em;
     z-index: 20;
     display: block;
-    min-width: 120px;
-    max-width: 260px;
-    padding: 4px 6px;
+    min-width: 500px;
+    max-width: 1000px;
+    padding: 10px 12px;
     box-sizing: border-box;
     border: 1px solid var(--wikidot-red);
     background: #ffffff;
     color: #000000;
-    font-size: 11px;
-    line-height: 1.3;
+    font-size: 14px;
+    line-height: 1.55;
     text-align: left;
     white-space: normal;
     vertical-align: baseline;
@@ -474,13 +478,17 @@
 
 .editor-theme-default .wj-footnote-ref-tooltip-label {
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    line-height: 1.35;
     font-weight: bold;
     color: var(--wikidot-red);
 }
 
 .editor-theme-default .wj-footnote-ref-contents {
     display: block;
+    min-width: 500px;
+    max-width: 1000px;
 }
 
 .editor-theme-default .wj-footnote-list {
