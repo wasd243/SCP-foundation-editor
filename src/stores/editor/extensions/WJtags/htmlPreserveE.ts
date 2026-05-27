@@ -240,6 +240,16 @@ function shouldPreserveInlineElement(element: HTMLElement) {
 }
 
 function shouldPreserveVoidElement(element: HTMLElement) {
+    if (
+        element.tagName.toLowerCase() === "img" &&
+        (
+            element.classList.contains("ProseMirror-separator") ||
+            element.hasAttribute("mark-placeholder")
+        )
+    ) {
+        return false;
+    }
+
     return shouldPreserveElement(element) && voidTags.has(element.tagName.toLowerCase());
 }
 

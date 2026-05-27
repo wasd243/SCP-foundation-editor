@@ -93,6 +93,15 @@ function isImageContainerDiv(element: HTMLElement) {
     return element.tagName.toLowerCase() === "div" && element.classList.contains("image-container");
 }
 
+function isProseMirrorHackImage(element: HTMLElement) {
+    return element.tagName.toLowerCase() === "img" &&
+        (
+            element.classList.contains("ProseMirror-separator") ||
+            element.hasAttribute("mark-placeholder") ||
+            !element.hasAttribute("src")
+        );
+}
+
 function findImageContainer(element: HTMLElement) {
     let current: HTMLElement | null = element;
 
@@ -111,6 +120,11 @@ function updateMoveableTarget(view: EditorView) {
     const selected = view.dom.querySelector("img.ProseMirror-selectednode");
 
     if (selected instanceof HTMLElement) {
+        if (isProseMirrorHackImage(selected)) {
+            selectedImageBlockElement.value = null;
+            return;
+        }
+
         selectedImageBlockElement.value = findImageContainer(selected) ?? selected;
         return;
     }
@@ -130,6 +144,11 @@ function updateMoveableTargetFromPointerDown(_view: EditorView, event: Event) {
     const target = event.target;
 
     if (!(target instanceof HTMLElement)) {
+        selectedImageBlockElement.value = null;
+        return false;
+    }
+
+    if (isProseMirrorHackImage(target)) {
         selectedImageBlockElement.value = null;
         return false;
     }
