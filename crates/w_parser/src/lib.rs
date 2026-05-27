@@ -107,7 +107,7 @@ pub fn render_wikidot_to_html_with_resourcepack(
     html_output.body = normalize_component_images(&html_output.body);
 
     // This is a debug output for the parsed HTML
-    println!("{:#?}", html_output);
+    // println!("{:#?}", html_output);
 
     Ok(FtmlParseOutput {
         html: html_output.body.to_string(),
