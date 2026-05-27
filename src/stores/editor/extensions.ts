@@ -8,6 +8,7 @@ import { DetailsExtension, DetailsSummaryExtension } from "./extensions/DetailsE
 import { DetailsContentExtension } from "./extensions/DetailsContentE.ts";
 import { FontSizeExtension } from "./extensions/FontSizeE.ts";
 import { ImageExtension } from "./extensions/ImageE.ts";
+import InvisibleCharacters, { ParagraphNode } from "@tiptap/extension-invisible-characters";
 import { TableExtensions } from "./extensions/TableE.ts";
 import { TabViewExtensions } from "./extensions/TabViewE.ts";
 import { TextAlignExtension } from "./extensions/TextAlignE.ts";
@@ -31,6 +32,10 @@ export const editorExtensions = [
     DetailsSummaryExtension,
     DetailsContentExtension,
     TextAlignExtension,
+    InvisibleCharacters.configure({
+        visible: true,
+        builders: [new ParagraphNode()],
+    }),
     ...BasicExtensions,
     TextColorExtension,
     FontSizeExtension,

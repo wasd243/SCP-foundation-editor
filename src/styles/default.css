@@ -215,6 +215,10 @@
     line-height: 1;
 }
 
+.editor-theme-default .ProseMirror .tiptap-invisible-character--paragraph::before {
+    content: "↵";
+}
+
 /* ---Collapsible start--- */
 .editor-theme-default .ProseMirror [data-type="details"],
 .editor-theme-default .ProseMirror details {
@@ -235,7 +239,7 @@
     justify-content: flex-end;
 }
 
-.editor-theme-default .ProseMirror [data-type="details"]>button {
+.editor-theme-default .ProseMirror [data-type="details"] > button {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -252,15 +256,15 @@
     user-select: none;
 }
 
-.editor-theme-default .ProseMirror [data-type="details"]>button::before {
+.editor-theme-default .ProseMirror [data-type="details"] > button::before {
     content: "▸";
 }
 
-.editor-theme-default .ProseMirror [data-type="details"].is-open>button::before {
+.editor-theme-default .ProseMirror [data-type="details"].is-open > button::before {
     content: "▾";
 }
 
-.editor-theme-default .ProseMirror [data-type="details"]>div {
+.editor-theme-default .ProseMirror [data-type="details"] > div {
     display: block;
     flex: 1 1 auto;
     min-width: 0;
@@ -283,7 +287,7 @@
 }
 
 .editor-theme-default .ProseMirror [data-type="detailsContent"],
-.editor-theme-default .ProseMirror details>div[data-type="detailsContent"] {
+.editor-theme-default .ProseMirror details > div[data-type="detailsContent"] {
     margin-left: calc(-1.25em - 6px);
     width: calc(100% + 1.25em + 6px);
     max-width: calc(100% + 1.25em + 6px);
@@ -363,7 +367,7 @@
     cursor: text;
 }
 
-.editor-theme-default .ProseMirror .wj-tabs-button+.wj-tabs-button {
+.editor-theme-default .ProseMirror .wj-tabs-button + .wj-tabs-button {
     margin-left: -1px;
 }
 
@@ -405,6 +409,7 @@
 
     max-width: 80%;
 }
+
 /* ---Note end--- */
 
 /* =============================
@@ -648,6 +653,7 @@
     border: var(--color-word-blue) solid 2px;
     border-radius: 4px;
 }
+
 /* ~_EDITOR_IMMUTABLE_THEME_END_~ */
 
 .editor-theme-default .ProseMirror div.image-container[data-editor-include="component:image-block"] .scp-image-caption {
@@ -668,6 +674,7 @@
     background: rgba(255, 255, 255, 0.9);
     border: var(--wikidot-gray) solid 1px;
 }
+
 /* =============================
    Wikidot-style image end
    ============================= */
