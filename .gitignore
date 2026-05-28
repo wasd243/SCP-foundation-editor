@@ -16,7 +16,6 @@ code_view/assets/bundle_editor.js
 node_modules/
 
 # packages
-package-lock.json
 .gitnexus/
 ftml/
 
