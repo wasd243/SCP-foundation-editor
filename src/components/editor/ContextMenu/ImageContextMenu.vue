@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import SetImageInline from "./ImageContextMenu/setImageInline.vue";
 import SetImageWrap from "./ImageContextMenu/setImageWrap.vue";
+import {
+  findTopImageContainer,
+  setPlainImageFlowDom,
+  updatePlainImageFlowAttrs,
+} from "../../../stores/editor/extensions/ImageAttrE.ts";
 import { selectedImageBlockElement } from "../../../stores/editor/extensions/ImageE.ts";
-
-const imagePositionClasses = ["alignleft", "alignright", "aligncenter", "floatleft", "floatright"];
 
 function getSelectedImageContainer() {
   const target = selectedImageBlockElement.value;
@@ -12,9 +15,7 @@ function getSelectedImageContainer() {
     return null;
   }
 
-  const container = target.classList.contains("image-container")
-      ? target
-      : target.closest(".image-container");
+  const container = findTopImageContainer(target);
 
   if (!(container instanceof HTMLElement) || container.hasAttribute("data-editor-include")) {
     return null;
@@ -30,8 +31,8 @@ function setImageInline() {
     return;
   }
 
-  imagePositionClasses.forEach(className => container.classList.remove(className));
-  container.removeAttribute("data-editor-no-resize");
+  setPlainImageFlowDom(container, "inline");
+  updatePlainImageFlowAttrs(container, "inline");
 }
 
 function setImageWrap() {
@@ -41,9 +42,8 @@ function setImageWrap() {
     return;
   }
 
-  imagePositionClasses.forEach(className => container.classList.remove(className));
-  container.classList.add("floatleft");
-  container.removeAttribute("data-editor-no-resize");
+  setPlainImageFlowDom(container, "wrap");
+  updatePlainImageFlowAttrs(container, "wrap");
 }
 </script>
 

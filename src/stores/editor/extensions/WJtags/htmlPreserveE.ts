@@ -195,6 +195,12 @@ function hasElementClass(element: HTMLElement, className: string) {
     return element.classList.contains(className);
 }
 
+function isNestedImageContainerElement(element: HTMLElement) {
+    return element.tagName.toLowerCase() === "div" &&
+        hasElementClass(element, "image-container") &&
+        Boolean(element.parentElement?.closest(".image-container"));
+}
+
 function isFootnoteListOrderedElement(element: HTMLElement) {
     return element.tagName.toLowerCase() === "ol" && Boolean(element.closest(".wj-footnote-list"));
 }
@@ -230,6 +236,7 @@ function shouldPreserveElement(element: HTMLElement) {
     const tagName = element.tagName.toLowerCase();
 
     if (ignoredRootTags.has(tagName)) return false;
+    if (isNestedImageContainerElement(element)) return false;
     if (isDedicatedExtensionElement(element)) return false;
 
     return !isNativeTipTapElement(element);
