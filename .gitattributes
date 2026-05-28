@@ -6,6 +6,7 @@
 *.vue  linguist-language=Vue
 *.ts   linguist-language=TypeScript
 *.css  linguist-language=CSS
+*.scss linguist-language=SCSS
 *.html linguist-language=HTML
 *.py   linguist-language=Python
 
