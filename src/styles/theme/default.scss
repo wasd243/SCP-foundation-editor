@@ -432,8 +432,12 @@
     }
 
     // User and User with img part are all mutable
+    .user,
     .wj-user {
       color: var(--wikidot-red);
+      border: var(--wikidot-gray) solid 1px;
+      border-radius: 3px;
+      background: var(--color-word-blue-light);
     }
 
   }
