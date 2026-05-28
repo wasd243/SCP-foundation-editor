@@ -79,6 +79,13 @@ function getImageContainerClassName(className: unknown, positionClass: string | 
     return classNames.join(" ");
 }
 
+function removeImageContainerClassName(className: unknown) {
+    return splitClassName(className)
+        .filter(className => className !== "image-container")
+        .filter(className => !imagePositionClasses.includes(className))
+        .join(" ");
+}
+
 function nodeHasImageContainerAttrs(node: ProseMirrorNode) {
     const attrsName = getImageContainerAttributeName(node);
 
@@ -95,12 +102,35 @@ function cleanNestedImageWrapperNodeAttrs(transaction: Transaction) {
     function scanNode(node: ProseMirrorNode, position: number, insideImageContainer: boolean) {
         node.forEach((child, offset) => {
             const childPosition = position + 1 + offset;
-            const childHasImageContainer = nodeHasImageContainerAttrs(child);
+            const childAttrsName = getImageContainerAttributeName(child);
+            const childHasImageContainer = childAttrsName !== null && nodeHasImageContainerAttrs(child);
 
             if (insideImageContainer && isObjectAttributes(child.attrs.wrapperAttributes)) {
                 transaction.setNodeMarkup(childPosition, undefined, {
                     ...child.attrs,
                     wrapperAttributes: null,
+                }, child.marks);
+            }
+
+            if (insideImageContainer && childHasImageContainer) {
+                const attributes = child.attrs[childAttrsName] as Record<string, unknown>;
+                const nextAttributes: Record<string, unknown> = {
+                    ...attributes,
+                    class: removeImageContainerClassName(attributes.class),
+                    style: setStyleMargin(attributes.style, null),
+                };
+
+                if (!nextAttributes.class) {
+                    delete nextAttributes.class;
+                }
+
+                if (!nextAttributes.style) {
+                    delete nextAttributes.style;
+                }
+
+                transaction.setNodeMarkup(childPosition, undefined, {
+                    ...child.attrs,
+                    [childAttrsName]: nextAttributes,
                 }, child.marks);
             }
 

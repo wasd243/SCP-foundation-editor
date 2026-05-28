@@ -38,7 +38,7 @@ function findWrappedImage(element: HTMLElement, allowBase64: boolean) {
         return null;
     }
 
-    if (element.parentElement?.classList.contains("image-container")) {
+    if (element.parentElement?.closest(".image-container")) {
         return null;
     }
 
