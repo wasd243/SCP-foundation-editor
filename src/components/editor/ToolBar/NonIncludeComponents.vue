@@ -6,7 +6,7 @@ import Footnotes from "./NonIncludeComponents/Footnotes.vue";
 import ModuleRate from "./NonIncludeComponents/ModuleRate.vue";
 import Note from "./NonIncludeComponents/Note.vue";
 import TabView from "./NonIncludeComponents/TabView.vue";
-import Users from "./NonIncludeComponents/Users.vue";
+import User from "./NonIncludeComponents/User.vue";
 </script>
 
 <template>
@@ -15,9 +15,9 @@ import Users from "./NonIncludeComponents/Users.vue";
     <Footnotes/>
     <Code/>
     <Note/>
+    <User/>
     <cssModule/>
     <divBlock/>
     <ModuleRate/>
-    <Users/>
   </div>
 </template>

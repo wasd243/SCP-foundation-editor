@@ -31,6 +31,12 @@
     - COLLECTION: Uxaspects Sharp Cornered Icons
     - LICENSE: Apache License
 
+- User Icon: [SvgRepo](https://www.svgrepo.com/svg/526706/user-id)
+    - AUTHOR: Solar Icons
+    - COLLECTION: Solar Line Duotone Icons
+    - LICENSE: CC Attribution License
+
+
 ## Libraries
 - TipTap
 - ProseMirror
