@@ -2,11 +2,18 @@
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import VueMoveable from "vue3-moveable";
 import { getEditor } from "../../../stores/editor.ts";
+import {
+  findTopImageContainer,
+  imagePositionClasses,
+  setImageContainerPositionDom,
+  syncImageContainerSizeDom,
+  updateImageElementSizeAttrs,
+  updateImageContainerPositionAttrs,
+  updateImageContainerSizeAttrs,
+  type ImagePosition,
+} from "../../../stores/editor/extensions/ImageAttrE.ts";
 import { selectedImageBlockElement } from "../../../stores/editor/extensions/ImageE.ts";
 
-const imageAlignmentClasses = ["alignleft", "alignright", "aligncenter"];
-const imageFloatPositionClasses = ["floatleft", "floatright"];
-const imagePositionClasses = [...imageAlignmentClasses, ...imageFloatPositionClasses];
 const imagePositionGuideVisible = ref(false);
 const imagePositionPreview = ref<"left" | "center" | "right" | null>(null);
 const imagePositionDragHandle = ref<HTMLElement | null>(null);
@@ -40,163 +47,11 @@ function updateImagePositionDragHandle() {
   };
 }
 
-function findImageContainerParent(element: HTMLElement) {
-  let parent: HTMLElement | null = element.parentElement;
-  let imageContainer: HTMLElement | null = null;
-
-  while (parent) {
-    if (parent.tagName.toLowerCase() === "div" && parent.classList.contains("image-container")) {
-      imageContainer = parent;
-    }
-
-    parent = parent.parentElement;
-  }
-
-  return imageContainer;
-}
-
 function getImageContainerTarget(element: HTMLElement) {
-  const parentImageContainer = findImageContainerParent(element);
-
-  if (parentImageContainer) {
-    return parentImageContainer;
-  }
-
-  if (element.tagName.toLowerCase() === "div" && element.classList.contains("image-container")) {
-    return element;
-  }
-
-  return null;
+  return findTopImageContainer(element);
 }
 
-function findNodePositionByElement(element: HTMLElement) {
-  const editorInstance = getEditor();
-
-  if (!editorInstance) {
-    return null;
-  }
-
-  let position: number | null = null;
-
-  editorInstance.state.doc.descendants((_node, pos) => {
-    if (editorInstance.view.nodeDOM(pos) === element) {
-      position = pos;
-      return false;
-    }
-
-    return true;
-  });
-
-  return position;
-}
-
-function setSizeStyle(styleText: unknown, width: string, height: string) {
-  const element = document.createElement("div");
-
-  element.style.cssText = typeof styleText === "string" ? styleText : "";
-  element.style.width = width;
-  element.style.height = height;
-
-  return element.style.cssText;
-}
-
-function setPositionStyle(styleText: unknown, margin: string) {
-  const element = document.createElement("div");
-
-  element.style.cssText = typeof styleText === "string" ? styleText : "";
-  element.style.margin = margin;
-
-  return element.style.cssText;
-}
-
-function updateImageContainerNodeStyle(container: HTMLElement, width: string, height: string) {
-  const editorInstance = getEditor();
-  const position = findNodePositionByElement(container);
-
-  if (!editorInstance || position === null) {
-    return;
-  }
-
-  const node = editorInstance.state.doc.nodeAt(position);
-
-  if (!node) {
-    return;
-  }
-
-  const attrsName = node.attrs.htmlAttributes && typeof node.attrs.htmlAttributes === "object"
-      ? "htmlAttributes"
-      : node.attrs.wrapperAttributes && typeof node.attrs.wrapperAttributes === "object"
-          ? "wrapperAttributes"
-          : null;
-
-  if (!attrsName) {
-    return;
-  }
-
-  const sizeAttributes = node.attrs[attrsName] as Record<string, unknown>;
-
-  editorInstance.view.dispatch(
-      editorInstance.state.tr.setNodeMarkup(position, undefined, {
-        ...node.attrs,
-        [attrsName]: {
-          ...sizeAttributes,
-          style: setSizeStyle(sizeAttributes.style, width, height),
-        },
-      }, node.marks)
-  );
-}
-
-function updateImageContainerPositionNodeAttrs(container: HTMLElement, position: "left" | "center" | "right") {
-  const editorInstance = getEditor();
-  const nodePosition = findNodePositionByElement(container);
-
-  if (!editorInstance || nodePosition === null) {
-    return;
-  }
-
-  const node = editorInstance.state.doc.nodeAt(nodePosition);
-
-  if (!node) {
-    return;
-  }
-
-  const attrsName = node.attrs.htmlAttributes && typeof node.attrs.htmlAttributes === "object"
-      ? "htmlAttributes"
-      : node.attrs.wrapperAttributes && typeof node.attrs.wrapperAttributes === "object"
-          ? "wrapperAttributes"
-          : null;
-
-  if (!attrsName) {
-    return;
-  }
-
-  const positionAttributes = node.attrs[attrsName] as Record<string, unknown>;
-  const className = typeof positionAttributes.class === "string" ? positionAttributes.class : "";
-  const nextClassName = className
-      .split(/\s+/)
-      .filter(Boolean)
-      .filter(className => !imagePositionClasses.includes(className));
-  const margin = position === "left"
-      ? "0 1em 0.8em 0"
-      : position === "right"
-          ? "0 0 0.8em 1em"
-          : "0 auto 0.8em auto";
-
-  nextClassName.push(getImagePositionClass(container, position));
-
-  editorInstance.view.dispatch(
-      editorInstance.state.tr.setNodeMarkup(nodePosition, undefined, {
-        ...node.attrs,
-        [attrsName]: {
-          ...positionAttributes,
-          class: nextClassName.join(" "),
-          style: setPositionStyle(positionAttributes.style, margin),
-        },
-      }, node.marks)
-  );
-}
-
-function getImageDropPosition(container: HTMLElement): "left" | "center" | "right" {
+function getImageDropPosition(container: HTMLElement): ImagePosition {
   const editorRoot = getEditor()?.view.dom;
   const rootRect = editorRoot?.getBoundingClientRect();
   const rect = container.getBoundingClientRect();
@@ -217,49 +72,6 @@ function getImageDropPosition(container: HTMLElement): "left" | "center" | "righ
   }
 
   return "center";
-}
-
-function setImageContainerPosition(container: HTMLElement, position: "left" | "center" | "right") {
-  imagePositionClasses.forEach(className => container.classList.remove(className));
-  container.querySelectorAll("div.image-container").forEach(child => {
-    imagePositionClasses.forEach(className => child.classList.remove(className));
-    child.classList.remove("image-container");
-
-    if (child instanceof HTMLElement) {
-      child.style.transform = "";
-      child.style.margin = "";
-    }
-  });
-
-  container.classList.add(getImagePositionClass(container, position));
-  container.style.transform = "";
-  container.style.margin = position === "left"
-      ? "0 1em 0.8em 0"
-      : position === "right"
-          ? "0 0 0.8em 1em"
-          : "0 auto 0.8em auto";
-}
-
-function getImagePositionClass(container: HTMLElement, position: "left" | "center" | "right") {
-  if (container.hasAttribute("data-editor-include")) {
-    return position === "left" ? "alignleft" : position === "right" ? "alignright" : "aligncenter";
-  }
-
-  return position === "left" ? "floatleft" : position === "right" ? "floatright" : "aligncenter";
-}
-
-function syncImageContainerSize(container: HTMLElement, width: string, height: string) {
-  const img = container.querySelector("img") as HTMLElement | null;
-
-  container.style.width = width;
-  container.style.height = height;
-
-  if (!img) {
-    return;
-  }
-
-  img.style.width = width;
-  img.style.height = height;
 }
 
 function setEditorDomObserverEnabled(enabled: boolean) {
@@ -307,8 +119,8 @@ function onImageDragEnd(e: any) {
   if (container && selectedImageDraggable.value) {
     const position = getImageDropPosition(container);
 
-    setImageContainerPosition(container, position);
-    updateImageContainerPositionNodeAttrs(container, position);
+    setImageContainerPositionDom(container, position);
+    updateImageContainerPositionAttrs(container, position);
   }
 
   imagePositionGuideVisible.value = false;
@@ -324,7 +136,7 @@ function onImageResize(e: any) {
   const container = getImageContainerTarget(target);
 
   if (container) {
-    syncImageContainerSize(container, width, height);
+    syncImageContainerSizeDom(container, width, height);
     updateImagePositionDragHandle();
     return;
   }
@@ -341,8 +153,8 @@ function onImageResizeEnd(e: any) {
   const container = getImageContainerTarget(target);
 
   if (container) {
-    syncImageContainerSize(container, width, height);
-    updateImageContainerNodeStyle(container, width, height);
+    syncImageContainerSizeDom(container, width, height);
+    updateImageContainerSizeAttrs(container, width, height);
     setEditorDomObserverEnabled(true);
     updateImagePositionDragHandle();
     return;
@@ -350,6 +162,7 @@ function onImageResizeEnd(e: any) {
 
   target.style.width = width;
   target.style.height = height;
+  updateImageElementSizeAttrs(target, width, height);
   setEditorDomObserverEnabled(true);
   updateImagePositionDragHandle();
 }

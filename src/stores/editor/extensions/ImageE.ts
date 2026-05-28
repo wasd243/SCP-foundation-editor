@@ -4,6 +4,7 @@ import type {DOMOutputSpec} from "@tiptap/pm/model";
 import {Plugin, PluginKey} from "@tiptap/pm/state";
 import type {EditorView} from "@tiptap/pm/view";
 import {createDeleteImageBlockPlugin} from "./deleteImageBlockE";
+import { findTopImageContainer, isImageContainerElement } from "./ImageAttrE";
 import {ref} from "vue";
 
 type HTMLAttributes = Record<string, string>;
@@ -34,6 +35,10 @@ function isAllowedImage(element: HTMLElement, allowBase64: boolean) {
 
 function findWrappedImage(element: HTMLElement, allowBase64: boolean) {
     if (!(element instanceof HTMLDivElement)) {
+        return null;
+    }
+
+    if (element.parentElement?.classList.contains("image-container")) {
         return null;
     }
 
@@ -89,10 +94,6 @@ function hasWrapper(value: unknown) {
 
 export const selectedImageBlockElement = ref<HTMLElement | null>(null);
 
-function isImageContainerDiv(element: HTMLElement) {
-    return element.tagName.toLowerCase() === "div" && element.classList.contains("image-container");
-}
-
 function isProseMirrorHackImage(element: HTMLElement) {
     return element.tagName.toLowerCase() === "img" &&
         (
@@ -100,21 +101,6 @@ function isProseMirrorHackImage(element: HTMLElement) {
             element.hasAttribute("mark-placeholder") ||
             !element.hasAttribute("src")
         );
-}
-
-function findImageContainer(element: HTMLElement) {
-    let current: HTMLElement | null = element;
-    let imageContainer: HTMLElement | null = null;
-
-    while (current) {
-        if (isImageContainerDiv(current)) {
-            imageContainer = current;
-        }
-
-        current = current.parentElement;
-    }
-
-    return imageContainer;
 }
 
 function updateMoveableTarget(view: EditorView) {
@@ -126,14 +112,14 @@ function updateMoveableTarget(view: EditorView) {
             return;
         }
 
-        selectedImageBlockElement.value = findImageContainer(selected) ?? selected;
+        selectedImageBlockElement.value = findTopImageContainer(selected) ?? selected;
         return;
     }
 
     if (
         selectedImageBlockElement.value &&
         view.dom.contains(selectedImageBlockElement.value) &&
-        isImageContainerDiv(selectedImageBlockElement.value)
+        isImageContainerElement(selectedImageBlockElement.value)
     ) {
         return;
     }
@@ -154,7 +140,7 @@ function updateMoveableTargetFromPointerDown(_view: EditorView, event: Event) {
         return false;
     }
 
-    selectedImageBlockElement.value = findImageContainer(target);
+    selectedImageBlockElement.value = findTopImageContainer(target);
     return false;
 }
 
