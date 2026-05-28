@@ -18,16 +18,20 @@ const imagePositionGuideVisible = ref(false);
 const imagePositionPreview = ref<"left" | "center" | "right" | null>(null);
 const imagePositionDragHandle = ref<HTMLElement | null>(null);
 const imagePositionDragHandleStyle = ref<Record<string, string>>({});
-const selectedImageResizable = computed(() =>
-    selectedImageBlockElement.value?.getAttribute("data-editor-no-resize") !== "true"
-);
+// no-resize was a temporary development flag; Moveable resize is always enabled for selected images.
+const selectedImageResizable = computed(() => Boolean(selectedImageBlockElement.value));
 const selectedImageDraggable = computed(() =>
     Boolean(
         selectedImageBlockElement.value?.classList.contains("floatleft") ||
         selectedImageBlockElement.value?.classList.contains("floatright") ||
-        selectedImageBlockElement.value?.classList.contains("alignleft") ||
-        selectedImageBlockElement.value?.classList.contains("alignright") ||
-        selectedImageBlockElement.value?.classList.contains("aligncenter")
+        (
+            selectedImageBlockElement.value?.hasAttribute("data-editor-include") &&
+            (
+                selectedImageBlockElement.value.classList.contains("alignleft") ||
+                selectedImageBlockElement.value.classList.contains("alignright") ||
+                selectedImageBlockElement.value.classList.contains("aligncenter")
+            )
+        )
     )
 );
 

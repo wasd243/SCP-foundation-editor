@@ -1,8 +1,8 @@
-import type { Editor } from "@tiptap/core";
-import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
-import type { Transaction } from "@tiptap/pm/state";
+import type {Editor} from "@tiptap/core";
+import type {Node as ProseMirrorNode} from "@tiptap/pm/model";
+import type {Transaction} from "@tiptap/pm/state";
 
-import { getEditor } from "../../editor.ts";
+import {getEditor} from "../../editor.ts";
 
 export type ImagePosition = "left" | "center" | "right";
 export type PlainImageFlow = "inline" | "wrap";
@@ -109,9 +109,7 @@ function cleanNestedImageWrapperNodeAttrs(transaction: Transaction) {
     }
 
     transaction.doc.forEach((node, offset) => {
-        const position = offset;
-
-        scanNode(node, position, nodeHasImageContainerAttrs(node));
+        scanNode(node, offset, nodeHasImageContainerAttrs(node));
     });
 }
 
@@ -228,7 +226,6 @@ export function setPlainImageFlowDom(container: HTMLElement, flow: PlainImageFlo
     clearNestedImageContainerDom(container);
     container.style.transform = "";
     container.style.margin = "";
-    container.removeAttribute("data-editor-no-resize");
 
     if (flow === "wrap") {
         container.classList.add("floatleft");
@@ -300,8 +297,6 @@ export function updatePlainImageFlowAttrs(container: HTMLElement, flow: PlainIma
             class: getImageContainerClassName(attributes.class, flow === "wrap" ? "floatleft" : null),
             style: setStyleMargin(attributes.style, null),
         };
-
-        delete nextAttributes["data-editor-no-resize"];
 
         if (!nextAttributes.class) {
             delete nextAttributes.class;
