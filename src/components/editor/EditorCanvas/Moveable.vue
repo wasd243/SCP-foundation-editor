@@ -41,25 +41,32 @@ function updateImagePositionDragHandle() {
 }
 
 function findImageContainerParent(element: HTMLElement) {
-  let parent = element.parentElement;
+  let parent: HTMLElement | null = element.parentElement;
+  let imageContainer: HTMLElement | null = null;
 
   while (parent) {
     if (parent.tagName.toLowerCase() === "div" && parent.classList.contains("image-container")) {
-      return parent;
+      imageContainer = parent;
     }
 
     parent = parent.parentElement;
   }
 
-  return null;
+  return imageContainer;
 }
 
 function getImageContainerTarget(element: HTMLElement) {
+  const parentImageContainer = findImageContainerParent(element);
+
+  if (parentImageContainer) {
+    return parentImageContainer;
+  }
+
   if (element.tagName.toLowerCase() === "div" && element.classList.contains("image-container")) {
     return element;
   }
 
-  return findImageContainerParent(element);
+  return null;
 }
 
 function findNodePositionByElement(element: HTMLElement) {
@@ -214,6 +221,15 @@ function getImageDropPosition(container: HTMLElement): "left" | "center" | "righ
 
 function setImageContainerPosition(container: HTMLElement, position: "left" | "center" | "right") {
   imagePositionClasses.forEach(className => container.classList.remove(className));
+  container.querySelectorAll("div.image-container").forEach(child => {
+    imagePositionClasses.forEach(className => child.classList.remove(className));
+    child.classList.remove("image-container");
+
+    if (child instanceof HTMLElement) {
+      child.style.transform = "";
+      child.style.margin = "";
+    }
+  });
 
   container.classList.add(getImagePositionClass(container, position));
   container.style.transform = "";

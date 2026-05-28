@@ -104,16 +104,17 @@ function isProseMirrorHackImage(element: HTMLElement) {
 
 function findImageContainer(element: HTMLElement) {
     let current: HTMLElement | null = element;
+    let imageContainer: HTMLElement | null = null;
 
     while (current) {
         if (isImageContainerDiv(current)) {
-            return current;
+            imageContainer = current;
         }
 
         current = current.parentElement;
     }
 
-    return null;
+    return imageContainer;
 }
 
 function updateMoveableTarget(view: EditorView) {

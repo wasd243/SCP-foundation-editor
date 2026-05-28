@@ -12,15 +12,34 @@ function getSelectedImageContainer() {
     return null;
   }
 
-  const container = target.classList.contains("image-container")
-      ? target
-      : target.closest(".image-container");
+  let current: Element | null = target;
+  let container: Element | null = null;
+
+  while (current) {
+    if (current.classList.contains("image-container")) {
+      container = current;
+    }
+
+    current = current.parentElement;
+  }
 
   if (!(container instanceof HTMLElement) || container.hasAttribute("data-editor-include")) {
     return null;
   }
 
   return container;
+}
+
+function clearNestedImageContainer(container: HTMLElement) {
+  container.querySelectorAll("div.image-container").forEach(child => {
+    imagePositionClasses.forEach(className => child.classList.remove(className));
+    child.classList.remove("image-container");
+
+    if (child instanceof HTMLElement) {
+      child.style.transform = "";
+      child.style.margin = "";
+    }
+  });
 }
 
 function setImageInline() {
@@ -31,6 +50,7 @@ function setImageInline() {
   }
 
   imagePositionClasses.forEach(className => container.classList.remove(className));
+  clearNestedImageContainer(container);
   container.removeAttribute("data-editor-no-resize");
 }
 
@@ -42,6 +62,7 @@ function setImageWrap() {
   }
 
   imagePositionClasses.forEach(className => container.classList.remove(className));
+  clearNestedImageContainer(container);
   container.classList.add("floatleft");
   container.removeAttribute("data-editor-no-resize");
 }
