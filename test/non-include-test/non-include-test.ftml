@@ -73,6 +73,12 @@ image preview test
 [[image https://sdafkhgashijkfd.example.com]]
 image failed test
 
+
+[[code type="python"]]
+print("hello world")
+[[/code]]
+
+
 [!--comment test--]
 
 ------------------------------------------------------------------------------------------------------------------------

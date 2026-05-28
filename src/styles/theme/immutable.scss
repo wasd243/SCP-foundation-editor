@@ -1,0 +1,169 @@
+// Immutable theme for editor
+
+/* ~_EDITOR_IMMUTABLE_THEME_BEGIN_~ */
+.editor-theme-default {
+  .ProseMirror {
+    [data-type="details"],
+    details {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      margin: 0 0 0.8em;
+    }
+
+    [data-type="details"] {
+      &[style*="text-align: center"] {
+        justify-content: center;
+      }
+
+      &[style*="text-align: right"] {
+        justify-content: flex-end;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    div {
+      &.image-container,
+      &:has(> img.image) {
+        display: block;
+        max-width: 100%;
+      }
+
+      &.image-container {
+        &.alignleft {
+          text-align: left;
+        }
+
+        &.aligncenter {
+          text-align: center;
+          margin-right: auto;
+          margin-left: auto;
+
+          > img,
+          img {
+            margin-right: auto;
+            margin-left: auto;
+          }
+        }
+
+        &.alignright {
+          text-align: right;
+          margin-left: auto;
+
+          > img,
+          img {
+            margin-left: auto;
+          }
+        }
+
+        &.floatleft {
+          float: left;
+          margin: 0 1em 0.8em 0;
+        }
+
+        &.floatright {
+          float: right;
+          margin: 0 0 0.8em 1em;
+        }
+
+        &[data-editor-include="component:image-block"] {
+          box-sizing: border-box;
+          position: relative;
+          overflow: hidden;
+
+          > img {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 100%;
+          }
+
+          &.alignleft {
+            float: left;
+            margin: 0 1em 0.8em 0;
+          }
+
+          &.alignright {
+            float: right;
+            margin: 0 0 0.8em 1em;
+          }
+        }
+      }
+
+      &.left {
+        &:has(> img) {
+          text-align: left;
+        }
+      }
+
+      &.center {
+        &:has(> img) {
+          text-align: center;
+        }
+
+        > img {
+          margin-right: auto;
+          margin-left: auto;
+        }
+      }
+
+      &.right {
+        &:has(> img) {
+          text-align: right;
+        }
+
+        > img {
+          margin-left: auto;
+        }
+      }
+
+      &:has(> img.left) {
+        text-align: left;
+      }
+
+      &:has(> img.center) {
+        text-align: center;
+
+        > img {
+          margin-right: auto;
+          margin-left: auto;
+        }
+      }
+
+      &:has(> img.right) {
+        text-align: right;
+
+        > img {
+          margin-left: auto;
+        }
+      }
+
+      &.floatleft {
+        &:has(> img) {
+          float: left;
+          margin: 0 1em 0.8em 0;
+        }
+      }
+
+      &.floatright {
+        &:has(> img) {
+          float: right;
+          margin: 0 0 0.8em 1em;
+        }
+      }
+    }
+  }
+
+  .ProseMirror-selectednode {
+    border: var(--color-word-blue) solid 2px;
+    border-radius: 4px;
+  }
+}
+/* ~_EDITOR_IMMUTABLE_THEME_END_~ */

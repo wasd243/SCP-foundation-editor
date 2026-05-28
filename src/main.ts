@@ -13,7 +13,12 @@ import "./styles/toolbar/list.css";
 import "./styles/toolbar/align.css";
 import "./styles/toolbar/components/cards.css";
 import "./styles/toolbar/components/actions.css";
-import "./styles/default.css";
+// Use SCSS as the editor default theme
+// `immutable.scss` is the default theme as ProseMirror theme.
+// Could not be muted by usertheme
+import "./styles/theme/immutable.scss";
+// user theme can mute `default.scss`
+import "./styles/theme/default.scss";
 import "./styles/contextmenu/menudefault.css";
 import "./styles/contextmenu/menutable.css";
 import "./styles/toolbar/url.css";
