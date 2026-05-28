@@ -26,6 +26,11 @@
     - COLLECTION: Micons Interface Icons
     - LICENSE: CC Attribution License
 
+- Wrap Image Icon: [SvgRepo](https://www.svgrepo.com/svg/449293/text-wrap)
+    - AUTHOR: UXAspects
+    - COLLECTION: Uxaspects Sharp Cornered Icons
+    - LICENSE: Apache License
+
 ## Libraries
 - TipTap
 - ProseMirror
