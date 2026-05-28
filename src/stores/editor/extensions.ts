@@ -14,6 +14,7 @@ import { TabViewExtensions } from "./extensions/TabViewE.ts";
 import { TextAlignExtension } from "./extensions/TextAlignE.ts";
 import { TextColorExtension } from "./extensions/TextColorE.ts";
 import { UserExtension } from "./extensions/User/UserE.ts";
+import { UserWithImgExtension } from "./extensions/User/UserWithImgE.ts";
 import { WJTagExtension } from "./extensions/WJtagsE.ts";
 
 export const editorExtensions = [
@@ -43,5 +44,6 @@ export const editorExtensions = [
     ...TableExtensions,
     ...TabViewExtensions,
     UserExtension,
+    UserWithImgExtension,
     WJTagExtension,
 ];
