@@ -430,6 +430,12 @@
         }
       }
     }
+
+    // User and User with img part are all mutable
+    .wj-user {
+      color: var(--wikidot-red);
+    }
+
   }
 
   // =============================
