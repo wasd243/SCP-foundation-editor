@@ -33,3 +33,4 @@
 pub mod module_rate;
 pub mod note;
 pub mod preprocess_interceptor;
+pub mod user;

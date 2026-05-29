@@ -430,6 +430,29 @@
         }
       }
     }
+
+    // User and User with img part are all mutable
+    .wj-user {
+      color: var(--wikidot-red);
+      border: var(--wikidot-gray) solid 1px;
+      border-radius: 3px;
+      background: var(--color-word-blue-light);
+    }
+
+    .wj-user-with-img {
+      color: var(--wikidot-red);
+      border: var(--wikidot-gray) solid 1px;
+      border-radius: 3px;
+      background: var(--color-word-blue-light);
+      min-width: 100px;
+
+      &::before {
+        content: " :-( ";
+        border: black solid 1px;
+        border-radius: 3px;
+      }
+    }
+
   }
 
   // =============================

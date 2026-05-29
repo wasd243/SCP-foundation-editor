@@ -5,9 +5,23 @@ use std::borrow::Cow;
 use std::path::PathBuf;
 
 use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
-use crate::ftml_interceptor::note::note_cleaner::note_cleaner;
-use crate::ftml_interceptor::note::note_interceptor::note_interceptor;
-use crate::ftml_interceptor::note::note_parser::note_parser;
+
+use crate::ftml_interceptor::note::{
+  note_cleaner::note_cleaner,
+  note_interceptor::note_interceptor,
+  note_parser::note_parser,
+};
+
+use crate::ftml_interceptor::user::{
+    user_interceptor::{
+        user_interceptor,
+        user_with_img_interceptor,
+    },
+    user_parser::{
+        parse_user,
+        parse_user_with_img,
+    },
+};
 
 use crate::ftml_interceptor::preprocess_interceptor::{
     unused_variable_interceptor::unused_variable_interceptor,
@@ -76,6 +90,11 @@ pub fn render_wikidot_to_html_with_resourcepack(
     // Intercept first, then parse after ftml output HTML.
     wikitext = note_interceptor(&wikitext);
 
+    // User blocks are generated for the Wikidot browser/server runtime.
+    // Intercept first, then parse them into cleaner editor-friendly HTML.
+    wikitext = user_with_img_interceptor(&wikitext);
+    wikitext = user_interceptor(&wikitext);
+
     // Include blocks:
     // Sometimes preprocessing leaves malformed wikitext after include expansion.
     // Then FTML tokenization receives incorrect content,
@@ -102,6 +121,9 @@ pub fn render_wikidot_to_html_with_resourcepack(
 
     html_output.body = note_parser(&html_output.body);
     html_output.body = note_cleaner(&html_output.body);
+
+    html_output.body = parse_user_with_img(&html_output.body);
+    html_output.body = parse_user(&html_output.body);
 
     html_output.body = normalize_images(&html_output.body);
     html_output.body = normalize_component_images(&html_output.body);
