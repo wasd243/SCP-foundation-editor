@@ -1,0 +1,832 @@
+{
+  "content": [
+    {
+      "attrs": {},
+      "content": [
+        {
+          "text": "测试文本",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "text": "test",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "text": "test测试文本",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "text": "测试文本test",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ],
+          "text": "测试文本test",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "marks": [
+            {
+              "type": "italic"
+            }
+          ],
+          "text": "测试文本test",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "marks": [
+            {
+              "type": "underline"
+            }
+          ],
+          "text": "测试文本test",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "marks": [
+            {
+              "type": "strike"
+            }
+          ],
+          "text": "测试文本test",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "marks": [
+            {
+              "type": "code"
+            }
+          ],
+          "text": "测试文本test",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "marks": [
+            {
+              "type": "superscript"
+            }
+          ],
+          "text": "测试文本test",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "marks": [
+            {
+              "type": "subscript"
+            }
+          ],
+          "text": "测试文本test",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "attrs": {
+            "htmlAttributes": {
+              "style": "white-space: pre-wrap;"
+            },
+            "tagName": "span"
+          },
+          "content": [
+            {
+              "text": "测 试文本test",
+              "type": "text"
+            }
+          ],
+          "type": "wjInlineTag"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "attrs": {
+            "htmlAttributes": {
+              "style": "white-space: pre-wrap;"
+            },
+            "tagName": "span"
+          },
+          "type": "wjInlineTag"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "attrs": {
+            "htmlAttributes": {
+              "class": "wj-footnote-ref",
+              "contenteditable": "false"
+            },
+            "tagName": "span"
+          },
+          "content": [
+            {
+              "attrs": {
+                "htmlAttributes": {
+                  "aria-label": "Footnote 1.",
+                  "class": "wj-footnote-ref-marker",
+                  "contenteditable": "false",
+                  "data-id": "1",
+                  "role": "link"
+                },
+                "tagName": "span"
+              },
+              "content": [
+                {
+                  "text": "1",
+                  "type": "text"
+                }
+              ],
+              "type": "wjInlineTag"
+            },
+            {
+              "attrs": {
+                "htmlAttributes": {
+                  "aria-hidden": "true",
+                  "class": "wj-footnote-ref-tooltip",
+                  "contenteditable": "false"
+                },
+                "tagName": "span"
+              },
+              "content": [
+                {
+                  "attrs": {
+                    "htmlAttributes": {
+                      "class": "wj-footnote-ref-tooltip-label",
+                      "contenteditable": "false"
+                    },
+                    "tagName": "span"
+                  },
+                  "content": [
+                    {
+                      "text": "Footnote 1.",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "wjInlineTag"
+                },
+                {
+                  "attrs": {
+                    "htmlAttributes": {
+                      "class": "wj-footnote-ref-contents",
+                      "contenteditable": "false"
+                    },
+                    "tagName": "span"
+                  },
+                  "content": [
+                    {
+                      "text": "This is a footnote",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "wjInlineTag"
+                }
+              ],
+              "type": "wjInlineTag"
+            }
+          ],
+          "type": "wjInlineTag"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {
+        "style": "text-align: left;",
+        "textAlign": "left"
+      },
+      "content": [
+        {
+          "text": "Aligned content",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {
+        "style": "text-align: center;",
+        "textAlign": "center"
+      },
+      "content": [
+        {
+          "text": "Centered content",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {
+        "style": "text-align: right;",
+        "textAlign": "right"
+      },
+      "content": [
+        {
+          "text": "Aligned content",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {
+        "class": "wj-collapsible"
+      },
+      "content": [
+        {
+          "attrs": {
+            "class": "wj-collapsible-button wj-collapsible-button-top"
+          },
+          "content": [
+            {
+              "text": "+测试文本test测试文本test-测试文本test",
+              "type": "text"
+            }
+          ],
+          "type": "detailsSummary"
+        },
+        {
+          "attrs": {},
+          "content": [
+            {
+              "attrs": {},
+              "content": [
+                {
+                  "text": "测试文本test",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "type": "detailsContent"
+        }
+      ],
+      "type": "details"
+    },
+    {
+      "attrs": {},
+      "content": [
+        {
+          "attrs": {},
+          "marks": [
+            {
+              "attrs": {
+                "size": "2em"
+              },
+              "type": "fontSize"
+            }
+          ],
+          "type": "hardBreak"
+        },
+        {
+          "marks": [
+            {
+              "attrs": {
+                "size": "2em"
+              },
+              "type": "fontSize"
+            }
+          ],
+          "text": "测试文本test",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "marks": [
+            {
+              "attrs": {
+                "size": "2em"
+              },
+              "type": "fontSize"
+            }
+          ],
+          "type": "hardBreak"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {
+        "class": "wj-tabs"
+      },
+      "content": [
+        {
+          "attrs": {
+            "class": "wj-tabs-button-list",
+            "role": "tablist"
+          },
+          "content": [
+            {
+              "attrs": {
+                "aria-controls": "wj-id-yEiqTFC0tWwhlIys",
+                "aria-label": "测试文本test",
+                "aria-selected": "true",
+                "class": "wj-tabs-button",
+                "id": "wj-id-JPBXf8cPkSI5h9AB",
+                "role": "tab",
+                "tabindex": "0"
+              },
+              "content": [
+                {
+                  "text": "测试文本test",
+                  "type": "text"
+                }
+              ],
+              "type": "tabViewButton"
+            },
+            {
+              "attrs": {
+                "aria-controls": "wj-id-fwqGOvG6ZULQYcbU",
+                "aria-label": "测试文本test测试文本test",
+                "aria-selected": "false",
+                "class": "wj-tabs-button",
+                "id": "wj-id-AXMKWuOYbg7BSExH",
+                "role": "tab",
+                "tabindex": "-1"
+              },
+              "content": [
+                {
+                  "text": "测试文本test测试文本test",
+                  "type": "text"
+                }
+              ],
+              "type": "tabViewButton"
+            },
+            {
+              "attrs": {
+                "aria-controls": "wj-id-YNv3BT5PloYa7Qt2",
+                "aria-label": "测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test",
+                "aria-selected": "false",
+                "class": "wj-tabs-button",
+                "id": "wj-id-obWM7mMBX9rAqu75",
+                "role": "tab",
+                "tabindex": "-1"
+              },
+              "content": [
+                {
+                  "text": "测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test",
+                  "type": "text"
+                }
+              ],
+              "type": "tabViewButton"
+            }
+          ],
+          "type": "tabViewButtonList"
+        },
+        {
+          "attrs": {
+            "class": "wj-tabs-panel-list"
+          },
+          "content": [
+            {
+              "attrs": {
+                "aria-labelledby": "wj-id-JPBXf8cPkSI5h9AB",
+                "class": "wj-tabs-panel",
+                "id": "wj-id-yEiqTFC0tWwhlIys",
+                "role": "tabpanel",
+                "tabindex": "0"
+              },
+              "content": [
+                {
+                  "attrs": {},
+                  "content": [
+                    {
+                      "text": "测试文本test",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "type": "tabViewPanel"
+            },
+            {
+              "attrs": {
+                "aria-labelledby": "wj-id-AXMKWuOYbg7BSExH",
+                "class": "wj-tabs-panel",
+                "hidden": "",
+                "id": "wj-id-fwqGOvG6ZULQYcbU",
+                "role": "tabpanel",
+                "tabindex": "0"
+              },
+              "content": [
+                {
+                  "attrs": {},
+                  "content": [
+                    {
+                      "text": "测试文本test测试文本test测试文本test",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "type": "tabViewPanel"
+            },
+            {
+              "attrs": {
+                "aria-labelledby": "wj-id-obWM7mMBX9rAqu75",
+                "class": "wj-tabs-panel",
+                "hidden": "",
+                "id": "wj-id-YNv3BT5PloYa7Qt2",
+                "role": "tabpanel",
+                "tabindex": "0"
+              },
+              "content": [
+                {
+                  "attrs": {},
+                  "content": [
+                    {
+                      "text": "测试文本test测试文本test测试文本test测试文本test",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "type": "tabViewPanel"
+            }
+          ],
+          "type": "tabViewPanelList"
+        }
+      ],
+      "type": "tabView"
+    },
+    {
+      "attrs": {
+        "htmlAttributes": {
+          "class": "wj-note"
+        },
+        "tagName": "div"
+      },
+      "content": [
+        {
+          "attrs": {},
+          "content": [
+            {
+              "text": "123123",
+              "type": "text"
+            },
+            {
+              "attrs": {},
+              "type": "hardBreak"
+            },
+            {
+              "text": "测试文本test",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        }
+      ],
+      "type": "wjBlockTag"
+    },
+    {
+      "attrs": {
+        "htmlAttributes": {
+          "class": "test"
+        },
+        "tagName": "div"
+      },
+      "content": [
+        {
+          "attrs": {},
+          "content": [
+            {
+              "text": "This is a test 这是div测试文本test",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        }
+      ],
+      "type": "wjBlockTag"
+    },
+    {
+      "attrs": {},
+      "content": [
+        {
+          "marks": [
+            {
+              "attrs": {
+                "href": "https://scp-wiki.wikidot.com",
+                "rel": "noopener noreferrer nofollow",
+                "target": "_blank"
+              },
+              "type": "link"
+            }
+          ],
+          "text": "EN",
+          "type": "text"
+        },
+        {
+          "text": " ",
+          "type": "text"
+        },
+        {
+          "marks": [
+            {
+              "attrs": {
+                "href": "https://scp-wiki-cn.wikidot.com",
+                "rel": "noopener noreferrer nofollow",
+                "target": "_blank"
+              },
+              "type": "link"
+            }
+          ],
+          "text": "CN",
+          "type": "text"
+        },
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "marks": [
+            {
+              "attrs": {
+                "href": "https://youtube.com",
+                "rel": "noopener noreferrer nofollow",
+                "target": "_blank"
+              },
+              "type": "link"
+            }
+          ],
+          "text": "youtube",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {},
+      "content": [
+        {
+          "attrs": {
+            "htmlAttributes": {
+              "style": "white-space: pre-wrap;"
+            },
+            "tagName": "span"
+          },
+          "type": "wjInlineTag"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {},
+      "type": "paragraph"
+    },
+    {
+      "attrs": {
+        "imageAttributes": {
+          "class": "image",
+          "src": "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg"
+        },
+        "src": "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg",
+        "wrapperAttributes": {
+          "class": "image-container alignleft",
+          "data-editor-no-resize": "true"
+        }
+      },
+      "type": "image"
+    },
+    {
+      "attrs": {},
+      "content": [
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "text": "image preview test",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {},
+      "type": "paragraph"
+    },
+    {
+      "attrs": {},
+      "type": "paragraph"
+    },
+    {
+      "attrs": {
+        "imageAttributes": {
+          "class": "image",
+          "src": "https://sdafkhgashijkfd.example.com"
+        },
+        "src": "https://sdafkhgashijkfd.example.com",
+        "wrapperAttributes": {
+          "class": "image-container alignleft",
+          "data-editor-no-resize": "true"
+        }
+      },
+      "type": "image"
+    },
+    {
+      "attrs": {},
+      "content": [
+        {
+          "attrs": {},
+          "type": "hardBreak"
+        },
+        {
+          "text": "image failed test",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {},
+      "type": "paragraph"
+    },
+    {
+      "attrs": {
+        "class": "wj-code wj-language-python",
+        "language": "python"
+      },
+      "content": [
+        {
+          "text": "print(\"hello world\")",
+          "type": "text"
+        }
+      ],
+      "type": "codeBlock"
+    },
+    {
+      "attrs": {},
+      "type": "horizontalRule"
+    },
+    {
+      "attrs": {},
+      "content": [
+        {
+          "text": "sadfasdfasdf",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {},
+      "type": "paragraph"
+    },
+    {
+      "attrs": {
+        "htmlAttributes": {
+          "class": "wj-footnote-list"
+        },
+        "tagName": "div"
+      },
+      "content": [
+        {
+          "attrs": {
+            "htmlAttributes": {
+              "class": "wj-title"
+            },
+            "tagName": "div"
+          },
+          "content": [
+            {
+              "text": "Footnotes",
+              "type": "text"
+            }
+          ],
+          "type": "wjTextBlockTag"
+        },
+        {
+          "attrs": {
+            "htmlAttributes": {},
+            "tagName": "ol"
+          },
+          "content": [
+            {
+              "attrs": {
+                "htmlAttributes": {
+                  "class": "wj-footnote-list-item",
+                  "data-id": "1"
+                },
+                "tagName": "li"
+              },
+              "content": [
+                {
+                  "attrs": {
+                    "htmlAttributes": {
+                      "class": "wj-footnote-list-item-marker",
+                      "contenteditable": "false",
+                      "role": "link",
+                      "type": "button"
+                    },
+                    "tagName": "span"
+                  },
+                  "content": [
+                    {
+                      "text": "1",
+                      "type": "text"
+                    },
+                    {
+                      "attrs": {
+                        "htmlAttributes": {
+                          "class": "wj-footnote-sep"
+                        },
+                        "tagName": "span"
+                      },
+                      "content": [
+                        {
+                          "text": ".",
+                          "type": "text"
+                        }
+                      ],
+                      "type": "wjInlineTag"
+                    }
+                  ],
+                  "type": "wjInlineTag"
+                },
+                {
+                  "attrs": {
+                    "htmlAttributes": {
+                      "class": "wj-footnote-list-item-contents"
+                    },
+                    "tagName": "span"
+                  },
+                  "content": [
+                    {
+                      "text": "This is a footnote",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "wjInlineTag"
+                }
+              ],
+              "type": "wjTextBlockTag"
+            }
+          ],
+          "type": "wjBlockTag"
+        }
+      ],
+      "type": "wjBlockTag"
+    },
+    {
+      "attrs": {
+        "imageAttributes": {}
+      },
+      "type": "image"
+    }
+  ],
+  "type": "doc"
+}
+
