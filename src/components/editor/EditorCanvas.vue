@@ -5,6 +5,7 @@ import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
 import { getContextMenuFlags, type ContextMenuFlags } from "../../stores/editor/contextMenuFlags.ts";
 import { alertNoteExternalParserMarkers } from "../../stores/editor/noteExternalParserGuard.ts";
 import { selectedImageBlockElement } from "../../stores/editor/extensions/ImageE.ts";
+import { SyncJSONToExporter } from "../../ipc/Extensions/CodeExport/getJSON.ts";
 import ContextMenu from "./ContextMenu.vue";
 import EditorCanvasMoveable from "./EditorCanvas/Moveable.vue";
 
@@ -114,8 +115,12 @@ const editor = useEditor({
   onCreate: ({ editor }) => {
     setEditor(editor);
     alertNoteExternalParserMarkers(editor);
+    SyncJSONToExporter();
   },
-  onUpdate: ({ editor }) => alertNoteExternalParserMarkers(editor),
+  onUpdate: ({ editor }) => {
+    alertNoteExternalParserMarkers(editor);
+    SyncJSONToExporter();
+  },
   onDestroy: () => setEditor(null),
 
   editorProps: {

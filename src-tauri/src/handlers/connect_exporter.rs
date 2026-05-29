@@ -13,5 +13,5 @@
 
 #[tauri::command]
 pub fn export_json(json: String) {
-    println!("{json}")
+    println!("{json}");
 }
