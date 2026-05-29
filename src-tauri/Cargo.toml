@@ -15,3 +15,6 @@ serde_json = "1"
 
 # Parser
 w_parser = { path = "../crates/w_parser" }
+
+# Exporter is not implemented yet
+# w_exporter = { path = "../crates/w_exporter" }
