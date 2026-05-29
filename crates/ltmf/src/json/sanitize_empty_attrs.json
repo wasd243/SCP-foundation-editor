@@ -1,14 +1,12 @@
 {
   "content": [
     {
-      "attrs": {},
       "content": [
         {
           "text": "测试文本",
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -16,7 +14,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -24,7 +21,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -32,7 +28,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -45,7 +40,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -58,7 +52,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -71,7 +64,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -84,7 +76,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -97,7 +88,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -110,7 +100,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -123,7 +112,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -142,7 +130,6 @@
           "type": "wjInlineTag"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -155,7 +142,6 @@
           "type": "wjInlineTag"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -294,10 +280,8 @@
           "type": "detailsSummary"
         },
         {
-          "attrs": {},
           "content": [
             {
-              "attrs": {},
               "content": [
                 {
                   "text": "测试文本test",
@@ -313,10 +297,8 @@
       "type": "details"
     },
     {
-      "attrs": {},
       "content": [
         {
-          "attrs": {},
           "marks": [
             {
               "attrs": {
@@ -340,7 +322,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "marks": [
             {
               "attrs": {
@@ -437,7 +418,6 @@
               },
               "content": [
                 {
-                  "attrs": {},
                   "content": [
                     {
                       "text": "测试文本test",
@@ -460,7 +440,6 @@
               },
               "content": [
                 {
-                  "attrs": {},
                   "content": [
                     {
                       "text": "测试文本test测试文本test测试文本test",
@@ -483,7 +462,6 @@
               },
               "content": [
                 {
-                  "attrs": {},
                   "content": [
                     {
                       "text": "测试文本test测试文本test测试文本test测试文本test",
@@ -510,14 +488,12 @@
       },
       "content": [
         {
-          "attrs": {},
           "content": [
             {
               "text": "123123",
               "type": "text"
             },
             {
-              "attrs": {},
               "type": "hardBreak"
             },
             {
@@ -539,7 +515,6 @@
       },
       "content": [
         {
-          "attrs": {},
           "content": [
             {
               "text": "This is a test 这是div测试文本test",
@@ -552,7 +527,6 @@
       "type": "wjBlockTag"
     },
     {
-      "attrs": {},
       "content": [
         {
           "marks": [
@@ -587,7 +561,6 @@
           "type": "text"
         },
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -608,7 +581,6 @@
       "type": "paragraph"
     },
     {
-      "attrs": {},
       "content": [
         {
           "attrs": {
@@ -623,7 +595,6 @@
       "type": "paragraph"
     },
     {
-      "attrs": {},
       "type": "paragraph"
     },
     {
@@ -641,10 +612,8 @@
       "type": "image"
     },
     {
-      "attrs": {},
       "content": [
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -655,11 +624,9 @@
       "type": "paragraph"
     },
     {
-      "attrs": {},
       "type": "paragraph"
     },
     {
-      "attrs": {},
       "type": "paragraph"
     },
     {
@@ -677,10 +644,8 @@
       "type": "image"
     },
     {
-      "attrs": {},
       "content": [
         {
-          "attrs": {},
           "type": "hardBreak"
         },
         {
@@ -691,7 +656,6 @@
       "type": "paragraph"
     },
     {
-      "attrs": {},
       "type": "paragraph"
     },
     {
@@ -708,11 +672,9 @@
       "type": "codeBlock"
     },
     {
-      "attrs": {},
       "type": "horizontalRule"
     },
     {
-      "attrs": {},
       "content": [
         {
           "text": "sadfasdfasdf",
@@ -722,7 +684,6 @@
       "type": "paragraph"
     },
     {
-      "attrs": {},
       "type": "paragraph"
     },
     {
