@@ -4,6 +4,7 @@ use crate::preprocess::sanitize::{
     sanitize_data_editor::sanitize_data_editor,
     sanitize_empty_attrs::sanitize_empty_attrs,
     sanitize_null::sanitize_null,
+    sanitize_pm_unused_img::sanitize_pm_unused_img,
     sanitize_tabview::sanitize_tabview,
     sanitize_text_align::sanitize_text_align,
     sanitize_wj_inline_tag::sanitize_wj_inline_tag,
@@ -25,6 +26,7 @@ pub fn preprocess(json: &str) -> Result<String, String> {
     let sanitized_json = sanitize_text_align(sanitized_json);
     let sanitized_json = sanitize_contenteditable(sanitized_json);
     let sanitized_json = sanitize_tabview(sanitized_json);
+    let sanitized_json = sanitize_pm_unused_img(sanitized_json);
 
     // Sanitize empty attrs in the end to ensure that all empty attrs are removed.
     let sanitized_json = sanitize_empty_attrs(&sanitized_json);

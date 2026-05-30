@@ -73,6 +73,10 @@ image preview test
 [[image https://sdafkhgashijkfd.example.com]]
 image failed test
 
+||~ test1 ||~ test2 ||
+|| test1-1 || test2-1 ||
+|| test1-2 || test2-2 ||
+
 
 [[code type="python"]]
 print("hello world")

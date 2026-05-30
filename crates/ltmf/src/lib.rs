@@ -29,7 +29,7 @@ mod tests {
     fn test_sanitize_8() {
         let json = export_wikitext("").unwrap();
         let expected_json =
-            fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/test/json/sanitize_10.json"))
+            fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/test/json/sanitize_11.json"))
                 .unwrap();
 
         let actual: Value = serde_json::from_str(&json).unwrap();
