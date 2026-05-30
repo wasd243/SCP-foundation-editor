@@ -557,6 +557,204 @@
     },
     {
       "attrs": {
+        "class": "wiki-content-table"
+      },
+      "content": [
+        {
+          "content": [
+            {
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1
+              },
+              "content": [
+                {
+                  "content": [
+                    {
+                      "text": "test1",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "type": "tableHeader"
+            },
+            {
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1
+              },
+              "content": [
+                {
+                  "content": [
+                    {
+                      "text": "test2",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "type": "tableHeader"
+            }
+          ],
+          "type": "tableRow"
+        },
+        {
+          "content": [
+            {
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1
+              },
+              "content": [
+                {
+                  "content": [
+                    {
+                      "text": "test1-1",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "type": "tableCell"
+            },
+            {
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1
+              },
+              "content": [
+                {
+                  "content": [
+                    {
+                      "text": "test2-1",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "type": "tableCell"
+            }
+          ],
+          "type": "tableRow"
+        },
+        {
+          "content": [
+            {
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1
+              },
+              "content": [
+                {
+                  "content": [
+                    {
+                      "text": "test1-2",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "type": "tableCell"
+            },
+            {
+              "attrs": {
+                "colspan": 1,
+                "rowspan": 1
+              },
+              "content": [
+                {
+                  "content": [
+                    {
+                      "text": "test2-2",
+                      "type": "text"
+                    }
+                  ],
+                  "type": "paragraph"
+                }
+              ],
+              "type": "tableCell"
+            }
+          ],
+          "type": "tableRow"
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "attrs": {
+        "htmlAttributes": {
+          "class": "image-container alignright",
+          "data-editor-export": "include",
+          "data-editor-include": "component:image-block",
+          "style": "width:200px"
+        },
+        "tagName": "div"
+      },
+      "content": [
+        {
+          "type": "paragraph"
+        },
+        {
+          "attrs": {
+            "imageAttributes": {
+              "class": "image",
+              "src": "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg"
+            },
+            "src": "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg"
+          },
+          "type": "image"
+        },
+        {
+          "attrs": {
+            "htmlAttributes": {
+              "class": "scp-image-caption alignright"
+            },
+            "tagName": "div"
+          },
+          "content": [
+            {
+              "content": [
+                {
+                  "text": "image preview test",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "type": "wjBlockTag"
+        }
+      ],
+      "type": "wjBlockTag"
+    },
+    {
+      "content": [
+        {
+          "attrs": {
+            "user": "wasd243"
+          },
+          "type": "user"
+        },
+        {
+          "type": "hardBreak"
+        },
+        {
+          "attrs": {
+            "user": "wasd243"
+          },
+          "type": "userWithImg"
+        }
+      ],
+      "type": "paragraph"
+    },
+    {
+      "attrs": {
         "class": "wj-code wj-language-python",
         "language": "python"
       },

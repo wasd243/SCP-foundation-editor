@@ -2,6 +2,7 @@ use crate::import_json::import_json;
 use crate::preprocess::sanitize::{
     sanitize_contenteditable::sanitize_contenteditable,
     sanitize_data_editor::sanitize_data_editor,
+    sanitize_draggable::sanitize_draggable,
     sanitize_empty_html_attrs::sanitize_empty_html_attrs,
     sanitize_empty_attrs::sanitize_empty_attrs,
     sanitize_footnote::sanitize_footnote_refs,
@@ -30,6 +31,7 @@ pub fn preprocess(json: &str) -> Result<String, String> {
     let sanitized_json = sanitize_tabview(sanitized_json);
     let sanitized_json = sanitize_pm_unused_img(sanitized_json);
     let sanitized_json = sanitize_footnote_refs(sanitized_json);
+    let sanitized_json = sanitize_draggable(sanitized_json);
     let sanitized_json = sanitize_empty_html_attrs(&sanitized_json);
 
     // Sanitize empty attrs in the end to ensure that all empty attrs are removed.
