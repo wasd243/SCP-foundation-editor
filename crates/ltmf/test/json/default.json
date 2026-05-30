@@ -132,12 +132,7 @@
           "type": "NewLine"
         },
         {
-          "attrs": {
-            "htmlAttributes": {
-              "style": "white-space: pre-wrap;"
-            },
-            "tagName": "span"
-          }
+          "type": "ForceNewLine"
         },
         {
           "type": "NewLine"
@@ -475,17 +470,7 @@
       "type": "paragraph"
     },
     {
-      "content": [
-        {
-          "attrs": {
-            "htmlAttributes": {
-              "style": "white-space: pre-wrap;"
-            },
-            "tagName": "span"
-          }
-        }
-      ],
-      "type": "paragraph"
+      "type": "ForceNewLine"
     },
     {
       "type": "paragraph"
