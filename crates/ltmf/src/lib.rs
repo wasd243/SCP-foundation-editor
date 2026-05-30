@@ -18,5 +18,7 @@ mod tests {
         let output_path = concat!(env!("CARGO_MANIFEST_DIR"), "/test/json/default.json");
 
         fs::write(output_path, json).unwrap();
+
+        println!("Pass");
     }
 }

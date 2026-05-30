@@ -6,3 +6,4 @@ pub mod sanitize_text_align;
 pub mod sanitize_wj_inline_tag;
 pub mod sanitize_tabview;
 pub mod sanitize_pm_unused_img;
+pub mod sanitize_empty_html_attrs;
