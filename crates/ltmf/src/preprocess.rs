@@ -3,14 +3,15 @@ use crate::preprocess::sanitize::{
     sanitize_contenteditable::sanitize_contenteditable,
     sanitize_data_editor::sanitize_data_editor,
     sanitize_draggable::sanitize_draggable,
-    sanitize_empty_html_attrs::sanitize_empty_html_attrs,
     sanitize_empty_attrs::sanitize_empty_attrs,
+    sanitize_empty_html_attrs::sanitize_empty_html_attrs,
     sanitize_footnote::sanitize_footnote_refs,
     sanitize_null::sanitize_null,
     sanitize_pm_unused_img::sanitize_pm_unused_img,
     sanitize_table::sanitize_table,
     sanitize_tabview::sanitize_tabview,
     sanitize_text_align::sanitize_text_align,
+    sanitize_url::sanitize_url,
     sanitize_unused_img_attrs::sanitize_unused_img_attrs,
     sanitize_wj_inline_tag::sanitize_wj_inline_tag,
 };
@@ -36,6 +37,7 @@ pub fn preprocess(json: &str) -> Result<String, String> {
     let sanitized_json = sanitize_footnote_refs(sanitized_json);
     let sanitized_json = sanitize_draggable(sanitized_json);
     let sanitized_json = sanitize_table(sanitized_json);
+    let sanitized_json = sanitize_url(sanitized_json);
     let sanitized_json = sanitize_empty_html_attrs(&sanitized_json);
 
     // Sanitize empty attrs in the end to ensure that all empty attrs are removed.
