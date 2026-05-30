@@ -138,13 +138,18 @@
           "type": "NewLine"
         },
         {
+          "attrs": {
+            "htmlAttributes": {
+              "class": "wj-footnote-ref-contents"
+            },
+            "tagName": "span"
+          },
           "content": [
             {
               "text": "This is a footnote",
               "type": "text"
             }
-          ],
-          "type": "Footnote"
+          ]
         }
       ],
       "type": "paragraph"
