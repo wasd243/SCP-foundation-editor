@@ -1,3 +1,5 @@
+// This function removes unused footnote attrs.
+// Also, it will add the type "footnote" to footnote ref contents.
 use serde_json::Value;
 
 pub fn normalize_footnote(value: Value) -> Value {

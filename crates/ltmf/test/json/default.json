@@ -200,7 +200,7 @@
               "type": "text"
             }
           ],
-          "type": "detailsSummary"
+          "type": "CollapsibleSummary"
         },
         {
           "content": [
@@ -214,10 +214,10 @@
               "type": "paragraph"
             }
           ],
-          "type": "detailsContent"
+          "type": "CollapsibleContent"
         }
       ],
-      "type": "details"
+      "type": "Collapsible"
     },
     {
       "content": [
