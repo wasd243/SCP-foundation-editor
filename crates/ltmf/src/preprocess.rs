@@ -1,7 +1,7 @@
 use crate::import_json::import_json;
 use serde_json::Value;
 
-use crate::normalizer::preprocess::sanitize::{
+use crate::preprocess::sanitize::{
     sanitize_contenteditable::sanitize_contenteditable,
     sanitize_data_editor::sanitize_data_editor,
     sanitize_empty_attrs::sanitize_empty_attrs,
@@ -13,6 +13,7 @@ use crate::normalizer::preprocess::sanitize::{
 };
 
 pub mod sanitize;
+mod normalizer;
 
 pub fn preprocess(json: &str) -> Result<String, String> {
     let mut json = json.to_string();

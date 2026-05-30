@@ -1,7 +1,7 @@
 mod import_json;
-mod normalizer;
+pub mod preprocess;
 
-use normalizer::preprocess::preprocess;
+use preprocess::preprocess;
 
 pub fn export_wikitext(json: &str) -> Result<String, String> {
     preprocess(json)
