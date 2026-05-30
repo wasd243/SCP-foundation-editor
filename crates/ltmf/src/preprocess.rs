@@ -1,21 +1,6 @@
 use crate::import_json::import_json;
 use crate::preprocess::normalize::normalize_hard_break::normalize_hard_break;
-use crate::preprocess::sanitize::{
-    sanitize_contenteditable::sanitize_contenteditable,
-    sanitize_data_editor::sanitize_data_editor,
-    sanitize_draggable::sanitize_draggable,
-    sanitize_empty_attrs::sanitize_empty_attrs,
-    sanitize_empty_html_attrs::sanitize_empty_html_attrs,
-    sanitize_footnote::sanitize_footnote_refs,
-    sanitize_null::sanitize_null,
-    sanitize_pm_unused_img::sanitize_pm_unused_img,
-    sanitize_table::sanitize_table,
-    sanitize_tabview::sanitize_tabview,
-    sanitize_text_align::sanitize_text_align,
-    sanitize_url::sanitize_url,
-    sanitize_unused_img_attrs::sanitize_unused_img_attrs,
-    sanitize_wj_inline_tag::sanitize_wj_inline_tag,
-};
+use crate::preprocess::sanitize::sanitize;
 use serde_json::Value;
 
 mod sanitize;
@@ -30,22 +15,8 @@ pub fn preprocess(json: &str) -> Result<String, String> {
 
     let json_value: Value = serde_json::from_str(&json).map_err(|error| error.to_string())?;
 
-    let sanitized_json = sanitize_null(&json_value);
-    let sanitized_json = sanitize_data_editor(sanitized_json);
-    let sanitized_json = sanitize_wj_inline_tag(sanitized_json);
-    let sanitized_json = sanitize_text_align(sanitized_json);
-    let sanitized_json = sanitize_contenteditable(sanitized_json);
-    let sanitized_json = sanitize_tabview(sanitized_json);
-    let sanitized_json = sanitize_pm_unused_img(sanitized_json);
-    let sanitized_json = sanitize_unused_img_attrs(sanitized_json);
-    let sanitized_json = sanitize_footnote_refs(sanitized_json);
-    let sanitized_json = sanitize_draggable(sanitized_json);
-    let sanitized_json = sanitize_table(sanitized_json);
-    let sanitized_json = sanitize_url(sanitized_json);
-    let sanitized_json = sanitize_empty_html_attrs(&sanitized_json);
-
-    // Sanitize empty attrs in the end to ensure that all empty attrs are removed.
-    let sanitized_json = sanitize_empty_attrs(&sanitized_json);
+    // Sanitize the JSON.
+    let sanitized_json = sanitize(json_value);
 
     // Normalize hard break to NewLine.
     let normalized_json = normalize_hard_break(sanitized_json);
