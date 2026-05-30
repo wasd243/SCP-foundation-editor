@@ -16,20 +16,20 @@ use {
     sanitize_wj_inline_tag::sanitize_wj_inline_tag,
 };
 
-pub mod sanitize_contenteditable;
-pub mod sanitize_data_editor;
-pub mod sanitize_empty_attrs;
-pub mod sanitize_null;
-pub mod sanitize_text_align;
-pub mod sanitize_wj_inline_tag;
-pub mod sanitize_tabview;
-pub mod sanitize_pm_unused_img;
-pub mod sanitize_empty_html_attrs;
-pub mod sanitize_footnote;
-pub mod sanitize_draggable;
-pub mod sanitize_unused_img_attrs;
-pub mod sanitize_table;
-pub mod sanitize_url;
+mod sanitize_contenteditable;
+mod sanitize_data_editor;
+mod sanitize_empty_attrs;
+mod sanitize_null;
+mod sanitize_text_align;
+mod sanitize_wj_inline_tag;
+mod sanitize_tabview;
+mod sanitize_pm_unused_img;
+mod sanitize_empty_html_attrs;
+mod sanitize_footnote;
+mod sanitize_draggable;
+mod sanitize_unused_img_attrs;
+mod sanitize_table;
+mod sanitize_url;
 
 pub fn sanitize(value: Value) -> Value {
     let value = sanitize_null(&value);
