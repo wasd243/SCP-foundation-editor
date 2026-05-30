@@ -7,6 +7,7 @@ use crate::preprocess::normalize::{
     normalize_include::normalize_include,
     normalize_note::normalize_note,
     normalize_new_line_marks::normalize_new_line_marks,
+    normalize_raw_text::normalize_raw_text,
     normalize_strike::normalize_strike,
     normalize_white_space_pre_wrap::normalize_white_space_pre_wrap,
     normalize_tabview::normalize_tabview,
@@ -25,12 +26,14 @@ mod normalize_tabview;
 mod normalize_note;
 mod normalize_include;
 mod normalize_horizontalrule;
+mod normalize_raw_text;
 // pub mod normalize_div;
 
 pub fn normalize(value: Value) -> Value {
     // Normalize hard break to NewLine.
     let value = normalize_hard_break(value);
     let value = normalize_white_space_pre_wrap(value);
+    let value = normalize_raw_text(value);
     let value = normalize_footnote(value);
     let value = normalize_strike(value);
     let value = normalize_details(value);
