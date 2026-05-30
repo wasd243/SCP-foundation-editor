@@ -10,6 +10,7 @@ use crate::preprocess::sanitize::{
     sanitize_pm_unused_img::sanitize_pm_unused_img,
     sanitize_tabview::sanitize_tabview,
     sanitize_text_align::sanitize_text_align,
+    sanitize_unused_img_attrs::sanitize_unused_img_attrs,
     sanitize_wj_inline_tag::sanitize_wj_inline_tag,
 };
 use serde_json::Value;
@@ -30,6 +31,7 @@ pub fn preprocess(json: &str) -> Result<String, String> {
     let sanitized_json = sanitize_contenteditable(sanitized_json);
     let sanitized_json = sanitize_tabview(sanitized_json);
     let sanitized_json = sanitize_pm_unused_img(sanitized_json);
+    let sanitized_json = sanitize_unused_img_attrs(sanitized_json);
     let sanitized_json = sanitize_footnote_refs(sanitized_json);
     let sanitized_json = sanitize_draggable(sanitized_json);
     let sanitized_json = sanitize_empty_html_attrs(&sanitized_json);

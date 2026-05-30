@@ -498,10 +498,6 @@
     },
     {
       "attrs": {
-        "imageAttributes": {
-          "class": "image",
-          "src": "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg"
-        },
         "src": "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg",
         "wrapperAttributes": {
           "class": "image-container alignleft"
@@ -529,10 +525,6 @@
     },
     {
       "attrs": {
-        "imageAttributes": {
-          "class": "image",
-          "src": "https://sdafkhgashijkfd.example.com"
-        },
         "src": "https://sdafkhgashijkfd.example.com",
         "wrapperAttributes": {
           "class": "image-container alignleft"
@@ -702,10 +694,6 @@
         },
         {
           "attrs": {
-            "imageAttributes": {
-              "class": "image",
-              "src": "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg"
-            },
             "src": "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg"
           },
           "type": "image"
