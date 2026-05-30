@@ -17,8 +17,8 @@ use crate::preprocess::sanitize::{
 };
 use serde_json::Value;
 
-pub mod sanitize;
-mod normalizer;
+mod sanitize;
+mod normalize;
 
 pub fn preprocess(json: &str) -> Result<String, String> {
     let mut json = json.to_string();
