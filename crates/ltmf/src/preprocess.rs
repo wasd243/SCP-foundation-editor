@@ -22,7 +22,10 @@ mod normalize;
 
 pub fn preprocess(json: &str) -> Result<String, String> {
     let mut json = json.to_string();
+
+    // Test-only JSON, going to be removed after implementation of exporter
     import_json(&mut json);
+    // End of test-only JSON
 
     let json_value: Value = serde_json::from_str(&json).map_err(|error| error.to_string())?;
 
