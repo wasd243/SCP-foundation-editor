@@ -1,13 +1,12 @@
 use crate::import_json::import_json;
 use serde_json::Value;
-
+use sanitize::sanitize_tabview::sanitize_tabview_aria::sanitize_tabview_aria;
+use sanitize::sanitize_tabview::sanitize_tabview_attrs::sanitize_tabview_attrs;
 use crate::preprocess::sanitize::{
     sanitize_contenteditable::sanitize_contenteditable,
     sanitize_data_editor::sanitize_data_editor,
     sanitize_empty_attrs::sanitize_empty_attrs,
     sanitize_null::sanitize_null,
-    sanitize_tabview_aria::sanitize_tabview_aria,
-    sanitize_tabview_attrs::sanitize_tabview_attrs,
     sanitize_text_align::sanitize_text_align,
     sanitize_wj_inline_tag::sanitize_wj_inline_tag,
 };
