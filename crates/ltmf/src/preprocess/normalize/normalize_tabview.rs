@@ -3,6 +3,7 @@ use crate::preprocess::normalize::rename::rename_type;
 
 pub fn normalize_tabview(value: Value) -> Value {
     let value = rename_type(value, "tabViewButton", "tab");
+    let value = rename_type(value, "tabViewButtonList", "TabViewButtonList");
     delete_tabview_attrs(value)
 }
 
