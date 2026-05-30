@@ -1,15 +1,11 @@
 use serde_json::Value;
+use super::is_tabview::is_tabview;
 
 // Only sanitize aria-controls in tabview, not in details or accordion.
 fn sanitize_aria_controls_in_tabview(value: Value, in_tabview: bool) -> Value {
     match value {
         Value::Object(map) => {
-            let is_tabview = map
-                .get("attrs")
-                .and_then(|attrs| attrs.get("class"))
-                .and_then(Value::as_str)
-                .is_some_and(|class| class.split_whitespace().any(|class| class == "wj-tabs"));
-            let in_tabview = in_tabview || is_tabview;
+            let in_tabview = in_tabview || is_tabview(&map);
 
             Value::Object(
                 map.into_iter()
