@@ -77,6 +77,10 @@ image failed test
 || test1-1 || test2-1 ||
 || test1-2 || test2-2 ||
 
+[[include :component:image-block name=https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg|caption=image preview test|width=200px|height=200px|align=right]]
+
+[[user wasd243]]
+[[*user wasd243]]
 
 [[code type="python"]]
 print("hello world")
