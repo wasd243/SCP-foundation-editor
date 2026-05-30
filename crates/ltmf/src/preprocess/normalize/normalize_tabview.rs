@@ -2,8 +2,11 @@ use serde_json::Value;
 use crate::preprocess::normalize::rename::rename_type;
 
 pub fn normalize_tabview(value: Value) -> Value {
-    let value = rename_type(value, "tabViewButton", "tab");
+    let value = rename_type(value, "tabViewButton", "Tab");
     let value = rename_type(value, "tabViewButtonList", "TabViewButtonList");
+    let value = rename_type(value, "tabViewPanel", "TabViewContent");
+    let value = rename_type(value, "tabViewPanelList", "TabviewContentList");
+    let value = rename_type(value, "tabView", "TabView");
     delete_tabview_attrs(value)
 }
 
@@ -38,6 +41,13 @@ fn delete_tabview_attrs(value: Value) -> Value {
 fn is_tabview_node_type(node_type: &str) -> bool {
     matches!(
         node_type,
-        "tabView" | "tab" | "tabViewButtonList" | "tabViewPanelList" | "tabViewPanel"
+        "tabView"
+            | "tab"
+            | "TabViewButtonList"
+            | "tabViewButtonList"
+            | "TabViewContent"
+            | "tabViewPanel"
+            | "TabviewContentList"
+            | "tabViewPanelList"
     )
 }
