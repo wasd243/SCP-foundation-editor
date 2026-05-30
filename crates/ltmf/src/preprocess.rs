@@ -1,5 +1,5 @@
 use crate::import_json::import_json;
-use crate::preprocess::normalize::normalize_hard_break::normalize_hard_break;
+use crate::preprocess::normalize::normalize;
 use crate::preprocess::sanitize::sanitize;
 use serde_json::Value;
 
@@ -18,8 +18,8 @@ pub fn preprocess(json: &str) -> Result<String, String> {
     // Sanitize the JSON.
     let sanitized_json = sanitize(json_value);
 
-    // Normalize hard break to NewLine.
-    let normalized_json = normalize_hard_break(sanitized_json);
+    // Normalize the JSON.
+    let normalized_json = normalize(sanitized_json);
 
     let json = serde_json::to_string_pretty(&normalized_json)
         .map_err(|error| error.to_string())?;

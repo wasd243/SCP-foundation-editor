@@ -1,5 +1,5 @@
 use serde_json::Value;
-use crate::preprocess::sanitize::{
+use {
     sanitize_contenteditable::sanitize_contenteditable,
     sanitize_data_editor::sanitize_data_editor,
     sanitize_draggable::sanitize_draggable,
