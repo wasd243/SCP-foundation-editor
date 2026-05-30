@@ -4,6 +4,7 @@ use crate::preprocess::normalize::{
     normalize_details::normalize_details,
     normalize_footnote::normalize_footnote,
     normalize_hard_break::normalize_hard_break,
+    normalize_note::normalize_note,
     normalize_new_line_marks::normalize_new_line_marks,
     normalize_strike::normalize_strike,
     normalize_white_space_pre_wrap::normalize_white_space_pre_wrap,
@@ -20,6 +21,7 @@ pub mod normalize_strike;
 pub mod normalize_white_space_pre_wrap;
 pub mod rename;
 pub mod normalize_tabview;
+pub mod normalize_note;
 
 pub fn normalize(value: Value) -> Value {
     // Normalize hard break to NewLine.
@@ -28,6 +30,7 @@ pub fn normalize(value: Value) -> Value {
     let value = normalize_footnote(value);
     let value = normalize_strike(value);
     let value = normalize_details(value);
+    let value = normalize_note(value);
     let value = normalize_tabview(value);
     normalize_new_line_marks(value)
 }
