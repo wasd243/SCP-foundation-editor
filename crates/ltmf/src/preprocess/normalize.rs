@@ -14,18 +14,16 @@ use crate::preprocess::normalize::{
     normalize_horizontalrule::normalize_horizontalrule,
 };
 
-pub mod normalize_details;
-pub mod normalize_footnote;
-pub mod normalize_hard_break;
-
-pub mod normalize_new_line_marks;
-
-pub mod normalize_strike;
-pub mod normalize_white_space_pre_wrap;
+mod normalize_details;
+mod normalize_footnote;
+mod normalize_hard_break;
+mod normalize_new_line_marks;
+mod normalize_strike;
+mod normalize_white_space_pre_wrap;
 pub mod rename;
-pub mod normalize_tabview;
-pub mod normalize_note;
-pub mod normalize_include;
+mod normalize_tabview;
+mod normalize_note;
+mod normalize_include;
 mod normalize_horizontalrule;
 // pub mod normalize_div;
 
