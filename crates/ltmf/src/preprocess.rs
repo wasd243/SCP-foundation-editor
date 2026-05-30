@@ -1,4 +1,5 @@
 use crate::import_json::import_json;
+use crate::preprocess::normalize::normalize_hard_break::normalize_hard_break;
 use crate::preprocess::sanitize::{
     sanitize_contenteditable::sanitize_contenteditable,
     sanitize_data_editor::sanitize_data_editor,
@@ -46,7 +47,11 @@ pub fn preprocess(json: &str) -> Result<String, String> {
     // Sanitize empty attrs in the end to ensure that all empty attrs are removed.
     let sanitized_json = sanitize_empty_attrs(&sanitized_json);
 
-    let json = serde_json::to_string_pretty(&sanitized_json).map_err(|error| error.to_string())?;
+    // Normalize hard break to NewLine.
+    let normalized_json = normalize_hard_break(sanitized_json);
+
+    let json = serde_json::to_string_pretty(&normalized_json)
+        .map_err(|error| error.to_string())?;
 
     Ok(json)
 }
