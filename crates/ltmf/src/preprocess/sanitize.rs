@@ -10,3 +10,4 @@ pub mod sanitize_empty_html_attrs;
 pub mod sanitize_footnote;
 pub mod sanitize_draggable;
 pub mod sanitize_unused_img_attrs;
+pub mod sanitize_table;
