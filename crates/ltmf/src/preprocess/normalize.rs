@@ -11,6 +11,7 @@ use crate::preprocess::normalize::{
     normalize_white_space_pre_wrap::normalize_white_space_pre_wrap,
     normalize_tabview::normalize_tabview,
     // normalize_div::normalize_div,
+    normalize_horizontalrule::normalize_horizontalrule,
 };
 
 pub mod normalize_details;
@@ -25,6 +26,7 @@ pub mod rename;
 pub mod normalize_tabview;
 pub mod normalize_note;
 pub mod normalize_include;
+mod normalize_horizontalrule;
 // pub mod normalize_div;
 
 pub fn normalize(value: Value) -> Value {
@@ -37,6 +39,7 @@ pub fn normalize(value: Value) -> Value {
     let value = normalize_note(value);
     let value = normalize_include(value);
     let value = normalize_tabview(value);
+    let value = normalize_horizontalrule(value);
     // let value = normalize_div(value);
     normalize_new_line_marks(value)
 }
