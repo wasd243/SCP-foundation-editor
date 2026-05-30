@@ -1,10 +1,9 @@
-use serde_json::Value;
 use crate::import_json::import_json;
+use serde_json::Value;
 
 use crate::normalizer::preprocess::sanitize::{
-    sanitize_empty_attrs::sanitize_empty_attrs,
-    sanitize_null::sanitize_null,
-    sanitize_data_editor::sanitize_data_editor,
+    sanitize_data_editor::sanitize_data_editor, sanitize_empty_attrs::sanitize_empty_attrs,
+    sanitize_null::sanitize_null, sanitize_wj_inline_tag::sanitize_wj_inline_tag,
 };
 
 pub mod sanitize;
@@ -17,6 +16,7 @@ pub fn preprocess(json: &str) -> Result<String, String> {
 
     let sanitized_json = sanitize_null(&json_value);
     let sanitized_json = sanitize_data_editor(sanitized_json);
+    let sanitized_json = sanitize_wj_inline_tag(sanitized_json);
     let sanitized_json = sanitize_empty_attrs(&sanitized_json);
 
     let json = serde_json::to_string_pretty(&sanitized_json).map_err(|error| error.to_string())?;
