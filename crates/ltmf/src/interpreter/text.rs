@@ -6,6 +6,7 @@ mod new_line;
 mod normal_text;
 mod italic;
 mod underline;
+mod strikethrough;
 
 use serde_json::Value;
 

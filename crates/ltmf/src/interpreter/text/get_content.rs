@@ -6,6 +6,7 @@ use crate::interpreter::{
     text::{
         bold::interpret_bold_text, color::interpret_color_text, new_line::interpret_new_line,
         normal_text::interpret_normal_text, italic::interpret_italic_text, underline::interpret_underline_text,
+        strikethrough::interpret_strike_through_text,
     },
 };
 
@@ -67,6 +68,7 @@ fn interpret_marked_text(node: &Value, output: String) -> Result<String, String>
     let output = interpret_bold_text(node, output)?;
     let output = interpret_italic_text(node, output)?;
     let output = interpret_underline_text(node, output)?;
+    let output = interpret_strike_through_text(node, output)?;
 
     Ok(output)
 }
