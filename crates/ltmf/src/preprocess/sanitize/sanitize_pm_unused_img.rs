@@ -12,9 +12,7 @@ fn sanitize_value(value: Value) -> Option<Value> {
             } else {
                 Some(Value::Object(
                     map.into_iter()
-                        .filter_map(|(key, value)| {
-                            sanitize_value(value).map(|value| (key, value))
-                        })
+                        .filter_map(|(key, value)| sanitize_value(value).map(|value| (key, value)))
                         .collect(),
                 ))
             }

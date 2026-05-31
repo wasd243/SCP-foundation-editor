@@ -4,10 +4,7 @@ use serde_json::Value;
 pub fn normalize_new_line_marks(value: Value) -> Value {
     match value {
         Value::Object(mut map) => {
-            let is_new_line = map
-                .get("type")
-                .and_then(Value::as_str)
-                == Some("NewLine");
+            let is_new_line = map.get("type").and_then(Value::as_str) == Some("NewLine");
 
             if is_new_line {
                 map.remove("attrs");
@@ -20,12 +17,9 @@ pub fn normalize_new_line_marks(value: Value) -> Value {
                     .collect(),
             )
         }
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(normalize_new_line_marks)
-                .collect(),
-        ),
+        Value::Array(values) => {
+            Value::Array(values.into_iter().map(normalize_new_line_marks).collect())
+        }
         _ => value,
     }
 }

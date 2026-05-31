@@ -1,6 +1,6 @@
 // This function renames and removes unused details attrs.
-use serde_json::Value;
 use crate::preprocess::normalize::rename::rename_type;
+use serde_json::Value;
 
 fn rename_details(value: Value) -> Value {
     let value = rename_type(value, "details", "Collapsible");
@@ -30,12 +30,9 @@ fn remove_collapsible_attrs(value: Value) -> Value {
                     .collect(),
             )
         }
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(remove_collapsible_attrs)
-                .collect(),
-        ),
+        Value::Array(values) => {
+            Value::Array(values.into_iter().map(remove_collapsible_attrs).collect())
+        }
         _ => value,
     }
 }

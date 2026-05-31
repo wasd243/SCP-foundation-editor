@@ -21,12 +21,7 @@ pub fn normalize_raw_text(value: Value) -> Value {
                 _ => value,
             }
         }
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(normalize_raw_text)
-                .collect(),
-        ),
+        Value::Array(values) => Value::Array(values.into_iter().map(normalize_raw_text).collect()),
         _ => value,
     }
 }

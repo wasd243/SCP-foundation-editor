@@ -13,12 +13,9 @@ pub fn sanitize_unused_toc_id(value: Value) -> Value {
                     .collect(),
             )
         }
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(sanitize_unused_toc_id)
-                .collect(),
-        ),
+        Value::Array(values) => {
+            Value::Array(values.into_iter().map(sanitize_unused_toc_id).collect())
+        }
         _ => value,
     }
 }

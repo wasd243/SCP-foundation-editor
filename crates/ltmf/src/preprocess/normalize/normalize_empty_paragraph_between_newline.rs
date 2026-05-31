@@ -39,19 +39,13 @@ fn normalize_array(values: Vec<Value>) -> Value {
 }
 
 fn is_new_line(value: &Value) -> bool {
-    value
-        .as_object()
-        .is_some_and(|map| {
-            map.len() == 1
-                && map.get("type").and_then(Value::as_str) == Some("NewLine")
-        })
+    value.as_object().is_some_and(|map| {
+        map.len() == 1 && map.get("type").and_then(Value::as_str) == Some("NewLine")
+    })
 }
 
 fn is_empty_paragraph(value: &Value) -> bool {
-    value
-        .as_object()
-        .is_some_and(|map| {
-            map.len() == 1
-                && map.get("type").and_then(Value::as_str) == Some("paragraph")
-        })
+    value.as_object().is_some_and(|map| {
+        map.len() == 1 && map.get("type").and_then(Value::as_str) == Some("paragraph")
+    })
 }

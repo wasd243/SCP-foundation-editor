@@ -17,12 +17,7 @@ pub fn normalize_include(value: Value) -> Value {
                     .collect(),
             )
         }
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(normalize_include)
-                .collect(),
-        ),
+        Value::Array(values) => Value::Array(values.into_iter().map(normalize_include).collect()),
         _ => value,
     }
 }

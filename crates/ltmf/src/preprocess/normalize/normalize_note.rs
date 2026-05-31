@@ -17,12 +17,7 @@ pub fn normalize_note(value: Value) -> Value {
                     .collect(),
             )
         }
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(normalize_note)
-                .collect(),
-        ),
+        Value::Array(values) => Value::Array(values.into_iter().map(normalize_note).collect()),
         _ => value,
     }
 }

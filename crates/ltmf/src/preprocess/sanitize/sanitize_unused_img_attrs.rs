@@ -13,12 +13,9 @@ pub fn sanitize_unused_img_attrs(value: Value) -> Value {
                 })
                 .collect(),
         ),
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(sanitize_unused_img_attrs)
-                .collect(),
-        ),
+        Value::Array(values) => {
+            Value::Array(values.into_iter().map(sanitize_unused_img_attrs).collect())
+        }
         _ => value,
     }
 }

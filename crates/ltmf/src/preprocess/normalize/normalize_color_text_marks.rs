@@ -1,5 +1,5 @@
-use serde_json::Value;
 use crate::preprocess::normalize::rename::rename_type;
+use serde_json::Value;
 
 pub fn normalize_color_text_marks(value: Value) -> Value {
     let value = rename_type(value, "textColor", "ColorText");
@@ -27,12 +27,9 @@ fn normalize_color_text_attrs(value: Value) -> Value {
                     .collect(),
             )
         }
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(normalize_color_text_attrs)
-                .collect(),
-        ),
+        Value::Array(values) => {
+            Value::Array(values.into_iter().map(normalize_color_text_attrs).collect())
+        }
         _ => value,
     }
 }

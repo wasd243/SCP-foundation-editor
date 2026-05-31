@@ -13,12 +13,9 @@ pub fn sanitize_contenteditable(value: Value) -> Value {
                 })
                 .collect(),
         ),
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(sanitize_contenteditable)
-                .collect(),
-        ),
+        Value::Array(values) => {
+            Value::Array(values.into_iter().map(sanitize_contenteditable).collect())
+        }
         _ => value,
     }
 }

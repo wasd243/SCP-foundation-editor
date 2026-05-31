@@ -1,9 +1,9 @@
 mod import_json;
-pub mod preprocess;
 mod interpreter;
+pub mod preprocess;
 
-use preprocess::preprocess;
 use interpreter::interpret;
+use preprocess::preprocess;
 
 pub fn export_wikitext(json: &str) -> Result<String, String> {
     let json = preprocess(json)?;

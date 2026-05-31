@@ -1,5 +1,5 @@
-use serde_json::Value;
 use crate::preprocess::normalize::rename::rename_type;
+use serde_json::Value;
 
 pub fn normalize_tabview(value: Value) -> Value {
     let value = rename_type(value, "tabViewButton", "Tab");
@@ -27,12 +27,9 @@ fn delete_tabview_attrs(value: Value) -> Value {
                     .collect(),
             )
         }
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(delete_tabview_attrs)
-                .collect(),
-        ),
+        Value::Array(values) => {
+            Value::Array(values.into_iter().map(delete_tabview_attrs).collect())
+        }
         _ => value,
     }
 }

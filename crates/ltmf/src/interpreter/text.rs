@@ -1,14 +1,12 @@
+pub mod color;
 mod get_content;
 mod heading;
-pub mod color;
 mod normal_text;
 
 use serde_json::Value;
 
 use crate::interpreter::text::{
-    get_content::get_content,
-    heading::interpret_heading,
-    normal_text::interpret_normal_text,
+    get_content::get_content, heading::interpret_heading, normal_text::interpret_normal_text,
 };
 
 pub fn interpret_text(index: usize, node: &Value) -> Result<String, String> {

@@ -16,9 +16,7 @@ pub fn color_to_wikidot_hex(color: &str) -> Result<String, String> {
 
         return Ok(format!(
             "{:02X}{:02X}{:02X}",
-            values[0] as u8,
-            values[1] as u8,
-            values[2] as u8
+            values[0] as u8, values[1] as u8, values[2] as u8
         ));
     }
 
@@ -35,10 +33,7 @@ pub fn color_to_wikidot_hex(color: &str) -> Result<String, String> {
 
         return Ok(format!(
             "{:02X}{:02X}{:02X}({:02X})",
-            values[0] as u8,
-            values[1] as u8,
-            values[2] as u8,
-            alpha
+            values[0] as u8, values[1] as u8, values[2] as u8, alpha
         ));
     }
 

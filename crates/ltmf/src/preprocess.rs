@@ -3,8 +3,8 @@ use crate::preprocess::normalize::normalize;
 use crate::preprocess::sanitize::sanitize;
 use serde_json::Value;
 
-mod sanitize;
 mod normalize;
+mod sanitize;
 
 pub fn preprocess(json: &str) -> Result<String, String> {
     let mut json = json.to_string();
@@ -21,8 +21,7 @@ pub fn preprocess(json: &str) -> Result<String, String> {
     // Normalize the JSON.
     let normalized_json = normalize(sanitized_json);
 
-    let json = serde_json::to_string_pretty(&normalized_json)
-        .map_err(|error| error.to_string())?;
+    let json = serde_json::to_string_pretty(&normalized_json).map_err(|error| error.to_string())?;
 
     Ok(json)
 }

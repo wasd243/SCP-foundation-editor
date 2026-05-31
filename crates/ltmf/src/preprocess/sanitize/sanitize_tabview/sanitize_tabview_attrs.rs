@@ -27,9 +27,7 @@ pub fn sanitize_tabview_attrs(json: &Value) -> Value {
                 })
                 .collect(),
         ),
-        Value::Array(values) => {
-            Value::Array(values.iter().map(sanitize_tabview_attrs).collect())
-        }
+        Value::Array(values) => Value::Array(values.iter().map(sanitize_tabview_attrs).collect()),
         _ => json.clone(),
     }
 }

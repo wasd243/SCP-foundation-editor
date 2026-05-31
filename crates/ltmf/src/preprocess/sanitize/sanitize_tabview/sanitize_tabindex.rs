@@ -1,5 +1,5 @@
-use serde_json::Value;
 use super::is_tabview::is_tabview;
+use serde_json::Value;
 
 pub fn sanitize_tabindex(value: Value) -> Value {
     sanitize_tabindex_in_tabview(value, false)
