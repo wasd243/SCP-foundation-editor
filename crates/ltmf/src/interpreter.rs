@@ -4,7 +4,7 @@ mod include;
 
 use serde_json::Value;
 
-use crate::identify::{
+use crate::interpreter::{
     include::identify_include,
     text::identify_text,
     wiki_component::identify_wiki_component,
@@ -15,7 +15,7 @@ pub fn identify(json: &str) -> Result<String, String> {
     let content = value
         .get("content")
         .and_then(Value::as_array)
-        .ok_or_else(|| "identify expected doc.content array".to_string())?;
+        .ok_or_else(|| "interpreter expected doc.content array".to_string())?;
 
     let mut output = String::new();
 
@@ -36,6 +36,6 @@ fn identify_node(index: usize, node: &Value) -> Result<String, String> {
             identify_wiki_component(index, node)
         }
         Some(_) => identify_text(index, node),
-        None => Err(format!("identify expected node type at doc.content[{index}]")),
+        None => Err(format!("interpreter expected node type at doc.content[{index}]")),
     }
 }

@@ -8,5 +8,5 @@ pub fn identify_wiki_component(index: usize, node: &Value) -> Result<String, Str
 fn node_type(node: &Value) -> Result<&str, String> {
     node.get("type")
         .and_then(Value::as_str)
-        .ok_or_else(|| "wiki component identify expected node type".to_string())
+        .ok_or_else(|| "wiki component interpreter expected node type".to_string())
 }

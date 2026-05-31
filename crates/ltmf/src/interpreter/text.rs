@@ -8,5 +8,5 @@ pub fn identify_text(index: usize, node: &Value) -> Result<String, String> {
 fn node_type(node: &Value) -> Result<&str, String> {
     node.get("type")
         .and_then(Value::as_str)
-        .ok_or_else(|| "text identify expected node type".to_string())
+        .ok_or_else(|| "text interpreter expected node type".to_string())
 }
