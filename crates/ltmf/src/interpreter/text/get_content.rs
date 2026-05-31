@@ -5,9 +5,9 @@ use crate::interpreter::{
     get_types::node_type,
     text::{
         bold::interpret_bold_text, color::interpret_color_text, italic::interpret_italic_text,
-        new_line::interpret_new_line, normal_text::interpret_normal_text,
-        strikethrough::interpret_strike_through_text, underline::interpret_underline_text,
-        monospcae::interpret_monospace_text,
+        monospcae::interpret_monospace_text, new_line::interpret_new_line,
+        normal_text::interpret_normal_text, strikethrough::interpret_strike_through_text,
+        sup::interpret_sup_text, underline::interpret_underline_text,
     },
 };
 
@@ -72,6 +72,7 @@ fn interpret_marked_text(node: &Value, output: String) -> Result<String, String>
     let output = interpret_underline_text(node, output)?;
     let output = interpret_strike_through_text(node, output)?;
     let output = interpret_monospace_text(node, output)?;
+    let output = interpret_sup_text(node, output)?;
 
     Ok(output)
 }

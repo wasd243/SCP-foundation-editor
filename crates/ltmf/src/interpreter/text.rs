@@ -7,6 +7,7 @@ mod monospcae;
 mod new_line;
 mod normal_text;
 mod strikethrough;
+mod sup;
 mod underline;
 
 use serde_json::Value;
