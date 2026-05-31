@@ -13,6 +13,7 @@ use {
     sanitize_text_align::sanitize_text_align,
     sanitize_url::sanitize_url,
     sanitize_unused_img_attrs::sanitize_unused_img_attrs,
+    sanitize_unused_toc_id::sanitize_unused_toc_id,
     sanitize_wj_inline_tag::sanitize_wj_inline_tag,
 };
 
@@ -30,6 +31,7 @@ mod sanitize_draggable;
 mod sanitize_unused_img_attrs;
 mod sanitize_table;
 mod sanitize_url;
+mod sanitize_unused_toc_id;
 
 pub fn sanitize(value: Value) -> Value {
     let value = sanitize_null(&value);
@@ -44,6 +46,7 @@ pub fn sanitize(value: Value) -> Value {
     let value = sanitize_draggable(value);
     let value = sanitize_table(value);
     let value = sanitize_url(value);
+    let value = sanitize_unused_toc_id(value);
     let value = sanitize_empty_html_attrs(&value);
 
     // Sanitize empty attrs in the end to ensure that all empty attrs are removed.

@@ -4,6 +4,9 @@
     border: 1px solid red;
 }
 [[/module]]
++ HEADER TEST
+
+###ff0000|Color Test##
 
 测试文本
 test

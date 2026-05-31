@@ -2,6 +2,7 @@
   "content": [
     {
       "attrs": {
+        "id": "toc0",
         "level": 1
       },
       "content": [
@@ -17,8 +18,10 @@
         {
           "marks": [
             {
-              "color": "rgb(255, 0, 0)",
-              "type": "ColorText"
+              "attrs": {
+                "color": "rgb(255, 0, 0)"
+              },
+              "type": "textColor"
             }
           ],
           "text": "Color Test",

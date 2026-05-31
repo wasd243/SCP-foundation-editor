@@ -1,6 +1,7 @@
 use serde_json::Value;
 
 use crate::preprocess::normalize::{
+    normalize_color_text_marks::normalize_color_text_marks,
     normalize_details::normalize_details,
     normalize_empty_paragraph_between_newline::normalize_empty_paragraph_between_newline,
     normalize_footnote::normalize_footnote,
@@ -31,6 +32,7 @@ mod normalize_horizontalrule;
 mod normalize_raw_text;
 mod normalize_force_new_line;
 mod normalize_empty_paragraph_between_newline;
+mod normalize_color_text_marks;
 // pub mod normalize_div;
 
 pub fn normalize(value: Value) -> Value {
@@ -42,6 +44,7 @@ pub fn normalize(value: Value) -> Value {
 
     let value = normalize_raw_text(value);
     let value = normalize_footnote(value);
+    let value = normalize_color_text_marks(value);
     let value = normalize_strike(value);
     let value = normalize_details(value);
     let value = normalize_note(value);

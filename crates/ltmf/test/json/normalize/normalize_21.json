@@ -17,8 +17,10 @@
         {
           "marks": [
             {
-              "color": "rgb(255, 0, 0)",
-              "type": "ColorText"
+              "attrs": {
+                "color": "rgb(255, 0, 0)"
+              },
+              "type": "textColor"
             }
           ],
           "text": "Color Test",
