@@ -1,12 +1,17 @@
 mod get_content;
+mod heading;
 
 use serde_json::Value;
 
-use crate::interpreter::text::get_content::get_content;
+use crate::interpreter::text::{
+    get_content::get_content,
+    heading::interpret_heading,
+};
 
-pub fn identify_text(index: usize, node: &Value) -> Result<String, String> {
+pub fn interpret_text(index: usize, node: &Value) -> Result<String, String> {
     let node_type = node_type(node)?;
     let content = get_content(node).join(", ");
+    let content = interpret_heading(node, content)?;
 
     Ok(format!("[text:{index}] {node_type} -> {content}"))
 }

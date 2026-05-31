@@ -3,11 +3,11 @@ pub mod preprocess;
 mod interpreter;
 
 use preprocess::preprocess;
-use interpreter::identify;
+use interpreter::interpret;
 
 pub fn export_wikitext(json: &str) -> Result<String, String> {
     let json = preprocess(json)?;
-    identify(&json)
+    interpret(&json)
 }
 
 #[cfg(test)]
@@ -15,7 +15,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_export_identifier() {
+    fn test_export() {
         export_wikitext("").unwrap();
     }
 

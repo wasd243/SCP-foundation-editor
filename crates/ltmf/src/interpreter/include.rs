@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn identify_include(index: usize, node: &Value) -> Result<String, String> {
+pub fn interpret_include(index: usize, node: &Value) -> Result<String, String> {
     let include_name = node
         .get("attrs")
         .and_then(|attrs| attrs.get("htmlAttributes"))
