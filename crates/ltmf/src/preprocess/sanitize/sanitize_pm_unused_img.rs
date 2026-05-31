@@ -33,6 +33,6 @@ fn is_unused_pm_image(value: &Value) -> bool {
                 .get("attrs")
                 .and_then(|attrs| attrs.get("src"))
                 .and_then(Value::as_str)
-                .is_some_and(|src| !src.is_empty())
+                .is_none_or(|src| src.is_empty())
     })
 }

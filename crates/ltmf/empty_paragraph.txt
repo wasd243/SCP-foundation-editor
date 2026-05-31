@@ -1,0 +1,4 @@
+Newline => \n
+ForceNewLine => paragraph (empty)
+paragraph => \n\n
+paragraph (empty) => \n@@@@

@@ -2,7 +2,6 @@ use serde_json::Value;
 
 /// Sanitize `wjInlineTag` function only sanitize the `type` field.
 /// Because `wjInlineTag` is only used for TipTap/ProseMirror editor allowing ftml's customize HTML tags
-
 pub fn sanitize_wj_inline_tag(value: Value) -> Value {
     match value {
         Value::Object(map) => Value::Object(
