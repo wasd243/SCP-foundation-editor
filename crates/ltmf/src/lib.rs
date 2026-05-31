@@ -16,8 +16,7 @@ mod tests {
 
     #[test]
     fn test_export_identifier() {
-        let json = export_wikitext("").unwrap();
-        println!("{}", json);
+        export_wikitext("").unwrap();
     }
 
     // fn test_export_default_json() {
