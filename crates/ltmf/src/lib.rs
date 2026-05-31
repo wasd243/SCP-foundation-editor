@@ -3,18 +3,23 @@ pub mod preprocess;
 mod identify;
 
 use preprocess::preprocess;
+use identify::identify;
 
 pub fn export_wikitext(json: &str) -> Result<String, String> {
-    preprocess(json)
+    let json = preprocess(json)?;
+    identify(&json)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs;
-    use std::path::{Path, PathBuf};
 
-    // #[test]
+    #[test]
+    fn test_export_identifier() {
+        let json = export_wikitext("").unwrap();
+        println!("{}", json);
+    }
+
     // fn test_export_default_json() {
     //     let json = export_wikitext("").unwrap();
     //     let default_path = concat!(env!("CARGO_MANIFEST_DIR"), "/test/json/default.json");
