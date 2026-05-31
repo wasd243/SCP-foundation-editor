@@ -1,5 +1,6 @@
 mod get_content;
 mod heading;
+pub mod color;
 
 use serde_json::Value;
 

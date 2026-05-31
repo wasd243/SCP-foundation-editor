@@ -1,5 +1,7 @@
 use serde_json::Value;
 
+use crate::interpreter::text::color::interpret_color_text;
+
 pub fn get_content(node: &Value) -> Vec<String> {
     let mut content = Vec::new();
     collect_content(node, &mut content);
@@ -10,6 +12,8 @@ fn collect_content(node: &Value, content: &mut Vec<String>) {
     match node {
         Value::Object(map) => {
             if let Some(text) = map.get("text").and_then(Value::as_str) {
+                let text = interpret_color_text(node, text.to_string())
+                    .unwrap_or_else(|error| format!("ERROR:{error}"));
                 content.push(format!("text:{text}"));
             } else if let Some(node_type) = map.get("type").and_then(Value::as_str) {
                 content.push(format!("type:{node_type}"));

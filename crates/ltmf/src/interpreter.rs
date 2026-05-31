@@ -1,6 +1,7 @@
 mod text;
 mod wiki_component;
 mod include;
+pub mod rgba_to_hex;
 
 use serde_json::Value;
 
