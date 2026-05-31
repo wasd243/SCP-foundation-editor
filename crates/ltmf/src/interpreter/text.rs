@@ -2,11 +2,11 @@ mod bold;
 pub mod color;
 mod get_content;
 mod heading;
+mod italic;
 mod new_line;
 mod normal_text;
-mod italic;
-mod underline;
 mod strikethrough;
+mod underline;
 
 use serde_json::Value;
 
