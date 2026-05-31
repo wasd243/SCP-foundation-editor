@@ -3,6 +3,7 @@ pub mod color;
 mod get_content;
 mod heading;
 mod italic;
+mod monospcae;
 mod new_line;
 mod normal_text;
 mod strikethrough;
