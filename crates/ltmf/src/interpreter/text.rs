@@ -1,5 +1,6 @@
 mod bold;
 pub mod color;
+mod empty_paragraph;
 mod get_content;
 mod heading;
 mod italic;

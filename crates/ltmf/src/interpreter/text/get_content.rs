@@ -4,7 +4,8 @@ use crate::interpreter::{
     get_marks::get_marks,
     get_types::node_type,
     text::{
-        bold::interpret_bold_text, color::interpret_color_text, italic::interpret_italic_text,
+        bold::interpret_bold_text, color::interpret_color_text,
+        empty_paragraph::interpret_empty_paragraph, italic::interpret_italic_text,
         monospcae::interpret_monospace_text, new_line::interpret_new_line,
         normal_text::interpret_normal_text, strikethrough::interpret_strike_through_text,
         sub::interpret_sub_text, sup::interpret_sup_text, underline::interpret_underline_text,
@@ -31,13 +32,20 @@ fn collect_content(node: &Value, content: &mut Vec<String>) {
                         .unwrap_or_else(|error| format!("ERROR:{error}"));
                     content.push(new_line);
                 }
+                Some("paragraph") if is_empty_paragraph_node(node) => {
+                    let empty_paragraph = interpret_empty_paragraph(node, String::new())
+                        .unwrap_or_else(|error| format!("ERROR:{error}"));
+                    content.push(empty_paragraph);
+                }
                 Some(node_type) => content.push(format!("type:{node_type}")),
                 None => {}
             }
 
-            if let Some(values) = map.get("content").and_then(Value::as_array) {
-                for value in values {
-                    collect_content(value, content);
+            if !is_empty_paragraph_node(node) {
+                if let Some(values) = map.get("content").and_then(Value::as_array) {
+                    for value in values {
+                        collect_content(value, content);
+                    }
                 }
             }
         }
@@ -48,6 +56,15 @@ fn collect_content(node: &Value, content: &mut Vec<String>) {
         }
         _ => {}
     }
+}
+
+fn is_empty_paragraph_node(node: &Value) -> bool {
+    node_type(node) == Some("paragraph")
+        && node
+            .get("content")
+            .and_then(Value::as_array)
+            .map(|content| content.is_empty())
+            .unwrap_or(true)
 }
 
 fn interpret_text_node(node: &Value) -> Result<String, String> {
