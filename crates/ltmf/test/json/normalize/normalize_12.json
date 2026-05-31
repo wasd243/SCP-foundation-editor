@@ -115,11 +115,27 @@
           "type": "NewLine"
         },
         {
-          "text": "测 试文本test",
-          "type": "text"
+          "attrs": {
+            "htmlAttributes": {
+              "style": "white-space: pre-wrap;"
+            },
+            "tagName": "span"
+          },
+          "content": [
+            {
+              "text": "测 试文本test",
+              "type": "text"
+            }
+          ]
         },
         {
-          "type": "paragraph"
+          "type": "NewLine"
+        },
+        {
+          "type": "ForceNewLine"
+        },
+        {
+          "type": "NewLine"
         },
         {
           "content": [
@@ -299,7 +315,7 @@
               "type": "TabViewContent"
             }
           ],
-          "type": "TabViewContentList"
+          "type": "TabviewContentList"
         }
       ],
       "type": "tabView"
@@ -394,7 +410,7 @@
       "type": "paragraph"
     },
     {
-      "type": "paragraph"
+      "type": "ForceNewLine"
     },
     {
       "type": "paragraph"
@@ -595,7 +611,7 @@
           "type": "wjBlockTag"
         }
       ],
-      "type": "Include"
+      "type": "wjBlockTag"
     },
     {
       "content": [
@@ -631,7 +647,7 @@
       "type": "codeBlock"
     },
     {
-      "type": "HorizontalRule"
+      "type": "horizontalRule"
     },
     {
       "content": [

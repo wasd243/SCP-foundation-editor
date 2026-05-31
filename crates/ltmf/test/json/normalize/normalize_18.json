@@ -299,7 +299,7 @@
               "type": "TabViewContent"
             }
           ],
-          "type": "TabViewContentList"
+          "type": "TabviewContentList"
         }
       ],
       "type": "tabView"

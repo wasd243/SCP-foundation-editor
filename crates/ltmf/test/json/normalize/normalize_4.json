@@ -115,11 +115,27 @@
           "type": "NewLine"
         },
         {
-          "text": "测 试文本test",
-          "type": "text"
+          "attrs": {
+            "htmlAttributes": {
+              "style": "white-space: pre-wrap;"
+            },
+            "tagName": "span"
+          },
+          "content": [
+            {
+              "text": "测 试文本test",
+              "type": "text"
+            }
+          ]
         },
         {
-          "type": "paragraph"
+          "type": "NewLine"
+        },
+        {
+          "type": "ForceNewLine"
+        },
+        {
+          "type": "NewLine"
         },
         {
           "content": [
@@ -170,15 +186,21 @@
       "type": "paragraph"
     },
     {
+      "attrs": {
+        "class": "wj-collapsible"
+      },
       "content": [
         {
+          "attrs": {
+            "class": "wj-collapsible-button wj-collapsible-button-top"
+          },
           "content": [
             {
               "text": "+测试文本test测试文本test-测试文本test",
               "type": "text"
             }
           ],
-          "type": "CollapsibleSummary"
+          "type": "detailsSummary"
         },
         {
           "content": [
@@ -192,14 +214,22 @@
               "type": "paragraph"
             }
           ],
-          "type": "CollapsibleContent"
+          "type": "detailsContent"
         }
       ],
-      "type": "Collapsible"
+      "type": "details"
     },
     {
       "content": [
         {
+          "marks": [
+            {
+              "attrs": {
+                "size": "2em"
+              },
+              "type": "fontSize"
+            }
+          ],
           "type": "NewLine"
         },
         {
@@ -215,48 +245,77 @@
           "type": "text"
         },
         {
+          "marks": [
+            {
+              "attrs": {
+                "size": "2em"
+              },
+              "type": "fontSize"
+            }
+          ],
           "type": "NewLine"
         }
       ],
       "type": "paragraph"
     },
     {
+      "attrs": {
+        "class": "wj-tabs"
+      },
       "content": [
         {
           "content": [
             {
+              "attrs": {
+                "aria-label": "测试文本test",
+                "class": "wj-tabs-button"
+              },
               "content": [
                 {
                   "text": "测试文本test",
                   "type": "text"
                 }
               ],
-              "type": "Tab"
+              "type": "tabViewButton"
             },
             {
+              "attrs": {
+                "aria-label": "测试文本test测试文本test",
+                "class": "wj-tabs-button"
+              },
               "content": [
                 {
                   "text": "测试文本test测试文本test",
                   "type": "text"
                 }
               ],
-              "type": "Tab"
+              "type": "tabViewButton"
             },
             {
+              "attrs": {
+                "aria-label": "测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test",
+                "class": "wj-tabs-button"
+              },
               "content": [
                 {
                   "text": "测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test",
                   "type": "text"
                 }
               ],
-              "type": "Tab"
+              "type": "tabViewButton"
             }
           ],
-          "type": "TabViewButtonList"
+          "type": "tabViewButtonList"
         },
         {
+          "attrs": {
+            "class": "wj-tabs-panel-list"
+          },
           "content": [
             {
+              "attrs": {
+                "class": "wj-tabs-panel"
+              },
               "content": [
                 {
                   "content": [
@@ -268,9 +327,12 @@
                   "type": "paragraph"
                 }
               ],
-              "type": "TabViewContent"
+              "type": "tabViewPanel"
             },
             {
+              "attrs": {
+                "class": "wj-tabs-panel"
+              },
               "content": [
                 {
                   "content": [
@@ -282,9 +344,12 @@
                   "type": "paragraph"
                 }
               ],
-              "type": "TabViewContent"
+              "type": "tabViewPanel"
             },
             {
+              "attrs": {
+                "class": "wj-tabs-panel"
+              },
               "content": [
                 {
                   "content": [
@@ -296,15 +361,21 @@
                   "type": "paragraph"
                 }
               ],
-              "type": "TabViewContent"
+              "type": "tabViewPanel"
             }
           ],
-          "type": "TabViewContentList"
+          "type": "tabViewPanelList"
         }
       ],
       "type": "tabView"
     },
     {
+      "attrs": {
+        "htmlAttributes": {
+          "class": "wj-note"
+        },
+        "tagName": "div"
+      },
       "content": [
         {
           "content": [
@@ -323,7 +394,7 @@
           "type": "paragraph"
         }
       ],
-      "type": "Note"
+      "type": "wjBlockTag"
     },
     {
       "attrs": {
@@ -394,7 +465,7 @@
       "type": "paragraph"
     },
     {
-      "type": "paragraph"
+      "type": "ForceNewLine"
     },
     {
       "type": "paragraph"
@@ -595,7 +666,7 @@
           "type": "wjBlockTag"
         }
       ],
-      "type": "Include"
+      "type": "wjBlockTag"
     },
     {
       "content": [
@@ -631,7 +702,7 @@
       "type": "codeBlock"
     },
     {
-      "type": "HorizontalRule"
+      "type": "horizontalRule"
     },
     {
       "content": [

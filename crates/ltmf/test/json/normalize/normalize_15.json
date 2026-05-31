@@ -119,7 +119,13 @@
           "type": "text"
         },
         {
-          "type": "paragraph"
+          "type": "NewLine"
+        },
+        {
+          "type": "ForceNewLine"
+        },
+        {
+          "type": "NewLine"
         },
         {
           "content": [
@@ -299,7 +305,7 @@
               "type": "TabViewContent"
             }
           ],
-          "type": "TabViewContentList"
+          "type": "TabviewContentList"
         }
       ],
       "type": "tabView"
@@ -394,7 +400,7 @@
       "type": "paragraph"
     },
     {
-      "type": "paragraph"
+      "type": "ForceNewLine"
     },
     {
       "type": "paragraph"

@@ -299,7 +299,7 @@
               "type": "TabViewContent"
             }
           ],
-          "type": "TabViewContentList"
+          "type": "TabviewContentList"
         }
       ],
       "type": "tabView"
@@ -400,15 +400,6 @@
       "type": "paragraph"
     },
     {
-      "attrs": {
-        "src": "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg",
-        "wrapperAttributes": {
-          "class": "image-container alignleft"
-        }
-      },
-      "type": "image"
-    },
-    {
       "content": [
         {
           "type": "NewLine"
@@ -425,15 +416,6 @@
     },
     {
       "type": "paragraph"
-    },
-    {
-      "attrs": {
-        "src": "https://sdafkhgashijkfd.example.com",
-        "wrapperAttributes": {
-          "class": "image-container alignleft"
-        }
-      },
-      "type": "image"
     },
     {
       "content": [
@@ -570,12 +552,6 @@
         },
         {
           "attrs": {
-            "src": "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg"
-          },
-          "type": "image"
-        },
-        {
-          "attrs": {
             "htmlAttributes": {
               "class": "scp-image-caption alignright"
             },
@@ -644,6 +620,9 @@
     },
     {
       "type": "paragraph"
+    },
+    {
+      "type": "image"
     }
   ],
   "type": "doc"
