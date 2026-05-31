@@ -3,7 +3,10 @@ use serde_json::Value;
 use crate::interpreter::{
     get_marks::get_marks,
     get_types::node_type,
-    text::{color::interpret_color_text, normal_text::interpret_normal_text},
+    text::{
+        color::interpret_color_text, new_line::interpret_new_line,
+        normal_text::interpret_normal_text,
+    },
 };
 
 pub fn get_content(node: &Value) -> Vec<String> {
@@ -20,6 +23,11 @@ fn collect_content(node: &Value, content: &mut Vec<String>) {
                     let text =
                         interpret_text_node(node).unwrap_or_else(|error| format!("ERROR:{error}"));
                     content.push(format!("text:{text}"));
+                }
+                Some("NewLine") => {
+                    let new_line = interpret_new_line(node, String::new())
+                        .unwrap_or_else(|error| format!("ERROR:{error}"));
+                    content.push(new_line);
                 }
                 Some(node_type) => content.push(format!("type:{node_type}")),
                 None => {}
