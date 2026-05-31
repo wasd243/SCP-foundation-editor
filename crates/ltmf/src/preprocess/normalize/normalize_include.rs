@@ -1,5 +1,5 @@
 // Normalize include only normalizes the wjBlockTag to include
-// This function ONLY normalizes the outest part of json
+// This function recursively normalizes matching wjBlockTag nodes to Include.
 use serde_json::Value;
 
 pub fn normalize_include(value: Value) -> Value {
