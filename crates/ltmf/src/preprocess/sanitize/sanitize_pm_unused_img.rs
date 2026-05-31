@@ -29,7 +29,7 @@ fn sanitize_value(value: Value) -> Option<Value> {
 fn is_unused_pm_image(value: &Value) -> bool {
     value.as_object().is_some_and(|map| {
         map.get("type").and_then(Value::as_str) == Some("image")
-            && !map
+            && map
                 .get("attrs")
                 .and_then(|attrs| attrs.get("src"))
                 .and_then(Value::as_str)
