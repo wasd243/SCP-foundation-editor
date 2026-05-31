@@ -54,6 +54,7 @@ v2.1.0/
 
 # AI
 .junie/
+.forge/
 ai_generation_assets/
 personal_usage_assets/
 

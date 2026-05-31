@@ -1,18 +1,21 @@
 mod get_content;
 mod heading;
 pub mod color;
+mod normal_text;
 
 use serde_json::Value;
 
 use crate::interpreter::text::{
     get_content::get_content,
     heading::interpret_heading,
+    normal_text::interpret_normal_text,
 };
 
 pub fn interpret_text(index: usize, node: &Value) -> Result<String, String> {
     let node_type = node_type(node)?;
     let content = get_content(node).join(", ");
     let content = interpret_heading(node, content)?;
+    let content = interpret_normal_text(node, content)?;
 
     Ok(format!("[text:{index}] {node_type} -> {content}"))
 }
