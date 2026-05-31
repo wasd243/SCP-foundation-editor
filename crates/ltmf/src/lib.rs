@@ -1,5 +1,5 @@
 mod import_json;
-pub mod preprocess;
+mod preprocess;
 
 use preprocess::preprocess;
 
