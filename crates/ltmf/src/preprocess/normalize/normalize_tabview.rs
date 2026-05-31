@@ -5,7 +5,7 @@ pub fn normalize_tabview(value: Value) -> Value {
     let value = rename_type(value, "tabViewButton", "Tab");
     let value = rename_type(value, "tabViewButtonList", "TabViewButtonList");
     let value = rename_type(value, "tabViewPanel", "TabViewContent");
-    let value = rename_type(value, "tabViewPanelList", "TabviewContentList");
+    let value = rename_type(value, "tabViewPanelList", "TabViewContentList");
     delete_tabview_attrs(value)
 }
 
@@ -47,7 +47,7 @@ fn is_tabview_node_type(node_type: &str) -> bool {
             | "tabViewButtonList"
             | "TabViewContent"
             | "tabViewPanel"
-            | "TabviewContentList"
+            | "TabViewContentList"
             | "tabViewPanelList"
     )
 }
