@@ -1,6 +1,7 @@
 pub mod color;
 mod get_content;
 mod heading;
+mod new_line;
 mod normal_text;
 
 use serde_json::Value;

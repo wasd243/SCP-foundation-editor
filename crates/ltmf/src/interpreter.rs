@@ -1,3 +1,5 @@
+pub mod get_marks;
+pub mod get_types;
 mod include;
 pub mod rgba_to_hex;
 mod text;
