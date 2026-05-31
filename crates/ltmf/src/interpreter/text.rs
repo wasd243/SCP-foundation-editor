@@ -1,3 +1,4 @@
+mod bold;
 pub mod color;
 mod get_content;
 mod heading;
