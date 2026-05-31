@@ -4,6 +4,7 @@ mod get_content;
 mod heading;
 mod new_line;
 mod normal_text;
+mod italic;
 
 use serde_json::Value;
 

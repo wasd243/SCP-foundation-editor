@@ -5,7 +5,7 @@ use crate::interpreter::{
     get_types::node_type,
     text::{
         bold::interpret_bold_text, color::interpret_color_text, new_line::interpret_new_line,
-        normal_text::interpret_normal_text,
+        normal_text::interpret_normal_text, italic::interpret_italic_text,
     },
 };
 
@@ -61,9 +61,11 @@ fn interpret_text_node(node: &Value) -> Result<String, String> {
     }
 }
 
+/// ALL marked text like bold, italic, underline, strikethrough, etc. Should be placed in here.
 fn interpret_marked_text(node: &Value, output: String) -> Result<String, String> {
     let output = interpret_color_text(node, output)?;
     let output = interpret_bold_text(node, output)?;
+    let output = interpret_italic_text(node, output)?;
 
     Ok(output)
 }
