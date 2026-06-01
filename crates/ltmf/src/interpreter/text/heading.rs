@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-use crate::interpreter::get_types::has_type;
+use crate::interpreter::utils::get_types::has_type;
 
 pub fn interpret_heading(node: &Value, output: String) -> Result<String, String> {
     if !has_type(node, "heading") {

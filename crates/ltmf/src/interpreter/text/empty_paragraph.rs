@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-use crate::interpreter::get_types::has_type;
+use crate::interpreter::utils::get_types::has_type;
 
 pub fn interpret_empty_paragraph(node: &Value, output: String) -> Result<String, String> {
     if !is_empty_paragraph(node) {

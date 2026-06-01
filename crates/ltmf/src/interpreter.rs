@@ -1,9 +1,7 @@
-pub mod get_marks;
-pub mod get_types;
 mod include;
-pub mod rgba_to_hex;
 mod text;
 mod wiki_component;
+pub mod utils;
 
 use serde_json::Value;
 

@@ -1,17 +1,15 @@
 use serde_json::Value;
 
-use crate::interpreter::{
-    get_marks::get_marks,
-    get_types::node_type,
-    text::{
-        bold::interpret_bold_text, color::interpret_color_text,
-        empty_paragraph::interpret_empty_paragraph, italic::interpret_italic_text,
-        monospcae::interpret_monospace_text, new_line::interpret_new_line,
-        normal_text::interpret_normal_text, original_text::interpret_original_text,
-        strikethrough::interpret_strike_through_text, sub::interpret_sub_text,
-        sup::interpret_sup_text, underline::interpret_underline_text,
-    },
+use crate::interpreter::text::{
+    bold::interpret_bold_text, color::interpret_color_text,
+    empty_paragraph::interpret_empty_paragraph, italic::interpret_italic_text,
+    monospcae::interpret_monospace_text, new_line::interpret_new_line,
+    normal_text::interpret_normal_text, original_text::interpret_original_text,
+    strikethrough::interpret_strike_through_text, sub::interpret_sub_text,
+    sup::interpret_sup_text, underline::interpret_underline_text,
 };
+use crate::interpreter::utils::get_marks::get_marks;
+use crate::interpreter::utils::get_types::node_type;
 
 pub fn get_content(node: &Value) -> Vec<String> {
     let mut content = Vec::new();
