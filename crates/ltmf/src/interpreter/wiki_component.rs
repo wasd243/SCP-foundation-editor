@@ -1,23 +1,30 @@
+mod alignments;
 pub(crate) mod footnote;
 
 use serde_json::Value;
 
 use crate::interpreter::{
-    utils::get_types::node_type, wiki_component::footnote::interpret_footnote,
+    utils::get_types::node_type,
+    wiki_component::{
+        alignments::{interpret_align_left, is_align_left},
+        footnote::interpret_footnote,
+    },
 };
 
 pub fn interpret_wiki_component(index: usize, node: &Value) -> Result<String, String> {
     let node_type = expect_node_type(node)?;
     let content = interpret_footnote(node, String::new())?;
+    let content = interpret_align_left(node, content)?;
 
     Ok(format!("[wiki_component:{index}] {node_type} -> {content}"))
 }
 
 pub(crate) fn is_wiki_component_node(node: &Value) -> bool {
-    matches!(
-        node_type(node),
-        Some("tabView" | "Collapsible" | "Note" | "Footnote")
-    )
+    is_align_left(node)
+        || matches!(
+            node_type(node),
+            Some("tabView" | "Collapsible" | "Note" | "Footnote")
+        )
 }
 
 fn expect_node_type(node: &Value) -> Result<&str, String> {
