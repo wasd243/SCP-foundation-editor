@@ -5,7 +5,7 @@ use crate::interpreter::{
     utils::{get_intercepted_content::get_intercepted_content, get_types::has_type},
 };
 
-pub fn interpret_footnote(node: &Value, output: String) -> Result<String, String> {
+pub(crate) fn interpret_footnote(node: &Value, output: String) -> Result<String, String> {
     if !has_type(node, "Footnote") {
         return Ok(output);
     }

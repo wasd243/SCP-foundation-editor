@@ -8,7 +8,7 @@ use crate::interpreter::{
     },
 };
 
-pub fn interpret_align_left(node: &Value, output: String) -> Result<String, String> {
+pub(crate) fn interpret_align_left(node: &Value, output: String) -> Result<String, String> {
     if !is_align_left(node) {
         return Ok(output);
     }
@@ -18,7 +18,7 @@ pub fn interpret_align_left(node: &Value, output: String) -> Result<String, Stri
     Ok(format!("[[<]]\n{output}\n[[/<]]"))
 }
 
-pub fn interpret_align_right(node: &Value, output: String) -> Result<String, String> {
+pub(crate) fn interpret_align_right(node: &Value, output: String) -> Result<String, String> {
     if !is_align_right(node) {
         return Ok(output);
     }
@@ -28,7 +28,7 @@ pub fn interpret_align_right(node: &Value, output: String) -> Result<String, Str
     Ok(format!("[[>]]\n{output}\n[[/>]]"))
 }
 
-pub fn interpret_align_center(node: &Value, output: String) -> Result<String, String> {
+pub(crate) fn interpret_align_center(node: &Value, output: String) -> Result<String, String> {
     if !is_align_center(node) {
         return Ok(output);
     }
