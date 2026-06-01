@@ -8,7 +8,7 @@ use crate::interpreter::{
     },
 };
 
-pub(crate) fn interpret_align_left(node: &Value, output: String) -> Result<String, String> {
+pub(super) fn interpret_align_left(node: &Value, output: String) -> Result<String, String> {
     if !is_align_left(node) {
         return Ok(output);
     }
@@ -18,7 +18,7 @@ pub(crate) fn interpret_align_left(node: &Value, output: String) -> Result<Strin
     Ok(format!("[[<]]\n{output}\n[[/<]]"))
 }
 
-pub(crate) fn interpret_align_right(node: &Value, output: String) -> Result<String, String> {
+pub(super) fn interpret_align_right(node: &Value, output: String) -> Result<String, String> {
     if !is_align_right(node) {
         return Ok(output);
     }
@@ -28,7 +28,7 @@ pub(crate) fn interpret_align_right(node: &Value, output: String) -> Result<Stri
     Ok(format!("[[>]]\n{output}\n[[/>]]"))
 }
 
-pub(crate) fn interpret_align_center(node: &Value, output: String) -> Result<String, String> {
+pub(super) fn interpret_align_center(node: &Value, output: String) -> Result<String, String> {
     if !is_align_center(node) {
         return Ok(output);
     }
@@ -38,14 +38,14 @@ pub(crate) fn interpret_align_center(node: &Value, output: String) -> Result<Str
     Ok(format!("[[=]]\n{output}\n[[/=]]"))
 }
 
-pub(crate) fn is_align_left(node: &Value) -> bool {
+pub(super) fn is_align_left(node: &Value) -> bool {
     get_attrs_text_align(node, "left")
 }
 
-pub(crate) fn is_align_right(node: &Value) -> bool {
+pub(super) fn is_align_right(node: &Value) -> bool {
     get_attrs_text_align(node, "right")
 }
 
-pub(crate) fn is_align_center(node: &Value) -> bool {
+pub(super) fn is_align_center(node: &Value) -> bool {
     get_attrs_text_align(node, "center")
 }

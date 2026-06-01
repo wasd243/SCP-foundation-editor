@@ -1,4 +1,5 @@
 mod alignments;
+mod collapsible;
 pub(crate) mod footnote;
 
 use serde_json::Value;
@@ -10,12 +11,14 @@ use crate::interpreter::{
             interpret_align_center, interpret_align_left, interpret_align_right, is_align_center,
             is_align_left, is_align_right,
         },
+        collapsible::interpret_collapsible,
         footnote::interpret_footnote,
     },
 };
 pub fn interpret_wiki_component(index: usize, node: &Value) -> Result<String, String> {
     let node_type = expect_node_type(node)?;
     let content = interpret_footnote(node, String::new())?;
+    let content = interpret_collapsible(node, content)?;
     let content = interpret_align_left(node, content)?;
     let content = interpret_align_center(node, content)?;
     let content = interpret_align_right(node, content)?;
