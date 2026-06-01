@@ -2,6 +2,7 @@ use serde_json::Value;
 
 use crate::interpreter::get_types::has_type;
 
+/// Applies `@@text@@` original text when input has any `[[` or `]]`
 pub fn interpret_original_text(node: &Value, output: String) -> Result<String, String> {
     if !is_original_text_node(node) {
         return Ok(output);
