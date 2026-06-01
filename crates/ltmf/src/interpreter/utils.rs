@@ -1,6 +1,6 @@
 pub(crate) mod get_attrs_text_align;
-pub mod get_content;
-pub mod get_intercepted_content;
-pub mod get_marks;
-pub mod get_types;
-pub mod rgba_to_hex;
+pub(crate) mod get_content;
+pub(crate) mod get_intercepted_content;
+pub(crate) mod get_marks;
+pub(crate) mod get_types;
+pub(crate) mod rgba_to_hex;
