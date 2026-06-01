@@ -1,7 +1,7 @@
 mod include;
 mod text;
-mod wiki_component;
 pub mod utils;
+mod wiki_component;
 
 use serde_json::Value;
 
@@ -31,7 +31,7 @@ pub fn interpret(json: &str) -> Result<String, String> {
 fn identify_node(index: usize, node: &Value) -> Result<String, String> {
     match node.get("type").and_then(Value::as_str) {
         Some("Include") => interpret_include(index, node),
-        Some("tabView") | Some("Collapsible") | Some("Note") => {
+        Some("tabView") | Some("Collapsible") | Some("Note") | Some("Footnote") => {
             interpret_wiki_component(index, node)
         }
         Some(_) => interpret_text(index, node),

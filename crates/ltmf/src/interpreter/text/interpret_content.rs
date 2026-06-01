@@ -5,11 +5,12 @@ use crate::interpreter::text::{
     empty_paragraph::interpret_empty_paragraph, italic::interpret_italic_text,
     monospcae::interpret_monospace_text, new_line::interpret_new_line,
     normal_text::interpret_normal_text, original_text::interpret_original_text,
-    strikethrough::interpret_strike_through_text, sub::interpret_sub_text,
-    sup::interpret_sup_text, underline::interpret_underline_text,
+    strikethrough::interpret_strike_through_text, sub::interpret_sub_text, sup::interpret_sup_text,
+    underline::interpret_underline_text,
 };
 use crate::interpreter::utils::get_marks::get_marks;
 use crate::interpreter::utils::get_types::node_type;
+use crate::interpreter::wiki_component::footnote::interpret_footnote;
 
 pub fn interpret_text_content(node: &Value) -> Vec<String> {
     let mut content = Vec::new();
@@ -38,11 +39,16 @@ fn collect_content(node: &Value, content: &mut Vec<String>, parent_type: Option<
                         .unwrap_or_else(|error| format!("ERROR:{error}"));
                     content.push(empty_paragraph);
                 }
+                Some("Footnote") => {
+                    let footnote = interpret_footnote(node, String::new())
+                        .unwrap_or_else(|error| format!("ERROR:{error}"));
+                    content.push(footnote);
+                }
                 Some(node_type) => content.push(format!("type:{node_type}")),
                 None => {}
             }
 
-            if !is_empty_paragraph_node(node) {
+            if !is_empty_paragraph_node(node) && current_type != Some("Footnote") {
                 if let Some(values) = map.get("content").and_then(Value::as_array) {
                     for value in values {
                         collect_content(value, content, current_type);

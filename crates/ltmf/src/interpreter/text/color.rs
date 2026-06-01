@@ -1,7 +1,7 @@
 use serde_json::Value;
 
-use crate::interpreter::utils::rgba_to_hex::color_to_wikidot_hex;
 use crate::interpreter::utils::get_marks::get_marks_by_type;
+use crate::interpreter::utils::rgba_to_hex::color_to_wikidot_hex;
 
 pub fn interpret_color_text(node: &Value, output: String) -> Result<String, String> {
     let Some(color) = color_text_mark(node) else {

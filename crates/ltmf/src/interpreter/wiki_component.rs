@@ -1,8 +1,14 @@
+pub(crate) mod footnote;
+
 use serde_json::Value;
+
+use crate::interpreter::wiki_component::footnote::interpret_footnote;
 
 pub fn interpret_wiki_component(index: usize, node: &Value) -> Result<String, String> {
     let node_type = node_type(node)?;
-    Ok(format!("[wiki_component:{index}] {node_type}"))
+    let content = interpret_footnote(node, String::new())?;
+
+    Ok(format!("[wiki_component:{index}] {node_type} -> {content}"))
 }
 
 fn node_type(node: &Value) -> Result<&str, String> {

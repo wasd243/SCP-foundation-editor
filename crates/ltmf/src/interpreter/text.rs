@@ -1,8 +1,8 @@
 mod bold;
 pub mod color;
 mod empty_paragraph;
-mod interpret_content;
 mod heading;
+pub(crate) mod interpret_content;
 mod italic;
 mod monospcae;
 mod new_line;
@@ -16,7 +16,8 @@ mod underline;
 use serde_json::Value;
 
 use crate::interpreter::text::{
-    interpret_content::interpret_text_content, heading::interpret_heading, normal_text::interpret_normal_text,
+    heading::interpret_heading, interpret_content::interpret_text_content,
+    normal_text::interpret_normal_text,
 };
 
 pub fn interpret_text(index: usize, node: &Value) -> Result<String, String> {
