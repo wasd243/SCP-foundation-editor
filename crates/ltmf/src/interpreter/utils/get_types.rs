@@ -14,6 +14,7 @@ pub fn has_type(node: &Value, expected_type: &str) -> bool {
     node_type(node) == Some(expected_type)
 }
 
+#[allow(dead_code)]
 pub fn contains_type(node: &Value, expected_type: &str) -> bool {
     get_types(node)
         .into_iter()

@@ -13,6 +13,7 @@ pub fn get_marks_by_type<'a>(node: &'a Value, mark_type: &str) -> Vec<&'a Value>
         .collect()
 }
 
+#[allow(dead_code)]
 pub fn get_mark_types(node: &Value) -> Vec<&str> {
     get_marks(node)
         .into_iter()
