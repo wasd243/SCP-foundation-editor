@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn get_intercepted_content<F>(node: &Value, interpret_content: F) -> String
+pub(crate) fn get_intercepted_content<F>(node: &Value, interpret_content: F) -> String
 where
     F: Fn(&Value) -> Vec<String>,
 {

@@ -7,7 +7,7 @@ pub struct ContentNode<'a> {
     pub parent_type: Option<&'a str>,
 }
 
-pub fn get_content_nodes<F>(node: &Value, should_stop: F) -> Vec<ContentNode<'_>>
+pub(crate) fn get_content_nodes<F>(node: &Value, should_stop: F) -> Vec<ContentNode<'_>>
 where
     F: Fn(&Value) -> bool,
 {
