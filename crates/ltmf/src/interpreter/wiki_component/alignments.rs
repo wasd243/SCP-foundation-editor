@@ -18,9 +18,20 @@ pub fn interpret_align_right(node: &Value, output: String) -> Result<String, Str
     if !is_align_right(node) {
         return Ok(output);
     }
+
     let output = get_intercepted_content(node, interpret_text_content);
 
     Ok(format!("[[>]]\n{output}\n[[/>]]"))
+}
+
+pub fn interpret_align_center(node: &Value, output: String) -> Result<String, String> {
+    if !is_align_center(node) {
+        return Ok(output);
+    }
+
+    let output = get_intercepted_content(node, interpret_text_content);
+
+    Ok(format!("[[=]]\n{output}\n[[/=]]"))
 }
 
 pub(crate) fn is_align_left(node: &Value) -> bool {
@@ -35,4 +46,11 @@ pub(crate) fn is_align_right(node: &Value) -> bool {
         .and_then(|attrs| attrs.get("textAlign"))
         .and_then(Value::as_str)
         == Some("right")
+}
+
+pub(crate) fn is_align_center(node: &Value) -> bool {
+    node.get("attrs")
+        .and_then(|attrs| attrs.get("textAlign"))
+        .and_then(Value::as_str)
+        == Some("center")
 }
