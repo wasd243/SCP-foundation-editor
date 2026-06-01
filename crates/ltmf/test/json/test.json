@@ -316,6 +316,29 @@
         },
         {
           "type": "text",
+          "text": "[[include]]这是一条组件内显示原文本测试"
+        },
+        {
+          "type": "hardBreak",
+          "attrs": {
+            "class": null,
+            "id": null,
+            "style": null,
+            "role": null,
+            "type": null,
+            "data-id": null,
+            "data-type": null,
+            "aria-label": null,
+            "aria-hidden": null,
+            "aria-selected": null,
+            "aria-controls": null,
+            "aria-labelledby": null,
+            "tabindex": null,
+            "hidden": null
+          }
+        },
+        {
+          "type": "text",
           "marks": [
             {
               "type": "superscript"

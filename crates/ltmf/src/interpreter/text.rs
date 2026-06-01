@@ -7,6 +7,7 @@ mod italic;
 mod monospcae;
 mod new_line;
 mod normal_text;
+mod original_text;
 mod strikethrough;
 mod sub;
 mod sup;

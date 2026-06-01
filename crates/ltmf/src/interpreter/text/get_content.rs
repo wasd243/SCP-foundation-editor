@@ -7,24 +7,27 @@ use crate::interpreter::{
         bold::interpret_bold_text, color::interpret_color_text,
         empty_paragraph::interpret_empty_paragraph, italic::interpret_italic_text,
         monospcae::interpret_monospace_text, new_line::interpret_new_line,
-        normal_text::interpret_normal_text, strikethrough::interpret_strike_through_text,
-        sub::interpret_sub_text, sup::interpret_sup_text, underline::interpret_underline_text,
+        normal_text::interpret_normal_text, original_text::interpret_original_text,
+        strikethrough::interpret_strike_through_text, sub::interpret_sub_text,
+        sup::interpret_sup_text, underline::interpret_underline_text,
     },
 };
 
 pub fn get_content(node: &Value) -> Vec<String> {
     let mut content = Vec::new();
-    collect_content(node, &mut content);
+    collect_content(node, &mut content, None);
     content
 }
 
-fn collect_content(node: &Value, content: &mut Vec<String>) {
+fn collect_content(node: &Value, content: &mut Vec<String>, parent_type: Option<&str>) {
     match node {
         Value::Object(map) => {
-            match node_type(node) {
+            let current_type = node_type(node);
+
+            match current_type {
                 Some("text") => {
-                    let text =
-                        interpret_text_node(node).unwrap_or_else(|error| format!("ERROR:{error}"));
+                    let text = interpret_text_node(node, parent_type)
+                        .unwrap_or_else(|error| format!("ERROR:{error}"));
                     content.push(format!("text:{text}"));
                 }
                 Some("NewLine") => {
@@ -44,14 +47,14 @@ fn collect_content(node: &Value, content: &mut Vec<String>) {
             if !is_empty_paragraph_node(node) {
                 if let Some(values) = map.get("content").and_then(Value::as_array) {
                     for value in values {
-                        collect_content(value, content);
+                        collect_content(value, content, current_type);
                     }
                 }
             }
         }
         Value::Array(values) => {
             for value in values {
-                collect_content(value, content);
+                collect_content(value, content, parent_type);
             }
         }
         _ => {}
@@ -67,16 +70,21 @@ fn is_empty_paragraph_node(node: &Value) -> bool {
             .unwrap_or(true)
 }
 
-fn interpret_text_node(node: &Value) -> Result<String, String> {
+fn interpret_text_node(node: &Value, parent_type: Option<&str>) -> Result<String, String> {
     let text = node
         .get("text")
         .and_then(Value::as_str)
         .ok_or_else(|| "text node expected text".to_string())?
         .to_string();
 
-    match get_marks(node).is_empty() {
+    let text = match get_marks(node).is_empty() {
         true => interpret_normal_text(node, text),
         false => interpret_marked_text(node, text),
+    }?;
+
+    match parent_type {
+        Some("paragraph") => interpret_original_text(node, text),
+        _ => Ok(text),
     }
 }
 
