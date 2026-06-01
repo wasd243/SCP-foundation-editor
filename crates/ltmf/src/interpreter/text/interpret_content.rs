@@ -11,7 +11,7 @@ use crate::interpreter::text::{
 use crate::interpreter::utils::get_marks::get_marks;
 use crate::interpreter::utils::get_types::node_type;
 
-pub fn get_content(node: &Value) -> Vec<String> {
+pub fn interpret_text_content(node: &Value) -> Vec<String> {
     let mut content = Vec::new();
     collect_content(node, &mut content, None);
     content
