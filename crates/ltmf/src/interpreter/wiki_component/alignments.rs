@@ -1,7 +1,11 @@
 use serde_json::Value;
 
 use crate::interpreter::{
-    text::interpret_text_content, utils::get_intercepted_content::get_intercepted_content,
+    text::interpret_text_content,
+    utils::{
+        get_attrs_text_align::get_attrs_text_align,
+        get_intercepted_content::get_intercepted_content,
+    },
 };
 
 pub fn interpret_align_left(node: &Value, output: String) -> Result<String, String> {
@@ -35,22 +39,13 @@ pub fn interpret_align_center(node: &Value, output: String) -> Result<String, St
 }
 
 pub(crate) fn is_align_left(node: &Value) -> bool {
-    node.get("attrs")
-        .and_then(|attrs| attrs.get("textAlign"))
-        .and_then(Value::as_str)
-        == Some("left")
+    get_attrs_text_align(node, "left")
 }
 
 pub(crate) fn is_align_right(node: &Value) -> bool {
-    node.get("attrs")
-        .and_then(|attrs| attrs.get("textAlign"))
-        .and_then(Value::as_str)
-        == Some("right")
+    get_attrs_text_align(node, "right")
 }
 
 pub(crate) fn is_align_center(node: &Value) -> bool {
-    node.get("attrs")
-        .and_then(|attrs| attrs.get("textAlign"))
-        .and_then(Value::as_str)
-        == Some("center")
+    get_attrs_text_align(node, "center")
 }
