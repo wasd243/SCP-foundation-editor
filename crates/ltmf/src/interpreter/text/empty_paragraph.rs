@@ -2,7 +2,7 @@ use serde_json::Value;
 
 use crate::interpreter::utils::get_types::has_type;
 
-pub fn interpret_empty_paragraph(node: &Value, output: String) -> Result<String, String> {
+pub(super) fn interpret_empty_paragraph(node: &Value, output: String) -> Result<String, String> {
     if !is_empty_paragraph(node) {
         return Ok(output);
     }

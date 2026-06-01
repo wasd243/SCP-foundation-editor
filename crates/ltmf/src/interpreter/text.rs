@@ -1,5 +1,5 @@
 mod bold;
-pub mod color;
+pub(crate) mod color;
 mod empty_paragraph;
 mod heading;
 mod italic;
@@ -31,7 +31,7 @@ use crate::interpreter::{
     wiki_component::{interpret_wiki_component, is_wiki_component_node},
 };
 
-pub fn interpret_text(index: usize, node: &Value) -> Result<String, String> {
+pub(super) fn interpret_text(index: usize, node: &Value) -> Result<String, String> {
     let node_type = expect_node_type(node)?;
     let content = interpret_text_content(node).join(", ");
     let content = interpret_heading(node, content)?;
