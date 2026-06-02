@@ -1,3 +1,4 @@
+mod blockquote;
 mod bold;
 pub(crate) mod color;
 mod empty_paragraph;
@@ -18,6 +19,7 @@ use serde_json::Value;
 
 use crate::interpreter::{
     text::{
+        blockquote::{interpret_blockquote, is_blockquote},
         bold::interpret_bold_text,
         color::interpret_color_text,
         empty_paragraph::interpret_empty_paragraph,
@@ -75,6 +77,10 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
             interpret_empty_paragraph(node, String::new())
                 .unwrap_or_else(|error| format!("ERROR:{error}")),
         ),
+        Some(_) if is_blockquote(node) => Some(
+            interpret_blockquote(node, String::new())
+                .unwrap_or_else(|error| format!("ERROR:{error}")),
+        ),
         Some(_) if is_unordered_list(node) => {
             Some(interpret_ul(node, String::new()).unwrap_or_else(|error| format!("ERROR:{error}")))
         }
@@ -91,6 +97,7 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
 
 fn should_stop_collecting_children(node: &Value) -> bool {
     is_empty_paragraph_node(node)
+        || is_blockquote(node)
         || is_unordered_list(node)
         || is_ordered_list(node)
         || is_wiki_component_node(node)
