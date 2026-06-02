@@ -6,6 +6,7 @@ mod italic;
 mod monospcae;
 mod new_line;
 mod normal_text;
+mod ol;
 mod original_text;
 mod strikethrough;
 mod sub;
@@ -25,6 +26,7 @@ use crate::interpreter::{
         monospcae::interpret_monospace_text,
         new_line::interpret_new_line,
         normal_text::interpret_normal_text,
+        ol::{interpret_ol, is_ordered_list},
         original_text::interpret_original_text,
         strikethrough::interpret_strike_through_text,
         sub::interpret_sub_text,
@@ -76,6 +78,9 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
         Some(_) if is_unordered_list(node) => {
             Some(interpret_ul(node, String::new()).unwrap_or_else(|error| format!("ERROR:{error}")))
         }
+        Some(_) if is_ordered_list(node) => {
+            Some(interpret_ol(node, String::new()).unwrap_or_else(|error| format!("ERROR:{error}")))
+        }
         Some(_) if is_wiki_component_node(node) => {
             Some(interpret_wiki_component(0, node).unwrap_or_else(|error| format!("ERROR:{error}")))
         }
@@ -85,7 +90,10 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
 }
 
 fn should_stop_collecting_children(node: &Value) -> bool {
-    is_empty_paragraph_node(node) || is_unordered_list(node) || is_wiki_component_node(node)
+    is_empty_paragraph_node(node)
+        || is_unordered_list(node)
+        || is_ordered_list(node)
+        || is_wiki_component_node(node)
 }
 
 fn is_empty_paragraph_node(node: &Value) -> bool {
