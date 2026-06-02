@@ -1,5 +1,6 @@
 use serde_json::Value;
 
+use crate::interpreter::utils::get_raw_text::get_raw_text;
 use crate::interpreter::utils::get_types::has_type;
 
 pub(super) fn interpret_code(node: &Value, output: String) -> Result<String, String> {
@@ -26,13 +27,5 @@ fn code_language(node: &Value) -> Option<&str> {
 }
 
 fn raw_text_content(node: &Value) -> String {
-    node.get("content")
-        .and_then(Value::as_array)
-        .map(|content| {
-            content
-                .iter()
-                .filter_map(|node| node.get("text").and_then(Value::as_str))
-                .collect::<String>()
-        })
-        .unwrap_or_default()
+    get_raw_text(node)
 }
