@@ -6,6 +6,7 @@ use {
     sanitize_footnote::sanitize_footnote_refs, sanitize_null::sanitize_null,
     sanitize_pm_unused_img::sanitize_pm_unused_img, sanitize_table::sanitize_table,
     sanitize_tabview::sanitize_tabview, sanitize_text_align::sanitize_text_align,
+    sanitize_unused_code_block_attrs_class::sanitize_unused_code_block_attrs_class,
     sanitize_unused_img_attrs::sanitize_unused_img_attrs,
     sanitize_unused_toc_id::sanitize_unused_toc_id, sanitize_url::sanitize_url,
     sanitize_wj_inline_tag::sanitize_wj_inline_tag,
@@ -22,6 +23,7 @@ mod sanitize_pm_unused_img;
 mod sanitize_table;
 mod sanitize_tabview;
 mod sanitize_text_align;
+pub mod sanitize_unused_code_block_attrs_class;
 mod sanitize_unused_img_attrs;
 mod sanitize_unused_toc_id;
 mod sanitize_url;
@@ -36,6 +38,7 @@ pub fn sanitize(value: Value) -> Value {
     let value = sanitize_tabview(value);
     let value = sanitize_pm_unused_img(value);
     let value = sanitize_unused_img_attrs(value);
+    let value = sanitize_unused_code_block_attrs_class(value);
     let value = sanitize_footnote_refs(value);
     let value = sanitize_draggable(value);
     let value = sanitize_table(value);
