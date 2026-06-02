@@ -1,7 +1,7 @@
 use crate::preprocess::normalize::rename::rename_type;
 use serde_json::Value;
 
-pub fn normalize_tabview(value: Value) -> Value {
+pub(super) fn normalize_tabview(value: Value) -> Value {
     let value = rename_type(value, "tabViewButton", "Tab");
     let value = rename_type(value, "tabViewButtonList", "TabViewButtonList");
     let value = rename_type(value, "tabViewPanel", "TabViewContent");

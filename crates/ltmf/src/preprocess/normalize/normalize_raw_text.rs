@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn normalize_raw_text(value: Value) -> Value {
+pub(super) fn normalize_raw_text(value: Value) -> Value {
     match value {
         Value::Object(map) => {
             let value = Value::Object(map);

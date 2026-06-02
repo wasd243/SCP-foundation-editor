@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn normalize_empty_paragraph_between_newline(value: Value) -> Value {
+pub(super) fn normalize_empty_paragraph_between_newline(value: Value) -> Value {
     match value {
         Value::Object(map) => Value::Object(
             map.into_iter()
