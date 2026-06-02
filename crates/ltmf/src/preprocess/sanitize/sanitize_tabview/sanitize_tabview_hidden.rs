@@ -1,7 +1,7 @@
 use super::is_tabview::is_tabview;
 use serde_json::Value;
 
-pub fn sanitize_tabview_hidden(value: Value) -> Value {
+pub(super) fn sanitize_tabview_hidden(value: Value) -> Value {
     sanitize_tabview_hidden_in_tabview(value, false)
 }
 

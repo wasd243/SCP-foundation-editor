@@ -1,6 +1,6 @@
 use serde_json::{Map, Value};
 
-pub fn sanitize_unused_code_block_attrs_class(value: Value) -> Value {
+pub(super) fn sanitize_unused_code_block_attrs_class(value: Value) -> Value {
     match value {
         Value::Object(map) => sanitize_object(map),
         Value::Array(values) => Value::Array(

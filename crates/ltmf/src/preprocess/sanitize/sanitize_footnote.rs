@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn sanitize_footnote_refs(value: Value) -> Value {
+pub(super) fn sanitize_footnote_refs(value: Value) -> Value {
     sanitize_value(value).unwrap_or(Value::Null)
 }
 

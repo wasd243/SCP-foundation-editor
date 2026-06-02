@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn sanitize_empty_attrs(value: &Value) -> Value {
+pub(super) fn sanitize_empty_attrs(value: &Value) -> Value {
     match value {
         Value::Object(map) => Value::Object(
             map.iter()
