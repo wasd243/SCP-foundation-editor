@@ -6,6 +6,7 @@ mod image;
 mod note;
 mod table;
 mod tabview;
+mod user;
 
 use serde_json::Value;
 
@@ -22,6 +23,7 @@ use crate::interpreter::{
         note::{interpret_note, is_note},
         table::{interpret_table, is_table},
         tabview::{interpret_tabview, is_tabview},
+        user::{interpret_user, is_user},
     },
 };
 pub fn interpret_wiki_component(index: usize, node: &Value) -> Result<String, String> {
@@ -32,6 +34,7 @@ pub fn interpret_wiki_component(index: usize, node: &Value) -> Result<String, St
     let content = interpret_note(node, content)?;
     let content = interpret_image(node, content)?;
     let content = interpret_table(node, content)?;
+    let content = interpret_user(node, content)?;
     let content = interpret_align_left(node, content)?;
     let content = interpret_align_center(node, content)?;
     let content = interpret_align_right(node, content)?;
@@ -47,6 +50,7 @@ pub(crate) fn is_wiki_component_node(node: &Value) -> bool {
         || is_note(node)
         || is_image(node)
         || is_table(node)
+        || is_user(node)
         // This matches! macro only for identifier
         // Going to be removed for future implementation
         || matches!(node_type(node), Some("Collapsible" | "Footnote"))
