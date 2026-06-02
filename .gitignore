@@ -22,7 +22,6 @@ ftml/
 # IDE
 .vscode/
 .idea/
-.github/
 
 # Virtual environment
 .venv/
@@ -31,7 +30,7 @@ ftml/
 # Rust and Tauri
 target/
 gen/
-icons/
+icon.png
 
 # git
 .git/
@@ -45,16 +44,12 @@ Thumbs.db
 # aiderchat
 .aider*
 
-# OLD
-v2.1.0/
-
 # Vite
 .vite-dev.err.log
 .vite-dev.log
 
 # AI
 .junie/
-.forge/
 ai_generation_assets/
 personal_usage_assets/
 
