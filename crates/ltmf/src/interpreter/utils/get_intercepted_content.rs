@@ -11,7 +11,7 @@ where
                 .iter()
                 .flat_map(interpret_content)
                 .collect::<Vec<_>>()
-                .join(", ")
+                .join("")
         })
         .unwrap_or_default()
 }

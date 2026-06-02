@@ -28,8 +28,7 @@ use crate::interpreter::{
         user::{interpret_user, is_user},
     },
 };
-pub fn interpret_wiki_component(index: usize, node: &Value) -> Result<String, String> {
-    let node_type = expect_node_type(node)?;
+pub fn interpret_wiki_component(_index: usize, node: &Value) -> Result<String, String> {
     let content = interpret_footnote(node, String::new())?;
     let content = interpret_collapsible(node, content)?;
     let content = interpret_tabview(node, content)?;
@@ -42,7 +41,7 @@ pub fn interpret_wiki_component(index: usize, node: &Value) -> Result<String, St
     let content = interpret_align_center(node, content)?;
     let content = interpret_align_right(node, content)?;
 
-    Ok(format!("[wiki_component:{index}] {node_type} -> {content}"))
+    Ok(content)
 }
 
 pub(crate) fn is_wiki_component_node(node: &Value) -> bool {
@@ -58,10 +57,4 @@ pub(crate) fn is_wiki_component_node(node: &Value) -> bool {
         // This matches! macro only for identifier
         // Going to be removed for future implementation
         || matches!(node_type(node), Some("Collapsible" | "Footnote"))
-}
-
-fn expect_node_type(node: &Value) -> Result<&str, String> {
-    node.get("type")
-        .and_then(Value::as_str)
-        .ok_or_else(|| "wiki component interpreter expected node type".to_string())
 }

@@ -50,13 +50,12 @@ use crate::interpreter::{
     wiki_component::{interpret_wiki_component, is_wiki_component_node},
 };
 
-pub(super) fn interpret_text(index: usize, node: &Value) -> Result<String, String> {
-    let node_type = expect_node_type(node)?;
-    let content = interpret_text_content(node).join(", ");
+pub(super) fn interpret_text(_index: usize, node: &Value) -> Result<String, String> {
+    let content = interpret_text_content(node).join("");
     let content = interpret_heading(node, content)?;
     let content = interpret_normal_text(node, content)?;
 
-    Ok(format!("[text:{index}] {node_type} -> {content}"))
+    Ok(content)
 }
 
 pub(crate) fn interpret_text_content(node: &Value) -> Vec<String> {
@@ -70,11 +69,10 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
     let node = content_node.node;
 
     match node_type(node) {
-        Some("text") => Some(format!(
-            "text:{}",
+        Some("text") => Some(
             interpret_text_node(node, content_node.parent_type)
-                .unwrap_or_else(|error| format!("ERROR:{error}"))
-        )),
+                .unwrap_or_else(|error| format!("ERROR:{error}")),
+        ),
         Some("NewLine") => Some(
             interpret_new_line(node, String::new())
                 .unwrap_or_else(|error| format!("ERROR:{error}")),
@@ -83,6 +81,7 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
             interpret_empty_paragraph(node, String::new())
                 .unwrap_or_else(|error| format!("ERROR:{error}")),
         ),
+        Some("paragraph") => None,
         Some(_) if is_blockquote(node) => Some(
             interpret_blockquote(node, String::new())
                 .unwrap_or_else(|error| format!("ERROR:{error}")),
@@ -100,7 +99,7 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
         Some(_) if is_wiki_component_node(node) => {
             Some(interpret_wiki_component(0, node).unwrap_or_else(|error| format!("ERROR:{error}")))
         }
-        Some(node_type) => Some(format!("type:{node_type}")),
+        Some(node_type) => Some(format!("[[unknown {node_type}]]")),
         None => None,
     }
 }
@@ -156,10 +155,4 @@ fn interpret_marked_text(node: &Value, output: String) -> Result<String, String>
     let output = interpret_size_text(node, output)?;
 
     Ok(output)
-}
-
-fn expect_node_type(node: &Value) -> Result<&str, String> {
-    node.get("type")
-        .and_then(Value::as_str)
-        .ok_or_else(|| "text interpreter expected node type".to_string())
 }

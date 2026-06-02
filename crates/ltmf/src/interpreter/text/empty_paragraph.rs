@@ -8,7 +8,7 @@ pub(super) fn interpret_empty_paragraph(node: &Value, output: String) -> Result<
     }
 
     // add `\n` before `@@@@`
-    Ok("\n@@@@".to_string())
+    Ok("@@@@".to_string())
 }
 
 fn is_empty_paragraph(node: &Value) -> bool {
