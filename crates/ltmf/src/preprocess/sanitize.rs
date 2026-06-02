@@ -23,7 +23,7 @@ mod sanitize_pm_unused_img;
 mod sanitize_table;
 mod sanitize_tabview;
 mod sanitize_text_align;
-pub mod sanitize_unused_code_block_attrs_class;
+mod sanitize_unused_code_block_attrs_class;
 mod sanitize_unused_img_attrs;
 mod sanitize_unused_toc_id;
 mod sanitize_url;
