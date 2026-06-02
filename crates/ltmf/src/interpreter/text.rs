@@ -9,6 +9,7 @@ mod new_line;
 mod normal_text;
 mod ol;
 mod original_text;
+mod size;
 mod strikethrough;
 mod sub;
 mod sup;
@@ -30,6 +31,7 @@ use crate::interpreter::{
         normal_text::interpret_normal_text,
         ol::{interpret_ol, is_ordered_list},
         original_text::interpret_original_text,
+        size::interpret_size_text,
         strikethrough::interpret_strike_through_text,
         sub::interpret_sub_text,
         sup::interpret_sup_text,
@@ -141,6 +143,7 @@ fn interpret_marked_text(node: &Value, output: String) -> Result<String, String>
     let output = interpret_monospace_text(node, output)?;
     let output = interpret_sup_text(node, output)?;
     let output = interpret_sub_text(node, output)?;
+    let output = interpret_size_text(node, output)?;
 
     Ok(output)
 }

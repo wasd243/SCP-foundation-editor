@@ -1,7 +1,6 @@
 mod alignments;
 mod collapsible;
 pub(crate) mod footnote;
-mod size;
 
 use serde_json::Value;
 

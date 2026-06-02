@@ -5,6 +5,7 @@ use crate::preprocess::normalize::{
     normalize_color_text_marks::normalize_color_text_marks,
     normalize_details::normalize_details,
     normalize_empty_paragraph_between_newline::normalize_empty_paragraph_between_newline,
+    normalize_font_size::normalize_font_size,
     normalize_footnote::normalize_footnote,
     normalize_force_new_line::normalize_force_new_line_to_paragraph,
     normalize_hard_break::normalize_hard_break,
@@ -17,13 +18,13 @@ use crate::preprocess::normalize::{
     normalize_strike::normalize_strike,
     normalize_tabview::normalize_tabview,
     normalize_white_space_pre_wrap::normalize_white_space_pre_wrap,
-    normalize_font_size::normalize_font_size,
 };
 
 mod normalize_bullet_list;
 mod normalize_color_text_marks;
 mod normalize_details;
 mod normalize_empty_paragraph_between_newline;
+mod normalize_font_size;
 mod normalize_footnote;
 mod normalize_force_new_line;
 mod normalize_hard_break;
@@ -36,7 +37,6 @@ mod normalize_strike;
 mod normalize_tabview;
 mod normalize_white_space_pre_wrap;
 pub mod rename;
-mod normalize_font_size;
 // pub mod normalize_div;
 
 pub fn normalize(value: Value) -> Value {
