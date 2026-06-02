@@ -13,6 +13,11 @@ pub(super) fn interpret_ul(node: &Value, output: String) -> Result<String, Strin
         return Ok(output);
     }
 
+    // What's wrong with this Agent...
+    // I provided a function get_intercepted_content
+    // It's just repeat it and import???
+    // Maybe I should keep this because there's multiple listItem in ProseMirror JSON?
+    // I hate Wikidot Lists
     let output = node
         .get("content")
         .and_then(Value::as_array)
