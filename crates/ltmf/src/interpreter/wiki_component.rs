@@ -1,9 +1,9 @@
 mod alignments;
 mod collapsible;
+mod div;
 pub(crate) mod footnote;
 mod note;
 mod tabview;
-mod div;
 
 use serde_json::Value;
 

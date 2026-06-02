@@ -4,6 +4,7 @@ pub(crate) mod color;
 mod empty_paragraph;
 mod heading;
 mod italic;
+mod link;
 mod monospcae;
 mod new_line;
 mod normal_text;
@@ -26,6 +27,7 @@ use crate::interpreter::{
         empty_paragraph::interpret_empty_paragraph,
         heading::interpret_heading,
         italic::interpret_italic_text,
+        link::interpret_link_text,
         monospcae::interpret_monospace_text,
         new_line::interpret_new_line,
         normal_text::interpret_normal_text,
@@ -143,6 +145,7 @@ fn interpret_marked_text(node: &Value, output: String) -> Result<String, String>
     let output = interpret_monospace_text(node, output)?;
     let output = interpret_sup_text(node, output)?;
     let output = interpret_sub_text(node, output)?;
+    let output = interpret_link_text(node, output)?;
     let output = interpret_size_text(node, output)?;
 
     Ok(output)
