@@ -1,5 +1,4 @@
 {
-  "type": "doc",
   "content": [
     {
       "type": "heading",
@@ -316,29 +315,6 @@
         },
         {
           "type": "text",
-          "text": "[[include]]这是一条组件内显示原文本测试"
-        },
-        {
-          "type": "hardBreak",
-          "attrs": {
-            "class": null,
-            "id": null,
-            "style": null,
-            "role": null,
-            "type": null,
-            "data-id": null,
-            "data-type": null,
-            "aria-label": null,
-            "aria-hidden": null,
-            "aria-selected": null,
-            "aria-controls": null,
-            "aria-labelledby": null,
-            "tabindex": null,
-            "hidden": null
-          }
-        },
-        {
-          "type": "text",
           "marks": [
             {
               "type": "superscript"
@@ -612,6 +588,326 @@
       ]
     },
     {
+      "type": "blockquote",
+      "attrs": {
+        "class": null,
+        "id": null,
+        "style": null,
+        "role": null,
+        "type": null,
+        "data-id": null,
+        "data-type": null,
+        "aria-label": null,
+        "aria-hidden": null,
+        "aria-selected": null,
+        "aria-controls": null,
+        "aria-labelledby": null,
+        "tabindex": null,
+        "hidden": null
+      },
+      "content": [
+        {
+          "type": "paragraph",
+          "attrs": {
+            "textAlign": null,
+            "class": null,
+            "id": null,
+            "style": null,
+            "role": null,
+            "type": null,
+            "data-id": null,
+            "data-type": null,
+            "aria-label": null,
+            "aria-hidden": null,
+            "aria-selected": null,
+            "aria-controls": null,
+            "aria-labelledby": null,
+            "tabindex": null,
+            "hidden": null
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "引用测试"
+            },
+            {
+              "type": "hardBreak",
+              "attrs": {
+                "class": null,
+                "id": null,
+                "style": null,
+                "role": null,
+                "type": null,
+                "data-id": null,
+                "data-type": null,
+                "aria-label": null,
+                "aria-hidden": null,
+                "aria-selected": null,
+                "aria-controls": null,
+                "aria-labelledby": null,
+                "tabindex": null,
+                "hidden": null
+              }
+            },
+            {
+              "type": "hardBreak",
+              "attrs": {
+                "class": null,
+                "id": null,
+                "style": null,
+                "role": null,
+                "type": null,
+                "data-id": null,
+                "data-type": null,
+                "aria-label": null,
+                "aria-hidden": null,
+                "aria-selected": null,
+                "aria-controls": null,
+                "aria-labelledby": null,
+                "tabindex": null,
+                "hidden": null
+              }
+            },
+            {
+              "type": "text",
+              "text": "多行引用测试"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "bulletList",
+      "attrs": {
+        "class": null,
+        "id": null,
+        "style": null,
+        "role": null,
+        "type": null,
+        "data-id": null,
+        "data-type": null,
+        "aria-label": null,
+        "aria-hidden": null,
+        "aria-selected": null,
+        "aria-controls": null,
+        "aria-labelledby": null,
+        "tabindex": null,
+        "hidden": null
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "attrs": {
+            "class": null,
+            "id": null,
+            "style": null,
+            "role": null,
+            "type": null,
+            "data-id": null,
+            "data-type": null,
+            "aria-label": null,
+            "aria-hidden": null,
+            "aria-selected": null,
+            "aria-controls": null,
+            "aria-labelledby": null,
+            "tabindex": null,
+            "hidden": null
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "textAlign": null,
+                "class": null,
+                "id": null,
+                "style": null,
+                "role": null,
+                "type": null,
+                "data-id": null,
+                "data-type": null,
+                "aria-label": null,
+                "aria-hidden": null,
+                "aria-selected": null,
+                "aria-controls": null,
+                "aria-labelledby": null,
+                "tabindex": null,
+                "hidden": null
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "无须列表测试"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "attrs": {
+            "class": null,
+            "id": null,
+            "style": null,
+            "role": null,
+            "type": null,
+            "data-id": null,
+            "data-type": null,
+            "aria-label": null,
+            "aria-hidden": null,
+            "aria-selected": null,
+            "aria-controls": null,
+            "aria-labelledby": null,
+            "tabindex": null,
+            "hidden": null
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "textAlign": null,
+                "class": null,
+                "id": null,
+                "style": null,
+                "role": null,
+                "type": null,
+                "data-id": null,
+                "data-type": null,
+                "aria-label": null,
+                "aria-hidden": null,
+                "aria-selected": null,
+                "aria-controls": null,
+                "aria-labelledby": null,
+                "tabindex": null,
+                "hidden": null
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "无须列表测试"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "class": null,
+        "id": null,
+        "style": null,
+        "role": null,
+        "type": null,
+        "data-id": null,
+        "data-type": null,
+        "aria-label": null,
+        "aria-hidden": null,
+        "aria-selected": null,
+        "aria-controls": null,
+        "aria-labelledby": null,
+        "tabindex": null,
+        "hidden": null,
+        "start": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "attrs": {
+            "class": null,
+            "id": null,
+            "style": null,
+            "role": null,
+            "type": null,
+            "data-id": null,
+            "data-type": null,
+            "aria-label": null,
+            "aria-hidden": null,
+            "aria-selected": null,
+            "aria-controls": null,
+            "aria-labelledby": null,
+            "tabindex": null,
+            "hidden": null
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "textAlign": null,
+                "class": null,
+                "id": null,
+                "style": null,
+                "role": null,
+                "type": null,
+                "data-id": null,
+                "data-type": null,
+                "aria-label": null,
+                "aria-hidden": null,
+                "aria-selected": null,
+                "aria-controls": null,
+                "aria-labelledby": null,
+                "tabindex": null,
+                "hidden": null
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "有序列表测试"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "listItem",
+          "attrs": {
+            "class": null,
+            "id": null,
+            "style": null,
+            "role": null,
+            "type": null,
+            "data-id": null,
+            "data-type": null,
+            "aria-label": null,
+            "aria-hidden": null,
+            "aria-selected": null,
+            "aria-controls": null,
+            "aria-labelledby": null,
+            "tabindex": null,
+            "hidden": null
+          },
+          "content": [
+            {
+              "type": "paragraph",
+              "attrs": {
+                "textAlign": null,
+                "class": null,
+                "id": null,
+                "style": null,
+                "role": null,
+                "type": null,
+                "data-id": null,
+                "data-type": null,
+                "aria-label": null,
+                "aria-hidden": null,
+                "aria-selected": null,
+                "aria-controls": null,
+                "aria-labelledby": null,
+                "tabindex": null,
+                "hidden": null
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "有序列表测试2"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "type": "details",
       "attrs": {
         "class": "wj-collapsible",
@@ -726,33 +1022,6 @@
       },
       "content": [
         {
-          "type": "hardBreak",
-          "attrs": {
-            "class": null,
-            "id": null,
-            "style": null,
-            "role": null,
-            "type": null,
-            "data-id": null,
-            "data-type": null,
-            "aria-label": null,
-            "aria-hidden": null,
-            "aria-selected": null,
-            "aria-controls": null,
-            "aria-labelledby": null,
-            "tabindex": null,
-            "hidden": null
-          },
-          "marks": [
-            {
-              "type": "fontSize",
-              "attrs": {
-                "size": "2em"
-              }
-            }
-          ]
-        },
-        {
           "type": "text",
           "marks": [
             {
@@ -763,33 +1032,40 @@
             }
           ],
           "text": "测试文本test"
-        },
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null,
+        "class": null,
+        "id": null,
+        "style": null,
+        "role": null,
+        "type": null,
+        "data-id": null,
+        "data-type": null,
+        "aria-label": null,
+        "aria-hidden": null,
+        "aria-selected": null,
+        "aria-controls": null,
+        "aria-labelledby": null,
+        "tabindex": null,
+        "hidden": null
+      },
+      "content": [
         {
-          "type": "hardBreak",
-          "attrs": {
-            "class": null,
-            "id": null,
-            "style": null,
-            "role": null,
-            "type": null,
-            "data-id": null,
-            "data-type": null,
-            "aria-label": null,
-            "aria-hidden": null,
-            "aria-selected": null,
-            "aria-controls": null,
-            "aria-labelledby": null,
-            "tabindex": null,
-            "hidden": null
-          },
+          "type": "text",
           "marks": [
             {
               "type": "fontSize",
               "attrs": {
-                "size": "2em"
+                "size": "large"
               }
             }
-          ]
+          ],
+          "text": "大小测试2"
         }
       ]
     },
@@ -835,7 +1111,7 @@
               "type": "tabViewButton",
               "attrs": {
                 "class": "wj-tabs-button",
-                "id": "wj-id-4bi4YVla9VP5WC7q",
+                "id": "wj-id-POu97WbpxUNoUbTx",
                 "style": null,
                 "role": "tab",
                 "type": null,
@@ -844,7 +1120,7 @@
                 "aria-label": "测试文本test",
                 "aria-hidden": null,
                 "aria-selected": "true",
-                "aria-controls": "wj-id-Y3B1zAfmkoAlCBk9",
+                "aria-controls": "wj-id-51gDfg1bkceYNbWe",
                 "aria-labelledby": null,
                 "tabindex": "0",
                 "hidden": null
@@ -860,7 +1136,7 @@
               "type": "tabViewButton",
               "attrs": {
                 "class": "wj-tabs-button",
-                "id": "wj-id-bQrOsvJp8UbGixRE",
+                "id": "wj-id-JwFik3CgAPrDkc87",
                 "style": null,
                 "role": "tab",
                 "type": null,
@@ -869,7 +1145,7 @@
                 "aria-label": "测试文本test测试文本test",
                 "aria-hidden": null,
                 "aria-selected": "false",
-                "aria-controls": "wj-id-83N4nldZd55O84oz",
+                "aria-controls": "wj-id-7pkPijeyk6WcuR5o",
                 "aria-labelledby": null,
                 "tabindex": "-1",
                 "hidden": null
@@ -885,16 +1161,16 @@
               "type": "tabViewButton",
               "attrs": {
                 "class": "wj-tabs-button",
-                "id": "wj-id-rzTdXTxUduz35grN",
+                "id": "wj-id-nzjzR7hStk22wenC",
                 "style": null,
                 "role": "tab",
                 "type": null,
                 "data-id": null,
                 "data-type": null,
-                "aria-label": "测试 文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test",
+                "aria-label": "测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test测试文本test",
                 "aria-hidden": null,
                 "aria-selected": "false",
-                "aria-controls": "wj-id-KmLLtxoIKX5inRN8",
+                "aria-controls": "wj-id-e9FS9aK1wAHY3nWV",
                 "aria-labelledby": null,
                 "tabindex": "-1",
                 "hidden": null
@@ -931,7 +1207,7 @@
               "type": "tabViewPanel",
               "attrs": {
                 "class": "wj-tabs-panel",
-                "id": "wj-id-Y3B1zAfmkoAlCBk9",
+                "id": "wj-id-51gDfg1bkceYNbWe",
                 "style": null,
                 "role": "tabpanel",
                 "type": null,
@@ -941,7 +1217,7 @@
                 "aria-hidden": null,
                 "aria-selected": null,
                 "aria-controls": null,
-                "aria-labelledby": "wj-id-4bi4YVla9VP5WC7q",
+                "aria-labelledby": "wj-id-POu97WbpxUNoUbTx",
                 "tabindex": "0",
                 "hidden": null
               },
@@ -978,7 +1254,7 @@
               "type": "tabViewPanel",
               "attrs": {
                 "class": "wj-tabs-panel",
-                "id": "wj-id-83N4nldZd55O84oz",
+                "id": "wj-id-7pkPijeyk6WcuR5o",
                 "style": null,
                 "role": "tabpanel",
                 "type": null,
@@ -988,7 +1264,7 @@
                 "aria-hidden": null,
                 "aria-selected": null,
                 "aria-controls": null,
-                "aria-labelledby": "wj-id-bQrOsvJp8UbGixRE",
+                "aria-labelledby": "wj-id-JwFik3CgAPrDkc87",
                 "tabindex": "0",
                 "hidden": ""
               },
@@ -1025,7 +1301,7 @@
               "type": "tabViewPanel",
               "attrs": {
                 "class": "wj-tabs-panel",
-                "id": "wj-id-KmLLtxoIKX5inRN8",
+                "id": "wj-id-e9FS9aK1wAHY3nWV",
                 "style": null,
                 "role": "tabpanel",
                 "type": null,
@@ -1035,7 +1311,7 @@
                 "aria-hidden": null,
                 "aria-selected": null,
                 "aria-controls": null,
-                "aria-labelledby": "wj-id-rzTdXTxUduz35grN",
+                "aria-labelledby": "wj-id-nzjzR7hStk22wenC",
                 "tabindex": "0",
                 "hidden": ""
               },
@@ -2229,5 +2505,6 @@
         "imageAttributes": {}
       }
     }
-  ]
+  ],
+  "type": "doc"
 }
