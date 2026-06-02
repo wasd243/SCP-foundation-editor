@@ -25,7 +25,7 @@ use crate::interpreter::{
         blockquote::{interpret_blockquote, is_blockquote},
         bold::interpret_bold_text,
         color::interpret_color_text,
-        empty_paragraph::interpret_empty_paragraph,
+        empty_paragraph::{guard_empty_paragraph, interpret_empty_paragraph},
         heading::interpret_heading,
         horizontal_rule::{interpret_horizontal_rule, is_horizontal_rule},
         italic::interpret_italic_text,
@@ -53,6 +53,7 @@ use crate::interpreter::{
 pub(super) fn interpret_text(_index: usize, node: &Value) -> Result<String, String> {
     let content = interpret_text_content(node).join("");
     let content = interpret_heading(node, content)?;
+    let content = guard_empty_paragraph(content)?;
     let content = interpret_normal_text(node, content)?;
 
     Ok(content)
