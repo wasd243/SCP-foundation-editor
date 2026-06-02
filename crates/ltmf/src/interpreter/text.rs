@@ -10,18 +10,27 @@ mod original_text;
 mod strikethrough;
 mod sub;
 mod sup;
+mod ul;
 mod underline;
 
 use serde_json::Value;
 
 use crate::interpreter::{
     text::{
-        bold::interpret_bold_text, color::interpret_color_text,
-        empty_paragraph::interpret_empty_paragraph, heading::interpret_heading,
-        italic::interpret_italic_text, monospcae::interpret_monospace_text,
-        new_line::interpret_new_line, normal_text::interpret_normal_text,
-        original_text::interpret_original_text, strikethrough::interpret_strike_through_text,
-        sub::interpret_sub_text, sup::interpret_sup_text, underline::interpret_underline_text,
+        bold::interpret_bold_text,
+        color::interpret_color_text,
+        empty_paragraph::interpret_empty_paragraph,
+        heading::interpret_heading,
+        italic::interpret_italic_text,
+        monospcae::interpret_monospace_text,
+        new_line::interpret_new_line,
+        normal_text::interpret_normal_text,
+        original_text::interpret_original_text,
+        strikethrough::interpret_strike_through_text,
+        sub::interpret_sub_text,
+        sup::interpret_sup_text,
+        ul::{interpret_ul, is_unordered_list},
+        underline::interpret_underline_text,
     },
     utils::{
         get_content::{get_content_nodes, ContentNode},
@@ -64,6 +73,9 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
             interpret_empty_paragraph(node, String::new())
                 .unwrap_or_else(|error| format!("ERROR:{error}")),
         ),
+        Some(_) if is_unordered_list(node) => {
+            Some(interpret_ul(node, String::new()).unwrap_or_else(|error| format!("ERROR:{error}")))
+        }
         Some(_) if is_wiki_component_node(node) => {
             Some(interpret_wiki_component(0, node).unwrap_or_else(|error| format!("ERROR:{error}")))
         }
@@ -73,7 +85,7 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
 }
 
 fn should_stop_collecting_children(node: &Value) -> bool {
-    is_empty_paragraph_node(node) || is_wiki_component_node(node)
+    is_empty_paragraph_node(node) || is_unordered_list(node) || is_wiki_component_node(node)
 }
 
 fn is_empty_paragraph_node(node: &Value) -> bool {

@@ -1,6 +1,7 @@
 use serde_json::Value;
 
 use crate::preprocess::normalize::{
+    normalize_bullet_list::normalize_bullet_list,
     normalize_color_text_marks::normalize_color_text_marks,
     normalize_details::normalize_details,
     normalize_empty_paragraph_between_newline::normalize_empty_paragraph_between_newline,
@@ -16,9 +17,9 @@ use crate::preprocess::normalize::{
     normalize_strike::normalize_strike,
     normalize_tabview::normalize_tabview,
     normalize_white_space_pre_wrap::normalize_white_space_pre_wrap,
-    normalize_bullet_list::normalize_bullet_list,
 };
 
+mod normalize_bullet_list;
 mod normalize_color_text_marks;
 mod normalize_details;
 mod normalize_empty_paragraph_between_newline;
@@ -34,7 +35,6 @@ mod normalize_strike;
 mod normalize_tabview;
 mod normalize_white_space_pre_wrap;
 pub mod rename;
-mod normalize_bullet_list;
 // pub mod normalize_div;
 
 pub fn normalize(value: Value) -> Value {
