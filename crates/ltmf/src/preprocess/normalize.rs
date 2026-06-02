@@ -17,6 +17,7 @@ use crate::preprocess::normalize::{
     normalize_strike::normalize_strike,
     normalize_tabview::normalize_tabview,
     normalize_white_space_pre_wrap::normalize_white_space_pre_wrap,
+    normalize_font_size::normalize_font_size,
 };
 
 mod normalize_bullet_list;
@@ -35,6 +36,7 @@ mod normalize_strike;
 mod normalize_tabview;
 mod normalize_white_space_pre_wrap;
 pub mod rename;
+mod normalize_font_size;
 // pub mod normalize_div;
 
 pub fn normalize(value: Value) -> Value {
@@ -54,6 +56,7 @@ pub fn normalize(value: Value) -> Value {
     let value = normalize_tabview(value);
     let value = normalize_horizontalrule(value);
     let value = normalize_bullet_list(value);
+    let value = normalize_font_size(value);
 
     // This function normalizes `ForceNewLine` to `Paragraph`.
     let value = normalize_force_new_line_to_paragraph(value);
