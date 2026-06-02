@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn rename_type(value: Value, from: &str, to: &str) -> Value {
+pub(crate) fn rename_type(value: Value, from: &str, to: &str) -> Value {
     match value {
         Value::Object(map) => Value::Object(
             map.into_iter()
