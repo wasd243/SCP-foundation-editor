@@ -1,4 +1,5 @@
 mod alignments;
+mod code;
 mod collapsible;
 mod div;
 pub(crate) mod footnote;
@@ -17,6 +18,7 @@ use crate::interpreter::{
             interpret_align_center, interpret_align_left, interpret_align_right, is_align_center,
             is_align_left, is_align_right,
         },
+        code::{interpret_code, is_code},
         collapsible::interpret_collapsible,
         footnote::interpret_footnote,
         image::{interpret_image, is_image},
@@ -35,6 +37,7 @@ pub fn interpret_wiki_component(index: usize, node: &Value) -> Result<String, St
     let content = interpret_image(node, content)?;
     let content = interpret_table(node, content)?;
     let content = interpret_user(node, content)?;
+    let content = interpret_code(node, content)?;
     let content = interpret_align_left(node, content)?;
     let content = interpret_align_center(node, content)?;
     let content = interpret_align_right(node, content)?;
@@ -51,6 +54,7 @@ pub(crate) fn is_wiki_component_node(node: &Value) -> bool {
         || is_image(node)
         || is_table(node)
         || is_user(node)
+        || is_code(node)
         // This matches! macro only for identifier
         // Going to be removed for future implementation
         || matches!(node_type(node), Some("Collapsible" | "Footnote"))
