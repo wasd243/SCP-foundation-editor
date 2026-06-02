@@ -3,6 +3,7 @@ mod bold;
 pub(crate) mod color;
 mod empty_paragraph;
 mod heading;
+mod horizontal_rule;
 mod italic;
 mod link;
 mod monospcae;
@@ -26,6 +27,7 @@ use crate::interpreter::{
         color::interpret_color_text,
         empty_paragraph::interpret_empty_paragraph,
         heading::interpret_heading,
+        horizontal_rule::{interpret_horizontal_rule, is_horizontal_rule},
         italic::interpret_italic_text,
         link::interpret_link_text,
         monospcae::interpret_monospace_text,
@@ -85,6 +87,10 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
             interpret_blockquote(node, String::new())
                 .unwrap_or_else(|error| format!("ERROR:{error}")),
         ),
+        Some(_) if is_horizontal_rule(node) => Some(
+            interpret_horizontal_rule(node, String::new())
+                .unwrap_or_else(|error| format!("ERROR:{error}")),
+        ),
         Some(_) if is_unordered_list(node) => {
             Some(interpret_ul(node, String::new()).unwrap_or_else(|error| format!("ERROR:{error}")))
         }
@@ -102,6 +108,7 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
 fn should_stop_collecting_children(node: &Value) -> bool {
     is_empty_paragraph_node(node)
         || is_blockquote(node)
+        || is_horizontal_rule(node)
         || is_unordered_list(node)
         || is_ordered_list(node)
         || is_wiki_component_node(node)
