@@ -14,7 +14,7 @@ fn is_tabview_button_list_attrs(value: &Value) -> bool {
     })
 }
 
-pub fn sanitize_tabview_attrs(json: &Value) -> Value {
+pub(super) fn sanitize_tabview_attrs(json: &Value) -> Value {
     match json {
         Value::Object(map) => Value::Object(
             map.iter()

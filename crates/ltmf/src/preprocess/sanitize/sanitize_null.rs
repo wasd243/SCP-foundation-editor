@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn sanitize_null(value: &Value) -> Value {
+pub(super) fn sanitize_null(value: &Value) -> Value {
     match value {
         Value::Object(map) => Value::Object(
             map.iter()

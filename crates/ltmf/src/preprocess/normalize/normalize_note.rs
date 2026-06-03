@@ -1,7 +1,7 @@
 // This function will remove note json attrs and change the type to Note
 use serde_json::Value;
 
-pub fn normalize_note(value: Value) -> Value {
+pub(super) fn normalize_note(value: Value) -> Value {
     match value {
         Value::Object(mut map) => {
             let is_note = is_note_node(&Value::Object(map.clone()));

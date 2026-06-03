@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn sanitize_unused_toc_id(value: Value) -> Value {
+pub(super) fn sanitize_unused_toc_id(value: Value) -> Value {
     match value {
         Value::Object(mut map) => {
             if is_heading(&map) {

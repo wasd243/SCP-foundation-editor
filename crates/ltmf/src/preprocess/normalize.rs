@@ -36,7 +36,7 @@ mod normalize_raw_text;
 mod normalize_strike;
 mod normalize_tabview;
 mod normalize_white_space_pre_wrap;
-pub mod rename;
+mod rename;
 // pub mod normalize_div;
 
 pub fn normalize(value: Value) -> Value {

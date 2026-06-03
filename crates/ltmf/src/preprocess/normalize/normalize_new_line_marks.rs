@@ -1,7 +1,7 @@
 // This function will normalize has attrs/marks Newline type into normal Newline
 use serde_json::Value;
 
-pub fn normalize_new_line_marks(value: Value) -> Value {
+pub(super) fn normalize_new_line_marks(value: Value) -> Value {
     match value {
         Value::Object(mut map) => {
             let is_new_line = map.get("type").and_then(Value::as_str) == Some("NewLine");

@@ -89,7 +89,7 @@ fn sanitize_aria_labelledby(value: Value) -> Value {
     sanitize_aria_labelledby_in_tabview(value, false)
 }
 
-pub fn sanitize_tabview_aria(value: Value) -> Value {
+pub(super) fn sanitize_tabview_aria(value: Value) -> Value {
     let value = sanitize_aria_controls(value);
     let value = sanitize_aria_labelledby(value);
     sanitize_aria_selected(value)

@@ -8,7 +8,7 @@ fn rename_details(value: Value) -> Value {
     rename_type(value, "detailsContent", "CollapsibleContent")
 }
 
-pub fn normalize_details(value: Value) -> Value {
+pub(super) fn normalize_details(value: Value) -> Value {
     let value = rename_details(value);
     remove_collapsible_attrs(value)
 }

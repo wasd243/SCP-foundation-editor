@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn sanitize_contenteditable(value: Value) -> Value {
+pub(super) fn sanitize_contenteditable(value: Value) -> Value {
     match value {
         Value::Object(map) => Value::Object(
             map.into_iter()
