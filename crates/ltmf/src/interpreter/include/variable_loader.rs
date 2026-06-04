@@ -8,8 +8,10 @@ const RESOURCEPACK_COMPONENTS_PATH: &str = "resourcepack/components/";
 const VARIABLE_NAME_CONFIG_TABLE_SQL: &str = include_str!("variable_name_config_table.sql");
 
 pub(super) fn load_variables(connection: &Connection) -> Result<(), String> {
+    let (create_table_sql, insert_variable_sql) = split_variable_sql()?;
+
     connection
-        .execute_batch(VARIABLE_NAME_CONFIG_TABLE_SQL)
+        .execute_batch(create_table_sql)
         .map_err(|error| error.to_string())?;
 
     let components_path = Path::new(RESOURCEPACK_COMPONENTS_PATH);
@@ -19,13 +21,31 @@ pub(super) fn load_variables(connection: &Connection) -> Result<(), String> {
 
     let variable_regex = Regex::new(r"\{\$[^}]+\}").map_err(|error| error.to_string())?;
 
-    load_variables_from_directory(connection, components_path, &variable_regex)
+    load_variables_from_directory(
+        connection,
+        components_path,
+        &variable_regex,
+        &insert_variable_sql,
+    )
+}
+
+fn split_variable_sql() -> Result<(&'static str, String), String> {
+    let insert_statement_start = "INSERT INTO include_map";
+    let (create_table_sql, insert_variable_sql) = VARIABLE_NAME_CONFIG_TABLE_SQL
+        .split_once(insert_statement_start)
+        .ok_or_else(|| "missing include_map insert statement SQL".to_string())?;
+
+    Ok((
+        create_table_sql.trim(),
+        format!("{insert_statement_start}{}", insert_variable_sql.trim()),
+    ))
 }
 
 fn load_variables_from_directory(
     connection: &Connection,
     directory: &Path,
     variable_regex: &Regex,
+    insert_variable_sql: &str,
 ) -> Result<(), String> {
     let entries = fs::read_dir(directory).map_err(|error| error.to_string())?;
 
@@ -34,12 +54,12 @@ fn load_variables_from_directory(
         let path = entry.path();
 
         if path.is_dir() {
-            load_variables_from_directory(connection, &path, variable_regex)?;
+            load_variables_from_directory(connection, &path, variable_regex, insert_variable_sql)?;
         } else if path
             .extension()
             .is_some_and(|extension| extension == "ftml")
         {
-            load_variables_from_ftml(connection, &path, variable_regex)?;
+            load_variables_from_ftml(connection, &path, variable_regex, insert_variable_sql)?;
         }
     }
 
@@ -50,6 +70,7 @@ fn load_variables_from_ftml(
     connection: &Connection,
     path: &Path,
     variable_regex: &Regex,
+    insert_variable_sql: &str,
 ) -> Result<(), String> {
     let content = fs::read_to_string(path).map_err(|error| error.to_string())?;
     let include_name = extract_include_name(&content)
@@ -58,7 +79,7 @@ fn load_variables_from_ftml(
     for variable_match in variable_regex.find_iter(&content) {
         connection
             .execute(
-                "INSERT INTO include_map (include_name, include_variable, pm_json) VALUES (?1, ?2, ?3)",
+                insert_variable_sql,
                 params![include_name, variable_match.as_str(), ""],
             )
             .map_err(|error| error.to_string())?;
