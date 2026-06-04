@@ -4,7 +4,7 @@ use std::path::Path;
 use regex::Regex;
 use rusqlite::{params, Connection};
 
-const RESOURCEPACK_COMPONENTS_PATH: &str = "resourcepack/components/";
+const RESOURCEPACK_INCLUDES_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack/includes/");
 const VARIABLE_NAME_CONFIG_TABLE_SQL: &str = include_str!("variable_name_config_table.sql");
 
 pub(super) fn load_variables(connection: &Connection) -> Result<(), String> {
@@ -14,8 +14,8 @@ pub(super) fn load_variables(connection: &Connection) -> Result<(), String> {
         .execute_batch(create_table_sql)
         .map_err(|error| error.to_string())?;
 
-    let components_path = Path::new(RESOURCEPACK_COMPONENTS_PATH);
-    if !components_path.exists() {
+    let includes_path = Path::new(RESOURCEPACK_INCLUDES_PATH);
+    if !includes_path.exists() {
         return Ok(());
     }
 
@@ -23,7 +23,7 @@ pub(super) fn load_variables(connection: &Connection) -> Result<(), String> {
 
     load_variables_from_directory(
         connection,
-        components_path,
+        includes_path,
         &variable_regex,
         &insert_variable_sql,
     )
@@ -73,15 +73,21 @@ fn load_variables_from_ftml(
     insert_variable_sql: &str,
 ) -> Result<(), String> {
     let content = fs::read_to_string(path).map_err(|error| error.to_string())?;
+    let variables = variable_regex
+        .find_iter(&content)
+        .map(|variable_match| variable_match.as_str())
+        .collect::<Vec<_>>();
+
+    if variables.is_empty() {
+        return Ok(());
+    }
+
     let include_name = extract_include_name(&content)
         .ok_or_else(|| format!("missing data-editor-include in {}", path.display()))?;
 
-    for variable_match in variable_regex.find_iter(&content) {
+    for variable in variables {
         connection
-            .execute(
-                insert_variable_sql,
-                params![include_name, variable_match.as_str(), ""],
-            )
+            .execute(insert_variable_sql, params![include_name, variable, ""])
             .map_err(|error| error.to_string())?;
     }
 
@@ -104,4 +110,47 @@ fn extract_include_name(content: &str) -> Option<&str> {
     let value_end = value.find(quote)?;
 
     value.get(..value_end)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn resourcepack_include_path_matches_existing_layout() {
+        let includes_path = Path::new(RESOURCEPACK_INCLUDES_PATH);
+
+        assert!(
+            includes_path.exists(),
+            "resourcepack include variables should be loaded from {}",
+            includes_path.display()
+        );
+    }
+
+    #[test]
+    fn extracts_include_name_from_ftml_attribute() {
+        let content = r#"[[div data-editor-include="component:image-block"]]"#;
+
+        assert_eq!(extract_include_name(content), Some("component:image-block"));
+    }
+
+    #[test]
+    fn loads_variables_from_resourcepack_includes() {
+        let connection = Connection::open_in_memory().unwrap();
+
+        load_variables(&connection).unwrap();
+
+        let mut statement = connection
+            .prepare(
+                "SELECT include_variable FROM include_map WHERE include_name = ?1 ORDER BY include_variable",
+            )
+            .unwrap();
+        let variables = statement
+            .query_map(params!["component:image-block"], |row| row.get::<_, String>(0))
+            .unwrap()
+            .collect::<Result<Vec<_>, _>>()
+            .unwrap();
+
+        assert_eq!(variables, vec!["{$align}", "{$caption}", "{$link}", "{$name}", "{$width}"]);
+    }
 }
