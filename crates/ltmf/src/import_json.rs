@@ -1,4 +1,5 @@
 // `import_json.rs` is temporarily a test file which hardcoded to `test.json`
+// Only for testing purpose, going to be removed after implementation of exporter.
 use std::fs;
 
 const JSON_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/test/json/test.json");

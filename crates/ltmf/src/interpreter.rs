@@ -1,3 +1,13 @@
+//! Interpret canonical exporter JSON into FTML.
+//!
+//! This module runs after preprocessing.
+//!
+//! Responsibilities:
+//!
+//! - Convert canonical JSON nodes into FTML.
+//! - Load and cache resources used by `[[include]]`.
+//! - Write generated FTML to `output.ftml`.
+
 mod include;
 mod text;
 pub mod utils;
