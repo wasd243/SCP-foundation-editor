@@ -142,7 +142,10 @@ fn find_style_property<'a>(style: &'a str, property_name: &str) -> Option<&'a st
 
 fn find_adapter_alias_value(node: &Value, variable_name: &str) -> Option<String> {
     match variable_name {
-        "align" => find_value_by_key(node, "class"),
+        "align" => node
+            .pointer("/attrs/htmlAttributes/class")
+            .and_then(Value::as_str)
+            .map(|value| value.to_string()),
         _ => None,
     }
 }
