@@ -17,8 +17,10 @@ pub fn interpret_include(_index: usize, node: &Value) -> Result<String, String> 
         .and_then(Value::as_str)
         .unwrap_or("unknown");
 
+    // Cache the include variables in `cache/include.db`.
     fs::create_dir_all(CACHE_DIR).map_err(|error| error.to_string())?;
     let connection = Connection::open(INCLUDE_DB_PATH).map_err(|error| error.to_string())?;
+    
     variable_loader::load_variables(&connection)?;
     let include_variables = search::search_include_variables(&connection, include_name)?;
 
