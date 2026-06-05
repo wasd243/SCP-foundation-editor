@@ -4,11 +4,13 @@ use std::path::Path;
 use regex::Regex;
 use rusqlite::{params, Connection, OptionalExtension};
 
-const RESOURCEPACK_INCLUDES_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack/includes/");
+const RESOURCEPACK_INCLUDES_PATH: &str =
+    concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack/includes/");
 const VARIABLE_NAME_CONFIG_TABLE_SQL: &str = include_str!("variable_name_config_table.sql");
 
 pub(super) fn load_variables(connection: &Connection) -> Result<(), String> {
-    let (create_table_sql, insert_variable_sql, search_existing_variable_sql) = split_variable_sql()?;
+    let (create_table_sql, insert_variable_sql, search_existing_variable_sql) =
+        split_variable_sql()?;
 
     connection
         .execute_batch(create_table_sql)
@@ -107,7 +109,12 @@ fn load_variables_from_ftml(
         .ok_or_else(|| format!("missing data-editor-include in {}", path.display()))?;
 
     for variable in variables {
-        if include_variable_exists(connection, search_existing_variable_sql, include_name, variable)? {
+        if include_variable_exists(
+            connection,
+            search_existing_variable_sql,
+            include_name,
+            variable,
+        )? {
             continue;
         }
 
@@ -185,12 +192,13 @@ mod tests {
         load_variables(&connection).unwrap();
         load_variables(&connection).unwrap();
 
-        let variables = super::super::search::search_include_variables(
-            &connection,
-            "component:image-block",
-        )
-        .unwrap();
+        let variables =
+            super::super::search::search_include_variables(&connection, "component:image-block")
+                .unwrap();
 
-        assert_eq!(variables, vec!["{$align}", "{$caption}", "{$link}", "{$name}", "{$width}"]);
+        assert_eq!(
+            variables,
+            vec!["{$align}", "{$caption}", "{$link}", "{$name}", "{$width}"]
+        );
     }
 }

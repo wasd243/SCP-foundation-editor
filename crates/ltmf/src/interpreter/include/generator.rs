@@ -47,7 +47,12 @@ fn normalize_include_variable_name(include_variable: &str) -> &str {
         .strip_prefix("{$")
         .unwrap_or(include_variable)
         .strip_suffix('}')
-        .unwrap_or_else(|| include_variable.trim().strip_prefix("{$").unwrap_or(include_variable))
+        .unwrap_or_else(|| {
+            include_variable
+                .trim()
+                .strip_prefix("{$")
+                .unwrap_or(include_variable)
+        })
         .trim()
 }
 

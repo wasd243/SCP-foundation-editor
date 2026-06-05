@@ -49,6 +49,5 @@ mod tests {
             variables,
             vec!["{$align}", "{$caption}", "{$link}", "{$name}", "{$width}"]
         );
-
     }
 }

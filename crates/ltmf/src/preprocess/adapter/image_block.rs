@@ -115,7 +115,11 @@ fn is_image_caption_node(map: &Map<String, Value>) -> bool {
             .and_then(|attrs| attrs.get("htmlAttributes"))
             .and_then(|html_attrs| html_attrs.get("class"))
             .and_then(Value::as_str)
-            .is_some_and(|class| class.split_whitespace().any(|token| token == "scp-image-caption"))
+            .is_some_and(|class| {
+                class
+                    .split_whitespace()
+                    .any(|token| token == "scp-image-caption")
+            })
 }
 
 #[cfg(test)]
@@ -186,4 +190,3 @@ mod tests {
         );
     }
 }
-

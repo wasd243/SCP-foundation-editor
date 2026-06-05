@@ -4,9 +4,9 @@ use crate::preprocess::normalize::normalize;
 use crate::preprocess::sanitize::sanitize;
 use serde_json::Value;
 
+mod adapter;
 mod normalize;
 mod sanitize;
-mod adapter;
 
 pub fn preprocess(json: &str) -> Result<String, String> {
     let mut json = json.to_string();
