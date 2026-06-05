@@ -77,7 +77,7 @@ generator.rs
 
 Responsibilities:
 
-* variables_loader.rs loads mappings
+* variable_loader.rs loads mappings
 * search.rs performs lookups
 * generator.rs generates Wikitext
 
