@@ -5,10 +5,12 @@ mod preprocess;
 
 pub use interpreter::interpret;
 pub use preprocess::preprocess;
+pub use ftml_fmt::ftml_fmt;
 
 pub fn export_wikitext(json: &str) -> Result<String, String> {
     let json = preprocess(json)?;
-    interpret(&json)
+    let json = interpret(&json)?;
+    Ok(ftml_fmt(&json))
 }
 
 #[cfg(test)]
