@@ -4,10 +4,13 @@ pub mod utils;
 mod wiki_component;
 
 use serde_json::Value;
+use std::fs;
 
 use crate::interpreter::{
     include::interpret_include, text::interpret_text, wiki_component::interpret_wiki_component,
 };
+
+const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/output.ftml");
 
 pub fn interpret(json: &str) -> Result<String, String> {
     let value: Value = serde_json::from_str(json).map_err(|error| error.to_string())?;
@@ -20,10 +23,11 @@ pub fn interpret(json: &str) -> Result<String, String> {
 
     for (index, node) in content.iter().enumerate() {
         let debug_line = identify_node(index + 1, node)?;
-        println!("{}", debug_line);
         output.push_str(&debug_line);
         output.push('\n');
     }
+
+    fs::write(OUTPUT_PATH, &output).map_err(|error| error.to_string())?;
 
     Ok(output)
 }
