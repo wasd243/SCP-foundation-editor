@@ -66,7 +66,7 @@ Avoid dependency bloat.
 Current include architecture:
 
 ```text
-variables_loader.rs
+variable_loader.rs
     ↓
 SQLite mapping table
     ↓
