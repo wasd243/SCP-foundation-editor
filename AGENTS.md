@@ -154,6 +154,8 @@ Do not hardcode SQL inline.
 
 Directly use `**.sql` files.
 
+Do not create test SQL tables, directly use `crates/ltmf/src/interpreter/include/variable_name_config_table.sql`.
+
 ---
 
 # Development Philosophy
