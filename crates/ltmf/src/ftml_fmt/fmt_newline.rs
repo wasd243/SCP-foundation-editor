@@ -2,6 +2,11 @@ use std::fs;
 
 const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/cache/output.ftml");
 
+/// This function intentionally combines formatting and file I/O.
+///
+/// The formatter is currently only used by the exporter pipeline,
+/// so separating these responsibilities would add complexity
+/// without meaningful benefits.
 pub(super) fn format_newline(ftml: &str) -> String {
     let read_ftml = fs::read_to_string(OUTPUT_PATH);
     let ftml = read_ftml.as_deref().unwrap_or(ftml);
