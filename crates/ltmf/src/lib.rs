@@ -1,9 +1,10 @@
+mod ftml_fmt;
 mod import_json;
 mod interpreter;
-pub mod preprocess;
+mod preprocess;
 
-use interpreter::interpret;
-use preprocess::preprocess;
+pub use interpreter::interpret;
+pub use preprocess::preprocess;
 
 pub fn export_wikitext(json: &str) -> Result<String, String> {
     let json = preprocess(json)?;
