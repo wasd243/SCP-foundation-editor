@@ -184,8 +184,6 @@ mod tests {
             adapted.pointer("/content/2/content/0/content/0/text"),
             Some(&json!("image preview test"))
         );
-
-        println!("{:#?}", adapted);
     }
 }
 
