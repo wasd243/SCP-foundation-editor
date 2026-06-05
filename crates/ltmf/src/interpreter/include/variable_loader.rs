@@ -71,7 +71,7 @@ fn load_variables_from_directory(
             )?;
         } else if path
             .extension()
-            .is_some_and(|extension| extension == "ftml")
+            .is_some_and(|extension| extension == std::ffi::OsStr::new("ftml"))
         {
             load_variables_from_ftml(
                 connection,
