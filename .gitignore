@@ -38,6 +38,9 @@ icon.png
 # Windows
 Thumbs.db
 
+# Cache
+include.db
+
 # MacOS
 .DS_Store
 
