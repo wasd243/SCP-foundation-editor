@@ -28,6 +28,12 @@ use crate::interpreter::{
         user::{interpret_user, is_user},
     },
 };
+
+// TODO:
+// Investigate whether nested block children with multiple
+// paragraph nodes preserve paragraph boundaries correctly.
+//
+// Not reproducible in current tests.
 pub fn interpret_wiki_component(_index: usize, node: &Value) -> Result<String, String> {
     let content = interpret_footnote(node, String::new())?;
     let content = interpret_collapsible(node, content)?;
