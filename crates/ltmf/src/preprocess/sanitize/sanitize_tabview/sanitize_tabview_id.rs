@@ -1,7 +1,7 @@
-use serde_json::Value;
 use super::is_tabview::is_tabview;
+use serde_json::Value;
 
-pub fn sanitize_tabview_id(value: Value) -> Value {
+pub(super) fn sanitize_tabview_id(value: Value) -> Value {
     sanitize_tabview_id_in_tabview(value, false)
 }
 

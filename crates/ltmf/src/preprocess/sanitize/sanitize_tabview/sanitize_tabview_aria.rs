@@ -1,5 +1,5 @@
-use serde_json::Value;
 use super::is_tabview::is_tabview;
+use serde_json::Value;
 
 // Only sanitize aria-controls in tabview, not in details or accordion.
 fn sanitize_aria_controls_in_tabview(value: Value, in_tabview: bool) -> Value {
@@ -63,7 +63,9 @@ fn sanitize_aria_labelledby_in_tabview(value: Value, in_tabview: bool) -> Value 
                     .filter_map(|(key, value)| {
                         if in_tabview
                             && key == "aria-labelledby"
-                            && value.as_str().is_some_and(|value| value.starts_with("wj-id-"))
+                            && value
+                                .as_str()
+                                .is_some_and(|value| value.starts_with("wj-id-"))
                         {
                             None
                         } else {
@@ -87,7 +89,7 @@ fn sanitize_aria_labelledby(value: Value) -> Value {
     sanitize_aria_labelledby_in_tabview(value, false)
 }
 
-pub fn sanitize_tabview_aria(value: Value) -> Value {
+pub(super) fn sanitize_tabview_aria(value: Value) -> Value {
     let value = sanitize_aria_controls(value);
     let value = sanitize_aria_labelledby(value);
     sanitize_aria_selected(value)

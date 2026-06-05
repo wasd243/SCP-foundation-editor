@@ -13,7 +13,7 @@
 //         },
 use serde_json::Value;
 
-pub fn normalize_white_space_pre_wrap(value: Value) -> Value {
+pub(super) fn normalize_white_space_pre_wrap(value: Value) -> Value {
     match value {
         Value::Object(map) => {
             let value = Value::Object(map);
@@ -28,8 +28,8 @@ pub fn normalize_white_space_pre_wrap(value: Value) -> Value {
                 Value::Object(map) => {
                     let value = Value::Object(
                         map.into_iter()
-                        .map(|(key, value)| (key, normalize_white_space_pre_wrap(value)))
-                        .collect(),
+                            .map(|(key, value)| (key, normalize_white_space_pre_wrap(value)))
+                            .collect(),
                     );
 
                     if is_force_new_line_paragraph(&value) {

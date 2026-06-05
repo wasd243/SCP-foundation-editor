@@ -35,13 +35,23 @@ Centered content
 Aligned content
 [[/>]]
 
+> 引用测试
+>
+> 多行引用测试
+
+* 无须列表测试
+* 无须列表测试
+
+# 有序列表测试
+# 有序列表测试2
+
 [[collapsible show="+测试文本test测试文本test" hide="-测试文本test"]]
 测试文本test
 [[/collapsible]]
 
-[[size 2em]]
-测试文本test
-[[/size]]
+[[size 2em]]测试文本test[[/size]]
+
+[[size large]]大小测试2[[/size]]
 
 [[tabview]]
 [[tab 测试文本test]]

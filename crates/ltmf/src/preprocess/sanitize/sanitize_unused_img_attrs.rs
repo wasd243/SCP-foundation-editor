@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-pub fn sanitize_unused_img_attrs(value: Value) -> Value {
+pub(super) fn sanitize_unused_img_attrs(value: Value) -> Value {
     match value {
         Value::Object(map) => Value::Object(
             map.into_iter()
@@ -13,12 +13,9 @@ pub fn sanitize_unused_img_attrs(value: Value) -> Value {
                 })
                 .collect(),
         ),
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(sanitize_unused_img_attrs)
-                .collect(),
-        ),
+        Value::Array(values) => {
+            Value::Array(values.into_iter().map(sanitize_unused_img_attrs).collect())
+        }
         _ => value,
     }
 }

@@ -22,7 +22,6 @@ ftml/
 # IDE
 .vscode/
 .idea/
-.github/
 
 # Virtual environment
 .venv/
@@ -31,7 +30,7 @@ ftml/
 # Rust and Tauri
 target/
 gen/
-icons/
+icon.png
 
 # git
 .git/
@@ -39,14 +38,15 @@ icons/
 # Windows
 Thumbs.db
 
+# Cache
+include.db
+crates/ltmf/cache/
+
 # MacOS
 .DS_Store
 
 # aiderchat
 .aider*
-
-# OLD
-v2.1.0/
 
 # Vite
 .vite-dev.err.log

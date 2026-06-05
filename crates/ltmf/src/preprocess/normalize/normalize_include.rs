@@ -2,7 +2,7 @@
 // This function recursively normalizes matching wjBlockTag nodes to Include.
 use serde_json::Value;
 
-pub fn normalize_include(value: Value) -> Value {
+pub(super) fn normalize_include(value: Value) -> Value {
     match value {
         Value::Object(mut map) => {
             let is_include = is_include_node(&Value::Object(map.clone()));
@@ -17,12 +17,7 @@ pub fn normalize_include(value: Value) -> Value {
                     .collect(),
             )
         }
-        Value::Array(values) => Value::Array(
-            values
-                .into_iter()
-                .map(normalize_include)
-                .collect(),
-        ),
+        Value::Array(values) => Value::Array(values.into_iter().map(normalize_include).collect()),
         _ => value,
     }
 }

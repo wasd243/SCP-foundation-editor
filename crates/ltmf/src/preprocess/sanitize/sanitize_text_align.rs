@@ -35,7 +35,7 @@ fn sanitize_style(value: &Value, style: &str) -> Value {
     }
 }
 
-pub fn sanitize_text_align(value: Value) -> Value {
+pub(super) fn sanitize_text_align(value: Value) -> Value {
     let value = sanitize_text_align_left(&value);
     let value = sanitize_text_align_center(&value);
     sanitize_text_align_right(&value)
