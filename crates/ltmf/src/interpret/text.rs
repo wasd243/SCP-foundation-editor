@@ -43,7 +43,7 @@ use crate::interpret::{
         underline::interpret_underline_text,
     },
     utils::{
-        get_content::{get_content_nodes, ContentNode},
+        get_content::{ContentNode, get_content_nodes},
         get_marks::get_marks,
         get_types::{has_type, node_type},
     },

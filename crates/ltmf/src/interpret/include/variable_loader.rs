@@ -2,7 +2,7 @@ use std::fs;
 use std::path::Path;
 
 use regex::Regex;
-use rusqlite::{params, Connection, OptionalExtension};
+use rusqlite::{Connection, OptionalExtension, params};
 
 const RESOURCEPACK_INCLUDES_PATH: &str =
     concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack/includes/");

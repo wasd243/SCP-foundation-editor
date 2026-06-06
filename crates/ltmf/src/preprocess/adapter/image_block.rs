@@ -179,7 +179,9 @@ mod tests {
         );
         assert_eq!(
             adapted.pointer("/content/1/attrs/name"),
-            Some(&json!("https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg"))
+            Some(&json!(
+                "https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg"
+            ))
         );
         assert!(adapted.pointer("/content/1/attrs/src").is_none());
         assert_eq!(adapted.pointer("/content/2/type"), Some(&json!("caption")));
