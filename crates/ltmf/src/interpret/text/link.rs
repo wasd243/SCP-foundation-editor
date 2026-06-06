@@ -18,10 +18,12 @@ fn is_internal_href(href: &str) -> bool {
 }
 
 fn format_internal_link(href: &str, output: &str) -> String {
+    let href = href.trim_start_matches('/');
+
     if output.is_empty() {
-        format!("[[[ {href} ]]]")
+        format!("[[[{href}]]]")
     } else {
-        format!("[[[ {href} | {output} ]]]")
+        format!("[[[{href} | {output}]]]")
     }
 }
 
@@ -29,4 +31,16 @@ fn link_href(node: &Value) -> Option<&str> {
     get_marks_by_type(node, "link")
         .into_iter()
         .find_map(|mark| mark.get("attrs")?.get("href")?.as_str())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_internal_href() {
+        let href = "/scp-173";
+        assert!(is_internal_href(href));
+        println!("{}", format_internal_link(href, ""));
+    }
 }
