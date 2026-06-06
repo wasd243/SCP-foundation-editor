@@ -1,5 +1,8 @@
-import {SyncJSONToExporter} from "./CodeExport/getJSON.ts";
+import { SyncJSONToExporter } from "./CodeExport/getJSON.ts";
+import { SyncCSSToExporter } from "./CodeExport/getCSS.ts";
 
-export function CodeExport() {
-    return SyncJSONToExporter;
+export async function CodeExport() {
+    await SyncJSONToExporter();
+    // @ts-ignore
+    await SyncCSSToExporter();
 }

@@ -1,7 +1,7 @@
 import { CodeView } from "./Extensions/CodeView";
 import { CodeExport } from "./Extensions/CodeExport";
 
-export function connectIpc() {
+export async function connectIpc() {
   CodeView();
-  CodeExport();
+  await CodeExport();
 }
