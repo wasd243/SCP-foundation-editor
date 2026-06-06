@@ -1,0 +1,11 @@
+use serde_json::Value;
+
+use crate::interpret::utils::get_marks::has_mark;
+
+pub(super) fn interpret_italic_text(node: &Value, output: String) -> Result<String, String> {
+    if !has_mark(node, "italic") {
+        return Ok(output);
+    }
+
+    Ok(format!("//{output}//"))
+}

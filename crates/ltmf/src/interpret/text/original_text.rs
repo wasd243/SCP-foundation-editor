@@ -1,0 +1,20 @@
+use serde_json::Value;
+
+use crate::interpret::utils::get_types::has_type;
+
+/// Applies `@@text@@` original text when input has any `[[` or `]]`
+pub(super) fn interpret_original_text(node: &Value, output: String) -> Result<String, String> {
+    if !is_original_text_node(node) {
+        return Ok(output);
+    }
+
+    Ok(format!("@@{output}@@"))
+}
+
+fn is_original_text_node(node: &Value) -> bool {
+    has_type(node, "text")
+        && node
+            .get("text")
+            .and_then(Value::as_str)
+            .is_some_and(|text| text.starts_with("[[") || text.contains("]]"))
+}

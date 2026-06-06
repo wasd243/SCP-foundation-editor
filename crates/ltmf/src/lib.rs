@@ -1,9 +1,10 @@
 mod ftml_fmt;
 mod import_json;
-mod interpreter;
+mod interpret;
 mod preprocess;
+mod merge;
 
-pub use interpreter::interpret;
+pub use interpret::interpret;
 pub use preprocess::preprocess;
 pub use ftml_fmt::ftml_fmt;
 
