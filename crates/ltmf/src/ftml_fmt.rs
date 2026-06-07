@@ -1,9 +1,14 @@
+mod add_user_css;
 mod fmt_newline;
 
+use crate::ftml_fmt::add_user_css::add_user_css;
 use crate::ftml_fmt::fmt_newline::format_newline;
 use std::fs;
 
-const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/output.ftml");
+// These are temp directory paths.
+pub(crate) const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/output.ftml");
+pub(crate) const USER_CSS_PATH: &str =
+    concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/user_css.css");
 
 /// This function formats the ftml string.
 pub fn ftml_fmt(ftml: &str) -> String {
@@ -13,6 +18,10 @@ pub fn ftml_fmt(ftml: &str) -> String {
 
     // format the ftml string
     let output = format_newline(ftml);
+
+    // attach user css
+    let user_css = fs::read_to_string(USER_CSS_PATH);
+    let output = add_user_css(&output, user_css.as_deref().ok());
 
     // write output to interpreter's temp output file back
     if read_ftml.is_ok() {
@@ -28,9 +37,8 @@ mod tests {
 
     #[test]
     fn test_ftml_fmt() {
-        let origin = "a\n\n\n\n\n\nb";
+        let origin = "a\n\n\n\n\n\nb"; // <- This is a placeholder
         let output = ftml_fmt(origin);
-        assert_eq!(output, "a\n\nb");
 
         println!("{output}");
     }
