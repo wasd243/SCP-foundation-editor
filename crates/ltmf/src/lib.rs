@@ -6,12 +6,14 @@ mod preprocess;
 
 pub use ftml_fmt::ftml_fmt;
 pub use interpret::interpret;
+pub use merge::merge_final_output;
 pub use preprocess::preprocess;
 
 pub fn export_wikitext(json: &str) -> Result<String, String> {
     let json = preprocess(json)?;
     let json = interpret(&json)?;
-    Ok(ftml_fmt(&json))
+    let json = ftml_fmt(&json);
+    merge_final_output(json).map_err(|error| error.to_string())
 }
 
 #[cfg(test)]

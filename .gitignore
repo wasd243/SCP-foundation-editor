@@ -42,6 +42,8 @@ Thumbs.db
 **.db
 origin.ftml
 output.ftml
+final_output.ftml
+patch_origin.ftml
 user_css.css
 
 # MacOS
