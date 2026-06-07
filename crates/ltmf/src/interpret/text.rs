@@ -62,13 +62,28 @@ pub(super) fn interpret_text(_index: usize, node: &Value) -> Result<String, Stri
     Ok(content)
 }
 
+/// This function is used to guard against empty paragraphs in the output.
+/// Only allow one `\n` between `@@@@`
+pub(super) fn guard_output_empty_paragraphs(output: String) -> Result<String, String> {
+    guard_empty_paragraph(output)
+}
+
 pub(crate) fn interpret_text_content(node: &Value) -> Vec<String> {
-    get_content_nodes(node, should_stop_collecting_children)
+    get_content_nodes(node, stop_collecting_children)
         .into_iter()
         .filter_map(interpret_content_node)
         .collect()
 }
 
+/// Interprets a content node, which can be a text node, a new line node,
+/// a blockquote node, a horizontal rule node, a list node, or a nested
+/// wiki component node.
+///
+/// This function is used to match different kinds of text nodes...
+/// Temporary is not support wiki_components yet
+///
+/// Because the ` wiki_components ` module has some issues that MUST need to be refactored.
+/// TODO: refactor wiki_components module and let it able to interpret normal text node
 fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
     let node = content_node.node;
 
@@ -108,7 +123,10 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
     }
 }
 
-fn should_stop_collecting_children(node: &Value) -> bool {
+/// Stops collecting children of a node if it is an empty paragraph,
+/// blockquote, horizontal rule, unordered list, ordered list, or nested
+/// wiki component node.
+fn stop_collecting_children(node: &Value) -> bool {
     is_empty_paragraph_node(node)
         || is_blockquote(node)
         || is_horizontal_rule(node)

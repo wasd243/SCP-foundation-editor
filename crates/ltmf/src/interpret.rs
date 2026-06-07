@@ -18,7 +18,7 @@ use std::fs;
 
 use crate::interpret::{
     include::interpret_include,
-    text::interpret_text,
+    text::{guard_output_empty_paragraphs, interpret_text},
     wiki_component::{interpret_wiki_component, is_wiki_component_node},
 };
 
@@ -39,6 +39,8 @@ pub fn interpret(json: &str) -> Result<String, String> {
         output.push_str(&debug_line);
         output.push('\n');
     }
+
+    let output = guard_output_empty_paragraphs(output)?;
 
     fs::create_dir_all(CACHE_DIR).map_err(|error| error.to_string())?;
     fs::write(OUTPUT_PATH, &output).map_err(|error| error.to_string())?;
