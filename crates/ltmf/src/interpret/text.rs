@@ -1,6 +1,7 @@
 mod blockquote;
 mod bold;
 pub(crate) mod color;
+mod content_paragraph;
 mod empty_paragraph;
 mod heading;
 mod horizontal_rule;
@@ -25,6 +26,7 @@ use crate::interpret::{
         blockquote::{interpret_blockquote, is_blockquote},
         bold::interpret_bold_text,
         color::interpret_color_text,
+        content_paragraph::interpret_paragraph_with_contents,
         empty_paragraph::{guard_empty_paragraph, interpret_empty_paragraph},
         heading::interpret_heading,
         horizontal_rule::{interpret_horizontal_rule, is_horizontal_rule},
@@ -55,6 +57,7 @@ pub(super) fn interpret_text(_index: usize, node: &Value) -> Result<String, Stri
     let content = interpret_heading(node, content)?;
     let content = guard_empty_paragraph(content)?;
     let content = interpret_normal_text(node, content)?;
+    let content = interpret_paragraph_with_contents(node, content)?;
 
     Ok(content)
 }
