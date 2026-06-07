@@ -61,8 +61,7 @@ impl ResourcepackIncluder {
 
         if prefix == "scp-wiki-cn" || prefix.starts_with("scp-wiki-cn-") {
             Some("CN")
-        } else if prefix == "scp-wiki" || prefix.starts_with("scp-wiki-")
-        {
+        } else if prefix == "scp-wiki" || prefix.starts_with("scp-wiki-") {
             Some("EN")
         } else {
             None
