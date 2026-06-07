@@ -7,7 +7,7 @@ mod heading;
 mod horizontal_rule;
 mod italic;
 mod link;
-mod monospcae;
+mod monospace;
 mod new_line;
 mod normal_text;
 mod ol;
@@ -32,7 +32,7 @@ use crate::interpret::{
         horizontal_rule::{interpret_horizontal_rule, is_horizontal_rule},
         italic::interpret_italic_text,
         link::interpret_link_text,
-        monospcae::interpret_monospace_text,
+        monospace::interpret_monospace_text,
         new_line::interpret_new_line,
         normal_text::interpret_normal_text,
         ol::{interpret_ol, is_ordered_list},
