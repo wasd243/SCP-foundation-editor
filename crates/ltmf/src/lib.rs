@@ -1,8 +1,10 @@
 mod ftml_fmt;
-mod import_json;
 mod interpret;
 mod merge;
 mod preprocess;
+
+#[cfg(test)]
+mod import_json;
 
 pub use ftml_fmt::ftml_fmt;
 pub use interpret::interpret;
@@ -19,10 +21,14 @@ pub fn export_wikitext(json: &str) -> Result<String, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::import_json::import_json;
 
     #[test]
-    fn test_export() {
-        export_wikitext("").unwrap();
+    fn test_export() -> Result<(), String> {
+        let mut json = String::new();
+        import_json(&mut json)?;
+        export_wikitext(&json)?;
+        Ok(())
     }
 
     // fn test_export_default_json() {

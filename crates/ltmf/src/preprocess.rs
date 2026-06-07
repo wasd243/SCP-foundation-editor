@@ -11,7 +11,6 @@
 //! - Reverse editor-adapted JSON names (e.g., attributes matching `align*`) back to their
 //!   original exporter representation.
 
-use crate::import_json::import_json;
 use crate::preprocess::adapter::pm_json_reverse_adapter;
 use crate::preprocess::normalize::normalize;
 use crate::preprocess::sanitize::sanitize;
@@ -22,12 +21,6 @@ mod normalize;
 mod sanitize;
 
 pub fn preprocess(json: &str) -> Result<String, String> {
-    let mut json = json.to_string();
-
-    // Test-only JSON, going to be removed after implementation of exporter
-    import_json(&mut json);
-    // End of test-only JSON
-
     let json_value: Value = serde_json::from_str(&json).map_err(|error| error.to_string())?;
 
     // Sanitize the JSON.

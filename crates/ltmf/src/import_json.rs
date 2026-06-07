@@ -4,6 +4,7 @@ use std::fs;
 
 const JSON_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/test/json/test.json");
 
-pub fn import_json(json: &mut String) {
-    *json = fs::read_to_string(JSON_PATH).expect("failed to read test.json");
+pub fn import_json(json: &mut String) -> Result<(), String> {
+    *json = fs::read_to_string(JSON_PATH).map_err(|error| error.to_string())?;
+    Ok(())
 }
