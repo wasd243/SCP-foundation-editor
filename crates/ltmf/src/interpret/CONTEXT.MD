@@ -6,10 +6,10 @@ The interpreter is not finished yet. The resourcepack includer is implemented, b
 Currently, the interpreter can handle most marks in ProseMirror JSON, as well as some URLs and ProseMirror attrs.
 
 TODO:
-- [ ] Implement user div exporter
+- [x] Implement user div exporter
 - [x] Implement user css exporter
 - [ ] Implement user span exporter
 - [ ] Test the includer
-- [ ] Test the interpreter
+- [x] Test the interpreter: attempt 1: test normal text and components
 - [ ] Add `[[footnoteblock]]` exporter
 - [x] Add `Content Paragraph` exporter
