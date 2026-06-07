@@ -13,6 +13,7 @@ pub(super) fn sanitize_unused_code_block_attrs_class(value: Value) -> Value {
     }
 }
 
+#[allow(clippy::unnecessary_filter_map)]
 fn sanitize_object(map: Map<String, Value>) -> Value {
     let is_code_block = map.get("type").and_then(Value::as_str) == Some("codeBlock");
 

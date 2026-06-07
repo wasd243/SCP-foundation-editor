@@ -120,10 +120,10 @@ fn collect_text_content(node: &Value) -> String {
 fn find_value_in_style(node: &Value, variable_name: &str) -> Option<String> {
     match node {
         Value::Object(map) => {
-            if let Some(style) = map.get("style").and_then(Value::as_str) {
-                if let Some(value) = find_style_property(style, variable_name) {
-                    return Some(value.to_string());
-                }
+            if let Some(style) = map.get("style").and_then(Value::as_str)
+                && let Some(value) = find_style_property(style, variable_name)
+            {
+                return Some(value.to_string());
             }
 
             map.values()

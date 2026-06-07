@@ -21,7 +21,7 @@ mod normalize;
 mod sanitize;
 
 pub fn preprocess(json: &str) -> Result<String, String> {
-    let json_value: Value = serde_json::from_str(&json).map_err(|error| error.to_string())?;
+    let json_value: Value = serde_json::from_str(json).map_err(|error| error.to_string())?;
 
     // Sanitize the JSON.
     let sanitized_json = sanitize(json_value);
