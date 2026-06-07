@@ -1,8 +1,8 @@
 use regex::Regex;
 use std::fs;
 
-const CSS_CACHE_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../ltmf/cache");
-const CSS_CACHE_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../ltmf/cache/user_css.css");
+const CSS_CACHE_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp");
+const CSS_CACHE_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/user_css.css");
 
 pub fn css_cacher(ftml: &str) {
     let re = Regex::new(r"(?is)\[\[module css]](.*?)\[\[/module]]").unwrap();

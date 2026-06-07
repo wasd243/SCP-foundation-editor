@@ -5,8 +5,8 @@
 //! Responsibilities:
 //!
 //! - Convert canonical JSON nodes into FTML.
-//! - Load and cache resources used by `[[include]]`.
-//! - Write generated FTML to `cache/output.ftml`.
+//! - Load and temp resources used by `[[include]]`.
+//! - Write generated FTML to `temp/output.ftml`.
 
 mod include;
 mod text;
@@ -20,8 +20,8 @@ use crate::interpret::{
     include::interpret_include, text::interpret_text, wiki_component::interpret_wiki_component,
 };
 
-const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/cache/output.ftml");
-const CACHE_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/cache");
+const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/output.ftml");
+const CACHE_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp");
 
 pub fn interpret(json: &str) -> Result<String, String> {
     let value: Value = serde_json::from_str(json).map_err(|error| error.to_string())?;

@@ -6,8 +6,8 @@ use rusqlite::Connection;
 use serde_json::Value;
 use std::fs;
 
-const INCLUDE_DB_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/cache/include.db");
-const CACHE_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/cache");
+const INCLUDE_DB_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/include.db");
+const CACHE_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp");
 
 pub fn interpret_include(_index: usize, node: &Value) -> Result<String, String> {
     let include_name = node
@@ -17,7 +17,7 @@ pub fn interpret_include(_index: usize, node: &Value) -> Result<String, String> 
         .and_then(Value::as_str)
         .unwrap_or("unknown");
 
-    // Cache the include variables in `cache/include.db`.
+    // Cache the include variables in `temp/include.db`.
     fs::create_dir_all(CACHE_DIR).map_err(|error| error.to_string())?;
     let connection = Connection::open(INCLUDE_DB_PATH).map_err(|error| error.to_string())?;
 

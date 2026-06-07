@@ -1,6 +1,6 @@
 use std::fs;
 
-const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/cache/output.ftml");
+const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/output.ftml");
 
 /// This function intentionally combines formatting and file I/O.
 ///

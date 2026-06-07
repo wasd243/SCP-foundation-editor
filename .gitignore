@@ -1,4 +1,4 @@
-# Python cache
+# Python temp
 __pycache__/
 *.pyc
 *.pyo
@@ -39,8 +39,10 @@ icon.png
 Thumbs.db
 
 # Cache
-include.db
-crates/ltmf/cache/
+**.db
+origin.ftml
+output.ftml
+user_css.css
 
 # MacOS
 .DS_Store

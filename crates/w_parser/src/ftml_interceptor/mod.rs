@@ -37,7 +37,7 @@
 //! interceptor/exporter pipeline.
 //!
 //! Instead, this interceptor extracts the raw CSS content before it is lost
-//! and stores it in the temp cache for the merger/exporter to restore later.
+//! and stores it in the temp temp for the merger/exporter to restore later.
 
 pub mod module_css;
 pub mod module_rate;
