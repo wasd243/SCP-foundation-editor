@@ -7,7 +7,7 @@ Currently, the interpreter can handle most marks in ProseMirror JSON, as well as
 
 TODO:
 - [ ] Implement user div exporter
-- [ ] Implement user css exporter
+- [x] Implement user css exporter
 - [ ] Implement user span exporter
 - [ ] Test the includer
 - [ ] Test the interpreter

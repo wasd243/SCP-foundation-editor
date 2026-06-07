@@ -4,6 +4,7 @@ use serde::Serialize;
 use std::borrow::Cow;
 use std::path::PathBuf;
 
+use crate::ftml_interceptor::div::div_data_attacher::attach_div_meta_data;
 use crate::ftml_interceptor::module_css::css_cacher::css_cacher;
 use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
 
@@ -97,6 +98,9 @@ pub fn render_wikidot_to_html_with_resourcepack(
 
     // Cache user CSS
     css_cacher(&wikitext);
+
+    // Div blocks need editor metadata so the exporter can preserve them.
+    wikitext = attach_div_meta_data(&wikitext);
 
     // Tokenize and parse
     let tokens = ftml::tokenize(&wikitext);
