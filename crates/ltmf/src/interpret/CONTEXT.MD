@@ -11,3 +11,4 @@ TODO:
 - [ ] Implement user span exporter
 - [ ] Test the includer
 - [ ] Test the interpreter
+- [ ] Add `[[footnoteblock]]` exporter
