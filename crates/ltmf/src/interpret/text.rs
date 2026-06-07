@@ -47,7 +47,7 @@ use crate::interpret::{
         get_marks::get_marks,
         get_types::{has_type, node_type},
     },
-    wiki_component::{interpret_wiki_component, is_wiki_component_node},
+    wiki_component::{interpret_wiki_component, is_nested_wiki_component_node},
 };
 
 pub(super) fn interpret_text(_index: usize, node: &Value) -> Result<String, String> {
@@ -97,7 +97,7 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
         Some(_) if is_ordered_list(node) => {
             Some(interpret_ol(node, String::new()).unwrap_or_else(|error| format!("ERROR:{error}")))
         }
-        Some(_) if is_wiki_component_node(node) => {
+        Some(_) if is_nested_wiki_component_node(node) => {
             Some(interpret_wiki_component(0, node).unwrap_or_else(|error| format!("ERROR:{error}")))
         }
         Some(node_type) => Some(format!("[[unknown {node_type}]]")),
@@ -111,7 +111,7 @@ fn should_stop_collecting_children(node: &Value) -> bool {
         || is_horizontal_rule(node)
         || is_unordered_list(node)
         || is_ordered_list(node)
-        || is_wiki_component_node(node)
+        || is_nested_wiki_component_node(node)
 }
 
 fn is_empty_paragraph_node(node: &Value) -> bool {

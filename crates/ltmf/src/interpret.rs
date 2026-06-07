@@ -17,7 +17,9 @@ use serde_json::Value;
 use std::fs;
 
 use crate::interpret::{
-    include::interpret_include, text::interpret_text, wiki_component::interpret_wiki_component,
+    include::interpret_include,
+    text::interpret_text,
+    wiki_component::{interpret_wiki_component, is_wiki_component_node},
 };
 
 const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/output.ftml");
@@ -47,12 +49,39 @@ pub fn interpret(json: &str) -> Result<String, String> {
 fn identify_node(index: usize, node: &Value) -> Result<String, String> {
     match node.get("type").and_then(Value::as_str) {
         Some("Include") => interpret_include(index, node),
-        Some("tabView") | Some("Collapsible") | Some("Note") | Some("Footnote") => {
-            interpret_wiki_component(index, node)
-        }
+        Some(_) if is_wiki_component_node(node) => interpret_wiki_component(index, node),
         Some(_) => interpret_text(index, node),
         None => Err(format!(
             "interpret expected node type at doc.content[{index}]"
         )),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn interprets_aligned_paragraph_as_wiki_component() {
+        let json = r#"{
+            "content": [
+                {
+                    "type": "paragraph",
+                    "attrs": {
+                        "textAlign": "center"
+                    },
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Centered content"
+                        }
+                    ]
+                }
+            ]
+        }"#;
+
+        let output = interpret(json).unwrap();
+
+        assert!(output.contains("[[=]]\nCentered content\n[[/=]]"));
     }
 }

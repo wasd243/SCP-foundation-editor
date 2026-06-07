@@ -54,7 +54,11 @@ pub(crate) fn is_wiki_component_node(node: &Value) -> bool {
     is_align_left(node)
         || is_align_right(node)
         || is_align_center(node)
-        || is_tabview(node)
+        || is_nested_wiki_component_node(node)
+}
+
+pub(crate) fn is_nested_wiki_component_node(node: &Value) -> bool {
+    is_tabview(node)
         || is_note(node)
         || is_image(node)
         || is_table(node)
