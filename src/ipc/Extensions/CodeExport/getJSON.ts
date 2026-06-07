@@ -13,7 +13,7 @@ export async function SyncJSONToExporter() {
     // debug output for testing
     console.log(pmJSON);
 
-    await invoke("export_json", {
+    await invoke("export_code", {
         json: JSON.stringify(pmJSON),
     });
 }

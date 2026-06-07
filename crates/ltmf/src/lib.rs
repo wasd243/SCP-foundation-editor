@@ -11,6 +11,7 @@ pub use interpret::interpret;
 pub use merge::merge_final_output;
 pub use preprocess::preprocess;
 
+/// Quick export function
 pub fn export_wikitext(json: &str) -> Result<String, String> {
     let json = preprocess(json)?;
     let json = interpret(&json)?;
