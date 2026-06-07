@@ -2,27 +2,22 @@ use serde_json::Value;
 
 use crate::preprocess::normalize::{
     normalize_bullet_list::normalize_bullet_list,
-    normalize_color_text_marks::normalize_color_text_marks,
-    normalize_details::normalize_details,
+    normalize_color_text_marks::normalize_color_text_marks, normalize_details::normalize_details,
+    normalize_div::normalize_div,
     normalize_empty_paragraph_between_newline::normalize_empty_paragraph_between_newline,
-    normalize_font_size::normalize_font_size,
-    normalize_footnote::normalize_footnote,
+    normalize_font_size::normalize_font_size, normalize_footnote::normalize_footnote,
     normalize_force_new_line::normalize_force_new_line_to_paragraph,
-    normalize_hard_break::normalize_hard_break,
-    // normalize_div::normalize_div,
-    normalize_horizontalrule::normalize_horizontalrule,
-    normalize_include::normalize_include,
-    normalize_new_line_marks::normalize_new_line_marks,
-    normalize_note::normalize_note,
-    normalize_raw_text::normalize_raw_text,
-    normalize_strike::normalize_strike,
-    normalize_tabview::normalize_tabview,
+    normalize_hard_break::normalize_hard_break, normalize_horizontalrule::normalize_horizontalrule,
+    normalize_include::normalize_include, normalize_new_line_marks::normalize_new_line_marks,
+    normalize_note::normalize_note, normalize_raw_text::normalize_raw_text,
+    normalize_strike::normalize_strike, normalize_tabview::normalize_tabview,
     normalize_white_space_pre_wrap::normalize_white_space_pre_wrap,
 };
 
 mod normalize_bullet_list;
 mod normalize_color_text_marks;
 mod normalize_details;
+mod normalize_div;
 mod normalize_empty_paragraph_between_newline;
 mod normalize_font_size;
 mod normalize_footnote;
@@ -37,7 +32,6 @@ mod normalize_strike;
 mod normalize_tabview;
 mod normalize_white_space_pre_wrap;
 mod rename;
-// pub mod normalize_div;
 
 pub fn normalize(value: Value) -> Value {
     // Normalize hard break to NewLine.
@@ -53,6 +47,7 @@ pub fn normalize(value: Value) -> Value {
     let value = normalize_details(value);
     let value = normalize_note(value);
     let value = normalize_include(value);
+    let value = normalize_div(value);
     let value = normalize_tabview(value);
     let value = normalize_horizontalrule(value);
     let value = normalize_bullet_list(value);
@@ -64,6 +59,5 @@ pub fn normalize(value: Value) -> Value {
     // Normalize empty paragraph between `NewLine` to a signal `NewLine`.
     let value = normalize_empty_paragraph_between_newline(value);
 
-    // let value = normalize_div(value);
     normalize_new_line_marks(value)
 }
