@@ -12,4 +12,4 @@ TODO:
 - [ ] Test the includer
 - [ ] Test the interpreter
 - [ ] Add `[[footnoteblock]]` exporter
-- [ ] Add `Content Paragraph` exporter
+- [x] Add `Content Paragraph` exporter

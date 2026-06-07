@@ -1,7 +1,7 @@
 use serde_json::Value;
 
 use crate::interpret::{
-    text::interpret_text_content,
+    text::{interpret_text_content, patch_wiki_component_content},
     utils::{get_intercepted_content::get_intercepted_content, get_types::has_type},
 };
 
@@ -11,7 +11,7 @@ pub(super) fn interpret_tabview(node: &Value, output: String) -> Result<String, 
     }
 
     let tabs = tab_titles(node);
-    let contents = tab_contents(node);
+    let contents = tab_contents(node)?;
     let output = tabs
         .iter()
         .enumerate()
@@ -22,7 +22,7 @@ pub(super) fn interpret_tabview(node: &Value, output: String) -> Result<String, 
         .collect::<Vec<_>>()
         .join("\n");
 
-    Ok(format!("[[tabview]]\n{output}\n[[/tabview]]"))
+    Ok(format!("[[tabview]]\n{output}\n[[/tabview]]\n"))
 }
 
 pub(super) fn is_tabview(node: &Value) -> bool {
@@ -48,7 +48,7 @@ fn tab_titles(node: &Value) -> Vec<String> {
         .unwrap_or_default()
 }
 
-fn tab_contents(node: &Value) -> Vec<String> {
+fn tab_contents(node: &Value) -> Result<Vec<String>, String> {
     node.get("content")
         .and_then(Value::as_array)
         .and_then(|content| {
@@ -62,8 +62,61 @@ fn tab_contents(node: &Value) -> Vec<String> {
             contents
                 .iter()
                 .filter(|content| has_type(content, "TabViewContent"))
-                .map(|content| get_intercepted_content(content, interpret_text_content))
+                .map(patch_wiki_component_content)
                 .collect()
         })
-        .unwrap_or_default()
+        .unwrap_or_else(|| Ok(Vec::new()))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn parses_paragraph_inside_tab_content() {
+        let node = json!({
+            "type": "tabView",
+            "content": [
+                {
+                    "type": "TabViewButtonList",
+                    "content": [
+                        {
+                            "type": "Tab",
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": "tab title"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "TabViewContentList",
+                    "content": [
+                        {
+                            "type": "TabViewContent",
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "content": [
+                                        {
+                                            "type": "text",
+                                            "text": "tab content"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        });
+
+        assert_eq!(
+            interpret_tabview(&node, String::new()).unwrap(),
+            "[[tabview]]\n[[tab tab title]]\ntab content\n[[/tab]]\n[[/tabview]]\n"
+        );
+    }
 }

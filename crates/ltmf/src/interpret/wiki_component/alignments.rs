@@ -1,11 +1,8 @@
 use serde_json::Value;
 
 use crate::interpret::{
-    text::interpret_text_content,
-    utils::{
-        get_attrs_text_align::get_attrs_text_align,
-        get_intercepted_content::get_intercepted_content,
-    },
+    text::{patch_wiki_component_text, trim_trailing_newlines},
+    utils::get_attrs_text_align::get_attrs_text_align,
 };
 
 pub(super) fn interpret_align_left(node: &Value, output: String) -> Result<String, String> {
@@ -13,9 +10,9 @@ pub(super) fn interpret_align_left(node: &Value, output: String) -> Result<Strin
         return Ok(output);
     }
 
-    let output = get_intercepted_content(node, interpret_text_content);
+    let output = trim_trailing_newlines(patch_wiki_component_text(node)?);
 
-    Ok(format!("[[<]]\n{output}\n[[/<]]"))
+    Ok(format!("[[<]]\n{output}\n[[/<]]\n"))
 }
 
 pub(super) fn interpret_align_right(node: &Value, output: String) -> Result<String, String> {
@@ -23,9 +20,9 @@ pub(super) fn interpret_align_right(node: &Value, output: String) -> Result<Stri
         return Ok(output);
     }
 
-    let output = get_intercepted_content(node, interpret_text_content);
+    let output = trim_trailing_newlines(patch_wiki_component_text(node)?);
 
-    Ok(format!("[[>]]\n{output}\n[[/>]]"))
+    Ok(format!("[[>]]\n{output}\n[[/>]]\n"))
 }
 
 pub(super) fn interpret_align_center(node: &Value, output: String) -> Result<String, String> {
@@ -33,9 +30,9 @@ pub(super) fn interpret_align_center(node: &Value, output: String) -> Result<Str
         return Ok(output);
     }
 
-    let output = get_intercepted_content(node, interpret_text_content);
+    let output = trim_trailing_newlines(patch_wiki_component_text(node)?);
 
-    Ok(format!("[[=]]\n{output}\n[[/=]]"))
+    Ok(format!("[[=]]\n{output}\n[[/=]]\n"))
 }
 
 pub(super) fn is_align_left(node: &Value) -> bool {
@@ -48,4 +45,31 @@ pub(super) fn is_align_right(node: &Value) -> bool {
 
 pub(super) fn is_align_center(node: &Value) -> bool {
     get_attrs_text_align(node, "center")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn wraps_aligned_paragraph_after_paragraph_patch() {
+        let node = json!({
+            "type": "paragraph",
+            "attrs": {
+                "textAlign": "right"
+            },
+            "content": [
+                {
+                    "type": "text",
+                    "text": "Aligned content"
+                }
+            ]
+        });
+
+        assert_eq!(
+            interpret_align_right(&node, String::new()).unwrap(),
+            "[[>]]\nAligned content\n[[/>]]\n"
+        );
+    }
 }

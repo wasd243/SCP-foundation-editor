@@ -68,11 +68,56 @@ pub(super) fn guard_output_empty_paragraphs(output: String) -> Result<String, St
     guard_empty_paragraph(output)
 }
 
+/// Interprets the content of a text node.
 pub(crate) fn interpret_text_content(node: &Value) -> Vec<String> {
     get_content_nodes(node, stop_collecting_children)
         .into_iter()
         .filter_map(interpret_content_node)
         .collect()
+}
+
+pub(crate) fn patch_wiki_component_text(node: &Value) -> Result<String, String> {
+    let content = interpret_text_content(node).join("");
+    let content = guard_empty_paragraph(content)?;
+    interpret_paragraph_with_contents(node, content)
+}
+
+/// Compatibility patch for legacy `wiki_component` nodes.
+///
+/// The legacy interpreter did not model `wiki_component` as a wrapper node.
+/// Its child content was stored under `content`, so empty paragraphs and nested
+/// text could not be restored by the normal exporter path.
+///
+/// This function extracts and serializes that legacy content until the
+/// interpreter is fully migrated to wrapper-style components.
+pub(crate) fn patch_wiki_component_content(node: &Value) -> Result<String, String> {
+    // Historical note:
+    //
+    // This function exists because the legacy interpreter made wiki_component
+    // a standalone grammar node instead of a wrapper.
+    //
+    // I only discovered this bug while implementing the merger.
+    //
+    // If you are reading this after removing the legacy interpreter,
+    // congratulations. You may delete this function.
+    //
+    // If you are reading this while adding another patch,
+    // my condolences.
+    node.get("content")
+        .and_then(Value::as_array)
+        .map(|content| {
+            content
+                .iter()
+                .map(patch_wiki_component_text)
+                .collect::<Result<Vec<_>, _>>()
+                .map(|content| trim_trailing_newlines(content.join("")))
+        })
+        .unwrap_or_else(|| Ok(String::new()))
+}
+
+/// This function is used to add `\n` to the end of the `wiki_component` outputs.
+pub(crate) fn trim_trailing_newlines(output: String) -> String {
+    output.trim_end_matches('\n').to_string()
 }
 
 /// Interprets a content node, which can be a text node, a new line node,
@@ -83,7 +128,6 @@ pub(crate) fn interpret_text_content(node: &Value) -> Vec<String> {
 /// Temporary is not support wiki_components yet
 ///
 /// Because the ` wiki_components ` module has some issues that MUST need to be refactored.
-/// TODO: refactor wiki_components module and let it able to interpret normal text node
 fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
     let node = content_node.node;
 
@@ -118,7 +162,7 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
         Some(_) if is_nested_wiki_component_node(node) => {
             Some(interpret_wiki_component(0, node).unwrap_or_else(|error| format!("ERROR:{error}")))
         }
-        Some(node_type) => Some(format!("[[unknown {node_type}]]")),
+        Some(_) => None,
         None => None,
     }
 }
@@ -177,4 +221,79 @@ fn interpret_marked_text(node: &Value, output: String) -> Result<String, String>
     let output = interpret_size_text(node, output)?;
 
     Ok(output)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn patches_wiki_component_content_paragraph() {
+        let node = json!({
+            "type": "paragraph",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "content"
+                }
+            ]
+        });
+
+        assert_eq!(patch_wiki_component_text(&node).unwrap(), "content\n\n");
+    }
+
+    #[test]
+    fn patches_wiki_component_empty_paragraph() {
+        let node = json!({
+            "type": "paragraph"
+        });
+
+        assert_eq!(patch_wiki_component_text(&node).unwrap(), "@@@@");
+    }
+
+    #[test]
+    fn guards_empty_paragraphs_inside_wiki_component_content() {
+        let node = json!({
+            "type": "paragraph",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "before"
+                },
+                {
+                    "type": "paragraph"
+                },
+                {
+                    "type": "text",
+                    "text": "after"
+                }
+            ]
+        });
+
+        assert_eq!(
+            patch_wiki_component_text(&node).unwrap(),
+            "before\n@@@@\nafter\n\n"
+        );
+    }
+
+    #[test]
+    fn patches_wiki_component_child_paragraphs() {
+        let node = json!({
+            "type": "Note",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "content"
+                        }
+                    ]
+                }
+            ]
+        });
+
+        assert_eq!(patch_wiki_component_content(&node).unwrap(), "content");
+    }
 }

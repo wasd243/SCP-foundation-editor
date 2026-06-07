@@ -1,10 +1,7 @@
 use regex::Regex;
 use serde_json::Value;
 
-use crate::interpret::{
-    text::interpret_text_content,
-    utils::{get_intercepted_content::get_intercepted_content, get_types::has_type},
-};
+use crate::interpret::{text::patch_wiki_component_content, utils::get_types::has_type};
 
 pub(super) fn interpret_collapsible(node: &Value, output: String) -> Result<String, String> {
     if !has_type(node, "Collapsible") {
@@ -12,10 +9,10 @@ pub(super) fn interpret_collapsible(node: &Value, output: String) -> Result<Stri
     }
 
     let (show, hide) = collapsible_labels(node)?;
-    let output = collapsible_content(node);
+    let output = collapsible_content(node)?;
 
     Ok(format!(
-        "[[collapsible show=\"{show}\" hide=\"{hide}\"]]\n{output}\n[[/collapsible]]"
+        "[[collapsible show=\"{show}\" hide=\"{hide}\"]]\n{output}\n[[/collapsible]]\n"
     ))
 }
 
@@ -56,7 +53,7 @@ fn raw_text_content(node: &Value) -> Option<String> {
     })
 }
 
-fn collapsible_content(node: &Value) -> String {
+fn collapsible_content(node: &Value) -> Result<String, String> {
     node.get("content")
         .and_then(Value::as_array)
         .and_then(|content| {
@@ -64,6 +61,49 @@ fn collapsible_content(node: &Value) -> String {
                 .iter()
                 .find(|node| has_type(node, "CollapsibleContent"))
         })
-        .map(|content| get_intercepted_content(content, interpret_text_content))
-        .unwrap_or_default()
+        .map(patch_wiki_component_content)
+        .unwrap_or_else(|| Ok(String::new()))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn parses_paragraph_inside_collapsible_content() {
+        let node = json!({
+            "type": "Collapsible",
+            "content": [
+                {
+                    "type": "CollapsibleSummary",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "+open-close"
+                        }
+                    ]
+                },
+                {
+                    "type": "CollapsibleContent",
+                    "content": [
+                        {
+                            "type": "paragraph",
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": "collapsible content"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        });
+
+        assert_eq!(
+            interpret_collapsible(&node, String::new()).unwrap(),
+            "[[collapsible show=\"open\" hide=\"close\"]]\ncollapsible content\n[[/collapsible]]\n"
+        );
+    }
 }
