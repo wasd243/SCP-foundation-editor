@@ -1,4 +1,5 @@
 use serde_json::Value;
+use serde_json::value::Map;
 
 const NO_SUCH_INCLUDE_FALLBACK: &str = "EDITOR: NO SUCH INCLUDE IN RESOURCEPACK";
 
@@ -41,6 +42,26 @@ pub(super) fn generate_include(
     output
 }
 
+/// This ugly patch function is here because I cannot understand why wikidot component design like that shit
+/// I know this doc comment is rude, but I have no choice
+/// Do not touch unless you've found better ways to resolve `[[include]]` in the WYSIWYG editor.
+fn patch_is_image_caption_node(map: &Map<String, Value>) -> bool {
+    matches!(
+        map.get("type").and_then(Value::as_str),
+        Some("wjBlockTag") | Some("Div")
+    )
+        && map
+        .get("attrs")
+        .and_then(|attrs| attrs.get("htmlAttributes"))
+        .and_then(|html_attrs| html_attrs.get("class"))
+        .and_then(Value::as_str)
+        .is_some_and(|class| {
+            class
+                .split_whitespace()
+                .any(|token| token == "scp-image-caption")
+        })
+}
+
 fn normalize_include_variable_name(include_variable: &str) -> &str {
     include_variable
         .trim()
@@ -80,10 +101,14 @@ fn find_value_by_key(node: &Value, variable_name: &str) -> Option<String> {
     }
 }
 
+/// This function will find the text content of a node based on its type.
 fn find_text_by_node_type(node: &Value, variable_name: &str) -> Option<String> {
     match node {
         Value::Object(map) => {
-            if map.get("type").and_then(Value::as_str) == Some(variable_name) {
+            let type_matches = map.get("type").and_then(Value::as_str) == Some(variable_name)
+                || (variable_name == "caption" && patch_is_image_caption_node(map));
+
+            if type_matches {
                 let content = collect_text_content(node);
                 if !content.is_empty() {
                     return Some(content);
@@ -117,6 +142,8 @@ fn collect_text_content(node: &Value) -> String {
     }
 }
 
+/// This function will find the value of a style property in a node.
+/// For example, style="width: 100px;" will return width=100px.
 fn find_value_in_style(node: &Value, variable_name: &str) -> Option<String> {
     match node {
         Value::Object(map) => {
@@ -145,6 +172,7 @@ fn find_style_property<'a>(style: &'a str, property_name: &str) -> Option<&'a st
     })
 }
 
+/// This function hardcoded the value directly from the ProseMirror JSON.
 fn find_adapter_alias_value(node: &Value, variable_name: &str) -> Option<String> {
     match variable_name {
         "align" => node
