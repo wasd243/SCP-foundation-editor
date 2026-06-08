@@ -26,11 +26,11 @@ fn collapsible_labels(node: &Value) -> Result<(String, String), String> {
 
     let show = captures
         .get(1)
-        .map(|value| value.as_str().to_string())
+        .map(|value| format!("+{}", value.as_str()))
         .unwrap_or_default();
     let hide = captures
         .get(2)
-        .map(|value| value.as_str().to_string())
+        .map(|value| format!("-{}", value.as_str()))
         .unwrap_or_default();
 
     Ok((show, hide))

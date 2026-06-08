@@ -49,8 +49,7 @@ fn patch_is_image_caption_node(map: &Map<String, Value>) -> bool {
     matches!(
         map.get("type").and_then(Value::as_str),
         Some("wjBlockTag") | Some("Div")
-    )
-        && map
+    ) && map
         .get("attrs")
         .and_then(|attrs| attrs.get("htmlAttributes"))
         .and_then(|html_attrs| html_attrs.get("class"))
