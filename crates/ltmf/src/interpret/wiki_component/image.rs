@@ -8,12 +8,13 @@ pub(super) fn interpret_image(node: &Value, output: String) -> Result<String, St
     }
 
     let src = image_src(node).ok_or_else(|| "image expected attrs.src".to_string())?;
+    let options = image_options(node);
 
     Ok(match image_alignment(node) {
-        Some(ImageAlignment::Left) => format!("[[<image {src}]]"),
-        Some(ImageAlignment::Right) => format!("[[>image {src}]]"),
-        Some(ImageAlignment::Center) => format!("[[=image {src}]]"),
-        None => format!("[[image {src}]]"),
+        Some(ImageAlignment::Left) => format!("[[<image {src}{options}]]"),
+        Some(ImageAlignment::Right) => format!("[[>image {src}{options}]]"),
+        Some(ImageAlignment::Center) => format!("[[=image {src}{options}]]"),
+        None => format!("[[image {src}{options}]]"),
     })
 }
 
@@ -31,6 +32,50 @@ fn image_src(node: &Value) -> Option<&str> {
     node.get("attrs")?.get("src")?.as_str()
 }
 
+fn image_options(node: &Value) -> String {
+    let Some(style) = node
+        .get("attrs")
+        .and_then(|attrs| attrs.get("wrapperAttributes"))
+        .and_then(|wrapper_attrs| wrapper_attrs.get("style"))
+        .and_then(Value::as_str)
+    else {
+        return String::new();
+    };
+
+    let mut options = String::new();
+
+    if let Some(width) = style_value(style, "width") {
+        options.push_str(&format!(" width=\"{width}\""));
+    }
+
+    if let Some(height) = style_value(style, "height") {
+        options.push_str(&format!(" height=\"{height}\""));
+    }
+
+    options
+}
+
+fn style_value(style: &str, name: &str) -> Option<String> {
+    style
+        .split(';')
+        .map(str::trim)
+        .filter(|part| !part.is_empty())
+        .find_map(|part| {
+            let (key, value) = part.split_once(':')?;
+            if key.trim() != name {
+                return None;
+            }
+
+            let value = value.trim();
+            if value.is_empty() {
+                None
+            } else {
+                Some(value.to_string())
+            }
+        })
+}
+
+/// This function is used to identify the alignment of the image.
 fn image_alignment(node: &Value) -> Option<ImageAlignment> {
     let class = node
         .get("attrs")?
@@ -55,4 +100,47 @@ fn image_alignment(node: &Value) -> Option<ImageAlignment> {
 
 fn class_has_token(class: &str, token: &str) -> bool {
     class.split_whitespace().any(|value| value == token)
+}
+
+#[cfg(test)]
+mod tests {
+    use serde_json::json;
+
+    use super::interpret_image;
+
+    #[test]
+    fn interprets_image_width_and_height_from_wrapper_attributes_style() {
+        let node = json!({
+            "type": "image",
+            "attrs": {
+                "src": "example.png",
+                "wrapperAttributes": {
+                    "style": "width: 457px; height: 437px;"
+                }
+            }
+        });
+
+        assert_eq!(
+            interpret_image(&node, String::new()).unwrap(),
+            r#"[[image example.png width="457px" height="437px"]]"#
+        );
+    }
+
+    #[test]
+    fn interprets_partial_image_style() {
+        let node = json!({
+            "type": "image",
+            "attrs": {
+                "src": "example.png",
+                "wrapperAttributes": {
+                    "style": "width: 457px;"
+                }
+            }
+        });
+
+        assert_eq!(
+            interpret_image(&node, String::new()).unwrap(),
+            r#"[[image example.png width="457px"]]"#
+        );
+    }
 }
