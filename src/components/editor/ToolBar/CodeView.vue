@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import {invoke} from "@tauri-apps/api/core";
-import {onBeforeUnmount, ref, watch} from "vue";
+import {nextTick, onBeforeUnmount, ref, watch} from "vue";
 import RenderSyncHtmlToEditor from "./CodeView/RenderSyncHTMLToEditor.vue";
 import {setCodeViewIframe} from "../../../ipc/Extensions/CodeView/SyncToParser";
+import {setExportIframe, exportToViewer} from "../../../ipc/Extensions/CodeView/ExportToViewer.ts";
 
 const isCodeViewOpen = ref(false);
 const isCodeViewOpening = ref(false);
@@ -14,10 +15,12 @@ defineExpose({});
 
 watch(codeViewIframe, iframe => {
   setCodeViewIframe(iframe);
+  setExportIframe(iframe);
 });
 
 onBeforeUnmount(() => {
   setCodeViewIframe(null);
+  setExportIframe(null);
 });
 
 function formatOpenError(error: unknown): string {
@@ -31,9 +34,9 @@ function formatOpenError(error: unknown): string {
 }
 
 async function openCodeView() {
-  if (isCodeViewOpening.value || isCodeViewOpen.value) {
-    return;
-  }
+  console.log("openCodeView active");
+
+  if (isCodeViewOpening.value || isCodeViewOpen.value) return;
 
   isCodeViewOpening.value = true;
   codeViewOpenError.value = "";
@@ -41,6 +44,24 @@ async function openCodeView() {
   try {
     codeViewSrc.value = await invoke<string>("open_code_view_window");
     isCodeViewOpen.value = true;
+
+    // Wait for iframe to load
+    await nextTick();
+
+    await new Promise<void>(resolve => {
+      const iframe = codeViewIframe.value;
+      if (!iframe) return resolve();
+
+      // if already loaded, resolve immediately
+      if (iframe.contentDocument?.readyState === 'complete') {
+        console.log("iframe already loaded");
+        resolve();
+      } else {
+        iframe.addEventListener('load', () => resolve(), { once: true });
+      }
+    });
+
+    await exportToViewer();
   } catch (error) {
     codeViewOpenError.value = formatOpenError(error);
     console.error("[CodeView] open_code_view_window failed:", error);

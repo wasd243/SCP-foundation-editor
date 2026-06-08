@@ -1,10 +1,8 @@
 mod handlers;
 
 use handlers::{
-    connect_parser::parse_wikidot,
-    open_code_view::open_code_view_window,
-    connect_exporter::export_code,
-    connect_exporter::export_css,
+    connect_exporter::export_code, connect_exporter::export_css, connect_parser::parse_wikidot,
+    open_code_view::open_code_view_window, open_code_view::read_final_output,
 };
 
 fn main() {
@@ -12,8 +10,9 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             parse_wikidot,
             open_code_view_window,
+            read_final_output,
             export_code,
-            export_css
+            export_css,
         ])
         .run(tauri::generate_context!())
         .expect("failed to run Tauri application");

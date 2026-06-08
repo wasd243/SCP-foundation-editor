@@ -5,7 +5,7 @@ export async function SyncJSONToExporter() {
     const editor = getEditor();
 
     if (!editor) {
-        return;
+        return null;
     }
 
     const pmJSON = editor.getJSON();
@@ -13,7 +13,7 @@ export async function SyncJSONToExporter() {
     // debug output for testing
     console.log(pmJSON);
 
-    await invoke("export_code", {
+    return await invoke<string>("export_code", {
         json: JSON.stringify(pmJSON),
     });
 }

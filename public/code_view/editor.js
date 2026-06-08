@@ -55,6 +55,31 @@ function postCodeViewContent(content) {
     );
 }
 
+let pendingExportContent = null;
+
+function applyCodeViewContent(view, content) {
+    view.dispatch({
+        changes: {
+            from: 0,
+            to: view.state.doc.length,
+            insert: content ?? '',
+        },
+        selection: { anchor: 0 },
+    });
+}
+
+window.setCodeViewContent = function(content) {
+    const view = window.editorInstance;
+    if (!view) {
+        pendingExportContent = content ?? '';
+        console.warn("[ExportToViewer] editor instance is not ready yet. Content queued.");
+        return false;
+    }
+
+    applyCodeViewContent(view, content);
+    return true;
+};
+
 // Define custom highlight tags to prevent "Unknown highlighting tag" errors
 const customTags = {
     header: Tag.define(),
@@ -475,32 +500,20 @@ const startEditor = () => {
     // Expose instance globally for index.html button actions
     window.editorInstance = editorView;
 
+    if (pendingExportContent !== null) {
+        applyCodeViewContent(editorView, pendingExportContent);
+        pendingExportContent = null;
+    }
+
     return editorView;
 };
 
-// Listen for init/re-sync requests from the userscript
+// Listen for content exported by the Tauri editor bridge.
 window.addEventListener('message', (event) => {
-    // Allow messages from all Wikidot sub-sites
-    const isWikidot = event.origin.endsWith('wikidot.com');
-    
-    if (!isWikidot) return;
-    // Ignore unrelated messages (e.g., noisy extension injections)
-    if (!event.data || event.data.type !== 'h2o2-init') return;
-    
-    console.log("H2O2 Web: Successfully received initial content from Wikidot textarea.");
-    
-    const view = window.editorInstance;
-    if (view) {
-        // Replace full editor content with received textarea payload
-        view.dispatch({
-            changes: { 
-                from: 0, 
-                to: view.state.doc.length, 
-                insert: event.data.payload || ''
-            }
-        });
-    } else {
-        console.warn("H2O2 Web: Received data, but editor instance is not ready yet.");
+    console.log('[editor.js] raw message', event.data?.type);
+
+    if (event.data?.type === 'export-to-viewer-content') {
+        window.setCodeViewContent(event.data.payload);
     }
 });
 

@@ -11,16 +11,11 @@ type ParseOutput = {
   ast_json: string;
 };
 
-let codeViewIframe: HTMLIFrameElement | null = null;
-
-export function setCodeViewIframe(iframe: HTMLIFrameElement | null) {
-  codeViewIframe = iframe;
+export function setCodeViewIframe(_iframe: HTMLIFrameElement | null) {
 }
 
 export function SyncToParser() {
   window.addEventListener("message", async (event: MessageEvent<CodeViewMessage>) => {
-    if (event.source !== codeViewIframe?.contentWindow) return;
-    if (event.origin !== window.location.origin) return;
     if (event.data?.type !== "code-view-content-changed") return;
 
     try {
