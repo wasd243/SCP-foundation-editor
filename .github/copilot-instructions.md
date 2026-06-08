@@ -3,46 +3,39 @@
 ## Build, test, and lint commands
 
 ### Root frontend (Vue 3 + TipTap)
-
 - Install deps: `npm install`
 - Dev server: `npm run dev`
 - Build (includes type-check): `npm run build`
 - Preview built app: `npm run preview`
 
-### Tauri shell + Rust parser bridge
-
-- Run Tauri app in dev mode (from `src-tauri/`): `cargo tauri dev`
-- Build Tauri app (from `src-tauri/`): `cargo tauri build`
-- Build/check Rust backend crate only (from `src-tauri/`): `cargo check`
+### Tauri shell + Rust backend
+- Run Tauri app in dev mode: `cd src-tauri && cargo tauri dev`
+- Build Tauri app: `cd src-tauri && cargo tauri build`
+- Check the Rust backend crate: `cd src-tauri && cargo check`
 
 ### Rust parser crate (`w_parser`)
-
-- Run all tests (from `src-tauri/`): `cargo test -p w_parser`
-- Run a single test by name (from `src-tauri/`): `cargo test -p w_parser <test_name> -- --exact`
+- Run all tests: `cd src-tauri && cargo test -p w_parser`
+- Run a single test by name: `cd src-tauri && cargo test -p w_parser <test_name> -- --exact`
 
 ### Code View subproject (`public/code_view`)
-
 - Install deps: `cd public/code_view && npm install`
 - Build CodeMirror bundle: `cd public/code_view && npm run build`
 - Lint JS files: `cd public/code_view && npm run lint`
 
 ## High-level architecture
+- The app is a **Tauri host (`src-tauri`) plus a Vue 3 frontend (`src`)**. Frontend startup happens in `src/main.ts`, which mounts `App.vue` and initializes IPC through `connectIpc()`.
+- The editor canvas is a **TipTap editor** in `src/components/editor/EditorCanvas.vue`. Its extensions are assembled centrally in `src/stores/editor/extensions.ts`.
+- Editor access is centralized in `src/stores/editor/instance.ts`; toolbar and context-menu components stay thin and call store helpers under `src/stores/btnToolBar/*` and `src/stores/btnContextMenu/*`.
+- **Code View** is a separate CodeMirror-based editor under `public/code_view`, opened by the Tauri command `open_code_view_window`. It posts changes back to the main window, which calls `parse_wikidot`, then Rust `w_parser` converts Wikidot to HTML/AST, and DOM adapters in `src/ipc/Extensions/CodeView/htmlAdapter/*` reshape output before it goes back into TipTap.
+- The Rust side is split between the Tauri shell in `src-tauri`, the parser crate `crates/w_parser`, and the exporter crate `crates/ltmf`. The parser command temporarily writes source text to `temp/origin.ftml` before rendering.
 
-- The desktop app is a **Tauri host (`src-tauri`) + Vue frontend (`src`)**. Tauri exposes commands and the Vue app calls them through `@tauri-apps/api/core` `invoke`.
-- The editor canvas is a **TipTap editor** (`src/components/editor/EditorCanvas.vue`) with extensions assembled in `src/stores/editor/extensions.ts`.
-- Editor instance access is centralized through a shared singleton (`src/stores/editor/instance.ts`), and toolbar/context-menu actions call it through small store helpers in `src/stores/btnToolBar/*` and `src/stores/btnContextMenu/*`.
-- Code View is a separate web editor loaded in an iframe from `public/code_view/index.html`, opened by Tauri command `open_code_view_window`.
-- Sync flow:
-  1. `public/code_view` posts `window.parent.postMessage({ type: "code-view-content-changed", payload })`.
-  2. Frontend listener (`src/ipc/Extensions/CodeView/SyncToParser.ts`) calls Tauri command `parse_wikidot`.
-  3. Rust command (`src-tauri/src/handlers/connect_parser.rs`) calls `w_parser::render_wikidot_to_html_and_ast`.
-  4. Returned HTML is transformed by DOM adapters (`src/ipc/Extensions/CodeView/htmlAdapter/*`) and then injected back into TipTap via `code-view-parser-html` custom event.
-- The Rust parser crate (`crates/w_parser`) wraps FTML parsing/rendering and includes an interceptor layer (`ftml_interceptor`) for Wikidot constructs that need preprocessing before FTML tokenization (currently `[[module rate]]` handling).
-
-## Key conventions in this repository
-
-- **Use explicit `.ts` import suffixes** in internal TypeScript imports (enabled by `allowImportingTsExtensions` in `tsconfig.json`).
-- **Keep editor commands in store helper modules**, not in Vue button components. Components emit UI events; store helpers execute TipTap commands via `getEditor()`.
-- **Custom TipTap nodes map to `wj-*` HTML tags** (for example tabview nodes in `TabViewE.ts`) and preserve ARIA/ID attributes for round-tripping.
-- **When Code View parser output is not directly TipTap-compatible, adapt it in `htmlAdapter` replacers** before inserting into the editor.
-- **IPC wiring is initialized from `src/main.ts` via `connectIpc()`**, so new cross-window/event integrations should be attached under `src/ipc`.
+## Key conventions
+- Use explicit `.ts` import suffixes in internal TypeScript imports.
+- Keep editor actions in store helper modules, not in Vue button components.
+- Prefer ProseMirror node attrs, node content, and `data-editor` metadata over reconstructing state from rendered HTML.
+- Preserve `wj-*` tag mappings and ARIA/ID attributes for round-tripping custom nodes.
+- When parser output is not TipTap-compatible, adapt it in the Code View `htmlAdapter` replacers instead of changing the parser pipeline.
+- Do not hardcode SQL inline; use the existing `.sql` files, especially `crates/ltmf/src/interpreter/include/variable_name_config_table.sql` for include-related work.
+- Preserve existing logs, assertions, and error messages unless a change explicitly requires otherwise.
+- Keep IPC wiring in `src/main.ts` via `connectIpc()`, and add new cross-window/event integrations under `src/ipc`.
+- Optimize for export correctness and Wikidot fidelity over refactoring or abstraction.
