@@ -4,6 +4,9 @@
     border: 1px solid red;
 }
 [[/module]]
++ HEADER TEST
+
+###ff0000|Color Test##
 
 测试文本
 test
@@ -32,13 +35,23 @@ Centered content
 Aligned content
 [[/>]]
 
+> 引用测试
+>
+> 多行引用测试
+
+* 无须列表测试
+* 无须列表测试
+
+# 有序列表测试
+# 有序列表测试2
+
 [[collapsible show="+测试文本test测试文本test" hide="-测试文本test"]]
 测试文本test
 [[/collapsible]]
 
-[[size 2em]]
-测试文本test
-[[/size]]
+[[size 2em]]测试文本test[[/size]]
+
+[[size large]]大小测试2[[/size]]
 
 [[tabview]]
 [[tab 测试文本test]]
@@ -65,6 +78,8 @@ This is a test 这是div测试文本test
 [https://scp-wiki.wikidot.com EN] [https://scp-wiki-cn.wikidot.com CN]
 [https://youtube.com youtube]
 
+[[[SCP-173]]]
+
 @@@@
 
 [[image https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg]]
@@ -73,6 +88,14 @@ image preview test
 [[image https://sdafkhgashijkfd.example.com]]
 image failed test
 
+||~ test1 ||~ test2 ||
+|| test1-1 || test2-1 ||
+|| test1-2 || test2-2 ||
+
+[[include :component:image-block name=https://scp-wiki.wdfiles.com/local--files/theme%3Abasalt/basalt_scp_logo-for_lightmode.svg|caption=image preview test|width=200px|height=200px|align=right]]
+
+[[user wasd243]]
+[[*user wasd243]]
 
 [[code type="python"]]
 print("hello world")

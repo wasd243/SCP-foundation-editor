@@ -1,4 +1,4 @@
-# Python cache
+# Python temp
 __pycache__/
 *.pyc
 *.pyo
@@ -22,7 +22,6 @@ ftml/
 # IDE
 .vscode/
 .idea/
-.github/
 
 # Virtual environment
 .venv/
@@ -31,7 +30,7 @@ ftml/
 # Rust and Tauri
 target/
 gen/
-icons/
+icon.png
 
 # git
 .git/
@@ -39,14 +38,19 @@ icons/
 # Windows
 Thumbs.db
 
+# Cache
+**.db
+origin.ftml
+output.ftml
+final_output.ftml
+patch_origin.ftml
+user_css.css
+
 # MacOS
 .DS_Store
 
 # aiderchat
 .aider*
-
-# OLD
-v2.1.0/
 
 # Vite
 .vite-dev.err.log

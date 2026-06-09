@@ -4,37 +4,31 @@ use serde::Serialize;
 use std::borrow::Cow;
 use std::path::PathBuf;
 
+use crate::ftml_interceptor::div::div_data_attacher::attach_div_meta_data;
+use crate::ftml_interceptor::module_css::css_cacher::css_cacher;
 use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
 
 use crate::ftml_interceptor::note::{
-  note_cleaner::note_cleaner,
-  note_interceptor::note_interceptor,
-  note_parser::note_parser,
+    note_cleaner::note_cleaner, note_interceptor::note_interceptor, note_parser::note_parser,
 };
 
 use crate::ftml_interceptor::user::{
-    user_interceptor::{
-        user_interceptor,
-        user_with_img_interceptor,
-    },
-    user_parser::{
-        parse_user,
-        parse_user_with_img,
-    },
+    user_interceptor::{user_interceptor, user_with_img_interceptor},
+    user_parser::{parse_user, parse_user_with_img},
 };
 
 use crate::ftml_interceptor::preprocess_interceptor::{
-    unused_variable_interceptor::unused_variable_interceptor,
     unused_newline_interceptor::unused_newline_interceptor,
+    unused_variable_interceptor::unused_variable_interceptor,
 };
 
+use crate::ftml_normalizer::image_normalizer::normalize_images;
 use crate::ftml_normalizer::include_normalizer::component_image_normalizer::normalize_component_images;
 use crate::resourcepack_includer::ResourcepackIncluder;
-use crate::ftml_normalizer::image_normalizer::normalize_images;
 
 mod ftml_interceptor;
-mod resourcepack_includer;
 mod ftml_normalizer;
+mod resourcepack_includer;
 
 const DEFAULT_RESOURCEPACK_ROOT: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack");
 
@@ -101,6 +95,12 @@ pub fn render_wikidot_to_html_with_resourcepack(
     // and the parser falls back to normal text parsing.
     wikitext = unused_variable_interceptor(&wikitext);
     wikitext = unused_newline_interceptor(&wikitext);
+
+    // Cache user CSS
+    css_cacher(&wikitext);
+
+    // Div blocks need editor metadata so the exporter can preserve them.
+    wikitext = attach_div_meta_data(&wikitext);
 
     // Tokenize and parse
     let tokens = ftml::tokenize(&wikitext);

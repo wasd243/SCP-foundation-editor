@@ -1,0 +1,18 @@
+[
+  {
+    "type": "text",
+    "marks": [
+      {
+        "type": "link",
+        "attrs": {
+          "href": "/scp-173",
+          "target": "_blank",
+          "rel": "noopener noreferrer nofollow",
+          "class": "active",
+          "title": null
+        }
+      }
+    ],
+    "text": "SCP-173"
+  }
+]

@@ -29,7 +29,27 @@
 //! Current fixes:
 //! - unresolved variables
 //! - malformed newlines (\n)
+//!
+//! ---
+//!
+//! About `[[module CSS]]`:
+//!
+//! `[[module CSS]]` is parsed by FTML, but its content is not preserved
+//! in ProseMirror JSON. Therefore, we do not pass it through the normal
+//! interceptor/exporter pipeline.
+//!
+//! Instead, this interceptor extracts the raw CSS content before it is lost
+//! and stores it in the temp for the merger/exporter to restore later.
+//!
+//! ---
+//!
+//! Ablout `[[div]]`
+//!
+//! To let the exporter know that a div tag rather than include, the function will attach
+//! `data-editor-exporte="div"`.
 
+pub mod div;
+pub mod module_css;
 pub mod module_rate;
 pub mod note;
 pub mod preprocess_interceptor;

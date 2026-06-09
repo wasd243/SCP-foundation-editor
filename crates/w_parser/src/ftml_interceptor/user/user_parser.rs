@@ -10,9 +10,7 @@ pub fn parse_user(text: &str) -> String {
 
     re.replace_all(text, |captures: &regex::Captures| {
         let content = captures.get(1).map_or("", |matched| matched.as_str());
-        format!(
-            r#"<span class="wj-user" data-editor-export="user">{content}</span>"#
-        )
+        format!(r#"<span class="wj-user" data-editor-export="user">{content}</span>"#)
     })
     .into_owned()
 }

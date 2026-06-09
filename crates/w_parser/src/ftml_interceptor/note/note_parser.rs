@@ -2,7 +2,9 @@ use regex::Regex;
 
 pub fn note_parser(text: &str) -> String {
     // Identify content inside ~_WJ_NOTE_EXTERNAL_PARSER_~
-    let note_re = Regex::new(r"(?is)~_WJ_NOTE_EXTERNAL_PARSER_BEGIN_~(.*?)~_WJ_NOTE_EXTERNAL_PARSER_END_~").unwrap();
+    let note_re =
+        Regex::new(r"(?is)~_WJ_NOTE_EXTERNAL_PARSER_BEGIN_~(.*?)~_WJ_NOTE_EXTERNAL_PARSER_END_~")
+            .unwrap();
 
     if !note_re.is_match(text) {
         return text.into();

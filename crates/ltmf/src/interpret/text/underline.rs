@@ -1,0 +1,11 @@
+use serde_json::Value;
+
+use crate::interpret::utils::get_marks::has_mark;
+
+pub(super) fn interpret_underline_text(node: &Value, output: String) -> Result<String, String> {
+    if !has_mark(node, "underline") {
+        return Ok(output);
+    }
+
+    Ok(format!("__{output}__"))
+}

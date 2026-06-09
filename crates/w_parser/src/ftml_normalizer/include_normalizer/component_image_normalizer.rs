@@ -15,9 +15,10 @@ fn normalize_image_block_class(class_name: &str) -> String {
         .filter(|class_name| !is_template_align_class(class_name))
         .collect();
 
-    if !classes.iter().any(|class_name| {
-        matches!(*class_name, "block-left" | "block-right" | "block-center")
-    }) {
+    if !classes
+        .iter()
+        .any(|class_name| matches!(*class_name, "block-left" | "block-right" | "block-center"))
+    {
         classes.push(DEFAULT_IMAGE_BLOCK_ALIGN_CLASS);
     }
 
