@@ -36,6 +36,10 @@
     - COLLECTION: Solar Line Duotone Icons
     - LICENSE: CC Attribution License
 
+- Save Icon: [SvgRepo](https://www.svgrepo.com/svg/395640/save)
+    - AUTHOR: designmodo
+    - COLLECTION: Flat UI Icons
+    - LICENSE: MIT License
 
 ## Libraries
 - TipTap
