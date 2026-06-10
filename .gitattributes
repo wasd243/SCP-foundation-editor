@@ -21,6 +21,7 @@ crates/ltmf/test/**/*.json linguist-generated=true
 public/code_view/** linguist-generated=true
 
 # Ignore plain JS files for stats
+# Because `public/code_view/` already in another repo
 *.js linguist-generated=true
 
 # Ignore test output files

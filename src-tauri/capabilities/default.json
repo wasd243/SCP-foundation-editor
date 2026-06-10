@@ -1,0 +1,11 @@
+{
+  "identifier": "default",
+  "description": "",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "dialog:allow-save",
+    "dialog:allow-open",
+    "fs:allow-read-text-file"
+  ]
+}

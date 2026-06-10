@@ -25,6 +25,7 @@ const activeTab = ref<Tab>("home");
       <Settings :active="activeTab === 'settings'" @select="activeTab = 'settings'" />
     </nav>
 
+    <!--Actions bar, contains undo, redo, save, open, etc.-->
     <Actions/>
     <Ribbon :active-tab="activeTab" />
   </header>

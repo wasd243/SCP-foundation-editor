@@ -36,6 +36,25 @@
     - COLLECTION: Solar Line Duotone Icons
     - LICENSE: CC Attribution License
 
+- Save Icon: [SvgRepo](https://www.svgrepo.com/svg/395640/save)
+    - AUTHOR: designmodo
+    - COLLECTION: Flat UI Icons
+    - LICENSE: MIT License
+
+- Save Icon 2: [SvgRepo](https://www.svgrepo.com/svg/452351/save)
+    - AUTHOR: Bliss Design System
+    - COLLECTION: Bliss Cornered Interface Icons
+    - LICENSE: MIT License
+
+- Open Icon: [SvgRepo](https://www.svgrepo.com/svg/509178/open)
+    - AUTHOR: Orchid
+    - COLLECTION: Orchid Line Interface Icons
+    - LICENSE: MIT License
+
+- Open Icon 2: [SvgRepo](https://www.svgrepo.com/svg/474852/folder)
+    - UPLOADER: SVG Repo
+    - COLLECTION: Flat Colored Interface Icons
+    - LICENSE: CC0 License
 
 ## Libraries
 - TipTap
@@ -52,7 +71,7 @@
 - `test\image\input3.ftml`
     - AUTHOR: whenwerewe
     - TRANSLATOR: LeeBr
-    - FROM: SCP-wiki/SCP-wiki-CN
+    - FROM: scp-wiki/scp-wiki-cn
     - LINK: [EN](https://scp-wiki.wikidot.com/scp-9729)  [CN](https://scp-wiki-cn.wikidot.com/scp-9729)
     - LICENSE: CC BY-SA 2.0
     - Image: cave.jpg
