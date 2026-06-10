@@ -1,6 +1,8 @@
 .actions-button {
     width: 28px;
     height: 28px;
+    top: 12px;
+    color: #dbe8ff;
 
     display: flex;
     align-items: center;
@@ -13,6 +15,14 @@
     font-weight: bold;
 
     cursor: pointer;
+
+    /* Positioning of toolbar buttons always absolute */
+    position: absolute;
+}
+
+.actions-button img {
+    max-width: 24px;
+    max-height: 24px;
 }
 
 .actions-button:hover {
@@ -21,15 +31,13 @@
 }
 
 .actions-button.redo {
-    position: absolute;
-    left: 280px;
-    top: 15px;
-    color: #dbe8ff;
+    right: var(--actions-btn-right);
 }
 
 .actions-button.undo {
-    position: absolute;
-    left: 250px;
-    top: 15px;
-    color: #dbe8ff;
+    right: calc(var(--actions-btn-right) + 40px);
+}
+
+.actions-button.save {
+    right: calc(var(--actions-btn-right) + 80px);
 }

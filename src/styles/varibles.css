@@ -11,6 +11,9 @@
     /* This variable is used for insertion buttons left: position */
     --insertion-btn-left: 20px;
 
+    /* This variable is used for actions buttons default right: position */
+    --actions-btn-right: 20px;
+
     --color-word-blue: #185abd;
     --color-word-blue-dark: #0f3f8f;
     --color-word-blue-light: #eaf2ff;
