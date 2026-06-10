@@ -9,6 +9,8 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+serde_json = "1.0.149"
 
 # Parser
 w_parser = { path = "../crates/w_parser" }

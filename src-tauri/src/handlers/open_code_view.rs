@@ -1,6 +1,7 @@
 use std::fs;
 
-const FINAL_OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../temp/final_output.ftml");
+pub(crate) const FINAL_OUTPUT_PATH: &str =
+    concat!(env!("CARGO_MANIFEST_DIR"), "/../temp/final_output.ftml");
 
 /// Open the code view window.
 #[tauri::command]
