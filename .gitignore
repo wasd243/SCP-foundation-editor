@@ -6,18 +6,11 @@ __pycache__/
 build/
 dist/
 
-# Antigravity
-.agy/
-
 # tests
 code_view/node_modules/
 code_view/esbuild
 code_view/assets/bundle_editor.js
 node_modules/
-
-# packages
-.gitnexus/
-ftml/
 
 # IDE
 .vscode/
@@ -31,9 +24,6 @@ ftml/
 target/
 gen/
 icon.png
-
-# git
-.git/
 
 # Windows
 Thumbs.db
@@ -56,9 +46,6 @@ user_css.css
 .vite-dev.err.log
 .vite-dev.log
 
-# AI
-.junie/
-ai_generation_assets/
 personal_usage_assets/
 
 # DO NOT IGNORE: Assets

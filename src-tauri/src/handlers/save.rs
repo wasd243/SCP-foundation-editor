@@ -2,6 +2,7 @@ use crate::handlers::open_code_view::FINAL_OUTPUT_PATH;
 use std::fs;
 use std::path::Path;
 
+/// Save the final output to a file.
 #[tauri::command]
 pub fn save_ftml(path: String, name: String) -> Result<(), String> {
     if path.is_empty() {
