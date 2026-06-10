@@ -39,5 +39,11 @@
 }
 
 .actions-button.save {
-    right: calc(var(--actions-btn-right) + 80px);
+    width: 72px;
+    right: calc(var(--actions-btn-right) + 100px);
+}
+
+.actions-button.open-file {
+    width: 72px;
+    right: calc(var(--actions-btn-right) + 180px);
 }
