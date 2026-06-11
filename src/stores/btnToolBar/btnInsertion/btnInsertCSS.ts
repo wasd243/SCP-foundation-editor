@@ -24,5 +24,5 @@ export async function initCSSEditor(parent: HTMLElement) {
 export async function SaveCSS(view: EditorView) {
     const content = view.state.doc.toString();
     await invoke('save_user_css_to_cache', { css: content });
-    patch_injectUserCss(content);
+    patch_injectUserCss(content);  // This patch function in `ipc\Extensions\CodeView\SynvToParser.ts`
 }
