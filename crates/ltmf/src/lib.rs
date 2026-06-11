@@ -1,4 +1,5 @@
-mod ftml_fmt;
+// This module is public for `src-tauri` to use.
+pub mod ftml_fmt;
 mod interpret;
 mod merge;
 mod preprocess;

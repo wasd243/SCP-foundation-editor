@@ -25,7 +25,7 @@ const NO_USER_CSS = "/* NO USER CSS */";
  * Do not remove this function unless you know what happened in the parser and fix it.
  * Or you'll lose your user CSS.
  */
-function patch_injectUserCss(css: string) {
+export function patch_injectUserCss(css: string) {
     if (!css.trim() || css.trim() === NO_USER_CSS) return;
 
     let styleEl = document.getElementById("user-css-injected") as HTMLStyleElement | null;
