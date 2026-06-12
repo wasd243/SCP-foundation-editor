@@ -3,7 +3,7 @@ mod handlers;
 use handlers::{
     connect_exporter::export_code, connect_exporter::export_css, connect_parser::parse_wikidot,
     open_code_view::open_code_view_window, open_code_view::patch_get_user_css,
-    open_code_view::read_final_output, save::save_ftml,
+    open_code_view::read_final_output, save::save_ftml, insert_user_css::save_user_css_to_cache,
 };
 
 use tauri::Builder;
@@ -17,6 +17,7 @@ fn main() {
             export_code,
             export_css,
             save_ftml,
+            save_user_css_to_cache,
             // patch functions here
             patch_get_user_css,
         ])

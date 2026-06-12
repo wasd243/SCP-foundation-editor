@@ -56,6 +56,11 @@
     - COLLECTION: Flat Colored Interface Icons
     - LICENSE: CC0 License
 
+- Insert CSS Icon: [SvgRepo](https://www.svgrepo.com/svg/374266/css-opened)
+    - COLLECTION: Vscode Icons
+    - LICENSE: MIT License
+    - AUTHOR: vscode-icons
+
 ## Libraries
 - TipTap
 - ProseMirror

@@ -5,7 +5,7 @@
     background: transparent;
     border: none;
     z-index: 10;
-    width: 50px;
+    width: 60px;
     height: 72px;
 }
 
@@ -28,5 +28,8 @@
 
 .format-insertion-button.image-block-button {
     left: calc(var(--insertion-btn-left) + 60px);
-    width: 60px;
+}
+
+.format-insertion-button.css-button {
+    left: calc(var(--insertion-btn-left) + 140px);
 }

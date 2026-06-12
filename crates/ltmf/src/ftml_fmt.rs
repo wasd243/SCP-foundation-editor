@@ -7,7 +7,9 @@ use std::fs;
 
 // These are temp directory paths.
 pub(crate) const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/output.ftml");
-pub(crate) const USER_CSS_PATH: &str =
+
+// This const is public for `src-tauri` to use.
+pub const USER_CSS_PATH: &str =
     concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/user_css.css");
 
 /// This function formats the ftml string.

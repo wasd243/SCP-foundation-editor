@@ -25,8 +25,12 @@ const NO_USER_CSS = "/* NO USER CSS */";
  * Do not remove this function unless you know what happened in the parser and fix it.
  * Or you'll lose your user CSS.
  */
-function patch_injectUserCss(css: string) {
+export function patch_injectUserCss(css: string) {
     if (!css.trim() || css.trim() === NO_USER_CSS) return;
+
+    // To force cover ProseMirror styles, we need to add !important to every selector.
+    // When exporting, remove those unused !important.
+    const forced = css.replace(/(?<! !important);(\s*)$/gm, ' !important;$1');
 
     let styleEl = document.getElementById("user-css-injected") as HTMLStyleElement | null;
     if (!styleEl) {
@@ -34,7 +38,7 @@ function patch_injectUserCss(css: string) {
         styleEl.id = "user-css-injected";
         document.head.appendChild(styleEl);
     }
-    styleEl.textContent = css;
+    styleEl.textContent = forced;
 }
 
 export function setCodeViewIframe(_iframe: HTMLIFrameElement | null) {
@@ -55,7 +59,7 @@ export function SyncToParser() {
                 const css = await invoke<string>("patch_get_user_css");
                 patch_injectUserCss(css);
             } catch {
-                // ignore when no cache
+                console.warn("No user CSS cache found.");
             }
 
             window.dispatchEvent(new CustomEvent("code-view-parser-html", {
