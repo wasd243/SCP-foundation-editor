@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { EditorView } from '@codemirror/view';
-import { initDivEditor } from "../../../../stores/btnToolBar/btnInsertion/btnInsertDiv.ts";
+import { initDivEditor, InsertDiv } from "../../../../stores/btnToolBar/btnInsertion/btnInsertDiv.ts";
+import { getEditor } from "../../../../stores/editor/instance.ts";
 
 const editorRef = ref<HTMLElement>();
 let view: EditorView | null = null;
@@ -16,10 +17,10 @@ onUnmounted(() => {
   view?.destroy();
 });
 
-async function InsertDiv() {
-  if (!view) return;
-  const content = view.state.doc.toString();
-  console.log(content); // placeholder for output
+function InsertDivInEditor() {
+  const editor = getEditor();
+  if (!view || !editor) return;
+  InsertDiv(view, editor);
 }
 </script>
 
@@ -32,7 +33,7 @@ async function InsertDiv() {
       </button>
     </div>
     <div ref="editorRef" class="div-editor-container"/>
-    <button class="insert-button" @click="InsertDiv">Insert</button>
+    <button class="insert-button" @click="InsertDivInEditor">Insert</button>
   </div>
 </template>
 
