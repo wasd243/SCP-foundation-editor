@@ -429,6 +429,18 @@
           }
         }
       }
+
+      // This hover mark `div` blocks
+      &:hover {
+        border: var(--wikidot-red) solid 1px;
+        border-radius: 5px;
+      }
+
+      // This selectednode mark `div` when user select it
+      &.ProseMirror-selectednode {
+        border: var(--color-word-blue) solid 1px;
+        border-radius: 5px;
+      }
     }
 
     // User and User with img part are all mutable
