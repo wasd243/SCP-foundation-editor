@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Code from "./NonIncludeComponents/Code.vue";
-import divBlock from "./NonIncludeComponents/divBlock.vue";
 import Footnotes from "./NonIncludeComponents/Footnotes.vue";
 import ModuleRate from "./NonIncludeComponents/ModuleRate.vue";
 import Note from "./NonIncludeComponents/Note.vue";
@@ -15,7 +14,6 @@ import User from "./NonIncludeComponents/User.vue";
     <Code/>
     <Note/>
     <User/>
-    <divBlock/>
     <ModuleRate/>
   </div>
 </template>

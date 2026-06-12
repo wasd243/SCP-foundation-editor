@@ -33,3 +33,7 @@
 .format-insertion-button.css-button {
     left: calc(var(--insertion-btn-left) + 140px);
 }
+
+.format-insertion-button.div-button {
+    left: calc(var(--insertion-btn-left) + 200px);
+}

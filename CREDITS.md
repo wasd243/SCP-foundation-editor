@@ -61,6 +61,11 @@
     - LICENSE: MIT License
     - AUTHOR: vscode-icons
 
+- Insert Div Icon: [SvgRepo](https://www.svgrepo.com/svg/183637/html5)
+    - COLLECTION: Social Media 6
+    - LICENSE: CC0 License
+    - UPLOADER: SVG Repo
+
 ## Libraries
 - TipTap
 - ProseMirror
