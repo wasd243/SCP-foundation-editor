@@ -91,6 +91,8 @@
         tab-size: 4;
       }
 
+      // Some simple code highlight
+      // I don't think someone will need it, but I made it huh
       .hljs-keyword,
       .hljs-selector-tag,
       .hljs-title.function_ {
@@ -150,6 +152,7 @@
       }
     }
 
+    // This for wj-code block `language` edit area
     pre.wj-code {
       &::before {
         content: attr(data-language);
@@ -220,6 +223,7 @@
     }
 
     // Some parts of Collapsible is IMMUTABLE
+    // This details part are all mutable, used to define "details" rendering
     [data-type="details"] {
       > button {
         display: inline-flex;
@@ -430,14 +434,9 @@
         }
       }
 
-      // This hover mark `div` blocks
-      &:hover {
-        border: var(--wikidot-red) solid 1px;
-        border-radius: 5px;
-      }
-
-      // This selectednode mark `div` when user select it
-      &.ProseMirror-selectednode {
+      // This marks `div` blocks that don't match any specific style.
+      // Uses outset border on hover/selected/focus-within for visibility.
+      &.ProseMirror-selectednode, &:focus-within, &:hover {
         border: var(--color-word-blue) solid 1px;
         border-radius: 5px;
       }

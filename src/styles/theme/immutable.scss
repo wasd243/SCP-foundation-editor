@@ -161,6 +161,7 @@
     }
   }
 
+  // When selected, highlight the whole div block
   .ProseMirror-selectednode {
     border: var(--color-word-blue) solid 2px;
     border-radius: 4px;
