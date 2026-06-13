@@ -69,6 +69,7 @@
 ## Libraries
 - TipTap
 - ProseMirror
+- CodeMirror
 - Vue
 - Tauri
 - ftml

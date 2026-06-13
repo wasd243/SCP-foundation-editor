@@ -61,7 +61,7 @@ export function InsertDiv(view: EditorView, editor: any) {
     const attrs = parseDivAttrs(content);
 
     editor.commands.insertContent({
-        type: 'div',
+        type: 'wjBlockTag',
         attrs: {
             tagName: 'div',
             htmlAttributes: {

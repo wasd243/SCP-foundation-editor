@@ -17,7 +17,7 @@ onUnmounted(() => {
   view?.destroy();
 });
 
-function InsertDivInEditor() {
+async function InsertDivInEditor() {
   const editor = getEditor();
   if (!view || !editor) return;
   InsertDiv(view, editor);
