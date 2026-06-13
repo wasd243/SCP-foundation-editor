@@ -10,3 +10,4 @@
 8. `[[f> image url]]` is not supported yet.
 9. `[[module rate]]` is not supported yet.
 10. ~~`caption` variable is not supported yet.~~
+11. `[[footnote]]` needs better editor experience support.
