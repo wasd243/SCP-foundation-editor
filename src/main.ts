@@ -18,6 +18,7 @@ import "./styles/toolbar/components/actions.css";
 // Could not be muted by usertheme
 import "./styles/theme/immutable.scss";
 // user theme can mute `default.scss`
+import "./styles/theme/EditorCanvasFakeWikidotDivDefaultStyle.sass";
 import "./styles/theme/default.scss";
 import "./styles/contextmenu/menudefault.css";
 import "./styles/contextmenu/menutable.css";
