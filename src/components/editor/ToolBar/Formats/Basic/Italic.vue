@@ -5,5 +5,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <button class="format-basic-button italic" type="button" @click="emit('toggle')">I</button>
+  <button class="format-basic-button italic" type="button" @click="emit('toggle')">
+    <i>I</i>
+  </button>
 </template>

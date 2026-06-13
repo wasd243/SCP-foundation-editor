@@ -4,6 +4,7 @@ import {nextTick, onBeforeUnmount, ref, watch} from "vue";
 import RenderSyncHtmlToEditor from "./CodeView/RenderSyncHTMLToEditor.vue";
 import {setCodeViewIframe} from "../../../ipc/Extensions/CodeView/SyncToParser";
 import {setExportIframe, exportToViewer} from "../../../ipc/Extensions/CodeView/ExportToViewer.ts";
+import CodeView from "../../../assets/icons/CodeView.svg";
 
 const isCodeViewOpen = ref(false);
 const isCodeViewOpening = ref(false);
@@ -87,7 +88,9 @@ function closeCodeView() {
         @click="openCodeView"
     >
       <span v-if="isCodeViewOpening" class="code-view-loading" aria-hidden="true">…</span>
-      <span v-else>&lt;/&gt;</span>
+      <span v-else>
+        <img :src="CodeView" alt="CodeView">
+      </span>
     </button>
     <p
         v-if="codeViewOpenError"
