@@ -4,6 +4,7 @@ import { insertEditorFootnote } from "../../../../stores/btnToolBar/btnNonInclud
 
 <template>
     <button class="component-card" type="button" @click="insertEditorFootnote">
+        <!--Hardcoded svg icon, not planned to move because I didn't find any good `Footnote` icons in SvgRepo-->
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
             <text
                 x="5"
