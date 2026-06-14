@@ -1,8 +1,12 @@
 mod add_user_css;
 mod fmt_newline;
+mod fmt_alignments;
 
 use crate::ftml_fmt::add_user_css::add_user_css;
-use crate::ftml_fmt::fmt_newline::format_newline;
+use crate::ftml_fmt::{
+    fmt_newline::format_newline,
+    fmt_alignments::format_alignments,
+};
 use std::fs;
 
 // These are temp directory paths.
@@ -19,7 +23,9 @@ pub fn ftml_fmt(ftml: &str) -> String {
     let ftml = read_ftml.as_deref().unwrap_or(ftml);
 
     // format the ftml string
+    // normalize wikitext pipeline is here
     let output = format_newline(ftml);
+    let output = format_alignments(&output);
 
     // attach user css
     let user_css = fs::read_to_string(USER_CSS_PATH);

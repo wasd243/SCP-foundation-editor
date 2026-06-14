@@ -118,6 +118,11 @@
 - [Smaller](https://www.svgrepo.com/svg/370803/text-size-down)
     - PD
 
+- [FormatCleaner](https://www.svgrepo.com/svg/530420/format-painter)
+    - COLLECTION: Office Duotone Minimalist Icons
+    - LICENSE: CC0 License
+    - UPLOADER: SVG Repo
+
 ## Libraries
 
 - TipTap
