@@ -1,5 +1,6 @@
 /* This file contains basic postion of editor setups */
 /* To locate the postion and prevent user themes crash the editor themes, ALL objects in this file except `//debug` are IMMUTABLE */
+
 .editor-canvas.editor-theme-default
     #container-wrap
         position: absolute
@@ -9,35 +10,35 @@
         top: 0
         pointer-events: none
 
+        display: flex
+        flex-direction: column
+
         #header
-            position: absolute
             height: 180px
             width: 100%
-            top: var(--wiki-wrapper-top-absolute-postion)
             background: none
             border: var(--wiki-header-place-holder-color) solid 3px //debug
 
         #top-bar
-            position: absolute
             height: 30px
             width: 100%
-            top: calc(var(--wiki-wrapper-top-absolute-postion) + 180px)
             background: none
             border: var(--wiki-header-place-holder-color) solid 3px //debug
 
-        #side-bar
-            position: absolute
-            height: 100%
-            left: 0
-            top: calc(var(--wiki-wrapper-top-absolute-postion) + 210px)
-            background: none
-            border: var(--wiki-header-place-holder-color) solid 3px //debug
-            width: 495px
+        // content area (side + main)
+        #content-wrap
+            display: flex
+            flex: 1
+            width: 100%
 
-        .meta-title
-            position: absolute
-            border: var(--wiki-header-place-holder-color) solid 3px //debug
-            background: none
-            width: 900px
-            left: 500px
-            top: calc(var(--wiki-wrapper-top-absolute-postion) + 210px)
+            #side-bar
+                width: 21%
+                height: 100%
+                background: none
+                border: var(--wiki-header-place-holder-color) solid 3px //debug
+
+            .meta-title
+                width: 100%
+                height: 20px
+                background: none
+                border: var(--wiki-header-place-holder-color) solid 3px //debug
