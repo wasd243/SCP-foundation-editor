@@ -9,9 +9,9 @@ defineProps<{ activeTab: Tab }>();
 </script>
 
 <template>
-  <section class="ribbon-page" aria-label="Ribbon commands">
-    <HomePage v-if="activeTab === 'home'" />
-    <InsertPage v-else-if="activeTab === 'insert'" />
-    <SettingsPage v-else />
-  </section>
+    <section class="ribbon-page" aria-label="Ribbon commands">
+        <HomePage v-if="activeTab === 'home'" />
+        <InsertPage v-else-if="activeTab === 'insert'" />
+        <SettingsPage v-else />
+    </section>
 </template>

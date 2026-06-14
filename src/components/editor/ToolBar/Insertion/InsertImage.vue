@@ -4,9 +4,13 @@ import { promptEditorImage } from "../../../../stores/btnToolBar/btnInsertion/bt
 </script>
 
 <template>
-  <button class="format-insertion-button image-button" type="button" @click="promptEditorImage">
-    <img :src="InsertImageIcon" alt="Insert Image"/>
-    <br>
-    Image
-  </button>
+    <button
+        class="format-insertion-button image-button"
+        type="button"
+        @click="promptEditorImage"
+    >
+        <img :src="InsertImageIcon" alt="Insert Image" />
+        <br />
+        Image
+    </button>
 </template>

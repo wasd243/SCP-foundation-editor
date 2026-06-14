@@ -1,5 +1,5 @@
-import {getEditor} from "../../editor/instance.ts";
-import {createTabId} from "./createTabId.ts";
+import { getEditor } from "../../editor/instance.ts";
+import { createTabId } from "./createTabId.ts";
 
 export function addTab() {
     getEditor()
@@ -13,7 +13,11 @@ export function addTab() {
 
             if (!tabViewButton || !tabViewPanel || !paragraph) return false;
 
-            for (let depth = state.selection.$from.depth; depth > 0; depth -= 1) {
+            for (
+                let depth = state.selection.$from.depth;
+                depth > 0;
+                depth -= 1
+            ) {
                 const node = state.selection.$from.node(depth);
 
                 if (node.type.name !== "tabView") {
@@ -27,27 +31,39 @@ export function addTab() {
                 const buttonId = createTabId();
                 const panelId = createTabId();
 
-                const button = tabViewButton.create({
-                    class: "wj-tabs-button",
-                    id: buttonId,
-                    role: "tab",
-                    "aria-label": `Tab ${tabNumber}`,
-                    "aria-selected": "false",
-                    "aria-controls": panelId,
-                    tabindex: "-1",
-                }, schema.text(`Tab ${tabNumber}`));
+                const button = tabViewButton.create(
+                    {
+                        class: "wj-tabs-button",
+                        id: buttonId,
+                        role: "tab",
+                        "aria-label": `Tab ${tabNumber}`,
+                        "aria-selected": "false",
+                        "aria-controls": panelId,
+                        tabindex: "-1",
+                    },
+                    schema.text(`Tab ${tabNumber}`),
+                );
 
-                const panel = tabViewPanel.create({
-                    class: "wj-tabs-panel",
-                    id: panelId,
-                    role: "tabpanel",
-                    "aria-labelledby": buttonId,
-                    tabindex: "0",
-                    hidden: "",
-                }, paragraph.create());
+                const panel = tabViewPanel.create(
+                    {
+                        class: "wj-tabs-panel",
+                        id: panelId,
+                        role: "tabpanel",
+                        "aria-labelledby": buttonId,
+                        tabindex: "0",
+                        hidden: "",
+                    },
+                    paragraph.create(),
+                );
 
-                const buttonInsertPos = tabViewStart + 1 + buttonList.nodeSize - 1;
-                const panelInsertPos = tabViewStart + 1 + buttonList.nodeSize + panelList.nodeSize - 1;
+                const buttonInsertPos =
+                    tabViewStart + 1 + buttonList.nodeSize - 1;
+                const panelInsertPos =
+                    tabViewStart +
+                    1 +
+                    buttonList.nodeSize +
+                    panelList.nodeSize -
+                    1;
 
                 tr.insert(panelInsertPos, panel);
                 tr.insert(buttonInsertPos, button);

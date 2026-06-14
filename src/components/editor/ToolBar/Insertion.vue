@@ -6,9 +6,9 @@ import InsertDiv from "./Insertion/InsertDiv.vue";
 </script>
 
 <template>
-  <InsertImage/>
-  <InsertImageBlock/>
-  <div class="ribbon-separator insertion-normal-1"></div>
-  <InsertCSS/>
-  <InsertDiv/>
+    <InsertImage />
+    <InsertImageBlock />
+    <div class="ribbon-separator insertion-normal-1"></div>
+    <InsertCSS />
+    <InsertDiv />
 </template>

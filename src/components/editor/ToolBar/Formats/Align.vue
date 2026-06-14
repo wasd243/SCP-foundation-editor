@@ -7,26 +7,26 @@ import { alignMiddleEditor } from "../../../../stores/btnToolBar/btnFormats/btnA
 import { alignRightEditor } from "../../../../stores/btnToolBar/btnFormats/btnAlign/btnRight.ts";
 
 function alignLeft() {
-  alignLeftEditor();
+    alignLeftEditor();
 }
 
 function alignMiddle() {
-  alignMiddleEditor();
+    alignMiddleEditor();
 }
 
 function alignRight() {
-  alignRightEditor();
+    alignRightEditor();
 }
 
 function alignIdleInterface() {}
 
 defineExpose({
-  alignIdleInterface,
+    alignIdleInterface,
 });
 </script>
 
 <template>
-  <Left @align="alignLeft"/>
-  <Right @align="alignRight"/>
-  <Middle @align="alignMiddle"/>
+    <Left @align="alignLeft" />
+    <Right @align="alignRight" />
+    <Middle @align="alignMiddle" />
 </template>

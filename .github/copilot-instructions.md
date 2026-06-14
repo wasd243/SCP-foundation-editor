@@ -3,26 +3,31 @@
 ## Build, test, and lint commands
 
 ### Root frontend (Vue 3 + TipTap)
+
 - Install deps: `npm install`
 - Dev server: `npm run dev`
 - Build (includes type-check): `npm run build`
 - Preview built app: `npm run preview`
 
 ### Tauri shell + Rust backend
+
 - Run Tauri app in dev mode: `cd src-tauri && cargo tauri dev`
 - Build Tauri app: `cd src-tauri && cargo tauri build`
 - Check the Rust backend crate: `cd src-tauri && cargo check`
 
 ### Rust parser crate (`w_parser`)
+
 - Run all tests: `cd src-tauri && cargo test -p w_parser`
 - Run a single test by name: `cd src-tauri && cargo test -p w_parser <test_name> -- --exact`
 
 ### Code View subproject (`public/code_view`)
+
 - Install deps: `cd public/code_view && npm install`
 - Build CodeMirror bundle: `cd public/code_view && npm run build`
 - Lint JS files: `cd public/code_view && npm run lint`
 
 ## High-level architecture
+
 - The app is a **Tauri host (`src-tauri`) plus a Vue 3 frontend (`src`)**. Frontend startup happens in `src/main.ts`, which mounts `App.vue` and initializes IPC through `connectIpc()`.
 - The editor canvas is a **TipTap editor** in `src/components/editor/EditorCanvas.vue`. Its extensions are assembled centrally in `src/stores/editor/extensions.ts`.
 - Editor access is centralized in `src/stores/editor/instance.ts`; toolbar and context-menu components stay thin and call store helpers under `src/stores/btnToolBar/*` and `src/stores/btnContextMenu/*`.
@@ -30,6 +35,7 @@
 - The Rust side is split between the Tauri shell in `src-tauri`, the parser crate `crates/w_parser`, and the exporter crate `crates/ltmf`. The parser command temporarily writes source text to `temp/origin.ftml` before rendering.
 
 ## Key conventions
+
 - Use explicit `.ts` import suffixes in internal TypeScript imports.
 - Keep editor actions in store helper modules, not in Vue button components.
 - Prefer ProseMirror node attrs, node content, and `data-editor` metadata over reconstructing state from rendered HTML.

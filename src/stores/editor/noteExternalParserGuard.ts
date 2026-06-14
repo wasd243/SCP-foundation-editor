@@ -13,8 +13,8 @@ export function contentHasNoteExternalParserMarkers(editor: Editor) {
     const text = editor.getText();
     const html = editor.getHTML();
 
-    return noteExternalParserMarkers.some(marker =>
-        text.includes(marker) || html.includes(marker),
+    return noteExternalParserMarkers.some(
+        (marker) => text.includes(marker) || html.includes(marker),
     );
 }
 

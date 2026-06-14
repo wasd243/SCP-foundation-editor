@@ -3,11 +3,11 @@ import { insertEditorFootnote } from "../../../../stores/btnToolBar/btnNonInclud
 </script>
 
 <template>
-  <button
-      class="context-menu-item"
-      type="button"
-      @click="insertEditorFootnote"
-  >
-    <span>Footnote</span>
-  </button>
+    <button
+        class="context-menu-item"
+        type="button"
+        @click="insertEditorFootnote"
+    >
+        <span>Footnote</span>
+    </button>
 </template>

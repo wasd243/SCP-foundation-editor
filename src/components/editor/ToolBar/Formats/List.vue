@@ -5,21 +5,21 @@ import { toggleOrderedListEditor } from "../../../../stores/btnToolBar/btnFormat
 import { toggleUnorderedListEditor } from "../../../../stores/btnToolBar/btnFormats/btnList/btnUnorderedList.ts";
 
 function toggleOrderedList() {
-  toggleOrderedListEditor();
+    toggleOrderedListEditor();
 }
 
 function toggleUnorderedList() {
-  toggleUnorderedListEditor();
+    toggleUnorderedListEditor();
 }
 
 function listIdleInterface() {}
 
 defineExpose({
-  listIdleInterface,
+    listIdleInterface,
 });
 </script>
 
 <template>
-  <OrderedList @toggle="toggleOrderedList"/>
-  <UnorderedList @toggle="toggleUnorderedList"/>
+    <OrderedList @toggle="toggleOrderedList" />
+    <UnorderedList @toggle="toggleUnorderedList" />
 </template>

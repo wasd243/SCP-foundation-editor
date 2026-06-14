@@ -6,8 +6,8 @@ import OpenFile from "./Actions/OpenFile.vue";
 </script>
 
 <template>
-  <Redo/>
-  <Undo/>
-  <Save/>
-  <OpenFile/>
+    <Redo />
+    <Undo />
+    <Save />
+    <OpenFile />
 </template>

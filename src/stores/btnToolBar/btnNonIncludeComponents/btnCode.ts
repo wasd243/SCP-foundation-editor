@@ -16,9 +16,5 @@ export function insertEditorCode() {
         return;
     }
 
-    editor
-        .chain()
-        .focus()
-        .insertContent(createCodeBlockContent())
-        .run();
+    editor.chain().focus().insertContent(createCodeBlockContent()).run();
 }

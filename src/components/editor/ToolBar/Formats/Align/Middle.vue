@@ -2,12 +2,16 @@
 import AlignCenter from "../../../../../assets/icons/AlignCenter.svg";
 
 const emit = defineEmits<{
-  align: [];
+    align: [];
 }>();
 </script>
 
 <template>
-  <button class="format-basic-button align-center" type="button" @click="emit('align')">
-    <img :src="AlignCenter" alt="AlignCenter" />
-  </button>
+    <button
+        class="format-basic-button align-center"
+        type="button"
+        @click="emit('align')"
+    >
+        <img :src="AlignCenter" alt="AlignCenter" />
+    </button>
 </template>

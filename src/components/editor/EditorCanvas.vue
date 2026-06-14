@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import {onMounted, onUnmounted, ref} from "vue";
-import {useEditor, EditorContent} from "@tiptap/vue-3";
-import {editorExtensions, getEditor, setEditor} from "../../stores/editor.ts";
-import {getContextMenuFlags, type ContextMenuFlags} from "../../stores/editor/contextMenuFlags.ts";
-import {alertNoteExternalParserMarkers} from "../../stores/editor/noteExternalParserGuard.ts";
-import {selectedImageBlockElement} from "../../stores/editor/extensions/ImageE.ts";
-import {SyncJSONToExporter} from "../../ipc/Extensions/CodeExport/getJSON.ts";
+import { onMounted, onUnmounted, ref } from "vue";
+import { useEditor, EditorContent } from "@tiptap/vue-3";
+import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
+import {
+    getContextMenuFlags,
+    type ContextMenuFlags,
+} from "../../stores/editor/contextMenuFlags.ts";
+import { alertNoteExternalParserMarkers } from "../../stores/editor/noteExternalParserGuard.ts";
+import { selectedImageBlockElement } from "../../stores/editor/extensions/ImageE.ts";
+import { SyncJSONToExporter } from "../../ipc/Extensions/CodeExport/getJSON.ts";
 import ContextMenu from "./ContextMenu.vue";
 import EditorCanvasMoveable from "./EditorCanvas/Moveable.vue";
 
@@ -13,7 +16,11 @@ const contextMenuVisible = ref(false);
 const contextMenuX = ref(0);
 const contextMenuY = ref(0);
 const contextMenuKey = ref(0);
-const contextMenuFlags = ref<ContextMenuFlags>({showTabView: false, showTable: false, showImage: false});
+const contextMenuFlags = ref<ContextMenuFlags>({
+    showTabView: false,
+    showTable: false,
+    showImage: false,
+});
 
 function handleContextMenu(event: MouseEvent) {
     if (!(event.target instanceof Element)) {
@@ -47,7 +54,11 @@ function handleContextMenu(event: MouseEvent) {
             clickPos = position.pos;
 
             try {
-                editorInstance.chain().focus().setTextSelection(position.pos).run();
+                editorInstance
+                    .chain()
+                    .focus()
+                    .setTextSelection(position.pos)
+                    .run();
             } catch {
                 // Keep the context menu available even when ProseMirror rejects an edge position.
             }
@@ -55,9 +66,17 @@ function handleContextMenu(event: MouseEvent) {
     }
 
     if (editorInstance) {
-        contextMenuFlags.value = getContextMenuFlags(editorInstance, clickPos, event.target);
+        contextMenuFlags.value = getContextMenuFlags(
+            editorInstance,
+            clickPos,
+            event.target,
+        );
     } else {
-        contextMenuFlags.value = {showTabView: false, showTable: false, showImage: false};
+        contextMenuFlags.value = {
+            showTabView: false,
+            showTable: false,
+            showImage: false,
+        };
     }
 
     contextMenuKey.value += 1;
@@ -71,7 +90,10 @@ function closeContextMenuOnPointerDown(event: PointerEvent) {
         return;
     }
 
-    if (event.target instanceof Element && event.target.closest(".editor-context-menu")) {
+    if (
+        event.target instanceof Element &&
+        event.target.closest(".editor-context-menu")
+    ) {
         return;
     }
 
@@ -82,7 +104,10 @@ function findImageContainerParent(element: HTMLElement) {
     let parent = element.parentElement;
 
     while (parent) {
-        if (parent.tagName.toLowerCase() === "div" && parent.classList.contains("image-container")) {
+        if (
+            parent.tagName.toLowerCase() === "div" &&
+            parent.classList.contains("image-container")
+        ) {
             return parent;
         }
 
@@ -93,7 +118,10 @@ function findImageContainerParent(element: HTMLElement) {
 }
 
 function getImageContainerTarget(element: HTMLElement) {
-    if (element.tagName.toLowerCase() === "div" && element.classList.contains("image-container")) {
+    if (
+        element.tagName.toLowerCase() === "div" &&
+        element.classList.contains("image-container")
+    ) {
         return element;
     }
 
@@ -105,19 +133,23 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    window.removeEventListener("pointerdown", closeContextMenuOnPointerDown, true);
+    window.removeEventListener(
+        "pointerdown",
+        closeContextMenuOnPointerDown,
+        true,
+    );
 });
 
 const editor = useEditor({
     extensions: editorExtensions,
     content: "<p>Hello FTML editor.</p>",
 
-    onCreate: ({editor}) => {
+    onCreate: ({ editor }) => {
         setEditor(editor);
         alertNoteExternalParserMarkers(editor);
         SyncJSONToExporter();
     },
-    onUpdate: ({editor}) => {
+    onUpdate: ({ editor }) => {
         alertNoteExternalParserMarkers(editor);
         SyncJSONToExporter();
     },
@@ -139,20 +171,16 @@ const editor = useEditor({
 
             event.preventDefault();
 
-            view.dispatch(
-                view.state.tr.insertText(text)
-            );
+            view.dispatch(view.state.tr.insertText(text));
 
             return true;
         },
     },
 });
-
 </script>
 
 <template>
     <main class="editor-canvas editor-theme-default">
-
         <!--These div are here to support wiki css themes-->
         <!--I DO NOT promise that these would support all legacy wikidot css-->
         <!--GOOD LUCK-->
@@ -162,21 +190,15 @@ const editor = useEditor({
                     <span>Editor Header</span>
                 </h1>
             </div>
-            <div id="top-bar">
-                Editor Top Bar
-            </div>
+            <div id="top-bar">Editor Top Bar</div>
 
-            <div class="meta-title">
-                Editor Meta Title Preview
-            </div>
+            <div class="meta-title">Editor Meta Title Preview</div>
 
-            <div id="side-bar">
-                Editor side-bar
-            </div>
+            <div id="side-bar">Editor side-bar</div>
         </div>
 
-        <EditorContent :editor="editor"/>
-        <EditorCanvasMoveable/>
+        <EditorContent :editor="editor" />
+        <EditorCanvasMoveable />
     </main>
 
     <Teleport to="body">

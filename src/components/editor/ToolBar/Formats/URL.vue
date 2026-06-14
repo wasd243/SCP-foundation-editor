@@ -6,22 +6,22 @@ import { insertURLinkEditor } from "../../../../stores/btnToolBar/btnFormats/btn
 import { insertURLSiteEditor } from "../../../../stores/btnToolBar/btnFormats/btnURL/btnURLSite.ts";
 
 function insertLink() {
-  insertURLinkEditor();
+    insertURLinkEditor();
 }
 
 function insertSiteLink() {
-  insertURLSiteEditor();
+    insertURLSiteEditor();
 }
 
 function urlIdleInterface() {}
 
 defineExpose({
-  urlIdleInterface,
+    urlIdleInterface,
 });
 </script>
 
 <template>
-  <URLink @insert="insertLink"/>
-  <URLSite @insert="insertSiteLink"/>
-  <URLPreview/>
+    <URLink @insert="insertLink" />
+    <URLSite @insert="insertSiteLink" />
+    <URLPreview />
 </template>

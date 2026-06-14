@@ -39,11 +39,7 @@ export function insertEditorImage(rawUrl: string) {
         return;
     }
 
-    editor
-        .chain()
-        .focus()
-        .insertContent(createImageContent(src))
-        .run();
+    editor.chain().focus().insertContent(createImageContent(src)).run();
 }
 
 export function promptEditorImage() {

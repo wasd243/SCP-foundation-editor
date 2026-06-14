@@ -1,7 +1,8 @@
 # Credits
 
 ## Icons
-- URLink Icon: [SvgRepo](https://www.svgrepo.com/svg/522220/permalink) 
+
+- URLink Icon: [SvgRepo](https://www.svgrepo.com/svg/522220/permalink)
     - AUTHOR: Catalin Fertu
     - COLLECTION: Bigmug Interface Icons
     - LICENSE: CC Attribution License
@@ -97,27 +98,28 @@
     - UPLOADER: SvgRepo
 
 - [Hr](https://www.svgrepo.com/svg/344921/hr)
-  - COLLECTION: Bootstrap UI Icons
-  - LICENSE: MIT License
-  - AUTHOR: Bootstrap
+    - COLLECTION: Bootstrap UI Icons
+    - LICENSE: MIT License
+    - AUTHOR: Bootstrap
 
 - [Ol](https://www.svgrepo.com/svg/344985/list-ol)
-  - COLLECTION: Bootstrap UI Icons
-  - LICENSE: MIT License
-  - AUTHOR: Bootstrap
+    - COLLECTION: Bootstrap UI Icons
+    - LICENSE: MIT License
+    - AUTHOR: Bootstrap
 
 - [Ul](https://www.svgrepo.com/svg/493699/list-ul-list-ul-unordered-bullet-editor)
-  - COLLECTION: Toe Basic Line Interface Icons
-  - LICENSE: Apache License
-  - AUTHOR: javisperez
+    - COLLECTION: Toe Basic Line Interface Icons
+    - LICENSE: Apache License
+    - AUTHOR: javisperez
 
 - [Larger](https://www.svgrepo.com/svg/370805/text-size-up)
-  - PD
+    - PD
 
 - [Smaller](https://www.svgrepo.com/svg/370803/text-size-down)
-  - PD
+    - PD
 
 ## Libraries
+
 - TipTap
 - ProseMirror
 - CodeMirror
@@ -130,11 +132,12 @@
 - ...
 
 ## Test Articles
+
 - `test\image\input3.ftml`
     - AUTHOR: whenwerewe
     - TRANSLATOR: LeeBr
     - FROM: scp-wiki/scp-wiki-cn
-    - LINK: [EN](https://scp-wiki.wikidot.com/scp-9729)  [CN](https://scp-wiki-cn.wikidot.com/scp-9729)
+    - LINK: [EN](https://scp-wiki.wikidot.com/scp-9729) [CN](https://scp-wiki-cn.wikidot.com/scp-9729)
     - LICENSE: CC BY-SA 2.0
     - Image: cave.jpg
         - AUTHOR: Jerry Daykin

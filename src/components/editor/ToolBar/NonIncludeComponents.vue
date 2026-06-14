@@ -8,12 +8,12 @@ import User from "./NonIncludeComponents/User.vue";
 </script>
 
 <template>
-  <div class="component-gallery">
-    <TabView/>
-    <Footnotes/>
-    <Code/>
-    <Note/>
-    <User/>
-    <ModuleRate/>
-  </div>
+    <div class="component-gallery">
+        <TabView />
+        <Footnotes />
+        <Code />
+        <Note />
+        <User />
+        <ModuleRate />
+    </div>
 </template>

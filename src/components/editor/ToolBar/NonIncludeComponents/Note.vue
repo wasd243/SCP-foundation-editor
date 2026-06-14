@@ -4,8 +4,8 @@ import { insertEditorNote } from "../../../../stores/btnToolBar/btnNonIncludeCom
 </script>
 
 <template>
-  <button class="component-card" type="button" @click="insertEditorNote">
-    <img :src="Note" alt="Note"/>
-    Note
-  </button>
+    <button class="component-card" type="button" @click="insertEditorNote">
+        <img :src="Note" alt="Note" />
+        Note
+    </button>
 </template>

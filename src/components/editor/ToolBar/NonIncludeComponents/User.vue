@@ -4,8 +4,12 @@ import { promptInsertEditorUser } from "../../../../stores/btnToolBar/btnNonIncl
 </script>
 
 <template>
-  <button class="component-card" type="button" @click="promptInsertEditorUser">
-    <img :src="User" alt="User"/>
-    User
-  </button>
+    <button
+        class="component-card"
+        type="button"
+        @click="promptInsertEditorUser"
+    >
+        <img :src="User" alt="User" />
+        User
+    </button>
 </template>

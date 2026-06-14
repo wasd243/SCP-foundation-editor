@@ -106,11 +106,7 @@ const voidTags = new Set([
     "wbr",
 ]);
 
-const ignoredRootTags = new Set([
-    "body",
-    "head",
-    "html",
-]);
+const ignoredRootTags = new Set(["body", "head", "html"]);
 
 const dedicatedExtensionTags = new Set([
     "details",
@@ -125,10 +121,7 @@ const dedicatedExtensionClassNames = new Set([
     "wj-tabs-panel",
 ]);
 
-const dedicatedExtensionClassPrefixes = [
-    "wj-collapsible-",
-    "wj-tabs-",
-];
+const dedicatedExtensionClassPrefixes = ["wj-collapsible-", "wj-tabs-"];
 
 const dedicatedExtensionDataTypes = new Set([
     "details",
@@ -179,7 +172,10 @@ export const nativeAttributeTypes = [
 
 function getElementAttributes(element: HTMLElement): HTMLAttributes {
     return Object.fromEntries(
-        Array.from(element.attributes).map(attribute => [attribute.name, attribute.value]),
+        Array.from(element.attributes).map((attribute) => [
+            attribute.name,
+            attribute.value,
+        ]),
     );
 }
 
@@ -196,33 +192,50 @@ function hasElementClass(element: HTMLElement, className: string) {
 }
 
 function isNestedImageContainerElement(element: HTMLElement) {
-    return element.tagName.toLowerCase() === "div" &&
+    return (
+        element.tagName.toLowerCase() === "div" &&
         hasElementClass(element, "image-container") &&
-        Boolean(element.parentElement?.closest(".image-container"));
+        Boolean(element.parentElement?.closest(".image-container"))
+    );
 }
 
 function isFootnoteListOrderedElement(element: HTMLElement) {
-    return element.tagName.toLowerCase() === "ol" && Boolean(element.closest(".wj-footnote-list"));
+    return (
+        element.tagName.toLowerCase() === "ol" &&
+        Boolean(element.closest(".wj-footnote-list"))
+    );
 }
 
 function isFootnoteListItemElement(element: HTMLElement) {
-    return element.tagName.toLowerCase() === "li" && hasElementClass(element, "wj-footnote-list-item");
+    return (
+        element.tagName.toLowerCase() === "li" &&
+        hasElementClass(element, "wj-footnote-list-item")
+    );
 }
 
 function shouldPreserveNativeElement(element: HTMLElement) {
-    return isFootnoteListOrderedElement(element) || isFootnoteListItemElement(element);
+    return (
+        isFootnoteListOrderedElement(element) ||
+        isFootnoteListItemElement(element)
+    );
 }
 
 function isDedicatedExtensionElement(element: HTMLElement) {
     const tagName = element.tagName.toLowerCase();
 
     if (dedicatedExtensionTags.has(tagName)) return true;
-    if (dedicatedExtensionDataTypes.has(element.getAttribute("data-type") ?? "")) return true;
+    if (
+        dedicatedExtensionDataTypes.has(element.getAttribute("data-type") ?? "")
+    )
+        return true;
     if (tagName === "div" && element.style.textAlign) return true;
 
-    return Array.from(element.classList).some(className =>
-        dedicatedExtensionClassNames.has(className) ||
-        dedicatedExtensionClassPrefixes.some(prefix => className.startsWith(prefix)),
+    return Array.from(element.classList).some(
+        (className) =>
+            dedicatedExtensionClassNames.has(className) ||
+            dedicatedExtensionClassPrefixes.some((prefix) =>
+                className.startsWith(prefix),
+            ),
     );
 }
 
@@ -243,31 +256,44 @@ function shouldPreserveElement(element: HTMLElement) {
 }
 
 function shouldPreserveInlineElement(element: HTMLElement) {
-    return shouldPreserveElement(element) && !isBlockElement(element) && !voidTags.has(element.tagName.toLowerCase());
+    return (
+        shouldPreserveElement(element) &&
+        !isBlockElement(element) &&
+        !voidTags.has(element.tagName.toLowerCase())
+    );
 }
 
 function shouldPreserveVoidElement(element: HTMLElement) {
     if (
         element.tagName.toLowerCase() === "img" &&
-        (
-            element.classList.contains("ProseMirror-separator") ||
-            element.hasAttribute("mark-placeholder")
-        )
+        (element.classList.contains("ProseMirror-separator") ||
+            element.hasAttribute("mark-placeholder"))
     ) {
         return false;
     }
 
-    return shouldPreserveElement(element) && voidTags.has(element.tagName.toLowerCase());
+    return (
+        shouldPreserveElement(element) &&
+        voidTags.has(element.tagName.toLowerCase())
+    );
 }
 
 function shouldPreserveTextBlockElement(element: HTMLElement) {
     const tagName = element.tagName.toLowerCase();
 
-    return shouldPreserveElement(element) && textBlockTags.has(tagName) && !hasBlockChild(element);
+    return (
+        shouldPreserveElement(element) &&
+        textBlockTags.has(tagName) &&
+        !hasBlockChild(element)
+    );
 }
 
 function shouldPreserveBlockElement(element: HTMLElement) {
-    return shouldPreserveElement(element) && isBlockElement(element) && !shouldPreserveTextBlockElement(element);
+    return (
+        shouldPreserveElement(element) &&
+        isBlockElement(element) &&
+        !shouldPreserveTextBlockElement(element)
+    );
 }
 
 function createAttributes() {
@@ -302,7 +328,9 @@ function renderPreservedVoidElement({ node }: { node: ProseMirrorNode }) {
     return [tagName, htmlAttributes] as const;
 }
 
-export function getNodeHTMLAttributes(node: ProseMirrorNode): Record<string, unknown> {
+export function getNodeHTMLAttributes(
+    node: ProseMirrorNode,
+): Record<string, unknown> {
     const htmlAttributes = node.attrs.htmlAttributes;
 
     if (htmlAttributes && typeof htmlAttributes === "object") {
@@ -312,7 +340,10 @@ export function getNodeHTMLAttributes(node: ProseMirrorNode): Record<string, unk
     return node.attrs;
 }
 
-export function getNodeAttribute(node: ProseMirrorNode, name: string): string | null {
+export function getNodeAttribute(
+    node: ProseMirrorNode,
+    name: string,
+): string | null {
     const attributes = getNodeHTMLAttributes(node);
     const value = attributes[name];
 
@@ -335,13 +366,19 @@ export function nodeHasClass(node: ProseMirrorNode, className: string) {
     return classAttribute.split(/\s+/).includes(className);
 }
 
-export function removeHTMLAttribute(node: ProseMirrorNode, attributeName: string) {
+export function removeHTMLAttribute(
+    node: ProseMirrorNode,
+    attributeName: string,
+) {
     const attributes = getNodeHTMLAttributes(node);
     const htmlAttributes = { ...attributes };
 
     delete htmlAttributes[attributeName];
 
-    if (node.attrs.htmlAttributes && typeof node.attrs.htmlAttributes === "object") {
+    if (
+        node.attrs.htmlAttributes &&
+        typeof node.attrs.htmlAttributes === "object"
+    ) {
         return {
             ...node.attrs,
             htmlAttributes,
@@ -365,8 +402,11 @@ const WJBlockTagExtension = Node.create({
             {
                 tag: "*",
                 priority: 1000,
-                getAttrs: element => {
-                    if (!(element instanceof HTMLElement) || !shouldPreserveBlockElement(element)) {
+                getAttrs: (element) => {
+                    if (
+                        !(element instanceof HTMLElement) ||
+                        !shouldPreserveBlockElement(element)
+                    ) {
                         return false;
                     }
 
@@ -393,8 +433,11 @@ const WJTextBlockTagExtension = Node.create({
             {
                 tag: "*",
                 priority: 1000,
-                getAttrs: element => {
-                    if (!(element instanceof HTMLElement) || !shouldPreserveTextBlockElement(element)) {
+                getAttrs: (element) => {
+                    if (
+                        !(element instanceof HTMLElement) ||
+                        !shouldPreserveTextBlockElement(element)
+                    ) {
                         return false;
                     }
 
@@ -422,8 +465,11 @@ const WJInlineTagExtension = Node.create({
             {
                 tag: "*",
                 priority: 1,
-                getAttrs: element => {
-                    if (!(element instanceof HTMLElement) || !shouldPreserveInlineElement(element)) {
+                getAttrs: (element) => {
+                    if (
+                        !(element instanceof HTMLElement) ||
+                        !shouldPreserveInlineElement(element)
+                    ) {
                         return false;
                     }
 
@@ -450,8 +496,11 @@ const WJVoidTagExtension = Node.create({
             {
                 tag: "*",
                 priority: 1,
-                getAttrs: element => {
-                    if (!(element instanceof HTMLElement) || !shouldPreserveVoidElement(element)) {
+                getAttrs: (element) => {
+                    if (
+                        !(element instanceof HTMLElement) ||
+                        !shouldPreserveVoidElement(element)
+                    ) {
                         return false;
                     }
 

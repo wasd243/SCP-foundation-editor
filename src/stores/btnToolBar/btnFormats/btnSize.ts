@@ -74,10 +74,7 @@ export function setEditorTitle(title: string) {
 
     const { head } = editor.state.selection;
 
-    const chain = editor
-        .chain()
-        .focus()
-        .setTextSelection(head);
+    const chain = editor.chain().focus().setTextSelection(head);
 
     if (title.toLowerCase() === "content") {
         chain.setParagraph().run();

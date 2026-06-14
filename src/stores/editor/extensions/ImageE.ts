@@ -1,11 +1,11 @@
-import Image, {type ImageOptions} from "@tiptap/extension-image";
-import {mergeAttributes} from "@tiptap/core";
-import type {DOMOutputSpec} from "@tiptap/pm/model";
-import {Plugin, PluginKey} from "@tiptap/pm/state";
-import type {EditorView} from "@tiptap/pm/view";
-import {createDeleteImageBlockPlugin} from "./deleteImageBlockE";
+import Image, { type ImageOptions } from "@tiptap/extension-image";
+import { mergeAttributes } from "@tiptap/core";
+import type { DOMOutputSpec } from "@tiptap/pm/model";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
+import type { EditorView } from "@tiptap/pm/view";
+import { createDeleteImageBlockPlugin } from "./deleteImageBlockE";
 import { findTopImageContainer, isImageContainerElement } from "./ImageAttrE";
-import {ref} from "vue";
+import { ref } from "vue";
 
 type HTMLAttributes = Record<string, string>;
 type RenderAttributes = Record<string, unknown>;
@@ -18,8 +18,8 @@ const imageMoveableTargetKey = new PluginKey("imageMoveableTarget");
 function getElementAttributes(element: HTMLElement): HTMLAttributes {
     return Object.fromEntries(
         Array.from(element.attributes)
-            .filter(attribute => !removedAttributeRegex.test(attribute.name))
-            .map(attribute => [attribute.name, attribute.value]),
+            .filter((attribute) => !removedAttributeRegex.test(attribute.name))
+            .map((attribute) => [attribute.name, attribute.value]),
     );
 }
 
@@ -44,18 +44,24 @@ function findWrappedImage(element: HTMLElement, allowBase64: boolean) {
 
     const children = Array.from(element.children);
 
-    if (children.length !== 1 || !isAllowedImage(children[0] as HTMLElement, allowBase64)) {
+    if (
+        children.length !== 1 ||
+        !isAllowedImage(children[0] as HTMLElement, allowBase64)
+    ) {
         return null;
     }
 
-    const hasText = Array.from(element.childNodes).some(node =>
-        node.nodeType === 3 && node.textContent?.trim(),
+    const hasText = Array.from(element.childNodes).some(
+        (node) => node.nodeType === 3 && node.textContent?.trim(),
     );
 
-    return hasText ? null : children[0] as HTMLImageElement;
+    return hasText ? null : (children[0] as HTMLImageElement);
 }
 
-function createImageNodeAttributes(image: HTMLImageElement, wrapperAttributes: HTMLAttributes | null = null) {
+function createImageNodeAttributes(
+    image: HTMLImageElement,
+    wrapperAttributes: HTMLAttributes | null = null,
+) {
     const imageAttributes = getElementAttributes(image);
 
     return {
@@ -79,11 +85,12 @@ function objectAttributes(value: unknown): RenderAttributes {
 
 function getRenderableImageAttributes(attributes: RenderAttributes) {
     return Object.fromEntries(
-        Object.entries(attributes).filter(([name, value]) =>
-            name !== wrapperAttributeName &&
-            name !== imageAttributeName &&
-            value !== null &&
-            value !== undefined,
+        Object.entries(attributes).filter(
+            ([name, value]) =>
+                name !== wrapperAttributeName &&
+                name !== imageAttributeName &&
+                value !== null &&
+                value !== undefined,
         ),
     );
 }
@@ -95,12 +102,12 @@ function hasWrapper(value: unknown) {
 export const selectedImageBlockElement = ref<HTMLElement | null>(null);
 
 function isProseMirrorHackImage(element: HTMLElement) {
-    return element.tagName.toLowerCase() === "img" &&
-        (
-            element.classList.contains("ProseMirror-separator") ||
+    return (
+        element.tagName.toLowerCase() === "img" &&
+        (element.classList.contains("ProseMirror-separator") ||
             element.hasAttribute("mark-placeholder") ||
-            !element.hasAttribute("src")
-        );
+            !element.hasAttribute("src"))
+    );
 }
 
 function updateMoveableTarget(view: EditorView) {
@@ -112,7 +119,8 @@ function updateMoveableTarget(view: EditorView) {
             return;
         }
 
-        selectedImageBlockElement.value = findTopImageContainer(selected) ?? selected;
+        selectedImageBlockElement.value =
+            findTopImageContainer(selected) ?? selected;
         return;
     }
 
@@ -145,7 +153,6 @@ function updateMoveableTargetFromPointerDown(_view: EditorView, event: Event) {
 }
 
 function createImageMoveableTargetPlugin() {
-
     console.log("[ImageE] createImageMoveableTargetPlugin Active");
 
     return new Plugin({
@@ -192,26 +199,37 @@ export const ImageExtension = Image.extend<ImageOptions>({
             {
                 tag: "div",
                 priority: 1100,
-                getAttrs: element => {
+                getAttrs: (element) => {
                     if (!(element instanceof HTMLElement)) {
                         return false;
                     }
 
-                    const image = findWrappedImage(element, this.options.allowBase64);
+                    const image = findWrappedImage(
+                        element,
+                        this.options.allowBase64,
+                    );
 
                     return image
-                        ? createImageNodeAttributes(image, getElementAttributes(element))
+                        ? createImageNodeAttributes(
+                              image,
+                              getElementAttributes(element),
+                          )
                         : false;
                 },
             },
             {
                 tag: imageSelector,
-                getAttrs: element => {
-                    if (!(element instanceof HTMLElement) || !isAllowedImage(element, this.options.allowBase64)) {
+                getAttrs: (element) => {
+                    if (
+                        !(element instanceof HTMLElement) ||
+                        !isAllowedImage(element, this.options.allowBase64)
+                    ) {
                         return false;
                     }
 
-                    return createImageNodeAttributes(element as HTMLImageElement);
+                    return createImageNodeAttributes(
+                        element as HTMLImageElement,
+                    );
                 },
             },
         ];

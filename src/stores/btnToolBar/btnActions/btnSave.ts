@@ -1,12 +1,12 @@
-import { save } from '@tauri-apps/plugin-dialog';
-import { invoke } from '@tauri-apps/api/core';
-import { dirname, basename } from '@tauri-apps/api/path';
+import { save } from "@tauri-apps/plugin-dialog";
+import { invoke } from "@tauri-apps/api/core";
+import { dirname, basename } from "@tauri-apps/api/path";
 
 export async function SaveFtml() {
     // open a save dialog
     const filePath = await save({
-        filters: [{ name: 'FTML', extensions: ['ftml', 'txt'] }],
-        defaultPath: 'untitled.ftml',
+        filters: [{ name: "FTML", extensions: ["ftml", "txt"] }],
+        defaultPath: "untitled.ftml",
     });
 
     if (!filePath) return; // user canceled the dialog
@@ -14,7 +14,7 @@ export async function SaveFtml() {
     const path = await dirname(filePath);
     const name = await basename(filePath);
 
-    console.log("save active")
+    console.log("save active");
 
-    await invoke('save_ftml', { path, name });
+    await invoke("save_ftml", { path, name });
 }

@@ -9,31 +9,31 @@ import { setListFontSizeEditor } from "../../../../stores/btnToolBar/btnFormats/
 import { setListTitleEditor } from "../../../../stores/btnToolBar/btnFormats/btnSize/btnListTitle.ts";
 
 function increaseFontSize() {
-  increaseFontSizeEditor();
+    increaseFontSizeEditor();
 }
 
 function decreaseFontSize() {
-  decreaseFontSizeEditor();
+    decreaseFontSizeEditor();
 }
 
 function setFontSize(size: number) {
-  setListFontSizeEditor(size);
+    setListFontSizeEditor(size);
 }
 
 function setTitle(title: string) {
-  setListTitleEditor(title);
+    setListTitleEditor(title);
 }
 
 function sizeIdleInterface() {}
 
 defineExpose({
-  sizeIdleInterface,
+    sizeIdleInterface,
 });
 </script>
 
 <template>
-  <Larger @increase="increaseFontSize"/>
-  <Smaller @decrease="decreaseFontSize"/>
-  <ListTitle @select-title="setTitle"/>
-  <ListSize @select-size="setFontSize"/>
+    <Larger @increase="increaseFontSize" />
+    <Smaller @decrease="decreaseFontSize" />
+    <ListTitle @select-title="setTitle" />
+    <ListSize @select-size="setFontSize" />
 </template>

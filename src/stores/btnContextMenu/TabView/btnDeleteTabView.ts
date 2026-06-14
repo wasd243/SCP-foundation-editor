@@ -7,7 +7,11 @@ export function deleteTabView() {
         ?.chain()
         .focus()
         .command(({ state, tr }) => {
-            for (let depth = state.selection.$from.depth; depth > 0; depth -= 1) {
+            for (
+                let depth = state.selection.$from.depth;
+                depth > 0;
+                depth -= 1
+            ) {
                 const node = state.selection.$from.node(depth);
 
                 if (node.type.name !== "tabView") {

@@ -1,4 +1,4 @@
-import {getEditor} from "../../editor.ts";
+import { getEditor } from "../../editor.ts";
 
 // This function is used to normalize URLs which entered by user but without `http` or `https` begin
 function normalizeUrl(url: string) {
@@ -49,7 +49,11 @@ function ensureLeadingSlash(href: string) {
 // But the user needs a page name render without `/`
 // So this part we need to remove the leading `/`
 // And keep the leading `/` in href attribute
-function createInsertedLinkText(href: string, rawUrl: string, options: LinkOptions = {}) {
+function createInsertedLinkText(
+    href: string,
+    rawUrl: string,
+    options: LinkOptions = {},
+) {
     if (!options.leadingSlash) {
         return href;
     }
@@ -59,8 +63,11 @@ function createInsertedLinkText(href: string, rawUrl: string, options: LinkOptio
 
 export function insertEditorLink(rawUrl: string, options: LinkOptions = {}) {
     const editor = getEditor();
-    const normalizedHref = options.normalize === false ? rawUrl : normalizeUrl(rawUrl);
-    const href = options.leadingSlash ? ensureLeadingSlash(normalizedHref) : normalizedHref;
+    const normalizedHref =
+        options.normalize === false ? rawUrl : normalizeUrl(rawUrl);
+    const href = options.leadingSlash
+        ? ensureLeadingSlash(normalizedHref)
+        : normalizedHref;
     const insertedText = createInsertedLinkText(href, rawUrl, options);
 
     if (!editor || !href) {
@@ -97,7 +104,10 @@ export function insertEditorLink(rawUrl: string, options: LinkOptions = {}) {
 
 export function promptEditorLink(options: LinkOptions = {}) {
     const currentHref = getCurrentEditorLinkHref();
-    const url = window.prompt(options.promptLabel ?? "Enter URL", currentHref ?? "");
+    const url = window.prompt(
+        options.promptLabel ?? "Enter URL",
+        currentHref ?? "",
+    );
 
     if (url === null) {
         return;

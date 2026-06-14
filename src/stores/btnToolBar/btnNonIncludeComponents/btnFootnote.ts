@@ -1,8 +1,8 @@
-import type {JSONContent} from "@tiptap/core";
-import type {Node as ProseMirrorNode} from "@tiptap/pm/model";
-import type {Transaction} from "@tiptap/pm/state";
+import type { JSONContent } from "@tiptap/core";
+import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
+import type { Transaction } from "@tiptap/pm/state";
 
-import {getEditor} from "../../editor.ts";
+import { getEditor } from "../../editor.ts";
 import footnoteTemplate from "../../json/footnote.json";
 
 type FootnoteTemplate = {
@@ -29,8 +29,7 @@ const templates = footnoteTemplate as FootnoteTemplate;
 
 function cloneTemplate(template: JSONContent, footnoteId: string) {
     return JSON.parse(
-        JSON.stringify(template)
-            .replaceAll("__FOOTNOTE_ID__", footnoteId),
+        JSON.stringify(template).replaceAll("__FOOTNOTE_ID__", footnoteId),
     ) as JSONContent;
 }
 
@@ -53,7 +52,7 @@ function createFootnoteOrderedList(footnoteId: string) {
 function createFootnoteList(footnoteId: string) {
     const list = cloneTemplate(templates.list, footnoteId);
 
-    list.content = list.content?.map(child => {
+    list.content = list.content?.map((child) => {
         if (child.attrs?.tagName === "ol") {
             return createFootnoteOrderedList(footnoteId);
         }
@@ -120,7 +119,7 @@ function getNextFootnoteId() {
     const editor = getEditor();
     let maxFootnoteId = 0;
 
-    editor?.state.doc.descendants(node => {
+    editor?.state.doc.descendants((node) => {
         if (
             !hasClass(node.attrs, "wj-footnote-ref-marker") &&
             !hasClass(node.attrs, "wj-footnote-list-item")
@@ -128,7 +127,9 @@ function getNextFootnoteId() {
             return true;
         }
 
-        const footnoteId = getFootnoteId(node.attrs) ?? node.textContent.trim().replace(/\.$/, "");
+        const footnoteId =
+            getFootnoteId(node.attrs) ??
+            node.textContent.trim().replace(/\.$/, "");
         const numericFootnoteId = Number.parseInt(footnoteId, 10);
 
         if (Number.isFinite(numericFootnoteId)) {
@@ -148,7 +149,7 @@ function findTopLevelFootnoteList(doc: ProseMirrorNode): PositionedNode | null {
         const node = doc.child(index);
 
         if (nodeHasClass(node, "wj-footnote-list")) {
-            return {node, pos: offset};
+            return { node, pos: offset };
         }
 
         offset += node.nodeSize;
@@ -157,7 +158,11 @@ function findTopLevelFootnoteList(doc: ProseMirrorNode): PositionedNode | null {
     return null;
 }
 
-function findDescendantByTagName(node: ProseMirrorNode, tagName: string, basePos: number): PositionedNode | null {
+function findDescendantByTagName(
+    node: ProseMirrorNode,
+    tagName: string,
+    basePos: number,
+): PositionedNode | null {
     let offset = 0;
 
     for (let index = 0; index < node.childCount; index += 1) {
@@ -165,7 +170,7 @@ function findDescendantByTagName(node: ProseMirrorNode, tagName: string, basePos
         const childPos = basePos + offset + 1;
 
         if (getNodeTagName(child) === tagName) {
-            return {node: child, pos: childPos};
+            return { node: child, pos: childPos };
         }
 
         const descendant = findDescendantByTagName(child, tagName, childPos);
@@ -180,7 +185,9 @@ function findDescendantByTagName(node: ProseMirrorNode, tagName: string, basePos
     return null;
 }
 
-function findFootnoteOrderedList(footnoteList: PositionedNode): PositionedNode | null {
+function findFootnoteOrderedList(
+    footnoteList: PositionedNode,
+): PositionedNode | null {
     return findDescendantByTagName(footnoteList.node, "ol", footnoteList.pos);
 }
 
@@ -209,7 +216,7 @@ function upsertFootnoteListItem(footnoteId: string) {
         return;
     }
 
-    const {state, view} = editor;
+    const { state, view } = editor;
     const bookmark = state.selection.getBookmark();
     const tr = state.tr;
     const footnoteList = findTopLevelFootnoteList(tr.doc);
@@ -230,7 +237,9 @@ function upsertFootnoteListItem(footnoteId: string) {
         } else {
             tr.insert(
                 footnoteList.pos + footnoteList.node.nodeSize - 1,
-                state.schema.nodeFromJSON(createFootnoteOrderedList(footnoteId)),
+                state.schema.nodeFromJSON(
+                    createFootnoteOrderedList(footnoteId),
+                ),
             );
         }
     }

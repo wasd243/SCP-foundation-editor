@@ -11,38 +11,38 @@ import { deleteTableRowEditor } from "../../../stores/btnContextMenu/table/btnDe
 import { deleteEditorTable } from "../../../stores/btnContextMenu/table/btnDeleteTable.ts";
 
 function addColumn() {
-  addTableColumnEditor();
+    addTableColumnEditor();
 }
 
 function addRow() {
-  addTableRowEditor();
+    addTableRowEditor();
 }
 
 function deleteColumn() {
-  deleteTableColumnEditor();
+    deleteTableColumnEditor();
 }
 
 function deleteRow() {
-  deleteTableRowEditor();
+    deleteTableRowEditor();
 }
 
 function deleteTable() {
-  deleteEditorTable();
+    deleteEditorTable();
 }
 
 defineProps<{
-  includeDefault?: boolean;
+    includeDefault?: boolean;
 }>();
 </script>
 
 <template>
-  <div class="table-context-menu">
-    <AddColumn @click-command="addColumn"/>
-    <AddRow @click-command="addRow"/>
-    <div class="context-menu-separator"></div>
-    <DeleteColumn @click-command="deleteColumn"/>
-    <DeleteRow @click-command="deleteRow"/>
-    <div class="context-menu-separator"></div>
-    <DeleteTable @click-command="deleteTable"/>
-  </div>
+    <div class="table-context-menu">
+        <AddColumn @click-command="addColumn" />
+        <AddRow @click-command="addRow" />
+        <div class="context-menu-separator"></div>
+        <DeleteColumn @click-command="deleteColumn" />
+        <DeleteRow @click-command="deleteRow" />
+        <div class="context-menu-separator"></div>
+        <DeleteTable @click-command="deleteTable" />
+    </div>
 </template>

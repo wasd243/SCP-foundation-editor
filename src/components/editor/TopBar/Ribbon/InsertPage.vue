@@ -5,7 +5,7 @@ import Insertion from "../../ToolBar/Insertion.vue";
 </script>
 
 <template>
-  <div class="ribbon-layout" data-ribbon-page="insert">
-    <Insertion/>
-  </div>
+    <div class="ribbon-layout" data-ribbon-page="insert">
+        <Insertion />
+    </div>
 </template>

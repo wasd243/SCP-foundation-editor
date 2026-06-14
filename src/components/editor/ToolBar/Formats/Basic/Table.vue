@@ -2,12 +2,16 @@
 import Table from "../../../../../assets/icons/Table.svg";
 
 const emit = defineEmits<{
-  insert: [];
+    insert: [];
 }>();
 </script>
 
 <template>
-  <button class="format-basic-button table" type="button" @click="emit('insert')">
-    <img :src="Table" alt="Table" />
-  </button>
+    <button
+        class="format-basic-button table"
+        type="button"
+        @click="emit('insert')"
+    >
+        <img :src="Table" alt="Table" />
+    </button>
 </template>

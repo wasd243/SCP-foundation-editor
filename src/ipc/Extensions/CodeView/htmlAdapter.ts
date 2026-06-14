@@ -2,4 +2,7 @@
 // This is a final export of the htmlAdapter
 
 export { scanDOMandReplace } from "./htmlAdapter/scanDOMandReplace";
-export type { DOMReplaceContext, DOMReplacer } from "./htmlAdapter/scanDOMandReplace";
+export type {
+    DOMReplaceContext,
+    DOMReplacer,
+} from "./htmlAdapter/scanDOMandReplace";

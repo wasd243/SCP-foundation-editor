@@ -1,7 +1,7 @@
 // `FootnoteSyncE.ts` is a plugin that synchronizes footnote content from `[[footnoteblock]]` to `wj-footnote` elements.
 
-import type {Node as ProseMirrorNode} from "@tiptap/pm/model";
-import {Plugin, PluginKey, TextSelection} from "@tiptap/pm/state";
+import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
+import { Plugin, PluginKey, TextSelection } from "@tiptap/pm/state";
 
 import {
     collectFootnoteDocumentInfo,
@@ -18,18 +18,24 @@ export function createFootnoteSyncPlugin() {
     return new Plugin({
         key: new PluginKey("wjFootnoteSync"),
         appendTransaction(transactions, oldState, newState) {
-            if (!transactions.some(transaction => transaction.docChanged)) {
+            if (!transactions.some((transaction) => transaction.docChanged)) {
                 return null;
             }
 
-            const footnoteListItemRepairs = getFootnoteListItemRepairs(newState.doc);
+            const footnoteListItemRepairs = getFootnoteListItemRepairs(
+                newState.doc,
+            );
 
             if (footnoteListItemRepairs.length > 0) {
                 const transaction = newState.tr;
 
-                footnoteListItemRepairs.forEach(repair => {
+                footnoteListItemRepairs.forEach((repair) => {
                     if (repair.type === "replace") {
-                        transaction.replaceWith(repair.from, repair.to, repair.node);
+                        transaction.replaceWith(
+                            repair.from,
+                            repair.to,
+                            repair.node,
+                        );
                         return;
                     }
 
@@ -43,7 +49,9 @@ export function createFootnoteSyncPlugin() {
 
                 if (selectionPos !== null) {
                     try {
-                        transaction.setSelection(TextSelection.create(transaction.doc, selectionPos));
+                        transaction.setSelection(
+                            TextSelection.create(transaction.doc, selectionPos),
+                        );
                     } catch {
                         // Keep ProseMirror's mapped selection if the browser produced an invalid edge position.
                     }
@@ -55,13 +63,19 @@ export function createFootnoteSyncPlugin() {
             }
 
             const newFootnoteInfo = collectFootnoteDocumentInfo(newState.doc);
-            const deletedRefKeys = getDeletedFootnoteRefKeys(oldState.doc, newState.doc);
-            const deletionRanges = getFootnoteListItemDeletionRanges(newFootnoteInfo.listItems, deletedRefKeys);
+            const deletedRefKeys = getDeletedFootnoteRefKeys(
+                oldState.doc,
+                newState.doc,
+            );
+            const deletionRanges = getFootnoteListItemDeletionRanges(
+                newFootnoteInfo.listItems,
+                deletedRefKeys,
+            );
 
             if (deletionRanges.length > 0) {
                 const transaction = newState.tr;
 
-                deletionRanges.forEach(range => {
+                deletionRanges.forEach((range) => {
                     transaction.delete(range.from, range.to);
                 });
 
@@ -73,18 +87,21 @@ export function createFootnoteSyncPlugin() {
 
             const renumberTransaction = newState.tr;
 
-            if (renumberFootnotes(renumberTransaction) || ensureFootnoteListLeadingBlankLine(renumberTransaction)) {
+            if (
+                renumberFootnotes(renumberTransaction) ||
+                ensureFootnoteListLeadingBlankLine(renumberTransaction)
+            ) {
                 return renumberTransaction;
             }
 
-            const {sources, targets} = newFootnoteInfo;
+            const { sources, targets } = newFootnoteInfo;
 
             if (sources.length === 0 || targets.length === 0) {
                 return null;
             }
 
             const sourceByKey = new Map<string, FootnoteContentNode>();
-            sources.forEach(source => {
+            sources.forEach((source) => {
                 if (source.key && !sourceByKey.has(source.key)) {
                     sourceByKey.set(source.key, source);
                 }
@@ -97,9 +114,14 @@ export function createFootnoteSyncPlugin() {
                 .sort((left, right) => right.pos - left.pos)
                 .forEach((target, targetIndexFromEnd) => {
                     const targetIndex = targets.length - 1 - targetIndexFromEnd;
-                    const source = target.key ? sourceByKey.get(target.key) : sources[targetIndex];
+                    const source = target.key
+                        ? sourceByKey.get(target.key)
+                        : sources[targetIndex];
 
-                    if (!source || target.node.content.eq(source.node.content)) {
+                    if (
+                        !source ||
+                        target.node.content.eq(source.node.content)
+                    ) {
                         return;
                     }
 

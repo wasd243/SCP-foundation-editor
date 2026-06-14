@@ -9,10 +9,10 @@ import UrlFormat from "./Formats/URL.vue";
 </script>
 
 <template>
-  <Basic/>
-  <Size/>
-  <Color/>
-  <List/>
-  <Align/>
-  <UrlFormat/>
+    <Basic />
+    <Size />
+    <Color />
+    <List />
+    <Align />
+    <UrlFormat />
 </template>

@@ -1,11 +1,15 @@
 <script setup lang="ts">
 const emit = defineEmits<{
-  toggle: [];
+    toggle: [];
 }>();
 </script>
 
 <template>
-  <button class="format-basic-button italic" type="button" @click="emit('toggle')">
-    <i>I</i>
-  </button>
+    <button
+        class="format-basic-button italic"
+        type="button"
+        @click="emit('toggle')"
+    >
+        <i>I</i>
+    </button>
 </template>

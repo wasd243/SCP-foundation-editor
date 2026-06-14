@@ -26,15 +26,24 @@ function addPreservedAttributes() {
             {
                 default: null,
                 parseHTML: (element: HTMLElement) =>
-                    name === "hidden" ? (element.hasAttribute("hidden") ? "" : null) : element.getAttribute(name),
+                    name === "hidden"
+                        ? element.hasAttribute("hidden")
+                            ? ""
+                            : null
+                        : element.getAttribute(name),
                 renderHTML: (attributes: Record<string, string | null>) =>
-                    attributes[name] === null ? {} : { [name]: attributes[name] },
+                    attributes[name] === null
+                        ? {}
+                        : { [name]: attributes[name] },
             },
         ]),
     );
 }
 
-function syncPreservedAttributes(element: HTMLElement, attributes: Record<string, string | null>) {
+function syncPreservedAttributes(
+    element: HTMLElement,
+    attributes: Record<string, string | null>,
+) {
     preservedAttributes.forEach((name) => {
         element.removeAttribute(name);
 
@@ -54,10 +63,19 @@ function limitToParentWidth(element: HTMLElement) {
 }
 
 function createBoundedNodeView(tagName: string) {
-    return ({ node, HTMLAttributes }: { node: ProseMirrorNode; HTMLAttributes: Record<string, string | null> }) => {
+    return ({
+        node,
+        HTMLAttributes,
+    }: {
+        node: ProseMirrorNode;
+        HTMLAttributes: Record<string, string | null>;
+    }) => {
         const dom = document.createElement(tagName);
         const syncNode = (currentNode: ProseMirrorNode) => {
-            syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, currentNode.attrs));
+            syncPreservedAttributes(
+                dom,
+                mergeAttributes(HTMLAttributes, currentNode.attrs),
+            );
             limitToParentWidth(dom);
         };
 
@@ -96,7 +114,10 @@ function findTabViewButton($pos: ResolvedPos) {
     return null;
 }
 
-function getSelectedTabViewButtonTextLength(state: EditorState, button: { node: ProseMirrorNode; pos: number }) {
+function getSelectedTabViewButtonTextLength(
+    state: EditorState,
+    button: { node: ProseMirrorNode; pos: number },
+) {
     const { from, to } = state.selection;
     const buttonStart = button.pos + 1;
     const buttonEnd = button.pos + button.node.nodeSize - 1;
@@ -123,8 +144,14 @@ function shouldBlockTabViewButtonInput(state: EditorState, inputText: string) {
         return true;
     }
 
-    const selectedLength = getSelectedTabViewButtonTextLength(state, fromButton);
-    const nextLength = countChars(fromButton.node.textContent) - selectedLength + countChars(inputText);
+    const selectedLength = getSelectedTabViewButtonTextLength(
+        state,
+        fromButton,
+    );
+    const nextLength =
+        countChars(fromButton.node.textContent) -
+        selectedLength +
+        countChars(inputText);
 
     return nextLength > TAB_VIEW_BUTTON_MAX_LABEL_LENGTH;
 }
@@ -147,20 +174,31 @@ function switchTabViewTab(
             hasButton = true;
         }
 
-        tr.setNodeMarkup(buttonListPos + 1 + offset, undefined, {
-            ...button.attrs,
-            "aria-selected": button.attrs.id === buttonId ? "true" : "false",
-            tabindex: button.attrs.id === buttonId ? "0" : "-1",
-        }, button.marks);
+        tr.setNodeMarkup(
+            buttonListPos + 1 + offset,
+            undefined,
+            {
+                ...button.attrs,
+                "aria-selected":
+                    button.attrs.id === buttonId ? "true" : "false",
+                tabindex: button.attrs.id === buttonId ? "0" : "-1",
+            },
+            button.marks,
+        );
     });
 
     if (!hasButton) return false;
 
     panelList.forEach((panel, offset) => {
-        tr.setNodeMarkup(panelListPos + 1 + offset, undefined, {
-            ...panel.attrs,
-            hidden: panel.attrs.id === panelId ? null : "",
-        }, panel.marks);
+        tr.setNodeMarkup(
+            panelListPos + 1 + offset,
+            undefined,
+            {
+                ...panel.attrs,
+                hidden: panel.attrs.id === panelId ? null : "",
+            },
+            panel.marks,
+        );
     });
 
     return true;
@@ -246,7 +284,15 @@ export const TabViewExtension = Node.create({
                         view.state.doc.descendants((node, pos) => {
                             if (node.type.name !== "tabView") return true;
 
-                            if (switchTabViewTab(node, pos, buttonId, panelId, tr)) {
+                            if (
+                                switchTabViewTab(
+                                    node,
+                                    pos,
+                                    buttonId,
+                                    panelId,
+                                    tr,
+                                )
+                            ) {
                                 changed = true;
                                 return false;
                             }
@@ -261,11 +307,16 @@ export const TabViewExtension = Node.create({
 
                         return true;
                     },
-                    handleTextInput: (view, _from, _to, text) => shouldBlockTabViewButtonInput(view.state, text),
+                    handleTextInput: (view, _from, _to, text) =>
+                        shouldBlockTabViewButtonInput(view.state, text),
                     handlePaste: (view, event) => {
-                        const text = event.clipboardData?.getData("text/plain") ?? "";
+                        const text =
+                            event.clipboardData?.getData("text/plain") ?? "";
 
-                        return text.length > 0 && shouldBlockTabViewButtonInput(view.state, text);
+                        return (
+                            text.length > 0 &&
+                            shouldBlockTabViewButtonInput(view.state, text)
+                        );
                     },
                 },
             }),
@@ -316,8 +367,14 @@ export const TabViewButtonExtension = Node.create({
             dom.append(label);
 
             const syncButton = (currentNode: ProseMirrorNode) => {
-                syncPreservedAttributes(dom, mergeAttributes(HTMLAttributes, currentNode.attrs));
-                dom.title = currentNode.textContent || currentNode.attrs["aria-label"] || "";
+                syncPreservedAttributes(
+                    dom,
+                    mergeAttributes(HTMLAttributes, currentNode.attrs),
+                );
+                dom.title =
+                    currentNode.textContent ||
+                    currentNode.attrs["aria-label"] ||
+                    "";
             };
 
             syncButton(node);

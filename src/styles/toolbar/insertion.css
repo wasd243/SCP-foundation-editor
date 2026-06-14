@@ -24,7 +24,8 @@
     border-color: #8aaee8;
 }
 
-.format-insertion-button.image-button { }
+.format-insertion-button.image-button {
+}
 
 .format-insertion-button.image-block-button {
     left: calc(var(--insertion-btn-left) + 60px);

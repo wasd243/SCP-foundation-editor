@@ -1,12 +1,16 @@
 import { getEditor, type EditorTextAlign } from "../../editor.ts";
 
 function setTextAlignStyle(style: unknown, align: EditorTextAlign) {
-    const declarations = typeof style === "string"
-        ? style
-            .split(";")
-            .map(declaration => declaration.trim())
-            .filter(declaration => declaration && !/^text-align\s*:/i.test(declaration))
-        : [];
+    const declarations =
+        typeof style === "string"
+            ? style
+                  .split(";")
+                  .map((declaration) => declaration.trim())
+                  .filter(
+                      (declaration) =>
+                          declaration && !/^text-align\s*:/i.test(declaration),
+                  )
+            : [];
 
     declarations.push(`text-align: ${align}`);
 
@@ -18,7 +22,11 @@ export function setEditorAlign(align: EditorTextAlign) {
         ?.chain()
         .focus()
         .command(({ state, tr }) => {
-            const targetTypes = new Set(["paragraph", "heading", "detailsSummary"]);
+            const targetTypes = new Set([
+                "paragraph",
+                "heading",
+                "detailsSummary",
+            ]);
             const touchedPositions = new Set<number>();
 
             function updateNode(pos: number) {
@@ -28,15 +36,24 @@ export function setEditorAlign(align: EditorTextAlign) {
                 if (!node || !targetTypes.has(node.type.name)) return;
 
                 touchedPositions.add(pos);
-                tr.setNodeMarkup(pos, undefined, {
-                    ...node.attrs,
-                    textAlign: align,
-                    style: setTextAlignStyle(node.attrs.style, align),
-                }, node.marks);
+                tr.setNodeMarkup(
+                    pos,
+                    undefined,
+                    {
+                        ...node.attrs,
+                        textAlign: align,
+                        style: setTextAlignStyle(node.attrs.style, align),
+                    },
+                    node.marks,
+                );
             }
 
             if (state.selection.empty) {
-                for (let depth = state.selection.$from.depth; depth > 0; depth -= 1) {
+                for (
+                    let depth = state.selection.$from.depth;
+                    depth > 0;
+                    depth -= 1
+                ) {
                     const node = state.selection.$from.node(depth);
 
                     if (targetTypes.has(node.type.name)) {
@@ -45,11 +62,15 @@ export function setEditorAlign(align: EditorTextAlign) {
                     }
                 }
             } else {
-                state.doc.nodesBetween(state.selection.from, state.selection.to, (node, pos) => {
-                    if (targetTypes.has(node.type.name)) {
-                        updateNode(pos);
-                    }
-                });
+                state.doc.nodesBetween(
+                    state.selection.from,
+                    state.selection.to,
+                    (node, pos) => {
+                        if (targetTypes.has(node.type.name)) {
+                            updateNode(pos);
+                        }
+                    },
+                );
             }
 
             return true;

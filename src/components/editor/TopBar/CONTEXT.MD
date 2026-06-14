@@ -10,8 +10,8 @@ All `(RibbonName).vue` files will be imported to `Ribbon.vue` file.
 
 ### Ribbon Pages
 
-| Ribbon    | Page                       | Ribbon Button         |
-|-----------|----------------------------|-----------------------|
-| Home      | `Ribbon/HomePage.vue`      | `Topbar/Home.vue`     |
-| Insert    | `Ribbon/InsertPage.vue`    | `Topbar/Insert.vue`   |
-| Settings  | `Ribbon/SettingsPage.vue`  | `Topbar/Settings.vue` |
+| Ribbon   | Page                      | Ribbon Button         |
+| -------- | ------------------------- | --------------------- |
+| Home     | `Ribbon/HomePage.vue`     | `Topbar/Home.vue`     |
+| Insert   | `Ribbon/InsertPage.vue`   | `Topbar/Insert.vue`   |
+| Settings | `Ribbon/SettingsPage.vue` | `Topbar/Settings.vue` |

@@ -1,4 +1,4 @@
-import type {DOMReplaceContext, DOMReplacer} from "../scanDOMandReplace";
+import type { DOMReplaceContext, DOMReplacer } from "../scanDOMandReplace";
 
 const footnoteInlineTags = new Set([
     "wj-footnote-ref-marker",
@@ -6,20 +6,16 @@ const footnoteInlineTags = new Set([
 ]);
 
 // let ALL contents under wj-footnote-list contenteditable = false
-function underFootnoteListContentEditableFalse(
-    { element }: DOMReplaceContext
-): Node | null {
-
+function underFootnoteListContentEditableFalse({
+    element,
+}: DOMReplaceContext): Node | null {
     if (element.tagName !== "P") {
         return null;
     }
 
     const previous = element.previousElementSibling;
 
-    if (
-        previous &&
-        previous.classList.contains("wj-footnote-list")
-    ) {
+    if (previous && previous.classList.contains("wj-footnote-list")) {
         element.setAttribute("contenteditable", "false");
     }
 
@@ -27,7 +23,7 @@ function underFootnoteListContentEditableFalse(
 }
 
 function copyAttributes(source: Element, target: HTMLElement) {
-    Array.from(source.attributes).forEach(attribute => {
+    Array.from(source.attributes).forEach((attribute) => {
         target.setAttribute(attribute.name, attribute.value);
     });
 }
@@ -36,7 +32,7 @@ function hasClass(element: Element, className: string) {
     return element.classList.contains(className);
 }
 
-function replaceFootnoteInlineTag({element}: DOMReplaceContext): Node | null {
+function replaceFootnoteInlineTag({ element }: DOMReplaceContext): Node | null {
     const tagName = element.tagName.toLowerCase();
 
     if (!footnoteInlineTags.has(tagName)) return null;
@@ -53,16 +49,23 @@ function replaceFootnoteInlineTag({element}: DOMReplaceContext): Node | null {
     return span;
 }
 
-function makeFootnoteRefReadOnly({element}: DOMReplaceContext): Node | null {
+function makeFootnoteRefReadOnly({ element }: DOMReplaceContext): Node | null {
     if (!hasClass(element, "wj-footnote-ref")) return null;
 
     element.setAttribute("contenteditable", "false");
     return null;
 }
 
-function makeFootnoteRefChromeReadOnly({element}: DOMReplaceContext): Node | null {
+function makeFootnoteRefChromeReadOnly({
+    element,
+}: DOMReplaceContext): Node | null {
     if (!element.closest(".wj-footnote-ref")) return null;
-    if (!Array.from(element.classList).some(className => className.startsWith("wj-footnote-ref"))) return null;
+    if (
+        !Array.from(element.classList).some((className) =>
+            className.startsWith("wj-footnote-ref"),
+        )
+    )
+        return null;
 
     element.setAttribute("contenteditable", "false");
     return null;

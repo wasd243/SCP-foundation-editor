@@ -56,7 +56,9 @@
     border-radius: 4px;
     background: transparent;
     color: var(--text-main);
-    font: 500 12px var(--font-ui), sans-serif;
+    font:
+        500 12px var(--font-ui),
+        sans-serif;
     cursor: pointer;
 }
 
@@ -94,7 +96,9 @@
 
 .ribbon-group-label {
     color: #5f6b7a;
-    font: 500 11px var(--font-ui), sans-serif;
+    font:
+        500 11px var(--font-ui),
+        sans-serif;
     text-align: center;
 }
 

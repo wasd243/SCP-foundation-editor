@@ -1,15 +1,18 @@
-import type {Editor} from "@tiptap/core";
-import type {Node as ProseMirrorNode} from "@tiptap/pm/model";
-import type {Transaction} from "@tiptap/pm/state";
+import type { Editor } from "@tiptap/core";
+import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
+import type { Transaction } from "@tiptap/pm/state";
 
-import {getEditor} from "../../editor.ts";
+import { getEditor } from "../../editor.ts";
 
 export type ImagePosition = "left" | "center" | "right";
 export type PlainImageFlow = "inline" | "wrap";
 
 export const imageAlignmentClasses = ["alignleft", "alignright", "aligncenter"];
 export const imageFloatPositionClasses = ["floatleft", "floatright"];
-export const imagePositionClasses = [...imageAlignmentClasses, ...imageFloatPositionClasses];
+export const imagePositionClasses = [
+    ...imageAlignmentClasses,
+    ...imageFloatPositionClasses,
+];
 
 type AttributeName = "htmlAttributes" | "wrapperAttributes";
 
@@ -17,7 +20,9 @@ function isObjectAttributes(value: unknown): value is Record<string, unknown> {
     return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
-function getImageContainerAttributeName(node: ProseMirrorNode): AttributeName | null {
+function getImageContainerAttributeName(
+    node: ProseMirrorNode,
+): AttributeName | null {
     if (isObjectAttributes(node.attrs.htmlAttributes)) {
         return "htmlAttributes";
     }
@@ -39,7 +44,11 @@ function setStyleSize(styleText: unknown, width: string, height: string) {
     return element.style.cssText;
 }
 
-function setImageElementSizeAttributes(attributes: Record<string, unknown>, width: string, height: string) {
+function setImageElementSizeAttributes(
+    attributes: Record<string, unknown>,
+    width: string,
+    height: string,
+) {
     const imageAttributes = isObjectAttributes(attributes.imageAttributes)
         ? attributes.imageAttributes
         : {};
@@ -65,12 +74,18 @@ function setStyleMargin(styleText: unknown, margin: string | null) {
 }
 
 function splitClassName(className: unknown) {
-    return typeof className === "string" ? className.split(/\s+/).filter(Boolean) : [];
+    return typeof className === "string"
+        ? className.split(/\s+/).filter(Boolean)
+        : [];
 }
 
-function getImageContainerClassName(className: unknown, positionClass: string | null) {
-    const classNames = splitClassName(className)
-        .filter(className => !imagePositionClasses.includes(className));
+function getImageContainerClassName(
+    className: unknown,
+    positionClass: string | null,
+) {
+    const classNames = splitClassName(className).filter(
+        (className) => !imagePositionClasses.includes(className),
+    );
 
     if (positionClass) {
         classNames.push(positionClass);
@@ -81,8 +96,8 @@ function getImageContainerClassName(className: unknown, positionClass: string | 
 
 function removeImageContainerClassName(className: unknown) {
     return splitClassName(className)
-        .filter(className => className !== "image-container")
-        .filter(className => !imagePositionClasses.includes(className))
+        .filter((className) => className !== "image-container")
+        .filter((className) => !imagePositionClasses.includes(className))
         .join(" ");
 }
 
@@ -99,21 +114,37 @@ function nodeHasImageContainerAttrs(node: ProseMirrorNode) {
 }
 
 function cleanNestedImageWrapperNodeAttrs(transaction: Transaction) {
-    function scanNode(node: ProseMirrorNode, position: number, insideImageContainer: boolean) {
+    function scanNode(
+        node: ProseMirrorNode,
+        position: number,
+        insideImageContainer: boolean,
+    ) {
         node.forEach((child, offset) => {
             const childPosition = position + 1 + offset;
             const childAttrsName = getImageContainerAttributeName(child);
-            const childHasImageContainer = childAttrsName !== null && nodeHasImageContainerAttrs(child);
+            const childHasImageContainer =
+                childAttrsName !== null && nodeHasImageContainerAttrs(child);
 
-            if (insideImageContainer && isObjectAttributes(child.attrs.wrapperAttributes)) {
-                transaction.setNodeMarkup(childPosition, undefined, {
-                    ...child.attrs,
-                    wrapperAttributes: null,
-                }, child.marks);
+            if (
+                insideImageContainer &&
+                isObjectAttributes(child.attrs.wrapperAttributes)
+            ) {
+                transaction.setNodeMarkup(
+                    childPosition,
+                    undefined,
+                    {
+                        ...child.attrs,
+                        wrapperAttributes: null,
+                    },
+                    child.marks,
+                );
             }
 
             if (insideImageContainer && childHasImageContainer) {
-                const attributes = child.attrs[childAttrsName] as Record<string, unknown>;
+                const attributes = child.attrs[childAttrsName] as Record<
+                    string,
+                    unknown
+                >;
                 const nextAttributes: Record<string, unknown> = {
                     ...attributes,
                     class: removeImageContainerClassName(attributes.class),
@@ -128,13 +159,22 @@ function cleanNestedImageWrapperNodeAttrs(transaction: Transaction) {
                     delete nextAttributes.style;
                 }
 
-                transaction.setNodeMarkup(childPosition, undefined, {
-                    ...child.attrs,
-                    [childAttrsName]: nextAttributes,
-                }, child.marks);
+                transaction.setNodeMarkup(
+                    childPosition,
+                    undefined,
+                    {
+                        ...child.attrs,
+                        [childAttrsName]: nextAttributes,
+                    },
+                    child.marks,
+                );
             }
 
-            scanNode(child, childPosition, insideImageContainer || childHasImageContainer);
+            scanNode(
+                child,
+                childPosition,
+                insideImageContainer || childHasImageContainer,
+            );
         });
     }
 
@@ -145,11 +185,16 @@ function cleanNestedImageWrapperNodeAttrs(transaction: Transaction) {
 
 function patchImageContainerNodeAttrs(
     container: HTMLElement,
-    patchAttributes: (attributes: Record<string, unknown>, node: ProseMirrorNode) => Record<string, unknown>,
+    patchAttributes: (
+        attributes: Record<string, unknown>,
+        node: ProseMirrorNode,
+    ) => Record<string, unknown>,
 ) {
     const editor = getEditor();
     const targetContainer = findTopImageContainer(container) ?? container;
-    const position = editor ? findNodePositionByElement(editor, targetContainer) : null;
+    const position = editor
+        ? findNodePositionByElement(editor, targetContainer)
+        : null;
 
     if (!editor || position === null) {
         return false;
@@ -170,10 +215,15 @@ function patchImageContainerNodeAttrs(
     const attributes = node.attrs[attrsName] as Record<string, unknown>;
     const transaction = editor.state.tr;
 
-    transaction.setNodeMarkup(position, undefined, {
-        ...node.attrs,
-        [attrsName]: patchAttributes({ ...attributes }, node),
-    }, node.marks);
+    transaction.setNodeMarkup(
+        position,
+        undefined,
+        {
+            ...node.attrs,
+            [attrsName]: patchAttributes({ ...attributes }, node),
+        },
+        node.marks,
+    );
     cleanNestedImageWrapperNodeAttrs(transaction);
     editor.view.dispatch(transaction);
 
@@ -181,7 +231,10 @@ function patchImageContainerNodeAttrs(
 }
 
 export function isImageContainerElement(element: HTMLElement) {
-    return element.tagName.toLowerCase() === "div" && element.classList.contains("image-container");
+    return (
+        element.tagName.toLowerCase() === "div" &&
+        element.classList.contains("image-container")
+    );
 }
 
 export function findTopImageContainer(element: HTMLElement) {
@@ -199,7 +252,10 @@ export function findTopImageContainer(element: HTMLElement) {
     return imageContainer;
 }
 
-export function findNodePositionByElement(editor: Editor, element: HTMLElement) {
+export function findNodePositionByElement(
+    editor: Editor,
+    element: HTMLElement,
+) {
     let position: number | null = null;
 
     editor.state.doc.descendants((_node, pos) => {
@@ -214,25 +270,38 @@ export function findNodePositionByElement(editor: Editor, element: HTMLElement) 
     return position;
 }
 
-export function getImagePositionClass(container: HTMLElement, position: ImagePosition) {
+export function getImagePositionClass(
+    container: HTMLElement,
+    position: ImagePosition,
+) {
     if (container.hasAttribute("data-editor-include")) {
-        return position === "left" ? "alignleft" : position === "right" ? "alignright" : "aligncenter";
+        return position === "left"
+            ? "alignleft"
+            : position === "right"
+              ? "alignright"
+              : "aligncenter";
     }
 
-    return position === "left" ? "floatleft" : position === "right" ? "floatright" : "aligncenter";
+    return position === "left"
+        ? "floatleft"
+        : position === "right"
+          ? "floatright"
+          : "aligncenter";
 }
 
 export function getImagePositionMargin(position: ImagePosition) {
     return position === "left"
         ? "0 1em 0.8em 0"
         : position === "right"
-            ? "0 0 0.8em 1em"
-            : "0 auto 0.8em auto";
+          ? "0 0 0.8em 1em"
+          : "0 auto 0.8em auto";
 }
 
 export function clearNestedImageContainerDom(container: HTMLElement) {
-    container.querySelectorAll("div.image-container").forEach(child => {
-        imagePositionClasses.forEach(className => child.classList.remove(className));
+    container.querySelectorAll("div.image-container").forEach((child) => {
+        imagePositionClasses.forEach((className) =>
+            child.classList.remove(className),
+        );
         child.classList.remove("image-container");
 
         if (child instanceof HTMLElement) {
@@ -242,8 +311,13 @@ export function clearNestedImageContainerDom(container: HTMLElement) {
     });
 }
 
-export function setImageContainerPositionDom(container: HTMLElement, position: ImagePosition) {
-    imagePositionClasses.forEach(className => container.classList.remove(className));
+export function setImageContainerPositionDom(
+    container: HTMLElement,
+    position: ImagePosition,
+) {
+    imagePositionClasses.forEach((className) =>
+        container.classList.remove(className),
+    );
     clearNestedImageContainerDom(container);
 
     container.classList.add(getImagePositionClass(container, position));
@@ -251,8 +325,13 @@ export function setImageContainerPositionDom(container: HTMLElement, position: I
     container.style.margin = getImagePositionMargin(position);
 }
 
-export function setPlainImageFlowDom(container: HTMLElement, flow: PlainImageFlow) {
-    imagePositionClasses.forEach(className => container.classList.remove(className));
+export function setPlainImageFlowDom(
+    container: HTMLElement,
+    flow: PlainImageFlow,
+) {
+    imagePositionClasses.forEach((className) =>
+        container.classList.remove(className),
+    );
     clearNestedImageContainerDom(container);
     container.style.transform = "";
     container.style.margin = "";
@@ -262,7 +341,11 @@ export function setPlainImageFlowDom(container: HTMLElement, flow: PlainImageFlo
     }
 }
 
-export function syncImageContainerSizeDom(container: HTMLElement, width: string, height: string) {
+export function syncImageContainerSizeDom(
+    container: HTMLElement,
+    width: string,
+    height: string,
+) {
     const img = container.querySelector("img") as HTMLElement | null;
 
     container.style.width = width;
@@ -276,14 +359,22 @@ export function syncImageContainerSizeDom(container: HTMLElement, width: string,
     img.style.height = height;
 }
 
-export function updateImageContainerSizeAttrs(container: HTMLElement, width: string, height: string) {
-    return patchImageContainerNodeAttrs(container, attributes => ({
+export function updateImageContainerSizeAttrs(
+    container: HTMLElement,
+    width: string,
+    height: string,
+) {
+    return patchImageContainerNodeAttrs(container, (attributes) => ({
         ...attributes,
         style: setStyleSize(attributes.style, width, height),
     }));
 }
 
-export function updateImageElementSizeAttrs(image: HTMLElement, width: string, height: string) {
+export function updateImageElementSizeAttrs(
+    image: HTMLElement,
+    width: string,
+    height: string,
+) {
     const editor = getEditor();
     const position = editor ? findNodePositionByElement(editor, image) : null;
 
@@ -309,22 +400,31 @@ export function updateImageElementSizeAttrs(image: HTMLElement, width: string, h
     return true;
 }
 
-export function updateImageContainerPositionAttrs(container: HTMLElement, position: ImagePosition) {
+export function updateImageContainerPositionAttrs(
+    container: HTMLElement,
+    position: ImagePosition,
+) {
     const positionClass = getImagePositionClass(container, position);
     const margin = getImagePositionMargin(position);
 
-    return patchImageContainerNodeAttrs(container, attributes => ({
+    return patchImageContainerNodeAttrs(container, (attributes) => ({
         ...attributes,
         class: getImageContainerClassName(attributes.class, positionClass),
         style: setStyleMargin(attributes.style, margin),
     }));
 }
 
-export function updatePlainImageFlowAttrs(container: HTMLElement, flow: PlainImageFlow) {
-    return patchImageContainerNodeAttrs(container, attributes => {
+export function updatePlainImageFlowAttrs(
+    container: HTMLElement,
+    flow: PlainImageFlow,
+) {
+    return patchImageContainerNodeAttrs(container, (attributes) => {
         const nextAttributes: Record<string, unknown> = {
             ...attributes,
-            class: getImageContainerClassName(attributes.class, flow === "wrap" ? "floatleft" : null),
+            class: getImageContainerClassName(
+                attributes.class,
+                flow === "wrap" ? "floatleft" : null,
+            ),
             style: setStyleMargin(attributes.style, null),
         };
 
