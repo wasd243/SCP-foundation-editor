@@ -192,9 +192,10 @@ const editor = useEditor({
             </div>
             <div id="top-bar">Editor Top Bar</div>
 
-            <div class="meta-title">Editor Meta Title Preview</div>
-
-            <div id="side-bar">Editor side-bar</div>
+            <div id="content-wrap">
+                <div id="side-bar">Editor side-bar</div>
+                <div class="meta-title">Editor Meta Title Preview</div>
+            </div>
         </div>
 
         <EditorContent :editor="editor" />
@@ -232,7 +233,7 @@ const editor = useEditor({
     margin: 0 auto;
     padding: 48px 56px;
     box-sizing: border-box;
-    top: min(200px);
+    top: min(220px);
 
     background: #ffffff;
 
