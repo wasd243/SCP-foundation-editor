@@ -18,58 +18,67 @@ const activeTab = ref<Tab>("home");
 </script>
 
 <template>
-  <header class="editor-top">
-    <nav class="top-bar" aria-label="Editor sections">
-      <TopBarHome :active="activeTab === 'home'" @select="activeTab = 'home'" />
-      <Insert :active="activeTab === 'insert'" @select="activeTab = 'insert'" />
-      <Settings :active="activeTab === 'settings'" @select="activeTab = 'settings'" />
-    </nav>
+    <header class="editor-top">
+        <nav class="top-bar" aria-label="Editor sections">
+            <TopBarHome
+                :active="activeTab === 'home'"
+                @select="activeTab = 'home'"
+            />
+            <Insert
+                :active="activeTab === 'insert'"
+                @select="activeTab = 'insert'"
+            />
+            <Settings
+                :active="activeTab === 'settings'"
+                @select="activeTab = 'settings'"
+            />
+        </nav>
 
-    <!--Actions bar, contains undo, redo, save, open, etc.-->
-    <Actions/>
-    <Ribbon :active-tab="activeTab" />
-  </header>
+        <!--Actions bar, contains undo, redo, save, open, etc.-->
+        <Actions />
+        <Ribbon :active-tab="activeTab" />
+    </header>
 </template>
 
 <style scoped>
 .editor-top {
-  width: 100%;
-  position: relative;
-  z-index: 20;
-  flex: 0 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 20;
+    flex: 0 0 auto;
 }
 
 .top-bar {
-  height: var(--topbar-height);
-  display: flex;
-  align-items: end;
-  gap: 4px;
-  padding: 0 12px;
+    height: var(--topbar-height);
+    display: flex;
+    align-items: end;
+    gap: 4px;
+    padding: 0 12px;
 
-  background: var(--color-word-blue);
-  border-bottom: 1px solid var(--color-word-blue-dark);
-  font-family: var(--font-ui),sans-serif;
+    background: var(--color-word-blue);
+    border-bottom: 1px solid var(--color-word-blue-dark);
+    font-family: var(--font-ui), sans-serif;
 }
 
 .top-tab {
-  height: var(--tab-height);
-  padding: 0 18px;
+    height: var(--tab-height);
+    padding: 0 18px;
 
-  border: 0;
+    border: 0;
 
-  background: transparent;
-  color: var(--color-text-on-blue);
+    background: transparent;
+    color: var(--color-text-on-blue);
 
-  font-weight: 600;
-  cursor: pointer;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 .top-tab:hover {
-  background: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.16);
 }
 
 .top-tab.active {
-  background: var(--color-bg-surface);
-  color: var(--color-word-blue);
+    background: var(--color-bg-surface);
+    color: var(--color-word-blue);
 }
 </style>

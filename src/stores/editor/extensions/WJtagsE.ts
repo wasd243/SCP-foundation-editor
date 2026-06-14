@@ -18,16 +18,21 @@ export const WJTagExtension = Extension.create({
             {
                 types: nativeAttributeTypes,
                 attributes: Object.fromEntries(
-                    preservedGlobalAttributes.map(name => [
+                    preservedGlobalAttributes.map((name) => [
                         name,
                         {
                             default: null,
                             parseHTML: (element: HTMLElement) =>
                                 name === "hidden"
-                                    ? (element.hasAttribute("hidden") ? "" : null)
+                                    ? element.hasAttribute("hidden")
+                                        ? ""
+                                        : null
                                     : element.getAttribute(name),
-                            renderHTML: (attributes: Record<string, string | null>) =>
-                                attributes[name] === null || attributes[name] === undefined
+                            renderHTML: (
+                                attributes: Record<string, string | null>,
+                            ) =>
+                                attributes[name] === null ||
+                                attributes[name] === undefined
                                     ? {}
                                     : { [name]: attributes[name] },
                         },

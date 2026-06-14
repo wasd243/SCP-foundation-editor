@@ -40,10 +40,10 @@ The editor exists to generate valid Wikidot Wikitext.
 
 When making changes:
 
-* preserve exporter behavior
-* preserve include behavior
-* preserve resource pack compatibility
-* preserve existing Wikitext output
+- preserve exporter behavior
+- preserve include behavior
+- preserve resource pack compatibility
+- preserve existing Wikitext output
 
 Never sacrifice export correctness for code elegance.
 
@@ -53,9 +53,9 @@ Never sacrifice export correctness for code elegance.
 
 Before adding a dependency:
 
-* check whether the functionality already exists
-* prefer standard library solutions
-* prefer existing project dependencies
+- check whether the functionality already exists
+- prefer standard library solutions
+- prefer existing project dependencies
 
 Avoid dependency bloat.
 
@@ -77,9 +77,9 @@ generator.rs
 
 Responsibilities:
 
-* variable_loader.rs loads mappings
-* search.rs performs lookups
-* generator.rs generates Wikitext
+- variable_loader.rs loads mappings
+- search.rs performs lookups
+- generator.rs generates Wikitext
 
 Do not merge responsibilities.
 
@@ -93,9 +93,9 @@ Do not move generation logic into search.rs.
 
 Use:
 
-* node attrs
-* node content
-* data-editor metadata
+- node attrs
+- node content
+- data-editor metadata
 
 when available.
 
@@ -109,10 +109,10 @@ Avoid HTML parsing whenever possible.
 
 Prefer:
 
-* functions
-* modules
-* enums
-* traits
+- functions
+- modules
+- enums
+- traits
 
 Avoid unnecessary abstractions.
 
@@ -126,9 +126,9 @@ Simple code is preferred over clever code.
 
 Keep existing:
 
-* logs
-* assertions
-* error messages
+- logs
+- assertions
+- error messages
 
 unless explicitly requested.
 

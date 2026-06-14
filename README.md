@@ -1,7 +1,8 @@
 # SCP Foundation Editor
+
 ### SCP 基金会中文文档编辑器
 
-### *版本重构中，计划基于TipTap制作新版本编辑器*
+### _版本重构中，计划基于TipTap制作新版本编辑器_
 
 > 一个用于编写 **SCP Wikidot 文档** 的辅助编辑器，旨在简化 SCP 文档的编辑流程并提升写作体验。
 
@@ -12,18 +13,20 @@
 ---
 
 # Import
+
 File/Folder name in code: `rust_engine`
 
-* **ftml** – By SCP Foundation community  
-https://github.com/scpwiki/ftml
+- **ftml** – By SCP Foundation community  
+  https://github.com/scpwiki/ftml
 
 ---
 
 # 引用的代码
+
 文件名或文件夹名：`rust_engine`
 
-* **ftml** – SCP 基金会社区  
-https://github.com/scpwiki/ftml
+- **ftml** – SCP 基金会社区  
+  https://github.com/scpwiki/ftml
 
 ---
 
@@ -40,7 +43,7 @@ https://github.com/scpwiki/ftml
 
 # 项目简介
 
-这是一个为了方便编写 **SCP 基金会中文文档** 而制作的编辑器。  
+这是一个为了方便编写 **SCP 基金会中文文档** 而制作的编辑器。
 
 本项目旨在通过自动化工具与可视化组件，帮助作者更高效地编写符合 **Wikidot 格式** 的 SCP 文档。
 
@@ -122,9 +125,11 @@ IMKCFRunLoopWakeUpReliable
 # 编辑功能
 
 ### 便捷编辑
+
 专为 SCP 文档格式优化的编辑体验。
 
 ### 代码反向解析
+
 可将部分 Wikidot 代码反解析为编辑内容（实验性功能）。
 
 ---

@@ -1,4 +1,4 @@
-import {getEditor} from "../../editor.ts";
+import { getEditor } from "../../editor.ts";
 
 export function toggleEditorBold() {
     getEditor()?.chain().focus().toggleMark("bold").run();
@@ -17,11 +17,21 @@ export function toggleEditorStrikethrough() {
 }
 
 export function toggleEditorSubscript() {
-    getEditor()?.chain().focus().unsetMark("superscript").toggleMark("subscript").run();
+    getEditor()
+        ?.chain()
+        .focus()
+        .unsetMark("superscript")
+        .toggleMark("subscript")
+        .run();
 }
 
 export function toggleEditorSuperscript() {
-    getEditor()?.chain().focus().unsetMark("subscript").toggleMark("superscript").run();
+    getEditor()
+        ?.chain()
+        .focus()
+        .unsetMark("subscript")
+        .toggleMark("superscript")
+        .run();
 }
 
 export function toggleEditorQuote() {
@@ -32,16 +42,12 @@ export function insertEditorTable() {
     getEditor()
         ?.chain()
         .focus()
-        .insertTable({rows: 2, cols: 2, withHeaderRow: true})
+        .insertTable({ rows: 2, cols: 2, withHeaderRow: true })
         .run();
 }
 
 export function insertEditorHorizontalRule() {
-    getEditor()
-        ?.chain()
-        .focus()
-        .setHorizontalRule()
-        .run();
+    getEditor()?.chain().focus().setHorizontalRule().run();
 }
 
 export function insertEditorCollapsible() {
@@ -51,12 +57,7 @@ export function insertEditorCollapsible() {
         return;
     }
 
-    editor
-        .chain()
-        .focus()
-        .setDetails()
-        .run();
+    editor.chain().focus().setDetails().run();
 }
 
-export function btnBasicIdleInterface() {
-}
+export function btnBasicIdleInterface() {}

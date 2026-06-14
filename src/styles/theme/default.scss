@@ -1,604 +1,623 @@
 // Mutable theme
 .editor-theme-default {
-  .ProseMirror {
-    font-family: "Times New Roman", "Noto Serif SC", serif;
-    font-size: 16px;
-    line-height: 1.65;
-    color: #111827;
+    .ProseMirror {
+        font-family: "Times New Roman", "Noto Serif SC", serif;
+        font-size: 16px;
+        line-height: 1.65;
+        color: #111827;
 
-    p {
-      margin: 0 0 0.8em;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      display: block;
-      width: 100%;
-      margin: 1em 0 0.5em;
-      font-family: "SimHei", "Microsoft YaHei", Arial, sans-serif;
-      font-weight: 700;
-      line-height: 1.25;
-      color: #000000;
-    }
-
-    h1 {
-      font-size: 2em;
-      color: var(--wikidot-red);
-    }
-
-    h2 {
-      font-size: 1.6em;
-    }
-
-    h3 {
-      font-size: 1.4em;
-    }
-
-    h4 {
-      font-size: 1.2em;
-    }
-
-    h5 {
-      font-size: 1.05em;
-    }
-
-    h6 {
-      font-size: 0.95em;
-    }
-
-    // Blockquote also needs support both `[[div class="blockquote"]]`, `[[blockquote]]` and `> `
-    blockquote {
-      margin: 0 0 0.8em;
-      padding: 12px 16px;
-      color: #000000;
-      background: #f3f4f6;
-      border: 1px dashed #000000;
-
-      p {
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-    }
-
-    // Code block
-    .wj-code {
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-      margin: 10px 0 14px;
-      padding: 0;
-      overflow: hidden;
-      color: #1f2937;
-      background: #f8fafc;
-      border: 1px solid #b8c2cc;
-      border-radius: 3px;
-      font-family: Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 13px;
-      line-height: 1.45;
-      white-space: pre;
-
-      code {
-        display: block;
-        min-width: 100%;
-        box-sizing: border-box;
-        padding: 12px 14px;
-        overflow-x: auto;
-        color: inherit;
-        background: transparent;
-        font: inherit;
-        white-space: pre;
-        tab-size: 4;
-      }
-
-      .hljs-keyword,
-      .hljs-selector-tag,
-      .hljs-title.function_ {
-        color: #7c2d12;
-      }
-
-      .hljs-string,
-      .hljs-attr,
-      .hljs-symbol {
-        color: #166534;
-      }
-
-      .hljs-number,
-      .hljs-literal,
-      .hljs-built_in {
-        color: #1d4ed8;
-      }
-
-      .hljs-comment {
-        color: #6b7280;
-        font-style: italic;
-      }
-
-      &.ProseMirror-selectednode {
-        outline: 2px solid var(--wikidot-red);
-      }
-    }
-
-    .wj-code-panel {
-      display: flex;
-      align-items: center;
-      min-height: 28px;
-      box-sizing: border-box;
-      padding: 4px 8px;
-      background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 100%);
-      border-bottom: 1px solid #b8c2cc;
-    }
-
-    .wj-code-language-input {
-      width: 160px;
-      max-width: 100%;
-      min-width: 0;
-      box-sizing: border-box;
-      padding: 2px 4px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: #333333;
-      font-family: "Microsoft YaHei", Arial, sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 16px;
-      outline: none;
-
-      &:focus {
-        border-color: #9ca3af;
-        background: #ffffff;
-      }
-    }
-
-    pre.wj-code {
-      &::before {
-        content: attr(data-language);
-        display: block;
-        min-height: 28px;
-        box-sizing: border-box;
-        padding: 6px 10px;
-        color: #333333;
-        background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 100%);
-        border-bottom: 1px solid #b8c2cc;
-        font-family: "Microsoft YaHei", Arial, sans-serif;
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 16px;
-        text-transform: lowercase;
-      }
-
-      &:not([data-language]) {
-        &::before {
-          content: "code";
-        }
-      }
-    }
-
-    // Table
-    table {
-      width: 100%;
-      margin: 0 0 0.8em;
-      border-collapse: collapse;
-      table-layout: fixed;
-    }
-
-    th, td {
-      min-width: 1em;
-      padding: 8px 10px;
-      color: #000000;
-      border: 1px solid #000000;
-      vertical-align: top;
-
-      p:last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    th {
-      background: #f3f4f6;
-      font-weight: 700;
-    }
-
-    // PM hard paragraphs represent Wikidot paragraph breaks; soft breaks stay inside the same line flow.
-    p {
-      margin: 0 0 1.2em;
-      padding: 0;
-      line-height: 1.2;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    br {
-      line-height: 1;
-    }
-
-    // Modify tiptap enter key rendering
-    .tiptap-invisible-character--paragraph::before {
-      content: "↵";
-    }
-
-    // Some parts of Collapsible is IMMUTABLE
-    [data-type="details"] {
-      > button {
-        display: inline-flex;
-        flex: 0 0 auto;
-        align-items: center;
-        justify-content: center;
-        width: 1.25em;
-        height: 1.25em;
-        margin: 0 6px 0 0;
-        padding: 0;
-        border: 0;
-        background: transparent;
-        color: var(--wikidot-red);
-        font: inherit;
-        cursor: pointer;
-        user-select: none;
-
-        &::before {
-          content: "▸";
-        }
-      }
-
-      &.is-open {
-        > button {
-          &::before {
-            content: "▾";
-          }
+        p {
+            margin: 0 0 0.8em;
         }
 
-        [data-type="detailsContent"] {
-          display: block;
-        }
-      }
-
-      > div {
-        display: block;
-        flex: 1 1 auto;
-        min-width: 0;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-        text-align: inherit;
-      }
-    }
-
-    [data-type="detailsSummary"],
-    summary {
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      min-width: 1em;
-      min-height: 1.2em;
-      font-weight: 700;
-      color: var(--wikidot-red);
-      cursor: pointer;
-    }
-
-    [data-type="detailsContent"],
-    details > div[data-type="detailsContent"] {
-      margin-left: calc(-1.25em - 6px);
-      width: calc(100% + 1.25em + 6px);
-      max-width: calc(100% + 1.25em + 6px);
-      box-sizing: border-box;
-      padding-left: 0;
-      border-left: 2px solid #dddddd;
-    }
-
-    summary {
-      &::marker {
-        display: none;
-      }
-
-      &::-webkit-details-marker {
-        display: none;
-      }
-    }
-
-    // Tabview part are all mutable
-    .wj-tabs {
-      display: block;
-      width: 100%;
-      min-width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-      resize: none;
-      margin: 10px 0 14px;
-      border: 1px solid #8b8b8b;
-      background: #f7f7f7;
-    }
-
-    .wj-tabs-button-list {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-      box-sizing: border-box;
-      margin: -1px -1px 0;
-      border-bottom: 5px solid #333333;
-      background: #ffffff;
-    }
-
-    .wj-tabs-button {
-      appearance: none;
-      display: inline-flex;
-      align-items: center;
-      min-width: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      min-height: 26px;
-      padding: 4px 17px 5px;
-      box-sizing: border-box;
-      border: 1px solid #9f9f9f;
-      border-bottom: 0;
-      background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 48%, #d2d2d2 100%);
-      color: #202020;
-      font-family: "Microsoft YaHei", Arial, sans-serif;
-      font-size: 13px;
-      font-weight: bold;
-      line-height: 1.15;
-      cursor: default;
-      user-select: none;
-
-      + .wj-tabs-button {
-        margin-left: -1px;
-      }
-
-      &[aria-selected="true"] {
-        border-color: #5f0707;
-        background: linear-gradient(to bottom, #9a1111 0%, #800707 100%);
-        color: #ffffff;
-      }
-    }
-
-    .wj-tabs-button-label {
-      display: inline-block;
-      max-width: 100%;
-      min-width: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      user-select: text;
-      cursor: text;
-    }
-
-    .wj-tabs-panel-list {
-      width: 100%;
-      min-height: 67px;
-      padding: 16px 7px;
-      box-sizing: border-box;
-      background: #f7f7f7;
-    }
-
-    .wj-tabs-panel {
-      &[hidden] {
-        display: none;
-      }
-
-      p {
-        margin: 0;
-        min-height: 1.35em;
-        line-height: 1.35;
-      }
-    }
-
-    // Note part are all mutable
-    .wj-note {
-      margin: 1rem auto;
-      padding: 1rem;
-
-      border: 1px solid black;
-      background: transparent;
-
-      text-align: center;
-
-      max-width: 80%;
-    }
-
-    // Part of image are IMMUTABLE
-    div {
-      &.image-container {
-        &[data-editor-include="component:image-block"] {
-          box-sizing: border-box;
-          position: relative;
-          overflow: hidden;
-
-          > img {
-            box-sizing: border-box;
-            width: 100%;
-            max-width: 100%;
-          }
-
-          .scp-image-caption {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             display: block;
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1;
-            box-sizing: border-box;
             width: 100%;
-            min-width: 0;
-            max-width: 100%;
-            clear: none;
-            float: none;
-            margin: 0;
-            padding: 0.35em 0.5em;
-            background: rgba(255, 255, 255, 0.9);
-            border: var(--wikidot-gray) solid 1px;
-          }
+            margin: 1em 0 0.5em;
+            font-family: "SimHei", "Microsoft YaHei", Arial, sans-serif;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #000000;
         }
-      }
 
-      // This hover mark `div` blocks
-      &:hover {
-        border: var(--wikidot-red) solid 1px;
-        border-radius: 5px;
-      }
+        h1 {
+            font-size: 2em;
+            color: var(--wikidot-red);
+        }
 
-      // This selectednode mark `div` when user select it
-      &.ProseMirror-selectednode {
-        border: var(--color-word-blue) solid 1px;
-        border-radius: 5px;
-      }
+        h2 {
+            font-size: 1.6em;
+        }
+
+        h3 {
+            font-size: 1.4em;
+        }
+
+        h4 {
+            font-size: 1.2em;
+        }
+
+        h5 {
+            font-size: 1.05em;
+        }
+
+        h6 {
+            font-size: 0.95em;
+        }
+
+        // Blockquote also needs support both `[[div class="blockquote"]]`, `[[blockquote]]` and `> `
+        blockquote {
+            margin: 0 0 0.8em;
+            padding: 12px 16px;
+            color: #000000;
+            background: #f3f4f6;
+            border: 1px dashed #000000;
+
+            p {
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        // Code block
+        .wj-code {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            margin: 10px 0 14px;
+            padding: 0;
+            overflow: hidden;
+            color: #1f2937;
+            background: #f8fafc;
+            border: 1px solid #b8c2cc;
+            border-radius: 3px;
+            font-family: Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.45;
+            white-space: pre;
+
+            code {
+                display: block;
+                min-width: 100%;
+                box-sizing: border-box;
+                padding: 12px 14px;
+                overflow-x: auto;
+                color: inherit;
+                background: transparent;
+                font: inherit;
+                white-space: pre;
+                tab-size: 4;
+            }
+
+            // Some simple code highlight
+            // I don't think someone will need it, but I made it huh
+            .hljs-keyword,
+            .hljs-selector-tag,
+            .hljs-title.function_ {
+                color: #7c2d12;
+            }
+
+            .hljs-string,
+            .hljs-attr,
+            .hljs-symbol {
+                color: #166534;
+            }
+
+            .hljs-number,
+            .hljs-literal,
+            .hljs-built_in {
+                color: #1d4ed8;
+            }
+
+            .hljs-comment {
+                color: #6b7280;
+                font-style: italic;
+            }
+
+            &.ProseMirror-selectednode {
+                outline: 2px solid var(--wikidot-red);
+            }
+        }
+
+        .wj-code-panel {
+            display: flex;
+            align-items: center;
+            min-height: 28px;
+            box-sizing: border-box;
+            padding: 4px 8px;
+            background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 100%);
+            border-bottom: 1px solid #b8c2cc;
+        }
+
+        .wj-code-language-input {
+            width: 160px;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            padding: 2px 4px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: #333333;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 16px;
+            outline: none;
+
+            &:focus {
+                border-color: #9ca3af;
+                background: #ffffff;
+            }
+        }
+
+        // This for wj-code block `language` edit area
+        pre.wj-code {
+            &::before {
+                content: attr(data-language);
+                display: block;
+                min-height: 28px;
+                box-sizing: border-box;
+                padding: 6px 10px;
+                color: #333333;
+                background: linear-gradient(
+                    to bottom,
+                    #ffffff 0%,
+                    #e6e6e6 100%
+                );
+                border-bottom: 1px solid #b8c2cc;
+                font-family: "Microsoft YaHei", Arial, sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                line-height: 16px;
+                text-transform: lowercase;
+            }
+
+            &:not([data-language]) {
+                &::before {
+                    content: "code";
+                }
+            }
+        }
+
+        // Table
+        table {
+            width: 100%;
+            margin: 0 0 0.8em;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th,
+        td {
+            min-width: 1em;
+            padding: 8px 10px;
+            color: #000000;
+            border: 1px solid #000000;
+            vertical-align: top;
+
+            p:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        th {
+            background: #f3f4f6;
+            font-weight: 700;
+        }
+
+        // PM hard paragraphs represent Wikidot paragraph breaks; soft breaks stay inside the same line flow.
+        p {
+            margin: 0 0 1.2em;
+            padding: 0;
+            line-height: 1.2;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        br {
+            line-height: 1;
+        }
+
+        // Modify tiptap enter key rendering
+        .tiptap-invisible-character--paragraph::before {
+            content: "↵";
+        }
+
+        // Some parts of Collapsible is IMMUTABLE
+        // This details part are all mutable, used to define "details" rendering
+        [data-type="details"] {
+            > button {
+                display: inline-flex;
+                flex: 0 0 auto;
+                align-items: center;
+                justify-content: center;
+                width: 1.25em;
+                height: 1.25em;
+                margin: 0 6px 0 0;
+                padding: 0;
+                border: 0;
+                background: transparent;
+                color: var(--wikidot-red);
+                font: inherit;
+                cursor: pointer;
+                user-select: none;
+
+                &::before {
+                    content: "▸";
+                }
+            }
+
+            &.is-open {
+                > button {
+                    &::before {
+                        content: "▾";
+                    }
+                }
+
+                [data-type="detailsContent"] {
+                    display: block;
+                }
+            }
+
+            > div {
+                display: block;
+                flex: 1 1 auto;
+                min-width: 0;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                text-align: inherit;
+            }
+        }
+
+        [data-type="detailsSummary"],
+        summary {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            min-width: 1em;
+            min-height: 1.2em;
+            font-weight: 700;
+            color: var(--wikidot-red);
+            cursor: pointer;
+        }
+
+        [data-type="detailsContent"],
+        details > div[data-type="detailsContent"] {
+            margin-left: calc(-1.25em - 6px);
+            width: calc(100% + 1.25em + 6px);
+            max-width: calc(100% + 1.25em + 6px);
+            box-sizing: border-box;
+            padding-left: 0;
+            border-left: 2px solid #dddddd;
+        }
+
+        summary {
+            &::marker {
+                display: none;
+            }
+
+            &::-webkit-details-marker {
+                display: none;
+            }
+        }
+
+        // Tabview part are all mutable
+        .wj-tabs {
+            display: block;
+            width: 100%;
+            min-width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            resize: none;
+            margin: 10px 0 14px;
+            border: 1px solid #8b8b8b;
+            background: #f7f7f7;
+        }
+
+        .wj-tabs-button-list {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            box-sizing: border-box;
+            margin: -1px -1px 0;
+            border-bottom: 5px solid #333333;
+            background: #ffffff;
+        }
+
+        .wj-tabs-button {
+            appearance: none;
+            display: inline-flex;
+            align-items: center;
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            min-height: 26px;
+            padding: 4px 17px 5px;
+            box-sizing: border-box;
+            border: 1px solid #9f9f9f;
+            border-bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                #ffffff 0%,
+                #e6e6e6 48%,
+                #d2d2d2 100%
+            );
+            color: #202020;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            line-height: 1.15;
+            cursor: default;
+            user-select: none;
+
+            + .wj-tabs-button {
+                margin-left: -1px;
+            }
+
+            &[aria-selected="true"] {
+                border-color: #5f0707;
+                background: linear-gradient(
+                    to bottom,
+                    #9a1111 0%,
+                    #800707 100%
+                );
+                color: #ffffff;
+            }
+        }
+
+        .wj-tabs-button-label {
+            display: inline-block;
+            max-width: 100%;
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            user-select: text;
+            cursor: text;
+        }
+
+        .wj-tabs-panel-list {
+            width: 100%;
+            min-height: 67px;
+            padding: 16px 7px;
+            box-sizing: border-box;
+            background: #f7f7f7;
+        }
+
+        .wj-tabs-panel {
+            &[hidden] {
+                display: none;
+            }
+
+            p {
+                margin: 0;
+                min-height: 1.35em;
+                line-height: 1.35;
+            }
+        }
+
+        // Note part are all mutable
+        .wj-note {
+            margin: 1rem auto;
+            padding: 1rem;
+
+            border: 1px solid black;
+            background: transparent;
+
+            text-align: center;
+
+            max-width: 80%;
+        }
+
+        // Part of image are IMMUTABLE
+        div {
+            &.image-container {
+                &[data-editor-include="component:image-block"] {
+                    box-sizing: border-box;
+                    position: relative;
+                    overflow: hidden;
+
+                    > img {
+                        box-sizing: border-box;
+                        width: 100%;
+                        max-width: 100%;
+                    }
+
+                    .scp-image-caption {
+                        display: block;
+                        position: absolute;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                        z-index: 1;
+                        box-sizing: border-box;
+                        width: 100%;
+                        min-width: 0;
+                        max-width: 100%;
+                        clear: none;
+                        float: none;
+                        margin: 0;
+                        padding: 0.35em 0.5em;
+                        background: rgba(255, 255, 255, 0.9);
+                        border: var(--wikidot-gray) solid 1px;
+                    }
+                }
+            }
+
+            // This marks `div` blocks that don't match any specific style.
+            // Uses outset border on hover/selected/focus-within for visibility.
+            &.ProseMirror-selectednode,
+            &:focus-within,
+            &:hover {
+                border: var(--color-word-blue) solid 1px;
+                border-radius: 5px;
+            }
+        }
+
+        // User and User with img part are all mutable
+        .wj-user {
+            color: var(--wikidot-red);
+            border: var(--wikidot-gray) solid 1px;
+            border-radius: 3px;
+            background: var(--color-word-blue-light);
+        }
+
+        .wj-user-with-img {
+            color: var(--wikidot-red);
+            border: var(--wikidot-gray) solid 1px;
+            border-radius: 3px;
+            background: var(--color-word-blue-light);
+            min-width: 100px;
+
+            &::before {
+                content: " :-( ";
+                border: black solid 1px;
+                border-radius: 3px;
+            }
+        }
     }
 
-    // User and User with img part are all mutable
-    .wj-user {
-      color: var(--wikidot-red);
-      border: var(--wikidot-gray) solid 1px;
-      border-radius: 3px;
-      background: var(--color-word-blue-light);
+    // =============================
+    // Wikidot-style footnote
+    // =============================
+    .wj-footnote-ref {
+        position: relative;
+        display: inline-block;
+        color: #000000;
+        cursor: pointer;
+        font-size: var(--wj-footnote-ref-font-size, 12px);
+        font-weight: normal;
+        font-style: normal;
+        line-height: 1;
+        vertical-align: super;
+
+        [style*="font-size"] {
+            font-size: 1em !important;
+        }
+
+        &:hover,
+        &:focus-within {
+            .wj-footnote-ref-tooltip {
+                opacity: 1;
+            }
+        }
     }
 
-    .wj-user-with-img {
-      color: var(--wikidot-red);
-      border: var(--wikidot-gray) solid 1px;
-      border-radius: 3px;
-      background: var(--color-word-blue-light);
-      min-width: 100px;
+    .wj-footnote-ref-marker {
+        display: inline;
+        color: var(--wikidot-red);
+        background: transparent;
+        border: none;
+        font-size: 1em;
+        font-weight: normal;
+        font-style: normal;
+        line-height: 1;
 
-      &::before {
-        content: " :-( ";
-        border: black solid 1px;
-        border-radius: 3px;
-      }
+        &::after {
+            content: ".";
+        }
     }
 
-  }
-
-  // =============================
-  // Wikidot-style footnote
-  // =============================
-  .wj-footnote-ref {
-    position: relative;
-    display: inline-block;
-    color: #000000;
-    cursor: pointer;
-    font-size: var(--wj-footnote-ref-font-size, 12px);
-    font-weight: normal;
-    font-style: normal;
-    line-height: 1;
-    vertical-align: super;
-
-    [style*="font-size"] {
-      font-size: 1em !important;
+    .wj-footnote-ref-tooltip {
+        position: absolute;
+        left: 50%;
+        bottom: 1.6em;
+        z-index: 20;
+        display: block;
+        min-width: 500px;
+        max-width: 1000px;
+        padding: 10px 12px;
+        box-sizing: border-box;
+        border: 1px solid var(--wikidot-red);
+        background: #ffffff;
+        color: #000000;
+        font-size: 14px;
+        line-height: 1.55;
+        text-align: left;
+        white-space: normal;
+        vertical-align: baseline;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(-50%);
     }
 
-    &:hover,
-    &:focus-within {
-      .wj-footnote-ref-tooltip {
-        opacity: 1;
-      }
-    }
-  }
-
-  .wj-footnote-ref-marker {
-    display: inline;
-    color: var(--wikidot-red);
-    background: transparent;
-    border: none;
-    font-size: 1em;
-    font-weight: normal;
-    font-style: normal;
-    line-height: 1;
-
-    &::after {
-      content: ".";
-    }
-  }
-
-  .wj-footnote-ref-tooltip {
-    position: absolute;
-    left: 50%;
-    bottom: 1.6em;
-    z-index: 20;
-    display: block;
-    min-width: 500px;
-    max-width: 1000px;
-    padding: 10px 12px;
-    box-sizing: border-box;
-    border: 1px solid var(--wikidot-red);
-    background: #ffffff;
-    color: #000000;
-    font-size: 14px;
-    line-height: 1.55;
-    text-align: left;
-    white-space: normal;
-    vertical-align: baseline;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(-50%);
-  }
-
-  .wj-footnote-ref-tooltip-label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 14px;
-    line-height: 1.35;
-    font-weight: bold;
-    color: var(--wikidot-red);
-  }
-
-  .wj-footnote-ref-contents {
-    display: block;
-    min-width: 500px;
-    max-width: 1000px;
-  }
-
-  .wj-footnote-list {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 16px 0 0;
-    padding: 8px 0 0;
-    background: transparent;
-    border: none;
-    color: #000000;
-    font-size: 13px;
-    line-height: 1.35;
-    border-top: var(--wikidot-red) solid 1px;
-
-    .wj-title {
-      color: #000000;
-      font-weight: bold;
-      margin-bottom: 4px;
+    .wj-footnote-ref-tooltip-label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        line-height: 1.35;
+        font-weight: bold;
+        color: var(--wikidot-red);
     }
 
-    ol {
-      margin: 0;
-      padding-left: 24px;
-      list-style: none;
+    .wj-footnote-ref-contents {
+        display: block;
+        min-width: 500px;
+        max-width: 1000px;
     }
-  }
 
-  .wj-footnote-list-item {
-    display: block;
-    color: #000000;
-    background: transparent;
-    border: none;
-  }
+    .wj-footnote-list {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 16px 0 0;
+        padding: 8px 0 0;
+        background: transparent;
+        border: none;
+        color: #000000;
+        font-size: 13px;
+        line-height: 1.35;
+        border-top: var(--wikidot-red) solid 1px;
 
-  .wj-footnote-list-item-marker {
-    display: inline;
-    color: #000000;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font: inherit;
-  }
+        .wj-title {
+            color: #000000;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
 
-  .wj-footnote-sep {
-    color: #000000;
-  }
-
-  .wj-footnote-list-item-contents {
-    color: #000000;
-
-    &:empty {
-      display: inline-block;
-      min-width: 1ch;
-      min-height: 1em;
+        ol {
+            margin: 0;
+            padding-left: 24px;
+            list-style: none;
+        }
     }
-  }
+
+    .wj-footnote-list-item {
+        display: block;
+        color: #000000;
+        background: transparent;
+        border: none;
+    }
+
+    .wj-footnote-list-item-marker {
+        display: inline;
+        color: #000000;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font: inherit;
+    }
+
+    .wj-footnote-sep {
+        color: #000000;
+    }
+
+    .wj-footnote-list-item-contents {
+        color: #000000;
+
+        &:empty {
+            display: inline-block;
+            min-width: 1ch;
+            min-height: 1em;
+        }
+    }
 }

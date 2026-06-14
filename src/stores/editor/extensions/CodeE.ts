@@ -1,4 +1,4 @@
-import {mergeAttributes, undoInputRule} from "@tiptap/core";
+import { mergeAttributes, undoInputRule } from "@tiptap/core";
 import { CodeBlockLowlight } from "@tiptap/extension-code-block-lowlight";
 import { common, createLowlight } from "lowlight";
 
@@ -12,17 +12,20 @@ function normalizeLanguage(language: unknown) {
 }
 
 function getLanguageFromClassList(element: Element, prefix: string) {
-    const languageClass = Array.from(element.classList).find(className =>
+    const languageClass = Array.from(element.classList).find((className) =>
         className.startsWith(prefix),
     );
 
     return normalizeLanguage(languageClass?.slice(prefix.length));
 }
 
-function setCodeBlockLanguageAttributes(element: HTMLElement, language: string | null) {
+function setCodeBlockLanguageAttributes(
+    element: HTMLElement,
+    language: string | null,
+) {
     Array.from(element.classList)
-        .filter(className => className.startsWith("wj-language-"))
-        .forEach(className => element.classList.remove(className));
+        .filter((className) => className.startsWith("wj-language-"))
+        .forEach((className) => element.classList.remove(className));
 
     element.classList.add("wj-code");
 
@@ -34,7 +37,10 @@ function setCodeBlockLanguageAttributes(element: HTMLElement, language: string |
     }
 }
 
-function setCodeLanguageAttributes(element: HTMLElement, language: string | null) {
+function setCodeLanguageAttributes(
+    element: HTMLElement,
+    language: string | null,
+) {
     element.className = "";
 
     if (language) {
@@ -47,12 +53,19 @@ export const CodeBlockLowlightExtension = CodeBlockLowlight.extend({
         return {
             language: {
                 default: this.options.defaultLanguage,
-                parseHTML: element => {
+                parseHTML: (element) => {
                     const codeElement = element.firstElementChild;
 
                     return (
-                        normalizeLanguage(element.getAttribute("data-language")) ??
-                        (codeElement ? getLanguageFromClassList(codeElement, languageClassPrefix) : null)
+                        normalizeLanguage(
+                            element.getAttribute("data-language"),
+                        ) ??
+                        (codeElement
+                            ? getLanguageFromClassList(
+                                  codeElement,
+                                  languageClassPrefix,
+                              )
+                            : null)
                     );
                 },
                 rendered: false,
@@ -67,16 +80,20 @@ export const CodeBlockLowlightExtension = CodeBlockLowlight.extend({
             : {};
         const blockAttributes = language
             ? {
-                class: `wj-code wj-language-${language}`,
-                "data-language": language,
-            }
+                  class: `wj-code wj-language-${language}`,
+                  "data-language": language,
+              }
             : {
-                class: "wj-code",
-            };
+                  class: "wj-code",
+              };
 
         return [
             "pre",
-            mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, blockAttributes),
+            mergeAttributes(
+                this.options.HTMLAttributes,
+                HTMLAttributes,
+                blockAttributes,
+            ),
             ["code", codeAttributes, 0],
         ];
     },
@@ -140,12 +157,14 @@ export const CodeBlockLowlightExtension = CodeBlockLowlight.extend({
             return {
                 dom,
                 contentDOM,
-                stopEvent: event => event.target === languageInput,
-                update: updatedNode => {
+                stopEvent: (event) => event.target === languageInput,
+                update: (updatedNode) => {
                     if (updatedNode.type !== currentNode.type) return false;
 
                     currentNode = updatedNode;
-                    updateLanguage(normalizeLanguage(updatedNode.attrs.language));
+                    updateLanguage(
+                        normalizeLanguage(updatedNode.attrs.language),
+                    );
                     return true;
                 },
             };

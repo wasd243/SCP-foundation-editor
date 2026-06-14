@@ -21,61 +21,61 @@ import Hr from "./Basic/Hr.vue";
 import Collapsible from "./Basic/Collapsible.vue";
 
 function toggleBold() {
-  toggleBoldEditor();
+    toggleBoldEditor();
 }
 
 function toggleItalic() {
-  toggleItalicEditor();
+    toggleItalicEditor();
 }
 
 function toggleUnderline() {
-  toggleUnderlineEditor();
+    toggleUnderlineEditor();
 }
 
 function toggleStrikethrough() {
-  toggleStrikethroughEditor();
+    toggleStrikethroughEditor();
 }
 
 function toggleSubscript() {
-  toggleSubscriptEditor();
+    toggleSubscriptEditor();
 }
 
 function toggleSuperscript() {
-  toggleSuperscriptEditor();
+    toggleSuperscriptEditor();
 }
 
 function toggleQuote() {
-  toggleQuoteEditor();
+    toggleQuoteEditor();
 }
 
 function insertTable() {
-  insertTableEditor();
+    insertTableEditor();
 }
 
 function insertHorizontalRule() {
-  insertHorizontalRuleEditor();
+    insertHorizontalRuleEditor();
 }
 
 function insertCollapsible() {
-  insertCollapsibleEditor();
+    insertCollapsibleEditor();
 }
 
 function basicIdleInterface() {}
 
 defineExpose({
-  basicIdleInterface,
+    basicIdleInterface,
 });
 </script>
 
 <template>
-  <Bold @toggle="toggleBold"/>
-  <Italic @toggle="toggleItalic"/>
-  <Underline @toggle="toggleUnderline"/>
-  <Strikethrough @toggle="toggleStrikethrough"/>
-  <Sub @toggle="toggleSubscript"/>
-  <Sup @toggle="toggleSuperscript"/>
-  <Quote @toggle="toggleQuote"/>
-  <Table @insert="insertTable"/>
-  <Hr @insert="insertHorizontalRule"/>
-  <Collapsible @insert="insertCollapsible"/>
+    <Bold @toggle="toggleBold" />
+    <Italic @toggle="toggleItalic" />
+    <Underline @toggle="toggleUnderline" />
+    <Strikethrough @toggle="toggleStrikethrough" />
+    <Sub @toggle="toggleSubscript" />
+    <Sup @toggle="toggleSuperscript" />
+    <Quote @toggle="toggleQuote" />
+    <Table @insert="insertTable" />
+    <Hr @insert="insertHorizontalRule" />
+    <Collapsible @insert="insertCollapsible" />
 </template>

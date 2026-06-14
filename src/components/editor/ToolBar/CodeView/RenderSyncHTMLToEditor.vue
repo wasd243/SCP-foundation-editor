@@ -4,16 +4,16 @@ import { onBeforeUnmount, onMounted } from "vue";
 import { getEditor } from "../../../../stores/editor.ts";
 
 function renderSyncHTMLToEditor(event: Event) {
-  const html = (event as CustomEvent<string>).detail;
-  getEditor()?.commands.setContent(html);
+    const html = (event as CustomEvent<string>).detail;
+    getEditor()?.commands.setContent(html);
 }
 
 onMounted(() => {
-  window.addEventListener("code-view-parser-html", renderSyncHTMLToEditor);
+    window.addEventListener("code-view-parser-html", renderSyncHTMLToEditor);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("code-view-parser-html", renderSyncHTMLToEditor);
+    window.removeEventListener("code-view-parser-html", renderSyncHTMLToEditor);
 });
 </script>
 

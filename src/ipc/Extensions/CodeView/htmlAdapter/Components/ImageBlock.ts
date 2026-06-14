@@ -1,45 +1,57 @@
 import type { DOMReplaceContext, DOMReplacer } from "../scanDOMandReplace";
 
 const alignmentClassMap = new Map([
-  ["block-left", "alignleft"],
-  ["block-right", "alignright"],
-  ["block-center", "aligncenter"],
+    ["block-left", "alignleft"],
+    ["block-right", "alignright"],
+    ["block-center", "aligncenter"],
 ]);
-const plainImageAlignmentClassNames = ["alignleft", "alignright", "aligncenter"];
+const plainImageAlignmentClassNames = [
+    "alignleft",
+    "alignright",
+    "aligncenter",
+];
 function replaceImageBlock({ element }: DOMReplaceContext): Node | null {
-  if (!(element instanceof HTMLDivElement)) return null;
-  if (!element.classList.contains("scp-image-block")) return null;
+    if (!(element instanceof HTMLDivElement)) return null;
+    if (!element.classList.contains("scp-image-block")) return null;
 
-  const alignmentEntry = Array.from(alignmentClassMap.entries())
-    .find(([blockClass]) => element.classList.contains(blockClass));
+    const alignmentEntry = Array.from(alignmentClassMap.entries()).find(
+        ([blockClass]) => element.classList.contains(blockClass),
+    );
 
-  if (!alignmentEntry) return null;
+    if (!alignmentEntry) return null;
 
-  const [, alignClass] = alignmentEntry;
+    const [, alignClass] = alignmentEntry;
 
-  // Future adapters may need to convert block-left/right/center outside scp-image-block.
-  element.className = `image-container ${alignClass}`;
-  element.setAttribute("contenteditable", "false");
-  element.setAttribute("draggable", "true");
-  element.querySelectorAll(".scp-image-caption").forEach(caption => {
-    caption.classList.add(alignClass);
-    caption.setAttribute("contenteditable", "true");
-  });
+    // Future adapters may need to convert block-left/right/center outside scp-image-block.
+    element.className = `image-container ${alignClass}`;
+    element.setAttribute("contenteditable", "false");
+    element.setAttribute("draggable", "true");
+    element.querySelectorAll(".scp-image-caption").forEach((caption) => {
+        caption.classList.add(alignClass);
+        caption.setAttribute("contenteditable", "true");
+    });
 
-  return element;
+    return element;
 }
 
-function markPlainImageContainerNoResize({ element }: DOMReplaceContext): Node | null {
-  if (!(element instanceof HTMLDivElement)) return null;
-  if (!element.classList.contains("image-container")) return null;
-  if (element.hasAttribute("data-editor-include")) return null;
-  if (!plainImageAlignmentClassNames.some(className => element.classList.contains(className))) return null;
+function markPlainImageContainerNoResize({
+    element,
+}: DOMReplaceContext): Node | null {
+    if (!(element instanceof HTMLDivElement)) return null;
+    if (!element.classList.contains("image-container")) return null;
+    if (element.hasAttribute("data-editor-include")) return null;
+    if (
+        !plainImageAlignmentClassNames.some((className) =>
+            element.classList.contains(className),
+        )
+    )
+        return null;
 
-  element.setAttribute("data-editor-no-resize", "true");
-  return element;
+    element.setAttribute("data-editor-no-resize", "true");
+    return element;
 }
 
 export const imageBlockReplacer: DOMReplacer[] = [
-  replaceImageBlock,
-  markPlainImageContainerNoResize,
+    replaceImageBlock,
+    markPlainImageContainerNoResize,
 ];

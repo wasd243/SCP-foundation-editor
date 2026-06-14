@@ -6,29 +6,24 @@ import { setColorPickerEditorColor } from "../../../../stores/btnToolBar/btnForm
 const opened = ref(false);
 
 function togglePicker() {
-  opened.value = !opened.value;
+    opened.value = !opened.value;
 }
 
 function setTextColor(color: string) {
-  setColorPickerEditorColor(color);
+    setColorPickerEditorColor(color);
 }
 
 function colorIdleInterface() {}
 
 defineExpose({
-  colorIdleInterface,
+    colorIdleInterface,
 });
 </script>
 
 <template>
-  <div class="color-button-wrapper">
-    <button
-        class="format-color-button"
-        @click="togglePicker"
-    >
-      A
-    </button>
+    <div class="color-button-wrapper">
+        <button class="format-color-button" @click="togglePicker">A</button>
 
-    <ColorPicker v-if="opened" @change-color="setTextColor" />
-  </div>
+        <ColorPicker v-if="opened" @change-color="setTextColor" />
+    </div>
 </template>

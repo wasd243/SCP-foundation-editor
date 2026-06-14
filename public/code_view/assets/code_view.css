@@ -1,5 +1,7 @@
 /* Base background */
-html, body, #editor-container {
+html,
+body,
+#editor-container {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -13,11 +15,10 @@ html, body, #editor-container {
 }
 
 .cm-scroller {
-    font-family: 'Cascadia Code', 'Consolas', monospace;
+    font-family: "Cascadia Code", "Consolas", monospace;
     font-size: 14px;
     line-height: 1.6;
 }
-
 
 /* Forced highlight classes */
 .cm-editor .cm-header {
@@ -26,13 +27,11 @@ html, body, #editor-container {
     font-size: 1.2em;
 }
 
-
 /* Bold */
 .cm-editor .cm-strong {
     color: #abb2bf;
     font-weight: bold;
 }
-
 
 /* Italic */
 .cm-editor .cm-em {
@@ -40,20 +39,17 @@ html, body, #editor-container {
     font-style: italic;
 }
 
-
 /* Underline */
 .cm-editor .cm-underline {
     color: #abb2bf;
     text-decoration: underline;
 }
 
-
 /* Strikethrough */
 .cm-editor .cm-strikethrough {
     color: #abb2bf;
     text-decoration: line-through;
 }
-
 
 /* Superscript */
 .cm-editor .cm-sup {
@@ -62,7 +58,6 @@ html, body, #editor-container {
     vertical-align: super;
 }
 
-
 /* Subscript */
 .cm-editor .cm-sub {
     color: #abb2bf;
@@ -70,19 +65,16 @@ html, body, #editor-container {
     vertical-align: sub;
 }
 
-
 /* original_Text */
 .cm-editor .cm-original-text {
     color: #abb2bf;
     font-weight: normal !important;
 }
 
-
 /* div */
 .cm-editor .cm-div {
-    color: #E8BF6A;
+    color: #e8bf6a;
 }
-
 
 /* collapsible */
 .cm-editor .cm-collapsible {
@@ -90,93 +82,83 @@ html, body, #editor-container {
     font-style: italic;
 }
 
-
 /* code */
 .cm-editor .cm-code {
-    color: #61AFEF;
+    color: #61afef;
 }
-
 
 /* footnoteblock */
 .cm-editor .cm-footnote-block {
-    color: #E8BF6A;
+    color: #e8bf6a;
 }
 
 /* monospace */
 .cm-editor .cm-monospace {
-    color: #759DCB;
+    color: #759dcb;
 }
-
 
 /* link */
 .cm-editor .cm-link {
-    color: #61AFEF;
+    color: #61afef;
     font-style: italic;
     text-decoration: underline;
     font-weight: lighter;
 }
 
-
 /* footnote */
 .cm-editor .cm-footnote {
-    color: #E8BF6A;
+    color: #e8bf6a;
     font-weight: lighter;
 }
 
-
 /* @@@@ */
 .cm-editor .cm-newline {
-    color: #C678DD;
+    color: #c678dd;
     font-weight: bold;
 }
 
-
 /* include */
 .cm-editor .cm-include {
-    color: #61AFEF;
+    color: #61afef;
 }
 .cm-editor .cm-include-1 {
-    color: #C678DD;
+    color: #c678dd;
 }
 .cm-editor .cm-include-2 {
-    color: #E8BF6A;
+    color: #e8bf6a;
 }
 .cm-editor .cm-include-3 {
-    color: #98C379;
+    color: #98c379;
 }
-
 
 /* hr */
 .cm-editor .cm-hr {
-    color: #E8BF6A;
+    color: #e8bf6a;
 }
 
 /* -------------------- table styling -------------------- */
 .cm-editor .cm-table-header {
-    color: #FFC66D;
+    color: #ffc66d;
     font-weight: bold;
 }
 .cm-editor .cm-table {
-    color: #FFC66D;
+    color: #ffc66d;
     font-weight: normal;
 }
 /* -------------------- table styling -------------------- */
 
-
 /* image */
 .cm-editor .cm-image {
-    color: #E8BF6A;
+    color: #e8bf6a;
     font-style: italic;
 }
-
 
 /* quote */
 .cm-editor .cm-quote {
-    color: #98C379;
+    color: #98c379;
     font-style: italic;
     font-weight: bold;
 }
-
 
 /* tabview */
 .cm-editor .cm-tabview {
@@ -185,50 +167,43 @@ html, body, #editor-container {
     font-weight: normal;
 }
 .cm-editor .cm-tab {
-    color: #E06C75;
+    color: #e06c75;
     font-style: normal;
 }
 
-
 /* module */
 .cm-editor .cm-module {
-    color: #61AFEF;
+    color: #61afef;
     font-style: italic;
     font-weight: bold;
 }
-
 
 /* html */
 .cm-editor .cm-html {
-    color: #FFC66D;
+    color: #ffc66d;
     font-style: italic;
     font-weight: bold;
 }
 
-
 /* components */
 .cm-editor .cm-components {
-    color: #61AFEF;
+    color: #61afef;
 }
-
 
 /* = */
 .cm-editor .cm-equal {
     color: orange;
 }
 
-
 /* | */
 .cm-editor .cm-line-up {
-    color: #C678DD;
+    color: #c678dd;
 }
-
 
 /* numbers */
 .cm-editor .cm-num {
-    color: #E06C75;
+    color: #e06c75;
 }
-
 
 /* user */
 .cm-editor .cm-user {
@@ -237,113 +212,73 @@ html, body, #editor-container {
     font-weight: bold;
 }
 
-
 /* keyword */
 .cm-editor .cm-keyword {
-    color: #98C379;
+    color: #98c379;
     font-style: italic;
     font-weight: bold;
 }
-
 
 /* note */
 .cm-editor .cm-note {
-    color: #FFC66D;
+    color: #ffc66d;
     font-style: italic;
 }
-
 
 /* size */
 .cm-editor .cm-size {
-    color: #FFC66D;
+    color: #ffc66d;
     font-style: italic;
     font-weight: bold;
 }
-
 
 /* center */
 .cm-editor .cm-center {
-    color: #759DCB;
+    color: #759dcb;
     font-style: italic;
 }
-
 
 /* left */
 .cm-editor .cm-left {
-    color: #759DCB;
+    color: #759dcb;
     font-style: italic;
 }
-
 
 /* right */
 .cm-editor .cm-right {
-    color: #759DCB;
+    color: #759dcb;
     font-style: italic;
 }
 
-
 /* list1 */
 .cm-editor .cm-list1 {
-    color: #98C379;
+    color: #98c379;
     font-weight: bold;
 }
-
 
 /* list2 */
 .cm-editor .cm-list2 {
-    color: #98C379;
+    color: #98c379;
     font-weight: bold;
 }
 
-
 /* original text */
 .cm-editor .cm-original-text {
-    color: #FFFFFF;
+    color: #ffffff;
 }
-
 
 /* rate */
 .cm-editor .cm-rate {
-    color: #E06C75;
+    color: #e06c75;
     font-weight: bold;
     font-style: italic;
 }
 
 /* highlight */
 .cm-editor .cm-Highlight {
-    color: #98C379;
+    color: #98c379;
     font-style: italic;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* ====== color-related styles ====== */
 /* color code highlighting */
@@ -386,7 +321,9 @@ html, body, #editor-container {
     border-radius: 2px;
     vertical-align: middle;
     cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s;
+    transition:
+        transform 0.2s,
+        border-color 0.2s;
 }
 
 .cm-editor.cm-color-preview:hover {

@@ -10,7 +10,10 @@ function getUserText(value: unknown) {
     return typeof value === "string" ? value : "";
 }
 
-export function createUserNodeExtension({ name, className }: UserNodeExtensionOptions) {
+export function createUserNodeExtension({
+    name,
+    className,
+}: UserNodeExtensionOptions) {
     return Node.create({
         name,
         priority: 1100,
@@ -23,7 +26,10 @@ export function createUserNodeExtension({ name, className }: UserNodeExtensionOp
             return {
                 user: {
                     default: "",
-                    parseHTML: element => element instanceof HTMLElement ? element.textContent ?? "" : "",
+                    parseHTML: (element) =>
+                        element instanceof HTMLElement
+                            ? (element.textContent ?? "")
+                            : "",
                     renderHTML: () => ({}),
                 },
             };
@@ -34,9 +40,10 @@ export function createUserNodeExtension({ name, className }: UserNodeExtensionOp
                 {
                     tag: `span.${className}`,
                     priority: 1100,
-                    getAttrs: element => element instanceof HTMLElement
-                        ? { user: element.textContent ?? "" }
-                        : false,
+                    getAttrs: (element) =>
+                        element instanceof HTMLElement
+                            ? { user: element.textContent ?? "" }
+                            : false,
                 },
             ];
         },
@@ -88,13 +95,23 @@ export function createUserNodeExtension({ name, className }: UserNodeExtensionOp
                 function updateUser(value: string) {
                     const position = getPosition();
 
-                    if (position === null || position === undefined || currentNode.attrs.user === value) return;
+                    if (
+                        position === null ||
+                        position === undefined ||
+                        currentNode.attrs.user === value
+                    )
+                        return;
 
                     editor.view.dispatch(
-                        editor.view.state.tr.setNodeMarkup(position, undefined, {
-                            ...currentNode.attrs,
-                            user: value,
-                        }, currentNode.marks),
+                        editor.view.state.tr.setNodeMarkup(
+                            position,
+                            undefined,
+                            {
+                                ...currentNode.attrs,
+                                user: value,
+                            },
+                            currentNode.marks,
+                        ),
                     );
                 }
 
@@ -109,7 +126,12 @@ export function createUserNodeExtension({ name, className }: UserNodeExtensionOp
                     if (position === null || position === undefined) return;
 
                     editor.view.dispatch(
-                        editor.view.state.tr.setSelection(NodeSelection.create(editor.view.state.doc, position)),
+                        editor.view.state.tr.setSelection(
+                            NodeSelection.create(
+                                editor.view.state.doc,
+                                position,
+                            ),
+                        ),
                     );
                     editor.view.focus();
                 }
@@ -129,7 +151,10 @@ export function createUserNodeExtension({ name, className }: UserNodeExtensionOp
 
                     editing = false;
                     editor.view.dispatch(
-                        editor.view.state.tr.delete(position, position + currentNode.nodeSize),
+                        editor.view.state.tr.delete(
+                            position,
+                            position + currentNode.nodeSize,
+                        ),
                     );
                     editor.view.focus();
                 }
@@ -146,18 +171,23 @@ export function createUserNodeExtension({ name, className }: UserNodeExtensionOp
 
                 dom.addEventListener("mousedown", selectNode);
                 dom.addEventListener("dblclick", editNode);
-                input.addEventListener("input", () => updateUser(input.textContent ?? ""));
+                input.addEventListener("input", () =>
+                    updateUser(input.textContent ?? ""),
+                );
                 input.addEventListener("blur", () => {
                     editing = false;
                     updateUser(input.textContent ?? "");
                 });
-                input.addEventListener("keydown", event => {
+                input.addEventListener("keydown", (event) => {
                     if (event.key === "Escape" || event.key === "Enter") {
                         saveAndSelectNode(event);
                         return;
                     }
 
-                    if ((event.key === "Backspace" || event.key === "Delete") && !input.textContent) {
+                    if (
+                        (event.key === "Backspace" || event.key === "Delete") &&
+                        !input.textContent
+                    ) {
                         event.preventDefault();
                         event.stopPropagation();
                         deleteNode();
@@ -166,11 +196,15 @@ export function createUserNodeExtension({ name, className }: UserNodeExtensionOp
 
                 return {
                     dom,
-                    stopEvent: event => event.target === input || input.contains(event.target as globalThis.Node),
-                    selectNode: () => dom.classList.add("ProseMirror-selectednode"),
-                    deselectNode: () => dom.classList.remove("ProseMirror-selectednode"),
+                    stopEvent: (event) =>
+                        event.target === input ||
+                        input.contains(event.target as globalThis.Node),
+                    selectNode: () =>
+                        dom.classList.add("ProseMirror-selectednode"),
+                    deselectNode: () =>
+                        dom.classList.remove("ProseMirror-selectednode"),
                     ignoreMutation: () => true,
-                    update: updatedNode => {
+                    update: (updatedNode) => {
                         if (updatedNode.type !== currentNode.type) return false;
 
                         currentNode = updatedNode;

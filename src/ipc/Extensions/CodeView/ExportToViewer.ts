@@ -11,7 +11,7 @@ export function setExportIframe(iframe: HTMLIFrameElement | null) {
 }
 
 function wait(ms: number) {
-    return new Promise<void>(resolve => window.setTimeout(resolve, ms));
+    return new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 }
 
 async function sendContentToCodeView(content: string) {
@@ -24,25 +24,35 @@ async function sendContentToCodeView(content: string) {
 
     for (let attempt = 0; attempt < 20; attempt += 1) {
         try {
-            if (typeof win.setCodeViewContent === "function" && win.setCodeViewContent(content)) {
-                console.log("[ExportToViewer] content applied through iframe API");
+            if (
+                typeof win.setCodeViewContent === "function" &&
+                win.setCodeViewContent(content)
+            ) {
+                console.log(
+                    "[ExportToViewer] content applied through iframe API",
+                );
                 return;
             }
         } catch (error) {
-            console.warn("[ExportToViewer] iframe API was not accessible. Falling back to postMessage.", error);
+            console.warn(
+                "[ExportToViewer] iframe API was not accessible. Falling back to postMessage.",
+                error,
+            );
             break;
         }
 
         await wait(50);
     }
 
-    console.warn("[ExportToViewer] iframe API was not ready. Falling back to postMessage.");
+    console.warn(
+        "[ExportToViewer] iframe API was not ready. Falling back to postMessage.",
+    );
     win.postMessage(
         {
             type: "export-to-viewer-content",
             payload: content,
         },
-        "*"
+        "*",
     );
 }
 

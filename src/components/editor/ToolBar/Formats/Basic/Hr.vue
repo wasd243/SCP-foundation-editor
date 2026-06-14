@@ -1,22 +1,17 @@
 <script setup lang="ts">
+import Hr from "../../../../../assets/icons/Hr.svg";
+
 const emit = defineEmits<{
-  insert: [];
+    insert: [];
 }>();
 </script>
 
 <template>
-  <button class="format-basic-button hr" type="button" @click="emit('insert')">
-    <!--This is a hardcoded svg file for the hr-->
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <line
-          x1="2"
-          y1="10"
-          x2="18"
-          y2="10"
-          stroke="currentColor"
-          stroke-width="1.6"
-          stroke-linecap="round"
-      />
-    </svg>
-  </button>
+    <button
+        class="format-basic-button hr"
+        type="button"
+        @click="emit('insert')"
+    >
+        <img :src="Hr" alt="Hr" />
+    </button>
 </template>

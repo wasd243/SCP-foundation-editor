@@ -2,21 +2,21 @@
 import URLink from "../../../../../assets/icons/URLink.svg";
 
 const emit = defineEmits<{
-  insert: [];
+    insert: [];
 }>();
 
 function insertLink() {
-  emit("insert");
+    emit("insert");
 }
 </script>
 
 <template>
-  <button
-    class="format-basic-button url-link"
-    type="button"
-    aria-label="Insert link"
-    @click="insertLink"
-  >
-    <img :src="URLink" alt="URLink" />
-  </button>
+    <button
+        class="format-basic-button url-link"
+        type="button"
+        aria-label="Insert link"
+        @click="insertLink"
+    >
+        <img :src="URLink" alt="URLink" />
+    </button>
 </template>

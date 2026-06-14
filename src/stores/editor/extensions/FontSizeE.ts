@@ -7,9 +7,12 @@ export const FontSizeExtension = Mark.create({
         return {
             size: {
                 default: null,
-                parseHTML: (element: HTMLElement) => element.style.fontSize || null,
+                parseHTML: (element: HTMLElement) =>
+                    element.style.fontSize || null,
                 renderHTML: (attributes: { size?: string | null }) =>
-                    attributes.size ? { style: `font-size: ${attributes.size}` } : {},
+                    attributes.size
+                        ? { style: `font-size: ${attributes.size}` }
+                        : {},
             },
         };
     },

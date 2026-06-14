@@ -2,13 +2,14 @@
 
 import type { DOMReplaceContext, DOMReplacer } from "../scanDOMandReplace";
 
-function replaceCollapsibleContent({ element }: DOMReplaceContext): Node | null {
-  if (!(element instanceof HTMLBRElement)) return null;
-  if (element.parentElement?.getAttribute("data-type") !== "detailsContent") return null;
+function replaceCollapsibleContent({
+    element,
+}: DOMReplaceContext): Node | null {
+    if (!(element instanceof HTMLBRElement)) return null;
+    if (element.parentElement?.getAttribute("data-type") !== "detailsContent")
+        return null;
 
-  return document.createElement("p");
+    return document.createElement("p");
 }
 
-export const collapsibleReplacer: DOMReplacer[] = [
-  replaceCollapsibleContent,
-];
+export const collapsibleReplacer: DOMReplacer[] = [replaceCollapsibleContent];

@@ -13,8 +13,10 @@ const imageBlockIncludeName = "component:image-block";
 const imageBlockGuardKey = new PluginKey("imageBlockGuard");
 
 function isImageBlockNode(node: ProseMirrorNode) {
-    return nodeHasClass(node, "image-container") &&
-        getNodeAttribute(node, "data-editor-include") === imageBlockIncludeName;
+    return (
+        nodeHasClass(node, "image-container") &&
+        getNodeAttribute(node, "data-editor-include") === imageBlockIncludeName
+    );
 }
 
 function isImageCaptionNode(node: ProseMirrorNode) {
@@ -22,17 +24,23 @@ function isImageCaptionNode(node: ProseMirrorNode) {
 }
 
 function isElementInsideImageCaption(element: EventTarget | null) {
-    return element instanceof Element && Boolean(element.closest(".scp-image-caption"));
+    return (
+        element instanceof Element &&
+        Boolean(element.closest(".scp-image-caption"))
+    );
 }
 
 function isImageNode(node: ProseMirrorNode) {
     return node.type.name === "image";
 }
 
-function hasDescendant(node: ProseMirrorNode, predicate: (node: ProseMirrorNode) => boolean) {
+function hasDescendant(
+    node: ProseMirrorNode,
+    predicate: (node: ProseMirrorNode) => boolean,
+) {
     let found = false;
 
-    node.descendants(child => {
+    node.descendants((child) => {
         if (predicate(child)) {
             found = true;
             return false;
@@ -52,7 +60,10 @@ function hasCaption(node: ProseMirrorNode) {
     return hasDescendant(node, isImageCaptionNode);
 }
 
-function findAncestor($pos: ResolvedPos, predicate: (node: ProseMirrorNode) => boolean): PositionedNode | null {
+function findAncestor(
+    $pos: ResolvedPos,
+    predicate: (node: ProseMirrorNode) => boolean,
+): PositionedNode | null {
     for (let depth = $pos.depth; depth > 0; depth -= 1) {
         const node = $pos.node(depth);
 
@@ -71,15 +82,24 @@ function findCaptionAncestor($pos: ResolvedPos) {
     return findAncestor($pos, isImageCaptionNode);
 }
 
-function selectionStartsAtCaptionBoundary($pos: ResolvedPos, caption: PositionedNode) {
+function selectionStartsAtCaptionBoundary(
+    $pos: ResolvedPos,
+    caption: PositionedNode,
+) {
     return $pos.pos === caption.pos + 1;
 }
 
-function selectionEndsAtCaptionBoundary($pos: ResolvedPos, caption: PositionedNode) {
+function selectionEndsAtCaptionBoundary(
+    $pos: ResolvedPos,
+    caption: PositionedNode,
+) {
     return $pos.pos === caption.pos + caption.node.nodeSize - 1;
 }
 
-function BlockCaptionBoundaryDelete(key: "Backspace" | "Delete", $pos: ResolvedPos) {
+function BlockCaptionBoundaryDelete(
+    key: "Backspace" | "Delete",
+    $pos: ResolvedPos,
+) {
     const caption = findCaptionAncestor($pos);
 
     if (!caption) return false;
@@ -92,7 +112,7 @@ function BlockCaptionBoundaryDelete(key: "Backspace" | "Delete", $pos: ResolvedP
 function hasInvalidImageBlockWithoutCaption(doc: ProseMirrorNode) {
     let invalid = false;
 
-    doc.descendants(node => {
+    doc.descendants((node) => {
         if (!isImageBlockNode(node)) {
             return true;
         }
@@ -138,9 +158,13 @@ function isSelectionInsideCaption($from: ResolvedPos, $to: ResolvedPos) {
 }
 
 function BlockCaptionEnter(view: EditorView, event: KeyboardEvent) {
-    return event.key === "Enter" && (
-        isElementInsideImageCaption(event.target) ||
-        isSelectionInsideCaption(view.state.selection.$from, view.state.selection.$to)
+    return (
+        event.key === "Enter" &&
+        (isElementInsideImageCaption(event.target) ||
+            isSelectionInsideCaption(
+                view.state.selection.$from,
+                view.state.selection.$to,
+            ))
     );
 }
 
@@ -159,11 +183,13 @@ export function createDeleteImageBlockPlugin() {
             return !hasInvalidImageBlockWithoutCaption(transaction.doc);
         },
         appendTransaction(transactions, _oldState, newState) {
-            if (!transactions.some(transaction => transaction.docChanged)) {
+            if (!transactions.some((transaction) => transaction.docChanged)) {
                 return null;
             }
 
-            const imageBlocksWithoutImages = getImageBlocksWithoutImages(newState.doc);
+            const imageBlocksWithoutImages = getImageBlocksWithoutImages(
+                newState.doc,
+            );
 
             if (imageBlocksWithoutImages.length === 0) {
                 return null;
@@ -187,7 +213,10 @@ export function createDeleteImageBlockPlugin() {
                 if (
                     (event.key === "Backspace" || event.key === "Delete") &&
                     view.state.selection.empty &&
-                    BlockCaptionBoundaryDelete(event.key, view.state.selection.$from)
+                    BlockCaptionBoundaryDelete(
+                        event.key,
+                        view.state.selection.$from,
+                    )
                 ) {
                     event.preventDefault();
                     return true;
@@ -196,7 +225,12 @@ export function createDeleteImageBlockPlugin() {
                 return false;
             },
             handlePaste(view, event) {
-                if (!isSelectionInsideCaption(view.state.selection.$from, view.state.selection.$to)) {
+                if (
+                    !isSelectionInsideCaption(
+                        view.state.selection.$from,
+                        view.state.selection.$to,
+                    )
+                ) {
                     return false;
                 }
 
@@ -207,7 +241,9 @@ export function createDeleteImageBlockPlugin() {
                 }
 
                 event.preventDefault();
-                view.dispatch(view.state.tr.insertText(normalizeCaptionPaste(text)));
+                view.dispatch(
+                    view.state.tr.insertText(normalizeCaptionPaste(text)),
+                );
 
                 return true;
             },

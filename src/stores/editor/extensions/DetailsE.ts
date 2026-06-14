@@ -52,7 +52,8 @@ function summaryDeletionLeavesEmptyText(
         for (let index = 0; index < childText.length; index += 1) {
             const charFrom = summaryStart + offset + index;
             const charTo = charFrom + 1;
-            const isDeleted = charFrom >= deletionRange.from && charTo <= deletionRange.to;
+            const isDeleted =
+                charFrom >= deletionRange.from && charTo <= deletionRange.to;
 
             if (isDeleted) {
                 deletedText = true;
@@ -68,10 +69,13 @@ function summaryDeletionLeavesEmptyText(
     return deletedText && text.length === 0;
 }
 
-function countNestedDetails(node: ProseMirrorNode, hasDetailsAncestor = false): number {
+function countNestedDetails(
+    node: ProseMirrorNode,
+    hasDetailsAncestor = false,
+): number {
     let nestedDetailsCount = 0;
 
-    node.forEach(child => {
+    node.forEach((child) => {
         const isDetailsNode = child.type.name === "details";
 
         if (isDetailsNode && hasDetailsAncestor) {
@@ -79,7 +83,10 @@ function countNestedDetails(node: ProseMirrorNode, hasDetailsAncestor = false): 
         }
 
         if (child.childCount > 0) {
-            nestedDetailsCount += countNestedDetails(child, hasDetailsAncestor || isDetailsNode);
+            nestedDetailsCount += countNestedDetails(
+                child,
+                hasDetailsAncestor || isDetailsNode,
+            );
         }
     });
 
@@ -101,15 +108,18 @@ export const DetailsExtension = Details.extend({
                         return true;
                     }
 
-                    const previousNestedDetailsCount = countNestedDetails(state.doc);
-                    const nextNestedDetailsCount = countNestedDetails(transaction.doc);
+                    const previousNestedDetailsCount = countNestedDetails(
+                        state.doc,
+                    );
+                    const nextNestedDetailsCount = countNestedDetails(
+                        transaction.doc,
+                    );
 
                     return nextNestedDetailsCount <= previousNestedDetailsCount;
                 },
             }),
         ];
     },
-
 });
 
 export const DetailsSummaryExtension = DetailsSummary.extend({
@@ -117,7 +127,9 @@ export const DetailsSummaryExtension = DetailsSummary.extend({
         const deleteEmptyDetails = (key: "Backspace" | "Delete") => {
             const { state, view } = this.editor;
             const { selection } = state;
-            const detailsSummary = findParentNode(node => node.type === this.type)(selection);
+            const detailsSummary = findParentNode(
+                (node) => node.type === this.type,
+            )(selection);
 
             if (!detailsSummary) {
                 return false;
@@ -125,9 +137,16 @@ export const DetailsSummaryExtension = DetailsSummary.extend({
 
             const { $from, empty } = selection;
             const summaryStart = detailsSummary.pos + 1;
-            const summaryEnd = detailsSummary.pos + detailsSummary.node.nodeSize - 1;
-            const atBoundary = empty && (key === "Backspace" ? $from.pos === summaryStart : $from.pos === summaryEnd);
-            const details = findParentNode(node => node.type.name === "details")(selection);
+            const summaryEnd =
+                detailsSummary.pos + detailsSummary.node.nodeSize - 1;
+            const atBoundary =
+                empty &&
+                (key === "Backspace"
+                    ? $from.pos === summaryStart
+                    : $from.pos === summaryEnd);
+            const details = findParentNode(
+                (node) => node.type.name === "details",
+            )(selection);
 
             if (!details) {
                 return true;
@@ -135,9 +154,17 @@ export const DetailsSummaryExtension = DetailsSummary.extend({
 
             const deleteDetails = () => {
                 const paragraph = state.schema.nodes.paragraph?.createAndFill();
-                const transaction = state.doc.childCount === 1 && paragraph
-                    ? state.tr.replaceWith(details.pos, details.pos + details.node.nodeSize, paragraph)
-                    : state.tr.delete(details.pos, details.pos + details.node.nodeSize);
+                const transaction =
+                    state.doc.childCount === 1 && paragraph
+                        ? state.tr.replaceWith(
+                              details.pos,
+                              details.pos + details.node.nodeSize,
+                              paragraph,
+                          )
+                        : state.tr.delete(
+                              details.pos,
+                              details.pos + details.node.nodeSize,
+                          );
 
                 transaction.scrollIntoView();
                 view.dispatch(transaction);
@@ -145,9 +172,21 @@ export const DetailsSummaryExtension = DetailsSummary.extend({
                 return true;
             };
 
-            const deletionRange = getSummaryDeletionRange(detailsSummary.node, detailsSummary.pos, selection, key);
+            const deletionRange = getSummaryDeletionRange(
+                detailsSummary.node,
+                detailsSummary.pos,
+                selection,
+                key,
+            );
 
-            if (deletionRange && summaryDeletionLeavesEmptyText(detailsSummary.node, detailsSummary.pos, deletionRange)) {
+            if (
+                deletionRange &&
+                summaryDeletionLeavesEmptyText(
+                    detailsSummary.node,
+                    detailsSummary.pos,
+                    deletionRange,
+                )
+            ) {
                 return deleteDetails();
             }
 
@@ -160,7 +199,9 @@ export const DetailsSummaryExtension = DetailsSummary.extend({
 
         return {
             Enter: () => {
-                const detailsSummary = findParentNode(node => node.type === this.type)(this.editor.state.selection);
+                const detailsSummary = findParentNode(
+                    (node) => node.type === this.type,
+                )(this.editor.state.selection);
 
                 return Boolean(detailsSummary);
             },

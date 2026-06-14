@@ -16,9 +16,5 @@ export function insertEditorNote() {
         return;
     }
 
-    editor
-        .chain()
-        .focus()
-        .insertContent(createNoteContent())
-        .run();
+    editor.chain().focus().insertContent(createNoteContent()).run();
 }

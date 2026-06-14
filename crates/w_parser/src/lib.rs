@@ -141,3 +141,15 @@ pub fn render_wikidot_to_html_with_resourcepack(
 pub fn render_wikidot_to_html(source_text: &str) -> Result<FtmlParseOutput, String> {
     render_wikidot_to_html_with_resourcepack(source_text, DEFAULT_RESOURCEPACK_ROOT)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_wiki_css_themes_output_with_ftml() {
+        let source_text = include_str!("../../../test/themes/wiki_css_test.ftml");
+        let output = render_wikidot_to_html(source_text).unwrap();
+        eprintln!("output:\n{:#?}", output.html);
+    }
+}

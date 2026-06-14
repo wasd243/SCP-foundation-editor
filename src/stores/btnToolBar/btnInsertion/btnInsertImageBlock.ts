@@ -1,7 +1,10 @@
 import type { JSONContent } from "@tiptap/core";
 
 import { getEditor } from "../../editor.ts";
-import { alertUnsupportedImageUrl, isSupportedImageUrl } from "./btnInsertImage.ts";
+import {
+    alertUnsupportedImageUrl,
+    isSupportedImageUrl,
+} from "./btnInsertImage.ts";
 
 const defaultImageBlockWidth = "200px";
 const defaultImageBlockCaption = "CAPTION";
@@ -64,11 +67,7 @@ export function insertEditorImageBlock(rawUrl: string) {
         return;
     }
 
-    editor
-        .chain()
-        .focus()
-        .insertContent(createImageBlockContent(src))
-        .run();
+    editor.chain().focus().insertContent(createImageBlockContent(src)).run();
 }
 
 export function promptEditorImageBlock() {

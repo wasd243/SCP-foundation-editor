@@ -1,5 +1,5 @@
-import {open} from '@tauri-apps/plugin-dialog';
-import {readTextFile} from '@tauri-apps/plugin-fs';
+import { open } from "@tauri-apps/plugin-dialog";
+import { readTextFile } from "@tauri-apps/plugin-fs";
 
 /**
  * This function is used to open a file and parse it into the editor.
@@ -7,7 +7,7 @@ import {readTextFile} from '@tauri-apps/plugin-fs';
  * */
 export async function OpenFtml() {
     const filePath = await open({
-        filters: [{name: 'FTML', extensions: ['ftml']}],
+        filters: [{ name: "FTML", extensions: ["ftml"] }],
         multiple: false,
     });
 
@@ -18,7 +18,7 @@ export async function OpenFtml() {
 
     // directly use `parse_wikidot` function before opening
     window.postMessage(
-        {type: 'code-view-content-changed', payload: content},
-        '*'
+        { type: "code-view-content-changed", payload: content },
+        "*",
     );
 }

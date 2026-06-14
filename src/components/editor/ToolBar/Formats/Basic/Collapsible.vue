@@ -1,9 +1,15 @@
 <script setup lang="ts">
 const emit = defineEmits<{
-  insert: [];
+    insert: [];
 }>();
 </script>
 
 <template>
-  <button class="format-basic-button collapsible" type="button" @click="emit('insert')">▸▾</button>
+    <button
+        class="format-basic-button collapsible"
+        type="button"
+        @click="emit('insert')"
+    >
+        ▸▾
+    </button>
 </template>

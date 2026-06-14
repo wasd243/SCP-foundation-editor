@@ -5,10 +5,8 @@ import EditorCanvas from "./components/editor/EditorCanvas.vue";
 </script>
 
 <template>
-  <TopBar/>
-  <EditorCanvas/>
+    <TopBar />
+    <EditorCanvas />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,6 +1,7 @@
 # Milestones
 
 ## 2026-05-25
+
 SCP Foundation successfully occupied the WYSIWYG editor.
 
 - Local Resourcepack includer working
@@ -12,4 +13,5 @@ SCP Foundation successfully occupied the WYSIWYG editor.
 - ~~TODO: `[[include]]` class adapter~~
 
 ## 2026-05-27
+
 Article rendering pipeline is working.

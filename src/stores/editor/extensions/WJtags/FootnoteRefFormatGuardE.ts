@@ -59,7 +59,7 @@ function removeBlockedMarksInFootnoteRefs(transaction: Transaction) {
             return;
         }
 
-        node.marks.forEach(mark => {
+        node.marks.forEach((mark) => {
             if (!marksBlockedInsideFootnoteRef.has(mark.type.name)) {
                 return;
             }
@@ -76,7 +76,7 @@ export function createFootnoteRefFormatGuardPlugin() {
     return new Plugin({
         key: new PluginKey("wjFootnoteRefFormatGuard"),
         appendTransaction(transactions, _oldState, newState) {
-            if (!transactions.some(transaction => transaction.docChanged)) {
+            if (!transactions.some((transaction) => transaction.docChanged)) {
                 return null;
             }
 

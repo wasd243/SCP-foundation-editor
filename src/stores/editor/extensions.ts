@@ -4,11 +4,16 @@ import StarterKit from "@tiptap/starter-kit";
 
 import { BasicExtensions } from "./extensions/btnBasicE.ts";
 import { CodeBlockLowlightExtension } from "./extensions/CodeE.ts";
-import { DetailsExtension, DetailsSummaryExtension } from "./extensions/DetailsE.ts";
+import {
+    DetailsExtension,
+    DetailsSummaryExtension,
+} from "./extensions/DetailsE.ts";
 import { DetailsContentExtension } from "./extensions/DetailsContentE.ts";
 import { FontSizeExtension } from "./extensions/FontSizeE.ts";
 import { ImageExtension } from "./extensions/ImageE.ts";
-import InvisibleCharacters, { ParagraphNode } from "@tiptap/extension-invisible-characters";
+import InvisibleCharacters, {
+    ParagraphNode,
+} from "@tiptap/extension-invisible-characters";
 import { TableExtensions } from "./extensions/TableE.ts";
 import { TabViewExtensions } from "./extensions/TabViewE.ts";
 import { TextAlignExtension } from "./extensions/TextAlignE.ts";

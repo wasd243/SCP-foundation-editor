@@ -11,9 +11,7 @@
 
     line-height: 1;
     cursor: pointer;
-
 }
-
 
 .format-size-button:hover {
     background: #e7edf7;
@@ -37,7 +35,7 @@
     width: 32px;
     height: 32px;
     font-size: 16px;
-    left: 360px;
+    left: 370px;
     top: calc(var(--basic-btn-height) - 35px);
 }
 

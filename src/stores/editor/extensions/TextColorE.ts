@@ -7,9 +7,12 @@ export const TextColorExtension = Mark.create({
         return {
             color: {
                 default: null,
-                parseHTML: (element: HTMLElement) => element.style.color || null,
+                parseHTML: (element: HTMLElement) =>
+                    element.style.color || null,
                 renderHTML: (attributes: { color?: string | null }) =>
-                    attributes.color ? { style: `color: ${attributes.color}` } : {},
+                    attributes.color
+                        ? { style: `color: ${attributes.color}` }
+                        : {},
             },
         };
     },
