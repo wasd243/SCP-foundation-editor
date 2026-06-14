@@ -103,7 +103,7 @@ mod tests {
 
         assert_eq!(
             interpret_collapsible(&node, String::new()).unwrap(),
-            "[[collapsible show=\"open\" hide=\"close\"]]\ncollapsible content\n[[/collapsible]]\n"
+            "[[collapsible show=\"+open\" hide=\"-close\"]]\ncollapsible content\n[[/collapsible]]\n"
         );
     }
 }
