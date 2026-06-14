@@ -6,6 +6,7 @@ import List from "./Formats/List.vue";
 import Align from "./Formats/Align.vue";
 // Use URLFORMAT instead of URL
 import UrlFormat from "./Formats/URL.vue";
+import FormatCleaner from "./Formats/FormatCleaner.vue";
 </script>
 
 <template>
@@ -15,4 +16,5 @@ import UrlFormat from "./Formats/URL.vue";
     <List />
     <Align />
     <UrlFormat />
+    <FormatCleaner />
 </template>
