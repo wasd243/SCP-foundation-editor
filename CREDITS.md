@@ -123,6 +123,15 @@
     - LICENSE: CC0 License
     - UPLOADER: SVG Repo
 
+---
+
+### Editor Icon [SCP-Wiki-CN](https://scp-wiki-cn.wikidot.com/o9-ppt)
+
+- Author: OxygenNine
+- LICENSE: CC-BY-SA 4.0 International
+
+---
+
 ## Libraries
 
 - TipTap

@@ -23,7 +23,6 @@ node_modules/
 # Rust and Tauri
 target/
 gen/
-icon.png
 
 # Windows
 Thumbs.db
