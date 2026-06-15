@@ -1,8 +1,10 @@
 mod add_user_css;
 mod fmt_newline;
 mod fmt_alignments;
+mod add_footnote_block;
 
 use crate::ftml_fmt::add_user_css::add_user_css;
+use crate::ftml_fmt::add_footnote_block::add_footnote_block;
 use crate::ftml_fmt::{
     fmt_newline::format_newline,
     fmt_alignments::format_alignments,
@@ -30,6 +32,9 @@ pub fn ftml_fmt(ftml: &str) -> String {
     // attach user css
     let user_css = fs::read_to_string(USER_CSS_PATH);
     let output = add_user_css(&output, user_css.as_deref().ok());
+
+    // add footnote block
+    let output = add_footnote_block(&output);
 
     // write output to interpreter's temp output file back
     if read_ftml.is_ok() {

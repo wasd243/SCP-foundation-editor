@@ -13,5 +13,5 @@ TODO:
 - [ ] Implement user span exporter
 - [ ] Test the includer
 - [x] Test the interpreter: attempt 1: test normal text and components
-- [ ] Add `[[footnoteblock]]` exporter
+- [x] Add `[[footnoteblock]]` exporter (Fixed, only a patch is needed)
 - [x] Add `Content Paragraph` exporter
