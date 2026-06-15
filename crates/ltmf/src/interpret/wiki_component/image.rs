@@ -14,6 +14,8 @@ pub(super) fn interpret_image(node: &Value, output: String) -> Result<String, St
         Some(ImageAlignment::Left) => format!("[[<image {src}{options}]]"),
         Some(ImageAlignment::Right) => format!("[[>image {src}{options}]]"),
         Some(ImageAlignment::Center) => format!("[[=image {src}{options}]]"),
+        Some(ImageAlignment::FloatLeft) => format!("[[f<image {src}{options}]]"),
+        Some(ImageAlignment::FloatRight) => format!("[[f>image {src}{options}]]"),
         None => format!("[[image {src}{options}]]"),
     })
 }
@@ -26,6 +28,8 @@ enum ImageAlignment {
     Left,
     Right,
     Center,
+    FloatLeft,
+    FloatRight,
 }
 
 fn image_src(node: &Value) -> Option<&str> {
@@ -82,6 +86,14 @@ fn image_alignment(node: &Value) -> Option<ImageAlignment> {
         .get("wrapperAttributes")?
         .get("class")?
         .as_str()?;
+
+    if class_has_token(class, "floatleft") {
+        return Some(ImageAlignment::FloatLeft);
+    }
+
+    if class_has_token(class, "floatright") {
+        return Some(ImageAlignment::FloatRight);
+    }
 
     if class_has_token(class, "alignleft") {
         return Some(ImageAlignment::Left);
@@ -141,6 +153,80 @@ mod tests {
         assert_eq!(
             interpret_image(&node, String::new()).unwrap(),
             r#"[[image example.png width="457px"]]"#
+        );
+    }
+
+    #[test]
+    fn interprets_floatleft_image() {
+        let node = json!({
+            "type": "image",
+            "attrs": {
+                "src": "example.png",
+                "wrapperAttributes": {
+                    "class": "image-container floatleft"
+                }
+            }
+        });
+
+        assert_eq!(
+            interpret_image(&node, String::new()).unwrap(),
+            "[[f<image example.png]]"
+        );
+    }
+
+    #[test]
+    fn interprets_floatleft_image_with_width_and_height() {
+        let node = json!({
+            "type": "image",
+            "attrs": {
+                "src": "example.png",
+                "wrapperAttributes": {
+                    "class": "image-container floatleft",
+                    "style": "width: 457px; height: 437px;"
+                }
+            }
+        });
+
+        assert_eq!(
+            interpret_image(&node, String::new()).unwrap(),
+            r#"[[f<image example.png width="457px" height="437px"]]"#
+        );
+    }
+
+    #[test]
+    fn interprets_floatright_image() {
+        let node = json!({
+            "type": "image",
+            "attrs": {
+                "src": "example.png",
+                "wrapperAttributes": {
+                    "class": "image-container floatright"
+                }
+            }
+        });
+
+        assert_eq!(
+            interpret_image(&node, String::new()).unwrap(),
+            "[[f>image example.png]]"
+        );
+    }
+
+    #[test]
+    fn interprets_floatright_image_with_width_and_height() {
+        let node = json!({
+            "type": "image",
+            "attrs": {
+                "src": "example.png",
+                "wrapperAttributes": {
+                    "class": "image-container floatright",
+                    "style": "width: 457px; height: 437px;"
+                }
+            }
+        });
+
+        assert_eq!(
+            interpret_image(&node, String::new()).unwrap(),
+            r#"[[f>image example.png width="457px" height="437px"]]"#
         );
     }
 }
