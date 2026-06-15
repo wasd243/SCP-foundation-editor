@@ -11,3 +11,4 @@
 9. `[[module rate]]` is not supported yet.
 10. ~~`caption` variable is not supported yet.~~
 11. `[[footnote]]` needs better editor experience support.
+12. ftml output for `@@@@` needs to be adapted in editor.

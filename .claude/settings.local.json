@@ -6,7 +6,8 @@
       "Bash(npx vue-tsc *)",
       "Bash(node *)",
       "Bash(grep -n \"^\\\\.\\\\|^[a-z#].*{$\\\\|wj-footnote-list {\" src/styles/theme/default.scss)",
-      "Bash(awk -F: '$1<594')"
+      "Bash(awk -F: '$1<594')",
+      "Bash(git commit *)"
     ]
   },
   "skillOverrides": {
