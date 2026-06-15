@@ -1,0 +1,32 @@
+name: Check and Format
+
+on: [push]
+
+jobs:
+  check-and-fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: Check and fmt ltmf
+        working-directory: crates/ltmf
+        run: |
+          cargo check
+          cargo fmt
+
+      - name: Check and fmt w_parser
+        working-directory: crates/w_parser
+        run: |
+          cargo check
+          cargo fmt
+
+      - name: Check and fmt src-tauri
+        working-directory: src-tauri
+        run: |
+          cargo check
+          cargo fmt
