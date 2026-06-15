@@ -1,9 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { getEditor } from "../../../../stores/editor/instance.ts";
+</script>
 
 <template>
     <div class="footnote-edit-panel">
         <h1>Footnotes</h1>
-        <div class="wj-footnote-list"></div>
+        <div class="wj-footnote-list-wrapper"></div>
     </div>
 </template>
 
