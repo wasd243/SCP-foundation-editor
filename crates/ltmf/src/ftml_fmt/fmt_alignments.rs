@@ -49,8 +49,8 @@ fn format_center_alignments(ftml: &str) -> String {
 pub(super) fn format_alignments(ftml: &str) -> String {
     let output = format_left_alignments(ftml);
     let output = format_right_alignments(&output);
-    let output = format_center_alignments(&output);
-    output
+    
+    format_center_alignments(&output)
 }
 
 #[cfg(test)]
