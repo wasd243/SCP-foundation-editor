@@ -10,6 +10,7 @@ import {
 } from "./extensions/DetailsE.ts";
 import { DetailsContentExtension } from "./extensions/DetailsContentE.ts";
 import { FontSizeExtension } from "./extensions/FontSizeE.ts";
+import { HardBreakAndNewParagraphExtension } from "./extensions/hardBreakandNewParagraphE.ts";
 import { ImageExtension } from "./extensions/ImageE.ts";
 import InvisibleCharacters, {
     ParagraphNode,
@@ -51,4 +52,5 @@ export const editorExtensions = [
     UserExtension,
     UserWithImgExtension,
     WJTagExtension,
+    HardBreakAndNewParagraphExtension,
 ];
