@@ -9,7 +9,10 @@ const emit = defineEmits<{
 
 const defaultFontSize = 16;
 const isOpen = ref(false);
-const fontSizes = [12, 14];
+const fontSizes = [
+    8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+    27, 28, 29, 30,
+]; // HardCoded font sizes haha
 const selectedSize = ref(defaultFontSize);
 
 function parseFontSize(size: unknown) {
