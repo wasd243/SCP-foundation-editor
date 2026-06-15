@@ -46,7 +46,5 @@ user_css.css
 .vite-dev.err.log
 .vite-dev.log
 
-personal_usage_assets/
-
 # DO NOT IGNORE: Assets
 !src/assets/icons/

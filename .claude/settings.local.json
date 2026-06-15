@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(git add:*)",
-      "Bash(git commit -m ':*)"
+      "Bash(git commit -m ':*)",
+      "Bash(npx vue-tsc *)",
+      "Bash(node *)",
+      "Bash(grep -n \"^\\\\.\\\\|^[a-z#].*{$\\\\|wj-footnote-list {\" src/styles/theme/default.scss)",
+      "Bash(awk -F: '$1<594')"
     ]
+  },
+  "skillOverrides": {
+    "write-a-skill": "off"
   }
 }
