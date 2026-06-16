@@ -72,6 +72,10 @@ export function SyncToParser() {
                         detail: scanDOMandReplace(output.html),
                     }),
                 );
+
+                // The parser writes the module-rate status to a temp file on
+                // every parse. Notify listeners so they can refresh from it.
+                window.dispatchEvent(new CustomEvent("module-rate-status-changed"));
             } catch (error) {
                 window.dispatchEvent(
                     new CustomEvent("code-view-parser-error", {
