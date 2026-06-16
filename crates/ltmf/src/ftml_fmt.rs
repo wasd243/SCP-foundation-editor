@@ -31,8 +31,8 @@ pub fn ftml_fmt(ftml: &str) -> String {
     let output = format_newline(ftml);
     let output = format_alignments(&output);
 
-    // add module rate
-    let output = add_module_rate(&output);
+    // add module rate; on a missing/unreadable status file, leave content untouched
+    let output = add_module_rate(&output).unwrap_or(output);
 
     // attach user css
     let user_css = fs::read_to_string(USER_CSS_PATH);

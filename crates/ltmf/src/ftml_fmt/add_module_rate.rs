@@ -5,19 +5,16 @@ const MODULE_RATE_STATUS: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../tem
 
 /// Prepend the `[[module rate]]` Wikitext block (built from the module-rate
 /// status file) to the editor content.
-///
-/// NOTE: not yet wired into the `ftml_fmt` pipeline; exercised via `cfg(test)`
-/// only.
-pub(super) fn add_module_rate(ftml: &str) -> String {
-    let status = fs::read_to_string(MODULE_RATE_STATUS).unwrap();
+pub(super) fn add_module_rate(ftml: &str) -> Result<String, String> {
+    let status = fs::read_to_string(MODULE_RATE_STATUS).map_err(|e| e.to_string())?;
     let module_rate = build_module_rate(&status);
 
     // MODULE_RATE=FALSE yields an empty block; leave the content untouched.
     if module_rate.is_empty() {
-        return ftml.to_string();
+        return Ok(ftml.to_string());
     }
 
-    format!("{module_rate}\n{ftml}")
+    Ok(format!("{module_rate}\n{ftml}"))
 }
 
 /// Render the module-rate block from a status string of the form
