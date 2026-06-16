@@ -2,9 +2,11 @@ mod add_user_css;
 mod fmt_newline;
 mod fmt_alignments;
 mod add_footnote_block;
+mod add_module_rate;
 
 use crate::ftml_fmt::add_user_css::add_user_css;
 use crate::ftml_fmt::add_footnote_block::add_footnote_block;
+use crate::ftml_fmt::add_module_rate::add_module_rate;
 use crate::ftml_fmt::{
     fmt_newline::format_newline,
     fmt_alignments::format_alignments,
@@ -28,6 +30,9 @@ pub fn ftml_fmt(ftml: &str) -> String {
     // normalize wikitext pipeline is here
     let output = format_newline(ftml);
     let output = format_alignments(&output);
+
+    // add module rate; on a missing/unreadable status file, leave content untouched
+    let output = add_module_rate(&output).unwrap_or(output);
 
     // attach user css
     let user_css = fs::read_to_string(USER_CSS_PATH);

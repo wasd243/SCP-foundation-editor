@@ -1,7 +1,18 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
+import VueMoveable from "vue3-moveable";
 import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
+import { invoke } from "@tauri-apps/api/core";
+import {
+    rateAlignment,
+    rateBoxStyle,
+    getRateDropAlignment,
+    applyModuleRateAlignment,
+    applyModuleRateVisibility,
+    writeRateAlignmentToTemp,
+    rateVisible,
+} from "./EditorCanvas/RateBox.ts";
 import {
     getContextMenuFlags,
     type ContextMenuFlags,
@@ -128,8 +139,26 @@ function getImageContainerTarget(element: HTMLElement) {
     return findImageContainerParent(element);
 }
 
+/**
+ * Refresh the default rate-box alignment from the parser's module-rate temp
+ * file, which is rewritten on every `parse_wikidot` call.
+ */
+async function refreshRateAlignment() {
+    try {
+        const status = await invoke<string>("read_module_rate_temp");
+        applyModuleRateAlignment(status);
+        applyModuleRateVisibility(status);
+    } catch (error) {
+        console.warn("Failed to read module-rate alignment.", error);
+    }
+}
+
 onMounted(() => {
     window.addEventListener("pointerdown", closeContextMenuOnPointerDown, true);
+    window.addEventListener("module-rate-status-changed", refreshRateAlignment);
+
+    // Initialize alignment/visibility from temp on first mount.
+    refreshRateAlignment();
 });
 
 onUnmounted(() => {
@@ -138,7 +167,32 @@ onUnmounted(() => {
         closeContextMenuOnPointerDown,
         true,
     );
+    window.removeEventListener(
+        "module-rate-status-changed",
+        refreshRateAlignment,
+    );
 });
+
+const rateButtonRef = ref<HTMLElement | null>(null);
+
+function onRateDrag(e: any) {
+    (e.target as HTMLElement).style.transform = e.transform;
+}
+
+function onRateDragEnd(e: any) {
+    const target = e.target as HTMLElement;
+    const containerEl = document.querySelector<HTMLElement>("#container-wrap");
+
+    if (!containerEl) {
+        target.style.transform = "";
+        return;
+    }
+
+    const alignment = getRateDropAlignment(containerEl, target);
+    target.style.transform = "";
+    rateAlignment.value = alignment;
+    writeRateAlignmentToTemp();
+}
 
 const editor = useEditor({
     extensions: editorExtensions,
@@ -182,7 +236,6 @@ const editor = useEditor({
 <template>
     <main class="editor-canvas editor-theme-default">
         <!--These div are here to support wiki css themes-->
-        <!--I DO NOT promise that these would support all legacy wikidot css-->
         <!--GOOD LUCK-->
         <div id="container-wrap">
             <div id="header">
@@ -195,11 +248,22 @@ const editor = useEditor({
             <div id="content-wrap">
                 <div id="side-bar">Editor side-bar</div>
                 <div class="meta-title">Editor Meta Title Preview</div>
+                <button ref="rateButtonRef" class="rate" :style="rateBoxStyle">
+                    Rate: + - x
+                </button>
             </div>
         </div>
 
         <EditorContent :editor="editor" />
         <EditorCanvasMoveable />
+        <VueMoveable
+            v-if="rateVisible"
+            :target="rateButtonRef || undefined"
+            :draggable="true"
+            :resizable="false"
+            @drag="onRateDrag"
+            @dragEnd="onRateDragEnd"
+        />
     </main>
 
     <Teleport to="body">

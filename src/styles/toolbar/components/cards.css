@@ -41,6 +41,23 @@
     cursor: pointer;
 }
 
+/* This style related to module rate configuration */
+.component-card.module-rate {
+    width: 150px;
+}
+
+/* Active state: the parsed document contains a [[module rate]] tag */
+.component-card.module-rate.actived {
+    background: #dbe8ff;
+    border-color: #5b8def;
+    color: #1d4ed8;
+}
+
+.component-card.module-rate.actived:hover {
+    background: #cfe0ff;
+    border-color: #5b8def;
+}
+
 .component-card img {
     width: 24px;
     height: 24px;
