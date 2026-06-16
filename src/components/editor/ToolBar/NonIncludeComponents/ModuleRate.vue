@@ -39,6 +39,8 @@ async function toggleModuleRateStatus() {
 
     try {
         await invoke("rewrite_module_rate_temp", { status, alignment });
+        // Notify the canvas so the rate box shows/hides to match the toggle.
+        window.dispatchEvent(new CustomEvent("module-rate-status-changed"));
     } catch (error) {
         console.warn("Failed to rewrite module-rate status.", error);
     }

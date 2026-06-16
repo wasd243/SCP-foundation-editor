@@ -8,18 +8,39 @@ const RATE_WIDTH_PX = 80;
 
 export const rateAlignment = ref<RateAlignment>("left");
 
+// The rate box is only shown while MODULE_RATE=TRUE (button actived).
+export const rateVisible = ref(false);
+
+/** Show the rate box only when MODULE_RATE=TRUE; hide it otherwise. */
+export function applyModuleRateVisibility(status: string): void {
+    rateVisible.value = /MODULE_RATE=TRUE/i.test(status);
+}
+
 export const rateBoxStyle = computed<Record<string, string>>(() => {
+    const baseStyle = {
+        display: rateVisible.value ? "block" : "none",
+        pointerEvents: rateVisible.value ? "auto" : "none",
+        left: "auto",
+        right: "auto",
+    };
+
+    if (!rateVisible.value) {
+        return baseStyle;
+    }
+
     switch (rateAlignment.value) {
         case "left":
-            return { left: "500px", right: "auto", pointerEvents: "auto" };
+            return { ...baseStyle, left: "500px", right: "auto" };
         case "center":
             return {
+                ...baseStyle,
                 left: `calc(50% - ${RATE_WIDTH_PX / 2}px)`,
                 right: "auto",
-                pointerEvents: "auto",
             };
         case "right":
-            return { left: "auto", right: "500px", pointerEvents: "auto" };
+            return { ...baseStyle, left: "auto", right: "500px" };
+        default:
+            return baseStyle;
     }
 });
 

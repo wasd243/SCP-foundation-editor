@@ -9,7 +9,9 @@ import {
     rateBoxStyle,
     getRateDropAlignment,
     applyModuleRateAlignment,
+    applyModuleRateVisibility,
     writeRateAlignmentToTemp,
+    rateVisible,
 } from "./EditorCanvas/RateBox.ts";
 import {
     getContextMenuFlags,
@@ -145,6 +147,7 @@ async function refreshRateAlignment() {
     try {
         const status = await invoke<string>("read_module_rate_temp");
         applyModuleRateAlignment(status);
+        applyModuleRateVisibility(status);
     } catch (error) {
         console.warn("Failed to read module-rate alignment.", error);
     }
@@ -153,6 +156,9 @@ async function refreshRateAlignment() {
 onMounted(() => {
     window.addEventListener("pointerdown", closeContextMenuOnPointerDown, true);
     window.addEventListener("module-rate-status-changed", refreshRateAlignment);
+
+    // Initialize alignment/visibility from temp on first mount.
+    refreshRateAlignment();
 });
 
 onUnmounted(() => {
@@ -251,6 +257,7 @@ const editor = useEditor({
         <EditorContent :editor="editor" />
         <EditorCanvasMoveable />
         <VueMoveable
+            v-if="rateVisible"
             :target="rateButtonRef || undefined"
             :draggable="true"
             :resizable="false"
