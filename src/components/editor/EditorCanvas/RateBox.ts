@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api/core";
 import { computed, ref } from "vue";
 
 export type RateAlignment = "left" | "center" | "right";
@@ -43,6 +44,29 @@ export function applyModuleRateAlignment(status: string): void {
         default:
             rateAlignment.value = "right";
             break;
+    }
+}
+
+/**
+ * Write the current rate-box alignment back to the module-rate temp file,
+ * preserving the existing MODULE_RATE status line. Called on each moveable
+ * position change so the temp file reflects the box's latest alignment.
+ */
+export async function writeRateAlignmentToTemp(): Promise<void> {
+    let status = "MODULE_RATE=FALSE";
+    try {
+        const current = await invoke<string>("read_module_rate_temp");
+        status = /MODULE_RATE=\w+/i.exec(current)?.[0] ?? status;
+    } catch {
+        // No temp file yet; fall back to the default status.
+    }
+
+    const alignment = `ALIGNMENTS=${rateAlignment.value.toUpperCase()}`;
+
+    try {
+        await invoke("rewrite_module_rate_temp", { status, alignment });
+    } catch (error) {
+        console.warn("Failed to write rate alignment to temp.", error);
     }
 }
 

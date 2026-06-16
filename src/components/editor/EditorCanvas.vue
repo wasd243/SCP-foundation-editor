@@ -9,6 +9,7 @@ import {
     rateBoxStyle,
     getRateDropAlignment,
     applyModuleRateAlignment,
+    writeRateAlignmentToTemp,
 } from "./EditorCanvas/RateBox.ts";
 import {
     getContextMenuFlags,
@@ -184,6 +185,7 @@ function onRateDragEnd(e: any) {
     const alignment = getRateDropAlignment(containerEl, target);
     target.style.transform = "";
     rateAlignment.value = alignment;
+    writeRateAlignmentToTemp();
 }
 
 const editor = useEditor({
