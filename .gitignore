@@ -39,8 +39,9 @@ module_rate_status.txt
 # MacOS
 .DS_Store
 
-# aiderchat
+# Agents' local files
 .aider*
+.claude/settings.local.json
 
 # Vite
 .vite-dev.err.log
