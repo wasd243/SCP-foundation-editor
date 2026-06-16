@@ -1,0 +1,32 @@
+# Git
+.git
+.gitignore
+
+# Node dependencies & build output
+node_modules
+**/node_modules
+dist
+public/code_view/assets/bundle_editor*.js
+
+# Rust / Cargo build output
+target
+**/target
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Editor / OS cruft
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Local agent / tooling files
+.claude
+AGENTS.md
+CLAUDE.md
+.aider.chat.history.md
+.aider.conf.yml
+.aider.input.history
+.github/copilot-instructions.md
