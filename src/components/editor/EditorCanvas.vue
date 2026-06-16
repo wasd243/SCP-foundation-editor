@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
+import VueMoveable from "vue3-moveable";
 import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
+import {
+    rateAlignment,
+    rateBoxStyle,
+    getRateDropAlignment,
+} from "./EditorCanvas/RateBox.ts";
 import {
     getContextMenuFlags,
     type ContextMenuFlags,
@@ -140,6 +146,26 @@ onUnmounted(() => {
     );
 });
 
+const rateButtonRef = ref<HTMLElement | null>(null);
+
+function onRateDrag(e: any) {
+    (e.target as HTMLElement).style.transform = e.transform;
+}
+
+function onRateDragEnd(e: any) {
+    const target = e.target as HTMLElement;
+    const containerEl = document.querySelector<HTMLElement>("#container-wrap");
+
+    if (!containerEl) {
+        target.style.transform = "";
+        return;
+    }
+
+    const alignment = getRateDropAlignment(containerEl, target);
+    target.style.transform = "";
+    rateAlignment.value = alignment;
+}
+
 const editor = useEditor({
     extensions: editorExtensions,
     content: "<p>Hello FTML editor.</p>",
@@ -195,13 +221,23 @@ const editor = useEditor({
             <div id="content-wrap">
                 <div id="side-bar">Editor side-bar</div>
                 <div class="meta-title">Editor Meta Title Preview</div>
+                <button
+                    ref="rateButtonRef"
+                    class="rate"
+                    :style="rateBoxStyle"
+                ></button>
             </div>
         </div>
 
-        <button class="rate"></button>
-
         <EditorContent :editor="editor" />
         <EditorCanvasMoveable />
+        <VueMoveable
+            :target="rateButtonRef || undefined"
+            :draggable="true"
+            :resizable="false"
+            @drag="onRateDrag"
+            @dragEnd="onRateDragEnd"
+        />
     </main>
 
     <Teleport to="body">
