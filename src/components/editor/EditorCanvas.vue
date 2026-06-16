@@ -198,6 +198,8 @@ const editor = useEditor({
             </div>
         </div>
 
+        <button class="rate"></button>
+
         <EditorContent :editor="editor" />
         <EditorCanvasMoveable />
     </main>
