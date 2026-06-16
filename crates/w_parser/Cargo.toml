@@ -2,8 +2,8 @@
 
 [package]
 name = "w_parser"
-version = "0.1.0"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
 
 [lib]
 name = "w_parser"
@@ -11,9 +11,8 @@ crate-type = ["rlib", "cdylib"]
 
 [dependencies]
 ftml = { git = "https://github.com/scpwiki/ftml", tag = "v1.40.0" }
-
 kuchiki = "0.8"
 time = "=0.3.37"
 serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.149"
-regex = "1"
+serde_json.workspace = true
+regex.workspace = true

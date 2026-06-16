@@ -1,8 +1,8 @@
 [package]
 name = "scpeditor-bin"
-version = "0.1.0"
-edition = "2021"
-authors = ["wasd243"]
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -11,7 +11,7 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
-serde_json = "1.0.149"
+serde_json.workspace = true
 
 # Parser
 w_parser = { path = "../crates/w_parser" }
