@@ -3,10 +3,12 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 import VueMoveable from "vue3-moveable";
 import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
+import { invoke } from "@tauri-apps/api/core";
 import {
     rateAlignment,
     rateBoxStyle,
     getRateDropAlignment,
+    applyModuleRateAlignment,
 } from "./EditorCanvas/RateBox.ts";
 import {
     getContextMenuFlags,
@@ -134,8 +136,22 @@ function getImageContainerTarget(element: HTMLElement) {
     return findImageContainerParent(element);
 }
 
+/**
+ * Refresh the default rate-box alignment from the parser's module-rate temp
+ * file, which is rewritten on every `parse_wikidot` call.
+ */
+async function refreshRateAlignment() {
+    try {
+        const status = await invoke<string>("read_module_rate_temp");
+        applyModuleRateAlignment(status);
+    } catch (error) {
+        console.warn("Failed to read module-rate alignment.", error);
+    }
+}
+
 onMounted(() => {
     window.addEventListener("pointerdown", closeContextMenuOnPointerDown, true);
+    window.addEventListener("module-rate-status-changed", refreshRateAlignment);
 });
 
 onUnmounted(() => {
@@ -143,6 +159,10 @@ onUnmounted(() => {
         "pointerdown",
         closeContextMenuOnPointerDown,
         true,
+    );
+    window.removeEventListener(
+        "module-rate-status-changed",
+        refreshRateAlignment,
     );
 });
 

@@ -22,6 +22,30 @@ export const rateBoxStyle = computed<Record<string, string>>(() => {
     }
 });
 
+/**
+ * Set the default rate-box alignment from the parser's module-rate temp file
+ * content (`MODULE_RATE=...\nALIGNMENTS=LEFT|CENTER|RIGHT|NONE`).
+ * `NONE` (no explicit alignment context around `[[module rate]]`) falls back
+ * to `right`.
+ */
+export function applyModuleRateAlignment(status: string): void {
+    const value = /ALIGNMENTS=(\w+)/i.exec(status)?.[1]?.toUpperCase();
+
+    switch (value) {
+        case "LEFT":
+            rateAlignment.value = "left";
+            break;
+        case "CENTER":
+            rateAlignment.value = "center";
+            break;
+        case "RIGHT":
+        case "NONE":
+        default:
+            rateAlignment.value = "right";
+            break;
+    }
+}
+
 export function getRateDropAlignment(
     containerEl: HTMLElement,
     targetEl: HTMLElement,
