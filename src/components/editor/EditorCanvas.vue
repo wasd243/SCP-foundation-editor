@@ -208,7 +208,6 @@ const editor = useEditor({
 <template>
     <main class="editor-canvas editor-theme-default">
         <!--These div are here to support wiki css themes-->
-        <!--I DO NOT promise that these would support all legacy wikidot css-->
         <!--GOOD LUCK-->
         <div id="container-wrap">
             <div id="header">
@@ -221,11 +220,9 @@ const editor = useEditor({
             <div id="content-wrap">
                 <div id="side-bar">Editor side-bar</div>
                 <div class="meta-title">Editor Meta Title Preview</div>
-                <button
-                    ref="rateButtonRef"
-                    class="rate"
-                    :style="rateBoxStyle"
-                ></button>
+                <button ref="rateButtonRef" class="rate" :style="rateBoxStyle">
+                    Rate: + - x
+                </button>
             </div>
         </div>
 

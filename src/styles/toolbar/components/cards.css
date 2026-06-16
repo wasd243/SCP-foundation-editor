@@ -41,6 +41,11 @@
     cursor: pointer;
 }
 
+/* This style related to module rate configuration */
+.component-card.module-rate {
+    width: 150px;
+}
+
 .component-card img {
     width: 24px;
     height: 24px;
