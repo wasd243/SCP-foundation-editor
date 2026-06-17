@@ -35,6 +35,7 @@ final_output.ftml
 patch_origin.ftml
 user_css.css
 module_rate_status.txt
+theme_status.json
 
 # MacOS
 .DS_Store
