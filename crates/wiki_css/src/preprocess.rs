@@ -53,10 +53,8 @@ fn keep_only_css_blocks(ftml: &str) -> String {
 /// `[[module css]]`, `[[/module]]`, `[[code type="css"]]`, and `[[/code]]`,
 /// leaving only the raw CSS content.
 fn remove_unused_module_css(ftml: &str) -> String {
-    let re = Regex::new(
-        r#"(?i)\[\[module css]]|\[\[/module]]|\[\[code type="css"]]|\[\[/code]]"#,
-    )
-    .unwrap();
+    let re = Regex::new(r#"(?i)\[\[module css]]|\[\[/module]]|\[\[code type="css"]]|\[\[/code]]"#)
+        .unwrap();
     re.replace_all(ftml, "").to_string()
 }
 
