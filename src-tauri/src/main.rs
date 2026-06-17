@@ -10,6 +10,7 @@ use handlers::{
     open_code_view::patch_get_user_css,
     open_code_view::read_final_output,
     save::save_ftml,
+    theme::get_theme,
 };
 
 use tauri::Builder;
@@ -26,6 +27,7 @@ fn main() {
             save_user_css_to_cache,
             read_module_rate_temp,
             rewrite_module_rate_temp,
+            get_theme,
             // patch functions here
             patch_get_user_css,
         ])
