@@ -21,6 +21,7 @@ use crate::ftml_interceptor::preprocess_interceptor::{
     unused_newline_interceptor::unused_newline_interceptor,
     unused_variable_interceptor::unused_variable_interceptor,
     theme_interceptor::theme_interceptor,
+    theme_interceptor::THEME_CACHE,
 };
 
 use crate::ftml_normalizer::image_normalizer::normalize_images;
@@ -139,6 +140,14 @@ pub fn render_wikidot_to_html_with_resourcepack(
         html: html_output.body.to_string(),
         ast_json,
     })
+}
+
+/// Returns the cached theme CSS produced by the most recent parse.
+pub fn get_theme_css() -> String {
+    THEME_CACHE
+        .lock()
+        .unwrap()
+        .clone()
 }
 
 // Final handler to tauri
