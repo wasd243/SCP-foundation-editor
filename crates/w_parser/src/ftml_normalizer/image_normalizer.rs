@@ -1,6 +1,6 @@
+use kuchiki::NodeRef;
 use kuchiki::parse_html;
 use kuchiki::traits::*;
-use kuchiki::NodeRef;
 
 fn div_ancestor(node: &NodeRef) -> bool {
     node.ancestors().skip(1).any(|ancestor| {

@@ -1,7 +1,10 @@
 use regex::Regex;
 use std::fs;
 
-const MODULE_RATE_STATUS: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/module_rate_status.txt");
+const MODULE_RATE_STATUS: &str = concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../temp/module_rate_status.txt"
+);
 
 /// Prepend the `[[module rate]]` Wikitext block (built from the module-rate
 /// status file) to the editor content.

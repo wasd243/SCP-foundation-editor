@@ -1,24 +1,20 @@
-mod add_user_css;
-mod fmt_newline;
-mod fmt_alignments;
 mod add_footnote_block;
 mod add_module_rate;
+mod add_user_css;
+mod fmt_alignments;
+mod fmt_newline;
 
-use crate::ftml_fmt::add_user_css::add_user_css;
 use crate::ftml_fmt::add_footnote_block::add_footnote_block;
 use crate::ftml_fmt::add_module_rate::add_module_rate;
-use crate::ftml_fmt::{
-    fmt_newline::format_newline,
-    fmt_alignments::format_alignments,
-};
+use crate::ftml_fmt::add_user_css::add_user_css;
+use crate::ftml_fmt::{fmt_alignments::format_alignments, fmt_newline::format_newline};
 use std::fs;
 
 // These are temp directory paths.
 pub(crate) const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/output.ftml");
 
 // This const is public for `src-tauri` to use.
-pub const USER_CSS_PATH: &str =
-    concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/user_css.css");
+pub const USER_CSS_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/user_css.css");
 
 /// This function formats the ftml string.
 pub fn ftml_fmt(ftml: &str) -> String {

@@ -1,12 +1,15 @@
 mod handlers;
 
 use handlers::{
-    connect_exporter::export_code, connect_exporter::export_css, connect_parser::parse_wikidot,
-    module_rate::{
-        read_module_rate_temp, rewrite_module_rate_temp,
-    },
-    open_code_view::open_code_view_window, open_code_view::patch_get_user_css,
-    open_code_view::read_final_output, save::save_ftml, insert_user_css::save_user_css_to_cache,
+    connect_exporter::export_code,
+    connect_exporter::export_css,
+    connect_parser::parse_wikidot,
+    insert_user_css::save_user_css_to_cache,
+    module_rate::{read_module_rate_temp, rewrite_module_rate_temp},
+    open_code_view::open_code_view_window,
+    open_code_view::patch_get_user_css,
+    open_code_view::read_final_output,
+    save::save_ftml,
 };
 
 use tauri::Builder;

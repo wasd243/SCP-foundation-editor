@@ -3,10 +3,12 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 
 /// This constant is public for the whole project to use.
-pub const THEME_STATUS_TEMP_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/theme_status.json");
+pub const THEME_STATUS_TEMP_PATH: &str =
+    concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/theme_status.json");
 
 /// Root directory of the resource pack themes, where theme `.ftml` files live.
-pub const RESOURCEPACK_THEMES_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack/themes");
+pub const RESOURCEPACK_THEMES_PATH: &str =
+    concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack/themes");
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ThemeStatus {
@@ -21,11 +23,20 @@ pub fn theme_interceptor(ftml: &str) -> String {
     let re = Regex::new(r"\s*\[\[include\s+:[^\]]*?:theme:[^\]]*?\]\]").unwrap();
 
     // Preprocess here
-    let _theme_path = generate_theme_path(ftml);
+    let theme_path = generate_theme_path(ftml);
+    let theme_name = extract_theme_name(ftml);
 
-    write_theme_boolean_status(re.is_match(ftml));
+    write_theme_status(re.is_match(ftml), theme_name);
 
     re.replace_all(ftml, "").to_string()
+}
+
+/// Extracts the theme name from the theme include in `ftml`, if any.
+///
+/// e.g. `[[include :scp-wiki-cn:theme:yore]]` -> `Some("yore")`.
+fn extract_theme_name(ftml: &str) -> Option<String> {
+    let re = Regex::new(r"\[\[include\s+:[\w-]+:theme:([\w-]+)").unwrap();
+    re.captures(ftml).map(|caps| caps[1].to_string())
 }
 
 /// Maps a Wikidot site slug to its resource pack branch directory.
@@ -51,20 +62,19 @@ fn generate_theme_path(ftml: &str) -> Option<String> {
     let branch = site_to_branch(&caps[1]);
     let theme_name = &caps[2];
 
-    Some(format!("{RESOURCEPACK_THEMES_PATH}/{branch}/{theme_name}.ftml"))
+    Some(format!(
+        "{RESOURCEPACK_THEMES_PATH}/{branch}/{theme_name}.ftml"
+    ))
 }
 
-/// Writes the theme boolean status to the temp file. When a theme include is matched,
-/// `theme` is `true`; otherwise `false`. All other fields are left as
-/// `null` / `[]` placeholders for later population.
-///
-/// ---
-///
-/// Tip: Only write `theme` boolean and full all others `null` or `[]`.
-fn write_theme_boolean_status(matched: bool) {
+/// Writes the theme status to the temp file. When a theme include is matched,
+/// `theme` is `true` and `theme_name` holds the matched name; otherwise
+/// `theme` is `false` and `theme_name` is `null`. The parent fields are left
+/// as `null` / `[]` placeholders for later population.
+fn write_theme_status(matched: bool, theme_name: Option<String>) {
     let status = ThemeStatus {
         theme: matched,
-        theme_name: None,
+        theme_name,
         parent_theme: None,
         parent_theme_name: Vec::new(),
     };
@@ -136,5 +146,23 @@ mod tests {
     fn test_generate_theme_path_no_theme() {
         let ftml = r#"This is a normal text."#;
         assert_eq!(generate_theme_path(ftml), None);
+    }
+
+    #[test]
+    fn test_extract_theme_name() {
+        let ftml = r#"[[include :scp-wiki-cn:theme:yore]]"#;
+        assert_eq!(extract_theme_name(ftml), Some("yore".to_string()));
+    }
+
+    #[test]
+    fn test_extract_theme_name_with_variables() {
+        let ftml = r#"[[include :scp-wiki:theme:test|var1=value1]]"#;
+        assert_eq!(extract_theme_name(ftml), Some("test".to_string()));
+    }
+
+    #[test]
+    fn test_extract_theme_name_no_theme() {
+        let ftml = r#"This is a normal text."#;
+        assert_eq!(extract_theme_name(ftml), None);
     }
 }

@@ -1,5 +1,5 @@
-use std::fs;
 use ltmf::ftml_fmt::USER_CSS_PATH;
+use std::fs;
 
 /// This function saves the user css to the cache: `temp/user_css.css`.
 #[tauri::command]
