@@ -1,0 +1,12 @@
+[package]
+name = "wiki_css"
+version.workspace = true
+edition.workspace = true
+
+[lib]
+name = "wiki_css"
+crate-type = ["rlib"]
+
+[dependencies]
+regex.workspace = true
+lightningcss = "1.0.0-alpha.69"
