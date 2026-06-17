@@ -1,4 +1,7 @@
+mod resolve_import;
+
 use regex::Regex;
+use resolve_import::resolve_import;
 
 pub fn preprocess(ftml: &str) -> String {
     // Strip leftover `~_..._~` notes (e.g. parent-theme markers).
@@ -12,7 +15,10 @@ pub fn preprocess(ftml: &str) -> String {
     let ftml = keep_only_css_blocks(&ftml);
 
     // 3. Remove all invalid formats in the CSS file.
-    remove_unused_module_css(&ftml)
+    let ftml = remove_unused_module_css(&ftml);
+
+    // 4. Resolve `@import` rules, inlining them like a C preprocessor.
+    resolve_import(&ftml)
 }
 
 fn sanitize_unused_notes(ftml: &str) -> String {
