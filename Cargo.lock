@@ -5655,10 +5655,12 @@ version = "0.1.0"
 dependencies = [
  "ftml",
  "kuchiki",
+ "once_cell",
  "regex",
  "serde",
  "serde_json",
  "time",
+ "wiki_css",
 ]
 
 [[package]]

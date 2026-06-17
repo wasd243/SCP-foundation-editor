@@ -1,6 +1,10 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs;
+use once_cell::sync::Lazy;
+use std::sync::Mutex;
+
+static THEME_CACHE: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new(String::new()));
 
 /// This constant is public for the whole project to use.
 pub const THEME_STATUS_TEMP_PATH: &str =
@@ -26,6 +30,10 @@ pub fn theme_interceptor(ftml: &str) -> String {
     let theme_path = generate_theme_path(ftml);
     let theme_name = extract_theme_name(ftml);
     let (parent_theme, parent_theme_name) = detect_parent_theme(theme_path.as_deref());
+    let full_css = wiki_css::preprocess(ftml);
+
+    // Cache the full CSS here in memory
+    *THEME_CACHE.lock().unwrap() = full_css;
 
     write_theme_status(
         re.is_match(ftml),
@@ -235,5 +243,17 @@ mod tests {
     fn test_detect_parent_theme_missing_file() {
         let path = format!("{RESOURCEPACK_THEMES_PATH}/CN/does_not_exist.ftml");
         assert_eq!(detect_parent_theme(Some(&path)), (false, vec![]));
+    }
+
+    #[test]
+    fn test_the_whole_interceptor() {
+        let ftml = r#"[[include :scp-wiki-cn:theme:parallel]]"#;
+        theme_interceptor(ftml); // There's no assertion here, just make sure it will cache theme status
+    }
+
+    #[test]
+    fn test_the_whole_interceptor_with_parent_theme() {
+        let ftml = r#"[[include :scp-wiki-cn:theme:yore]]"#;
+        theme_interceptor(ftml); // There's no assertion here, just make sure it will cache theme status
     }
 }
