@@ -20,6 +20,7 @@ use crate::ftml_interceptor::user::{
 use crate::ftml_interceptor::preprocess_interceptor::{
     unused_newline_interceptor::unused_newline_interceptor,
     unused_variable_interceptor::unused_variable_interceptor,
+    theme_interceptor::theme_interceptor,
 };
 
 use crate::ftml_normalizer::image_normalizer::normalize_images;
@@ -98,6 +99,9 @@ pub fn render_wikidot_to_html_with_resourcepack(
 
     // Cache user CSS
     css_cacher(&wikitext);
+    
+    // Theme Interceptor here
+    wikitext = theme_interceptor(&wikitext);
 
     // Div blocks need editor metadata so the exporter can preserve them.
     wikitext = attach_div_meta_data(&wikitext);

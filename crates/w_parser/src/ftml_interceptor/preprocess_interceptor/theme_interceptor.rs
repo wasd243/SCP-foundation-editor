@@ -4,7 +4,7 @@ use std::fs;
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 
-static THEME_CACHE: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new(String::new()));
+pub static THEME_CACHE: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new(String::new()));
 
 /// This constant is public for the whole project to use.
 pub const THEME_STATUS_TEMP_PATH: &str =

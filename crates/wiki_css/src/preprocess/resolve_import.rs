@@ -34,7 +34,7 @@ pub fn resolve_import(css: &str) -> String {
     let css = strip_comments(css);
     let css = resolve_url_imports(&css);
 
-    bundle_css(&css).unwrap_or_else(|_| css)
+    bundle_css(&css).unwrap_or(css)
 }
 
 /// Removes all CSS comments by parsing with lightningcss and re-printing
