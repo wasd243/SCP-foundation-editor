@@ -1,3 +1,4 @@
+~_PARENT_THEME=null_~
 [[module CSS]]
 @import url('https://hormress.github.io/Parallel/normalize-min.css');
 @import url('https://hormress.github.io/Parallel/parallel-min.css');

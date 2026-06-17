@@ -25,10 +25,48 @@ pub fn theme_interceptor(ftml: &str) -> String {
     // Preprocess here
     let theme_path = generate_theme_path(ftml);
     let theme_name = extract_theme_name(ftml);
+    let (parent_theme, parent_theme_name) = detect_parent_theme(theme_path.as_deref());
 
-    write_theme_status(re.is_match(ftml), theme_name);
+    write_theme_status(
+        re.is_match(ftml),
+        theme_name,
+        parent_theme,
+        parent_theme_name,
+    );
 
     re.replace_all(ftml, "").to_string()
+}
+
+/// Detects the parent theme by reading the theme `.ftml` file at `theme_path`
+/// and matching the `~_PARENT_THEME=<name>_~` marker.
+///
+/// Returns `(parent_theme, parent_theme_name)`:
+/// - a single real name (e.g. `~_PARENT_THEME=parallel_~`) -> `(true, ["parallel"])`
+/// - `~_PARENT_THEME=null_~`, no marker, multiple markers, or an unreadable
+///   file -> the default `(false, [])`
+///
+/// Only one parent theme is supported for now; multiple markers fall back to
+/// the default.
+fn detect_parent_theme(theme_path: Option<&str>) -> (bool, Vec<String>) {
+    let default = (false, Vec::new());
+
+    let Some(path) = theme_path else {
+        return default;
+    };
+    let Ok(content) = fs::read_to_string(path) else {
+        return default;
+    };
+
+    let re = Regex::new(r"~_PARENT_THEME=([\w-]+)_~").unwrap();
+    let names: Vec<String> = re
+        .captures_iter(&content)
+        .map(|caps| caps[1].to_string())
+        .collect();
+
+    match names.as_slice() {
+        [name] if name != "null" => (true, vec![name.clone()]),
+        _ => default,
+    }
 }
 
 /// Extracts the theme name from the theme include in `ftml`, if any.
@@ -69,14 +107,19 @@ fn generate_theme_path(ftml: &str) -> Option<String> {
 
 /// Writes the theme status to the temp file. When a theme include is matched,
 /// `theme` is `true` and `theme_name` holds the matched name; otherwise
-/// `theme` is `false` and `theme_name` is `null`. The parent fields are left
-/// as `null` / `[]` placeholders for later population.
-fn write_theme_status(matched: bool, theme_name: Option<String>) {
+/// `theme` is `false` and `theme_name` is `null`. `parent_theme` defaults to
+/// `false` and `parent_theme_name` to `[]`.
+fn write_theme_status(
+    matched: bool,
+    theme_name: Option<String>,
+    parent_theme: bool,
+    parent_theme_name: Vec<String>,
+) {
     let status = ThemeStatus {
         theme: matched,
         theme_name,
-        parent_theme: None,
-        parent_theme_name: Vec::new(),
+        parent_theme: Some(parent_theme),
+        parent_theme_name,
     };
 
     if let Ok(contents) = serde_json::to_string_pretty(&status) {
@@ -164,5 +207,33 @@ mod tests {
     fn test_extract_theme_name_no_theme() {
         let ftml = r#"This is a normal text."#;
         assert_eq!(extract_theme_name(ftml), None);
+    }
+
+    #[test]
+    fn test_detect_parent_theme_with_parent() {
+        // CN/yore.ftml declares `~_PARENT_THEME=parallel_~`.
+        let path = format!("{RESOURCEPACK_THEMES_PATH}/CN/yore.ftml");
+        assert_eq!(
+            detect_parent_theme(Some(&path)),
+            (true, vec!["parallel".to_string()])
+        );
+    }
+
+    #[test]
+    fn test_detect_parent_theme_null() {
+        // CN/parallel.ftml declares `~_PARENT_THEME=null_~`.
+        let path = format!("{RESOURCEPACK_THEMES_PATH}/CN/parallel.ftml");
+        assert_eq!(detect_parent_theme(Some(&path)), (false, vec![]));
+    }
+
+    #[test]
+    fn test_detect_parent_theme_no_path() {
+        assert_eq!(detect_parent_theme(None), (false, vec![]));
+    }
+
+    #[test]
+    fn test_detect_parent_theme_missing_file() {
+        let path = format!("{RESOURCEPACK_THEMES_PATH}/CN/does_not_exist.ftml");
+        assert_eq!(detect_parent_theme(Some(&path)), (false, vec![]));
     }
 }
