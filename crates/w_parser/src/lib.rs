@@ -63,6 +63,9 @@ pub fn render_wikidot_to_html_with_resourcepack(
 
     ftml::preprocess(&mut wikitext);
 
+    // Theme Interceptor here
+    wikitext = theme_interceptor(&wikitext);
+
     // Includer
     let (mut wikitext, _included_pages) = ftml::include(
         &wikitext,
@@ -99,9 +102,6 @@ pub fn render_wikidot_to_html_with_resourcepack(
 
     // Cache user CSS
     css_cacher(&wikitext);
-    
-    // Theme Interceptor here
-    wikitext = theme_interceptor(&wikitext);
 
     // Div blocks need editor metadata so the exporter can preserve them.
     wikitext = attach_div_meta_data(&wikitext);
