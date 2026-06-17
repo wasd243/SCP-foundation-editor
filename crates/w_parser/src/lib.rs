@@ -20,6 +20,7 @@ use crate::ftml_interceptor::user::{
 use crate::ftml_interceptor::preprocess_interceptor::{
     unused_newline_interceptor::unused_newline_interceptor,
     unused_variable_interceptor::unused_variable_interceptor,
+    theme_interceptor::theme_interceptor,
 };
 
 use crate::ftml_normalizer::image_normalizer::normalize_images;
@@ -61,6 +62,9 @@ pub fn render_wikidot_to_html_with_resourcepack(
     let mut wikitext = source_text.to_string();
 
     ftml::preprocess(&mut wikitext);
+
+    // Theme Interceptor here
+    wikitext = theme_interceptor(&wikitext);
 
     // Includer
     let (mut wikitext, _included_pages) = ftml::include(

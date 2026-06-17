@@ -1,6 +1,9 @@
 use std::fs;
 
-const MODULE_RATE_TEMP_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../temp/module_rate_status.txt");
+const MODULE_RATE_TEMP_PATH: &str = concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../temp/module_rate_status.txt"
+);
 
 #[tauri::command]
 pub fn read_module_rate_temp() -> Result<String, String> {
@@ -25,6 +28,12 @@ mod tests {
     #[test]
     fn test_rewrite_module_rate_temp() {
         rewrite_module_rate_temp("MODULE_RATE=TRUE", "ALIGNMENTS=LEFT").unwrap();
-        println!("{}", include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../temp/module_rate_status.txt")))
+        println!(
+            "{}",
+            include_str!(concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/../temp/module_rate_status.txt"
+            ))
+        )
     }
 }
