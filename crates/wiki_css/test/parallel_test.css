@@ -1,4 +1,4 @@
-[[module CSS]]
+
 @import url('https://hormress.github.io/Parallel/normalize-min.css');
 @import url('https://hormress.github.io/Parallel/parallel-min.css');
 
@@ -23,8 +23,8 @@
 /{$deep-gold} */
 
 p:has(iframe) {margin: 0;}
-[[/module]]
-[[module CSS]]
+
+
 body {
     transition: background-color 0.125s;
 }
@@ -290,8 +290,8 @@ div.presets .yui-navset.yui-navset-top > ul.yui-nav > li:nth-child(6) {
         grid-template-columns: 1fr 1fr 1fr;
     }
 }
-[[/module]]
-[[module CSS]]
+
+
 .earthworm {
     font-weight: bold;
     display: flex;
@@ -369,4 +369,3 @@ div.presets .yui-navset.yui-navset-top > ul.yui-nav > li:nth-child(6) {
 .earthworm a {
     word-break: normal;
 }
-[[/module]]

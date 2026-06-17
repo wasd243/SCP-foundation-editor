@@ -9,7 +9,10 @@ pub fn preprocess(ftml: &str) -> String {
     let ftml = remove_code_wrapped_module_css(&ftml);
 
     // 2. Keep only real CSS blocks, discarding everything else.
-    keep_only_css_blocks(&ftml)
+    let ftml = keep_only_css_blocks(&ftml);
+
+    // 3. Remove all invalid formats in the CSS file.
+    remove_unused_module_css(&ftml)
 }
 
 fn sanitize_unused_notes(ftml: &str) -> String {
@@ -20,10 +23,9 @@ fn sanitize_unused_notes(ftml: &str) -> String {
 /// Removes any `[[code ...]] ... [[module css]] ... [[/module]] ... [[/code]]`
 /// block, i.e. a `[[module css]]` block nested inside a `[[code]]` block.
 fn remove_code_wrapped_module_css(ftml: &str) -> String {
-    let re = Regex::new(
-        r"(?is)\[\[code(.*?)]](.*?)\[\[module css]](.*?)\[\[/module]](.*?)\[\[/code]]",
-    )
-    .unwrap();
+    let re =
+        Regex::new(r"(?is)\[\[code(.*?)]](.*?)\[\[module css]](.*?)\[\[/module]](.*?)\[\[/code]]")
+            .unwrap();
     re.replace_all(ftml, "").to_string()
 }
 
@@ -41,6 +43,17 @@ fn keep_only_css_blocks(ftml: &str) -> String {
         .join("\n")
 }
 
+/// Remove all invalid formats in the CSS file, i.e. the block markers
+/// `[[module css]]`, `[[/module]]`, `[[code type="css"]]`, and `[[/code]]`,
+/// leaving only the raw CSS content.
+fn remove_unused_module_css(ftml: &str) -> String {
+    let re = Regex::new(
+        r#"(?i)\[\[module css]]|\[\[/module]]|\[\[code type="css"]]|\[\[/code]]"#,
+    )
+    .unwrap();
+    re.replace_all(ftml, "").to_string()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -48,8 +61,19 @@ mod tests {
 
     #[test]
     fn test_preprocess() {
-        let ftml = fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack/themes/CN/parallel.ftml")).unwrap();
+        let ftml = fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../resourcepack/themes/CN/parallel.ftml"
+        ))
+        .unwrap();
         println!("{}", preprocess(&ftml));
-        fs::write(concat!(env!("CARGO_MANIFEST_DIR"), "/../../crates/wiki_css/test/parallel_test.css"), preprocess(&ftml)).unwrap();
+        fs::write(
+            concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/../../crates/wiki_css/test/parallel_test.css"
+            ),
+            preprocess(&ftml),
+        )
+        .unwrap();
     }
 }
