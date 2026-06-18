@@ -51,7 +51,8 @@
         }
 
         // Blockquote also needs support both `[[div class="blockquote"]]`, `[[blockquote]]` and `> `
-        blockquote {
+        blockquote,
+        .blockquote {
             margin: 0 0 0.8em;
             padding: 12px 16px;
             color: #000000;

@@ -1,7 +1,10 @@
 use regex::Regex;
 use std::fs;
 
-const RATE_TEMP_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/module_rate_status.txt");
+const RATE_TEMP_PATH: &str = concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../temp/module_rate_status.txt"
+);
 
 pub fn rate_interceptor(text: &str) -> String {
     let re = Regex::new(r"(?i)\[\[module rate\]\]").unwrap();
@@ -18,8 +21,8 @@ pub fn rate_interceptor(text: &str) -> String {
 }
 
 fn detect_alignment(text: &str) -> &'static str {
-    let left   = Regex::new(r"(?i)(?s)\[\[<\]\].*?\[\[module rate\]\].*?\[\[/<\]\]").unwrap();
-    let right  = Regex::new(r"(?i)(?s)\[\[>\]\].*?\[\[module rate\]\].*?\[\[/>\]\]").unwrap();
+    let left = Regex::new(r"(?i)(?s)\[\[<\]\].*?\[\[module rate\]\].*?\[\[/<\]\]").unwrap();
+    let right = Regex::new(r"(?i)(?s)\[\[>\]\].*?\[\[module rate\]\].*?\[\[/>\]\]").unwrap();
     let center = Regex::new(r"(?i)(?s)\[\[=\]\].*?\[\[module rate\]\].*?\[\[/=\]\]").unwrap();
 
     if left.is_match(text) {

@@ -49,7 +49,7 @@ fn format_center_alignments(ftml: &str) -> String {
 pub(super) fn format_alignments(ftml: &str) -> String {
     let output = format_left_alignments(ftml);
     let output = format_right_alignments(&output);
-    
+
     format_center_alignments(&output)
 }
 
@@ -61,20 +61,29 @@ mod tests {
     fn test_format_left_alignments() {
         let ftml = "[[<]]\ntest1\n[[/<]]\n\n[[<]]\ntest2\n[[/<]]\n\n[[<]]\ntest3\n[[/<]]\n[[module rate]]\n\ntest4";
         let output = format_left_alignments(ftml);
-        assert_eq!(output, "[[<]]\ntest1\n\ntest2\n\ntest3\n[[/<]]\n[[module rate]]\n\ntest4");
+        assert_eq!(
+            output,
+            "[[<]]\ntest1\n\ntest2\n\ntest3\n[[/<]]\n[[module rate]]\n\ntest4"
+        );
     }
 
     #[test]
     fn test_format_right_alignments() {
         let ftml = "[[>]]\ntest1\n[[/>]]\n\n[[>]]\ntest2\n[[/>]]\n\n[[>]]\ntest3\n[[/>]]\n[[module rate]]\n\ntest4";
         let output = format_right_alignments(ftml);
-        assert_eq!(output, "[[>]]\ntest1\n\ntest2\n\ntest3\n[[/>]]\n[[module rate]]\n\ntest4");
+        assert_eq!(
+            output,
+            "[[>]]\ntest1\n\ntest2\n\ntest3\n[[/>]]\n[[module rate]]\n\ntest4"
+        );
     }
 
     #[test]
     fn test_format_center_alignments() {
         let ftml = "[[=]]\ntest1\n[[/=]]\n\n[[=]]\ntest2\n[[/=]]\n\n[[=]]\ntest3\n[[/=]]\n[[module rate]]\n\ntest4";
         let output = format_center_alignments(ftml);
-        assert_eq!(output, "[[=]]\ntest1\n\ntest2\n\ntest3\n[[/=]]\n[[module rate]]\n\ntest4");
+        assert_eq!(
+            output,
+            "[[=]]\ntest1\n\ntest2\n\ntest3\n[[/=]]\n[[module rate]]\n\ntest4"
+        );
     }
 }

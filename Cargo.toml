@@ -4,6 +4,7 @@ members = [
     "src-tauri",
     "crates/w_parser",
     "crates/ltmf",
+    "crates/wiki_css",
 ]
 
 [workspace.package]
