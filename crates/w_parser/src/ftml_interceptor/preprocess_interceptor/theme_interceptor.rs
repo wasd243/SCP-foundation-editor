@@ -1,8 +1,13 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::path::Path;
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
+
+/// How many `~_PARENT_THEME=..._~` links to follow before giving up, so a
+/// malformed/cyclic parent chain can never loop forever.
+const MAX_THEME_CHAIN_DEPTH: usize = 10;
 
 pub static THEME_CACHE: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new(String::new()));
 
@@ -30,7 +35,12 @@ pub fn theme_interceptor(ftml: &str) -> String {
     let theme_path = generate_theme_path(ftml);
     let theme_name = extract_theme_name(ftml);
     let (parent_theme, parent_theme_name) = detect_parent_theme(theme_path.as_deref());
-    let full_css = wiki_css::preprocess(ftml);
+
+    // The theme CSS lives in the resource pack theme file (and its parent
+    // chain), not in the bare `[[include :theme:...]]` directive. Read those
+    // files and preprocess their combined content. When there is no theme
+    // include, `theme_path` is `None` and the cache is cleared.
+    let full_css = build_theme_css(theme_path.as_deref());
 
     // Cache the full CSS here in memory
     *THEME_CACHE.lock().unwrap() = full_css;
@@ -43,6 +53,76 @@ pub fn theme_interceptor(ftml: &str) -> String {
     );
 
     re.replace_all(ftml, "").to_string()
+}
+
+/// Builds the full theme CSS for the theme at `theme_path`, including its
+/// parent-theme chain.
+///
+/// The chain is read root-ancestor first and the named theme last, so the
+/// child theme's rules come later in the stylesheet and win on equal
+/// specificity. The combined raw `.ftml` is then run through
+/// [`wiki_css::preprocess`] once, which extracts the `[[module css]]` blocks
+/// and resolves their `@import`s.
+///
+/// Returns an empty string when there is no theme include (`theme_path` is
+/// `None`) or none of the files can be read.
+fn build_theme_css(theme_path: Option<&str>) -> String {
+    let Some(theme_path) = theme_path else {
+        return String::new();
+    };
+
+    let mut combined = String::new();
+    for path in collect_theme_chain(theme_path) {
+        if let Ok(content) = fs::read_to_string(&path) {
+            combined.push_str(&content);
+            combined.push('\n');
+        }
+    }
+
+    if combined.trim().is_empty() {
+        return String::new();
+    }
+
+    wiki_css::preprocess(&combined)
+}
+
+/// Walks the `~_PARENT_THEME=..._~` chain starting at `theme_path` and returns
+/// the file paths ordered from the root ancestor down to `theme_path` itself.
+///
+/// Parent themes are resolved as sibling `.ftml` files in the same branch
+/// directory as the child. A visited set guards against cycles, and the walk
+/// is bounded by [`MAX_THEME_CHAIN_DEPTH`].
+fn collect_theme_chain(theme_path: &str) -> Vec<String> {
+    let mut chain = vec![theme_path.to_string()];
+    let mut current = theme_path.to_string();
+
+    for _ in 0..MAX_THEME_CHAIN_DEPTH {
+        let (has_parent, parent_names) = detect_parent_theme(Some(&current));
+        if !has_parent {
+            break;
+        }
+        let Some(parent_name) = parent_names.first() else {
+            break;
+        };
+        let Some(dir) = Path::new(&current).parent() else {
+            break;
+        };
+
+        let parent_path = dir.join(format!("{parent_name}.ftml"));
+        let parent_path = parent_path.to_string_lossy().to_string();
+
+        // Stop on a cycle so a self/mutual parent reference can't loop.
+        if chain.contains(&parent_path) {
+            break;
+        }
+
+        chain.push(parent_path.clone());
+        current = parent_path;
+    }
+
+    // Root ancestor first, the named theme last.
+    chain.reverse();
+    chain
 }
 
 /// Detects the parent theme by reading the theme `.ftml` file at `theme_path`
