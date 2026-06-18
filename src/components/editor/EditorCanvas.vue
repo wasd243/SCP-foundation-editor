@@ -238,16 +238,7 @@ const editor = useEditor({
         <!--These div are here to support wiki css themes-->
         <!--GOOD LUCK-->
         <div id="container-wrap">
-            <div id="header">
-                <h1>
-                    <span>Editor Header</span>
-                </h1>
-            </div>
-            <div id="top-bar">Editor Top Bar</div>
-
             <div id="content-wrap">
-                <div id="side-bar">Editor side-bar</div>
-                <div class="meta-title">Editor Meta Title Preview</div>
                 <button
                     ref="rateButtonRef"
                     class="rateBox"
@@ -301,7 +292,7 @@ const editor = useEditor({
     margin: 0 auto;
     padding: 48px 56px;
     box-sizing: border-box;
-    top: min(220px);
+    top: min(10px);
 
     background: #ffffff;
 
