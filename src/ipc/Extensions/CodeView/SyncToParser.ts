@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { scanDOMandReplace } from "./htmlAdapter";
+import { connectCSSAdapter } from "../../Themes/cssAdapter.ts";
 
 type CodeViewMessage = {
     type: "code-view-content-changed";
@@ -66,6 +67,8 @@ export function SyncToParser() {
                 } catch {
                     console.warn("No user CSS cache found.");
                 }
+
+                await connectCSSAdapter();
 
                 window.dispatchEvent(
                     new CustomEvent("code-view-parser-html", {

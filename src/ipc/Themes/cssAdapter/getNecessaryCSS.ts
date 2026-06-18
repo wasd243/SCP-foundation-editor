@@ -45,6 +45,9 @@ function matchesKeepList(selector: string): boolean {
 }
 
 export function getNecessaryCSS(ast: csstree.CssNode): void {
+
+    console.log("[cssAdapter] getNecessaryCSS: Activated");
+
     // Step 1: Remove disallowed at-rules (e.g. @font-face, @import)
     csstree.walk(ast, {
         visit: "Atrule",
