@@ -10,7 +10,8 @@ name = "w_parser"
 crate-type = ["rlib", "cdylib"]
 
 [dependencies]
-ftml = { git = "https://github.com/scpwiki/ftml", tag = "v1.40.0" } # This is parser library
+# Well, I don't know why wj team didn't publish that tag on GitHub, but it's seems like ftml stills good to use and very stable
+ftml = "1.41.0"
 wiki_css = { path = "../wiki_css" } # This is interceptor's preprocessor local library
 kuchiki = "0.8"
 once_cell = "1.21.4"
