@@ -1,3 +1,12 @@
-import type * as csstree from "css-tree";
+import * as csstree from "css-tree";
 
-export function addImportant(_ast: csstree.CssNode): void {}
+export function addImportant(ast: csstree.CssNode): void {
+    csstree.walk(ast, {
+        visit: "Declaration",
+        enter(node) {
+            if (!node.property.startsWith("--")) {
+                node.important = true;
+            }
+        },
+    });
+}
