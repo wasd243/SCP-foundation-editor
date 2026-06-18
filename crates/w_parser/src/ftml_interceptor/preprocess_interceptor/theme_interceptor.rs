@@ -1,10 +1,6 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs;
-use once_cell::sync::Lazy;
-use std::sync::Mutex;
-
-pub static THEME_CACHE: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new(String::new()));
 
 /// This constant is public for the whole project to use.
 pub const THEME_STATUS_TEMP_PATH: &str =
@@ -30,10 +26,6 @@ pub fn theme_interceptor(ftml: &str) -> String {
     let theme_path = generate_theme_path(ftml);
     let theme_name = extract_theme_name(ftml);
     let (parent_theme, parent_theme_name) = detect_parent_theme(theme_path.as_deref());
-    let full_css = wiki_css::preprocess(ftml);
-
-    // Cache the full CSS here in memory
-    *THEME_CACHE.lock().unwrap() = full_css;
 
     write_theme_status(
         re.is_match(ftml),

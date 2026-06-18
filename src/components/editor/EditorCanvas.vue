@@ -238,16 +238,8 @@ const editor = useEditor({
         <!--These div are here to support wiki css themes-->
         <!--GOOD LUCK-->
         <div id="container-wrap">
-            <div id="header">
-                <h1>
-                    <span>Editor Header</span>
-                </h1>
-            </div>
-            <div id="top-bar">Editor Top Bar</div>
-
+            <!--ARCHIVED: TO SEE FULL EXPLANATION, GO TO not-planned/theme ROOT DIRECTORY README.md.bak-->
             <div id="content-wrap">
-                <div id="side-bar">Editor side-bar</div>
-                <div class="meta-title">Editor Meta Title Preview</div>
                 <button ref="rateButtonRef" class="rate" :style="rateBoxStyle">
                     Rate: + - x
                 </button>
@@ -297,7 +289,7 @@ const editor = useEditor({
     margin: 0 auto;
     padding: 48px 56px;
     box-sizing: border-box;
-    top: min(220px);
+    top: 0;
 
     background: #ffffff;
 
