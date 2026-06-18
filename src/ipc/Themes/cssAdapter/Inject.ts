@@ -1,12 +1,11 @@
 export function inject(css: string) {
-    console.log(css);
-    // const existing = document.getElementById("theme-css");
-    // if (existing) {
-    //     existing.textContent = css;
-    // } else {
-    //     const style = document.createElement("style");
-    //     style.id = "theme-css";
-    //     style.textContent = css;
-    //     document.head.appendChild(style);
-    // }
+    const existing = document.getElementById("theme-css");
+    if (existing) {
+        existing.textContent = css;
+    } else {
+        const style = document.createElement("style");
+        style.id = "theme-css";
+        style.textContent = css;
+        document.head.appendChild(style);
+    }
 }
