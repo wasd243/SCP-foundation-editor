@@ -11,7 +11,7 @@ export async function SyncJSONToExporter() {
     const pmJSON = editor.getJSON();
 
     // debug output for testing
-    console.log(pmJSON);
+    // console.log(pmJSON);
 
     return await invoke<string>("export_code", {
         json: JSON.stringify(pmJSON),
