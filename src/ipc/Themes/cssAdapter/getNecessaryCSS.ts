@@ -18,6 +18,8 @@ const KEEP_ENTRIES = [
     ".image-block",
     ".footnotes-footer",
     ".yui-navset",
+    ".yui-nav",
+    ".yui-content",
     // ".Parallel-ACS", // These components cannot support WYSIWYG or really hard which will cause unknown errors, removed.
     // ".Parallel-AIM", // These components cannot support WYSIWYG or really hard which will cause unknown errors, removed.
     ".bblock",
