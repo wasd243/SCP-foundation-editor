@@ -248,7 +248,11 @@ const editor = useEditor({
             <div id="content-wrap">
                 <div id="side-bar">Editor side-bar</div>
                 <div class="meta-title">Editor Meta Title Preview</div>
-                <button ref="rateButtonRef" class="rate" :style="rateBoxStyle">
+                <button
+                    ref="rateButtonRef"
+                    class="rateBox"
+                    :style="rateBoxStyle"
+                >
                     Rate: + - x
                 </button>
             </div>

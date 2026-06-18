@@ -32,9 +32,9 @@
         "@tiptap/starter-kit": "3.22.5",
         "@tiptap/vue-3": "3.22.5",
         "codemirror": "^6.0.2",
+        "css-tree": "^3.2.1",
         "lowlight": "3.3.0",
         "pinia": "^2.1.0",
-        "postcss": "^8.5.15",
         "vue": "^3.4.0",
         "vue3-colorpicker": "^2.3.0",
         "vue3-moveable": "^0.28.0"

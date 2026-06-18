@@ -1,0 +1,102 @@
+## CSS Filter List for Theme Adapter
+
+### Delete (Wikidot runtime only)
+
+- `@font-face`
+- All-unset rules (handled by PostCSS)
+- `#login-status`
+- `#action-area`
+- `#edit-page-form`
+- `#edit-page-textarea`
+- `#edit-page-comments`
+- `#edit-page-title`
+- `#wd-editor-toolbar-panel`
+- `#np-editor-panel`
+- `#history-form-1`
+- `#revision-list`
+- `#site-changes-list`
+- `#who-rated-page-area`
+- `#flag-user-options-flag`
+- `#flag-user-options-unflag`
+- `#file-upload-form`
+- `#st-action-area`
+- `.forum-thread-box`
+- `.thread-container`
+- `.post-container`
+- `#new-post-form`
+- `#new-post-button`
+- `.diff-box`
+- `.inline-diff`
+- `#page-version-info`
+- `.odialog-shader`
+- `#odialog-container`
+- `.owindow`
+- `div#print-options`
+- `div#print-head`
+- `body.print-body`
+- `#avatar-hover-container`
+- `#interwiki`
+- `iframe.scpnet-interwiki-frame`
+- `div.scpnet-interwiki-wrapper`
+- `#search-top-box`
+- `#account-topbutton`
+- `div#account-options`
+- `a#account-topbutton`
+- `a#my-account`
+- `.creditRate`
+- `.creditButton`
+- `.creditButtonStandalone`
+- `#u-credit-view`
+- `#u-credit-otherwise`
+
+### Keep (placeholder targets)
+
+- `#container-wrap`
+- `#header`
+- `#top-bar`
+- `#content-wrap`
+- `#side-bar`
+- `.meta-title`
+- `.page-rate-widget-box`
+
+### Keep (content elements)
+
+- `:root` (all CSS variables)
+- `:root:has(...)` (theme preset switching)
+- `#main-content`
+- `#page-content`
+- `#footer`
+- `#breadcrumbs`
+- `#page-title`
+- `h1`~`h6`
+- `a`, `a:visited`, `a:hover`, `a.newpage`
+- `p`, `li`, `ul`, `ol`
+- `blockquote`, `div.blockquote`
+- `hr`
+- `table`, `th`, `td`
+- `code`, `pre`, `tt`
+- `sub`, `sup`
+- `b`, `strong`, `em`
+- `small`
+- `.code`
+- `.scp-image-block`, `.image-block`
+- `.footnotes-footer`, `.bibitems`
+- `.yui-navset`
+- `.earthworm`
+- `.Parallel-ACS`, `.Parallel-AIM`
+- `.bblock`, `.dblock`, `.keycap`, `.tags`
+- `.ruby`, `.rt`
+- `.hovertip`
+- `.printuser`
+- `.footer-wikiwalk-nav`
+- `.licensebox`
+- `.content-panel`
+- `.pager`
+- `.page-tags`
+- `::selection`
+- `::-webkit-scrollbar`
+- `@media` (all, keep as-is)
+- `@keyframes` (all, keep as-is)
+- `@supports` (all, keep as-is)
+- All utility classes: `.bg-*`, `.b-*`, `.round-*`, `.shadow-*`, `.t-*`, `.table`, `.w-*`, `.scroll-x`
+- All CSS custom property definitions in `:root`
