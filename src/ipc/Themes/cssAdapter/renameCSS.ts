@@ -1,7 +1,3 @@
-import type { Plugin } from "postcss";
+import type * as csstree from "css-tree";
 
-const renameCSS = (): Plugin => ({
-    postcssPlugin: "renameCSS",
-});
-
-export default renameCSS;
+export function renameCSS(_ast: csstree.CssNode): void {}

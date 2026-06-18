@@ -1,4 +1,4 @@
-import type { AtRule, Plugin, Rule } from "postcss";
+import * as csstree from "css-tree";
 
 const KEEP_ENTRIES = [
     // IDs
@@ -44,46 +44,63 @@ function matchesKeepList(selector: string): boolean {
     return false;
 }
 
-function isInsideKeyframes(rule: Rule): boolean {
-    return (
-        rule.parent?.type === "atrule" &&
-        (rule.parent as AtRule).name.toLowerCase().includes("keyframes")
-    );
+export function getNecessaryCSS(ast: csstree.CssNode): void {
+    // Step 1: Remove disallowed at-rules (e.g. @font-face, @import)
+    csstree.walk(ast, {
+        visit: "Atrule",
+        enter(node, item, list) {
+            if (!ALLOWED_AT_RULES.has(node.name.toLowerCase())) {
+                list?.remove(item!);
+            }
+        },
+    });
+
+    // Step 2: Filter rules — remove all-unset rules and non-keep-list rules
+    csstree.walk(ast, {
+        visit: "Rule",
+        enter: function (node, item, list) {
+            if (this.atrule?.name.toLowerCase().includes("keyframes")) return;
+
+            // All-unset check
+            if (!node.block.children.isEmpty) {
+                let allUnset = true;
+                node.block.children.forEach((child) => {
+                    if (child.type !== "Declaration") {
+                        allUnset = false;
+                        return;
+                    }
+                    const decl = child as csstree.Declaration;
+                    if (csstree.generate(decl.value).trim() !== "unset")
+                        allUnset = false;
+                });
+                if (allUnset) {
+                    list?.remove(item!);
+                    return;
+                }
+            }
+
+            // Allowlist filter — strip non-matching selectors, remove rule if none left
+            if (node.prelude.type !== "SelectorList") return;
+            const selectorList = node.prelude as csstree.SelectorList;
+            const toRemove: csstree.ListItem<csstree.CssNode>[] = [];
+            selectorList.children.forEach((selector, selectorItem) => {
+                if (!matchesKeepList(csstree.generate(selector)))
+                    toRemove.push(selectorItem);
+            });
+            for (const si of toRemove) selectorList.children.remove(si);
+            if (selectorList.children.isEmpty) {
+                list?.remove(item!);
+            }
+        },
+    });
+
+    // Step 3: Remove at-rules left empty after rule filtering
+    csstree.walk(ast, {
+        visit: "Atrule",
+        leave(node, item, list) {
+            if (node.block && node.block.children.isEmpty) {
+                list?.remove(item!);
+            }
+        },
+    });
 }
-
-const getNecessaryCSS = (): Plugin => ({
-    postcssPlugin: "getNecessaryCSS",
-    Rule(rule) {
-        if (isInsideKeyframes(rule)) return;
-
-        const allUnset = rule.every(
-            (node) =>
-                node.type === "decl" &&
-                node.value.replace(/\s*!important\s*$/, "").trim() === "unset",
-        );
-        if (allUnset && rule.nodes && rule.nodes.length > 0) {
-            rule.remove();
-            return;
-        }
-
-        const selectors = rule.selector.split(",").map((s) => s.trim());
-        const kept = selectors.filter(matchesKeepList);
-        if (kept.length === 0) {
-            rule.remove();
-        } else if (kept.length < selectors.length) {
-            rule.selector = kept.join(", ");
-        }
-    },
-    AtRule(atRule) {
-        if (!ALLOWED_AT_RULES.has(atRule.name.toLowerCase())) {
-            atRule.remove();
-        }
-    },
-    AtRuleExit(atRule) {
-        if (!atRule.nodes || atRule.nodes.length === 0) {
-            atRule.remove();
-        }
-    },
-});
-
-export default getNecessaryCSS;

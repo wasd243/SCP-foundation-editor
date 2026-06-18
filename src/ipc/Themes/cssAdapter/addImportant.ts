@@ -1,7 +1,3 @@
-import type { Plugin } from "postcss";
+import type * as csstree from "css-tree";
 
-const addImportant = (): Plugin => ({
-    postcssPlugin: "addImportant",
-});
-
-export default addImportant;
+export function addImportant(_ast: csstree.CssNode): void {}
