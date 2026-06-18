@@ -62,6 +62,8 @@ const KEEP_ENTRIES = [
     ":root",
     "::selection",
     "::-webkit-scrollbar",
+    // Renamed (Wikidot source names must be kept so renameCSS can map them)
+    ".wiki-note",
 ];
 
 const KEEP_WILDCARD_PREFIXES = [

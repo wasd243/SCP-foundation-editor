@@ -100,3 +100,44 @@
 - `@supports` (all, keep as-is)
 - All utility classes: `.bg-*`, `.b-*`, `.round-*`, `.shadow-*`, `.t-*`, `.table`, `.w-*`, `.scroll-x`
 - All CSS custom property definitions in `:root`
+
+# CSS Selector Rename Map (Wikidot → Editor)
+
+## YUI → WJ Tabview Rename Map
+
+| Wikidot (YUI)          | Editor (WJ)                             |
+|------------------------|-----------------------------------------|
+| `.yui-navset`          | `.wj-tabs`                              |
+| `.yui-nav`             | `.wj-tabs-button-list`                  |
+| `.yui-nav li`          | `.wj-tabs-button`                       |
+| `.yui-nav li a`        | `.wj-tabs-button`                       |
+| `.yui-nav li a em`     | `.wj-tabs-button-label`                 |
+| `.yui-nav li.selected` | `.wj-tabs-button[aria-selected="true"]` |
+| `.yui-content`         | `.wj-tabs-panel-list`                   |
+
+## Other Renames
+
+| Wikidot             | Editor              |
+|---------------------|---------------------|
+| `.scp-image-block`  | `.image-container`  |
+| `.image-block`      | `.image-container`  |
+| `.code`             | `.wj-code`          |
+| `.footnotes-footer` | `.wj-footnote-list` |
+| `.wiki-note`        | `.wj-note`          |
+
+## Directly Inject (No Rename)
+
+- `#container-wrap`, `#header`, `#top-bar`, `#content-wrap`, `#side-bar`
+- `#main-content`, `#page-content`, `#page-title`
+- `.meta-title`, `.page-rate-widget-box`
+- `.bblock`, `.dblock`, `.keycap`, `.ruby`, `.rt`, `.hovertip`
+- `.table`, `.scroll-x`
+- `h1`~`h6`, `a`, `p`, `li`, `ul`, `ol`, `blockquote`, `div.blockquote`, `hr`
+- `table`, `th`, `td`, `code`, `pre`, `tt`
+- `sub`, `sup`, `b`, `strong`, `em`, `small`
+- `:root`, `::selection`, `::-webkit-scrollbar`
+- All `.bg-*`, `.b-*`, `.round-*`, `.shadow-*`, `.t-*`, `.w-*`
+
+## Variables: Untouched
+
+All `--basalt-*` and other CSS custom properties pass through as-is.
