@@ -2,25 +2,76 @@ import * as csstree from "css-tree";
 
 const KEEP_ENTRIES = [
     // IDs
-    "#container-wrap", "#header", "#top-bar", "#content-wrap", "#side-bar",
-    "#main-content", "#page-content", "#footer", "#breadcrumbs", "#page-title",
+    "#container-wrap",
+    "#header",
+    "#top-bar",
+    "#content-wrap",
+    "#side-bar",
+    "#main-content",
+    "#page-content",
+    "#page-title", // removed `footer` and `breadcrumb` because the editor doesn't have them
     // Classes
-    ".meta-title", ".page-rate-widget-box", ".code",
-    ".scp-image-block", ".image-block", ".footnotes-footer", ".bibitems",
-    ".yui-navset", ".earthworm", ".Parallel-ACS", ".Parallel-AIM",
-    ".bblock", ".dblock", ".keycap", ".tags", ".ruby", ".rt",
-    ".hovertip", ".printuser", ".footer-wikiwalk-nav", ".licensebox",
-    ".content-panel", ".pager", ".page-tags", ".table", ".scroll-x",
+    ".meta-title",
+    ".page-rate-widget-box",
+    ".code",
+    ".scp-image-block",
+    ".image-block",
+    ".footnotes-footer",
+    ".yui-navset",
+    // ".Parallel-ACS", // These components cannot support WYSIWYG or really hard which will cause unknown errors, removed.
+    // ".Parallel-AIM", // These components cannot support WYSIWYG or really hard which will cause unknown errors, removed.
+    ".bblock",
+    ".dblock",
+    ".keycap",
+    ".ruby",
+    ".rt",
+    ".hovertip",
+    // ".printuser", // Remove this because wikidot user img and name cannot get by request/reqwest libraries, might return 418/402/403 if you don't log in to Pro account.
+    // ".licensebox", // Remove this because the community already has one license box generator.
+    // ".content-panel", // Remove this because I don't know where it should be used in WYSIWYG editor.
+    ".table",
+    ".scroll-x",
     // Elements
-    "h1", "h2", "h3", "h4", "h5", "h6",
-    "a", "p", "li", "ul", "ol", "blockquote", "div.blockquote", "hr",
-    "table", "th", "td", "code", "pre", "tt",
-    "sub", "sup", "b", "strong", "em", "small",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "a",
+    "p",
+    "li",
+    "ul",
+    "ol",
+    "blockquote",
+    "div.blockquote",
+    "hr",
+    "table",
+    "th",
+    "td",
+    "code",
+    "pre",
+    "tt",
+    "sub",
+    "sup",
+    "b",
+    "strong",
+    "em",
+    "small",
     // Pseudo
-    ":root", "::selection", "::-webkit-scrollbar",
+    ":root",
+    "::selection",
+    "::-webkit-scrollbar",
 ];
 
-const KEEP_WILDCARD_PREFIXES = [".bg-", ".b-", ".round-", ".shadow-", ".t-", ".w-"];
+const KEEP_WILDCARD_PREFIXES = [
+    ".bg-",
+    ".b-",
+    ".round-",
+    ".shadow-",
+    ".t-",
+    ".w-",
+];
 
 const ALLOWED_AT_RULES = new Set(["media", "keyframes", "supports"]);
 
@@ -45,7 +96,6 @@ function matchesKeepList(selector: string): boolean {
 }
 
 export function getNecessaryCSS(ast: csstree.CssNode): void {
-
     console.log("[cssAdapter] getNecessaryCSS: Activated");
 
     // Step 1: Remove disallowed at-rules (e.g. @font-face, @import)
