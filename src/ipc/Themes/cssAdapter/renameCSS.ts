@@ -19,9 +19,14 @@ const RENAME_MAP: Record<string, string> = {
     "yui-content": "wj-tabs-panel-list",
     "scp-image-block": "image-container",
     "image-block": "image-container",
-    "code": "wj-code",
+    ".code": ".wj-code",
     "footnotes-footer": "wj-footnote-list",
     "wiki-note": "wj-note",
+};
+
+// ID → class renames (node type changes from IdSelector to ClassSelector)
+const ID_TO_CLASS_MAP: Record<string, string> = {
+    "page-content": "ProseMirror",
 };
 
 function normalizeSelector(s: string): string {
@@ -42,6 +47,19 @@ export function renameCSS(ast: csstree.CssNode): void {
                     }) as csstree.CssNode;
                 }
             });
+        },
+    });
+
+    // Pass 1.5: replace ID selectors that map to a class
+    csstree.walk(ast, {
+        visit: "IdSelector",
+        enter(node) {
+            const renamed = ID_TO_CLASS_MAP[node.name];
+            if (renamed !== undefined) {
+                // mutate the node in place: change type id → class
+                (node as any).type = "ClassSelector";
+                node.name = renamed;
+            }
         },
     });
 
