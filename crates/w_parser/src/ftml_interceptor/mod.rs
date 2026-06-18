@@ -47,6 +47,13 @@
 //!
 //! To let the exporter know that a div tag rather than include, the function will attach
 //! `data-editor-exporte="div"`.
+//!
+//! ---
+//!
+//! Ablout `[[span]]`
+//!
+//! To let the exporter know that a span tag rather than include, the function will attach
+//! `data-editor-exporte="span"`.
 
 pub mod div;
 pub mod module_css;
@@ -54,3 +61,4 @@ pub mod module_rate;
 pub mod note;
 pub mod preprocess_interceptor;
 pub mod user;
+pub mod span;

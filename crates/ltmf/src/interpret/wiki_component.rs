@@ -8,6 +8,7 @@ mod note;
 mod table;
 mod tabview;
 mod user;
+mod span;
 
 use serde_json::Value;
 
@@ -24,6 +25,7 @@ use crate::interpret::{
         footnote::interpret_footnote,
         image::{interpret_image, is_image},
         note::{interpret_note, is_note},
+        span::{interpret_span, is_span},
         table::{interpret_table, is_table},
         tabview::{interpret_tabview, is_tabview},
         user::{interpret_user, is_user},
@@ -41,6 +43,7 @@ pub fn interpret_wiki_component(_index: usize, node: &Value) -> Result<String, S
     let content = interpret_tabview(node, content)?;
     let content = interpret_note(node, content)?;
     let content = interpret_div(node, content)?;
+    let content = interpret_span(node, content)?;
     let content = interpret_image(node, content)?;
     let content = interpret_table(node, content)?;
     let content = interpret_user(node, content)?;
@@ -65,6 +68,7 @@ pub(crate) fn is_nested_wiki_component_node(node: &Value) -> bool {
         || is_image(node)
         || is_table(node)
         || is_div(node)
+        || is_span(node)
         || is_user(node)
         || is_code(node)
         || matches!(node_type(node), Some("Collapsible" | "Footnote"))

@@ -38,3 +38,7 @@
 .format-insertion-button.div-button {
     left: calc(var(--insertion-btn-left) + 200px);
 }
+
+.format-insertion-button.span-button {
+    left: calc(var(--insertion-btn-left) + 260px);
+}

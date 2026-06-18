@@ -5,3 +5,4 @@ pub(crate) mod get_marks;
 pub(crate) mod get_raw_text;
 pub(crate) mod get_types;
 pub(crate) mod rgba_to_hex;
+pub(crate) mod get_attr_values;

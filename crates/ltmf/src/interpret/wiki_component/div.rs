@@ -1,5 +1,6 @@
 use serde_json::Value;
 
+use crate::interpret::utils::get_attr_values::value_to_string;
 use crate::interpret::{text::patch_wiki_component_content, utils::get_types::has_type};
 
 /// Interprets a Div node.
@@ -44,12 +45,7 @@ fn div_attr(key: &str, value: &Value) -> Option<String> {
         return None;
     }
 
-    let value = match value {
-        Value::String(value) => value.clone(),
-        Value::Bool(value) => value.to_string(),
-        Value::Number(value) => value.to_string(),
-        _ => return None,
-    };
+    let value = value_to_string(value)?;
 
     Some(format!("{key}=\"{value}\""))
 }

@@ -10,7 +10,8 @@ use crate::preprocess::normalize::{
     normalize_hard_break::normalize_hard_break, normalize_horizontalrule::normalize_horizontalrule,
     normalize_include::normalize_include, normalize_new_line_marks::normalize_new_line_marks,
     normalize_note::normalize_note, normalize_raw_text::normalize_raw_text,
-    normalize_strike::normalize_strike, normalize_tabview::normalize_tabview,
+    normalize_span::normalize_span, normalize_strike::normalize_strike,
+    normalize_tabview::normalize_tabview,
     normalize_white_space_pre_wrap::normalize_white_space_pre_wrap,
 };
 
@@ -28,6 +29,7 @@ mod normalize_include;
 mod normalize_new_line_marks;
 mod normalize_note;
 mod normalize_raw_text;
+mod normalize_span;
 mod normalize_strike;
 mod normalize_tabview;
 mod normalize_white_space_pre_wrap;
@@ -48,6 +50,7 @@ pub fn normalize(value: Value) -> Value {
     let value = normalize_note(value);
     let value = normalize_include(value);
     let value = normalize_div(value);
+    let value = normalize_span(value);
     let value = normalize_tabview(value);
     let value = normalize_horizontalrule(value);
     let value = normalize_bullet_list(value);
