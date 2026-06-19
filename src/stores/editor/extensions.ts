@@ -22,10 +22,18 @@ import { TextColorExtension } from "./extensions/TextColorE.ts";
 import { UserExtension } from "./extensions/User/UserE.ts";
 import { UserWithImgExtension } from "./extensions/User/UserWithImgE.ts";
 import { WJTagExtension } from "./extensions/WJtagsE.ts";
+import Gapcursor from "@tiptap/extension-gapcursor";
 
 export const editorExtensions = [
     StarterKit.configure({
         codeBlock: false,
+        // This value needs to set ProseMirror trailing break
+        // I forgot this and cause a lot of troubles
+        // Do not touch unless you know what you are doing, or you have better way to fix it
+        trailingNode: {
+            node: "paragraph", // DO NOT TOUCH
+            notAfter: ["paragraph"], // DO NOT TOUCH
+        },
     }),
     Underline,
     Link.configure({
@@ -50,6 +58,7 @@ export const editorExtensions = [
     ...TableExtensions,
     ...TabViewExtensions,
     UserExtension,
+    Gapcursor,
     UserWithImgExtension,
     WJTagExtension,
     HardBreakAndNewParagraphExtension,
