@@ -130,6 +130,11 @@
 - Author: OxygenNine
 - LICENSE: CC-BY-SA 4.0 International
 
+### Editor loading Icon [SCP-Wiki](https://scp-wiki.wikidot.com/theme:pataphysics)
+
+- Animated logo Author: Woedenaz
+- LICENSE: Creative Commons Attribution-ShareAlike 3.0 License
+
 ---
 
 ## Libraries

@@ -11,8 +11,9 @@
                 --steel: #8a929c;
                 --hazard: #d23b2e;
                 --line: #2a2f36;
-                --mono: ui-monospace, "Cascadia Code", "Consolas",
-                    "Courier New", monospace;
+                --mono:
+                    ui-monospace, "Cascadia Code", "Consolas", "Courier New",
+                    monospace;
             }
 
             html,
@@ -63,44 +64,6 @@
                 text-transform: uppercase;
             }
 
-            /* --- Signature: the containment mark (three inward arrows) --- */
-            .mark {
-                flex: 0 0 auto;
-                margin-top: 6px;
-                animation: pulse 2.2s ease-in-out infinite;
-            }
-
-            .mark__spin {
-                position: relative;
-                width: 80px;
-                height: 80px;
-                animation: spin 4s linear infinite;
-            }
-
-            .arrow {
-                position: absolute;
-                top: 0;
-                left: 50%;
-                width: 0;
-                height: 0;
-                margin-left: -13px;
-                border-left: 13px solid transparent;
-                border-right: 13px solid transparent;
-                border-top: 20px solid var(--hazard);
-                /* Rotate each arrow about the centre of the 80px box. */
-                transform-origin: 13px 40px;
-            }
-
-            .arrow:nth-child(1) {
-                transform: rotate(0deg);
-            }
-            .arrow:nth-child(2) {
-                transform: rotate(120deg);
-            }
-            .arrow:nth-child(3) {
-                transform: rotate(240deg);
-            }
-
             .title {
                 margin: 0;
                 color: var(--paper);
@@ -144,9 +107,7 @@
             }
 
             @media (prefers-reduced-motion: reduce) {
-                .card,
-                .mark,
-                .mark__spin {
+                .card {
                     animation: none;
                 }
             }
@@ -156,13 +117,7 @@
         <div class="card" role="status" aria-label="Starting SCP-WYSIWYG">
             <p class="motto">Secure · Contain · Protect</p>
 
-            <div class="mark" aria-hidden="true">
-                <div class="mark__spin">
-                    <span class="arrow"></span>
-                    <span class="arrow"></span>
-                    <span class="arrow"></span>
-                </div>
-            </div>
+            <img src="pataphysics.svg" alt="logo" width="120" height="120" />
 
             <h1 class="title">SCP-WYSIWYG</h1>
             <p class="status">Initializing editor&hellip;</p>
