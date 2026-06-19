@@ -4,6 +4,7 @@ import Undo from "./Actions/Undo.vue";
 import Save from "./Actions/Save.vue";
 import OpenFile from "./Actions/OpenFile.vue";
 import AutoSave from "./Actions/AutoSave.vue";
+import OpenFromAutoSave from "./Actions/OpenFromAutoSave.vue";
 </script>
 
 <template>
@@ -12,4 +13,5 @@ import AutoSave from "./Actions/AutoSave.vue";
     <Save />
     <OpenFile />
     <AutoSave />
+    <OpenFromAutoSave />
 </template>

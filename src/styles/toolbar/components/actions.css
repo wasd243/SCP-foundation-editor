@@ -142,3 +142,16 @@
     width: 72px;
     right: calc(var(--actions-btn-right) + 180px);
 }
+
+.actions-button.open-auto-save {
+    width: 140px;
+    right: calc(var(--actions-btn-right) + 416px);
+
+    gap: 6px;
+    padding: 0 10px;
+    border-radius: 4px;
+
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}

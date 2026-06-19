@@ -41,3 +41,16 @@ pub fn auto_save_ftml() -> Result<(), String> {
     fs::write(AUTO_SAVE_PATH, content).map_err(|e| e.to_string())?;
     Ok(())
 }
+
+/// Read the auto-saved Wikitext from the fixed `saves/autosave.ftml` file.
+///
+/// Returns the raw source so the frontend can feed it back into the parser,
+/// the same way opening a file does.
+#[tauri::command]
+pub fn read_autosave_ftml() -> Result<String, String> {
+    if !Path::new(AUTO_SAVE_PATH).exists() {
+        return Err("No auto-save file found yet.".into());
+    }
+
+    fs::read_to_string(AUTO_SAVE_PATH).map_err(|e| e.to_string())
+}
