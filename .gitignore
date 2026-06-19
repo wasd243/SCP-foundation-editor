@@ -37,6 +37,7 @@ user_css.css
 module_rate_status.txt
 theme_status.json
 parallel_test.css
+saves/autosave.ftml
 
 # MacOS
 .DS_Store
