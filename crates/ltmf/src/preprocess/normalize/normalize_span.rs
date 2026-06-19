@@ -50,10 +50,7 @@ mod tests {
 
         let normalized = normalize_span(value);
 
-        assert_eq!(
-            normalized.get("type").and_then(Value::as_str),
-            Some("Span")
-        );
+        assert_eq!(normalized.get("type").and_then(Value::as_str), Some("Span"));
         assert_eq!(
             normalized
                 .get("attrs")
