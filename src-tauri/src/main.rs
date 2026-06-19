@@ -13,6 +13,7 @@ use handlers::{
     save::read_autosave_ftml,
     save::save_ftml,
     splashscreen::close_splashscreen,
+    log_and_write_json::log_and_write_json,
 };
 
 use tauri::Builder;
@@ -32,6 +33,7 @@ fn main() {
             read_module_rate_temp,
             rewrite_module_rate_temp,
             close_splashscreen,
+            log_and_write_json,
             // patch functions here
             patch_get_user_css,
         ])

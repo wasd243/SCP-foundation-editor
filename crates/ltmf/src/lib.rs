@@ -29,7 +29,17 @@ mod tests {
     fn test_export() -> Result<(), String> {
         let mut json = String::new();
         import_json(&mut json)?;
-        export_wikitext(&json)?;
+        let output = export_wikitext(&json)?;
+
+        // An image-block includes nested inside a `[[div]]` must round-trip as a
+        // full `[[include]]` rather than being torn apart into a bare `[[image]]`.
+        assert!(
+            output.contains(
+                "[[include :component:image-block align=left|caption=rust-game|name=https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg|width=200px]]"
+            ),
+            "nested include was lost from div block:\n{output}"
+        );
+
         Ok(())
     }
 }

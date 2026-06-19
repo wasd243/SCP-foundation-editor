@@ -24,7 +24,7 @@ as you type — then export clean Wikidot wikitext ready to paste into the wiki.
 > In particular, `[[include]]` (resourcepack/theme formats) is **one-way only**
 > and cannot be round-tripped through a visual editor. This is a structural
 > limitation, not a missing feature — see
-> [Why `[[include]]` cannot be WYSIWYG](docs/What_the_hell_did_Wikidot_do_on_your_include.md) for the full explanation.
+> [Why `[[include]]` cannot be WYSIWYG](docs/Include_block.md) for the full explanation.
 
 ## Features
 
@@ -42,13 +42,28 @@ as you type — then export clean Wikidot wikitext ready to paste into the wiki.
 
 ## Screenshots
 
-<div align="center">
+<img width="1916" height="1009" alt="image" src="https://github.com/user-attachments/assets/254f3b92-d224-49d9-a81f-131401cf22be" />
+`Home` ribbon page and main editing area.
 
-</div>
+<br clear="both" />
 
-<!-- Replace with your actual screenshot path -->
+---
 
-## On `[[include]]` — Why It Cannot Be WYSIWYG
+<img align="right" width="380" height="154" alt="image" src="https://github.com/user-attachments/assets/e15d11cc-a171-4af1-944b-0b25626c881f" />
+`Insert` ribbon page.
+
+<br clear="both" />
+
+---
+
+<img align="right" width="518" height="141" alt="image" src="https://github.com/user-attachments/assets/6f3ce730-6d30-4cc6-8eee-6f3f53cc7e59" />
+Simple `autosave` settings.
+
+<br clear="both" />
+
+---
+
+## On `[[include]]` — Why It Cannot Be Made WYSIWYG
 
 `[[include]]` looks like C's `#include` or CSS's `@import`, but it is not.
 Those are **textual substitution** with fixed content. `[[include]]` is a
@@ -63,10 +78,21 @@ syncing it back to source — but after expansion, template content, interpolate
 arguments, and user-authored text are indistinguishable in the DOM. There is no
 correct place to write an edit back.
 
+I hardcoded `[[include :component:image-block]]` include WYSIWYG generator 
+and I used to want to do a resourcepack includer, 
+but now the resourcepack only works on parser rather than generator.
+
+So now you can see a `.sql` file exists in `crate/ltmf/src/interpret/include/`. 
+That's my legacy version based on `{$ }` variables and meta data attacher 
+(already removed, that's an attacher for `data-editor-export` and `data-editor-include`).
+
+I've given up on `resourcepack/` includer part, but that's not a trash folder because it only contains
+`image-block.ftml` for resolving `[[include :component:image-block]]`, so I leave it alone.
+
 For the full argument — including the classification of `#include` / `@import` /
 `use` / `import` / `[[include]]` by reversibility, and why nesting makes it
 information-theoretically hopeless — see
-**[the full write-up in `docs/`](docs/What_the_hell_did_Wikidot_do_on_your_include.md)**.
+**[the full write-up in `docs/`](docs/Include_block.md)**.
 
 ## Tech Stack
 

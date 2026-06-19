@@ -38,6 +38,7 @@ module_rate_status.txt
 theme_status.json
 parallel_test.css
 saves/autosave.ftml
+dev_output.json
 
 # MacOS
 .DS_Store

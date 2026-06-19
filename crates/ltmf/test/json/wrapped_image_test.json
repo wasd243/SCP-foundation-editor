@@ -1,0 +1,635 @@
+{
+    "content": [
+        {
+            "attrs": {
+                "aria-controls": null,
+                "aria-hidden": null,
+                "aria-label": null,
+                "aria-labelledby": null,
+                "aria-selected": null,
+                "class": null,
+                "data-id": null,
+                "data-type": null,
+                "hidden": null,
+                "id": null,
+                "role": null,
+                "style": null,
+                "tabindex": null,
+                "textAlign": null,
+                "type": null
+            },
+            "content": [
+                {
+                    "text": "Hello FTML editor.",
+                    "type": "text"
+                }
+            ],
+            "type": "paragraph"
+        },
+        {
+            "attrs": {
+                "htmlAttributes": {
+                    "class": "image-container alignright",
+                    "contenteditable": "false",
+                    "data-editor-export": "include",
+                    "data-editor-include": "component:image-block",
+                    "draggable": "true",
+                    "style": "width:200px"
+                },
+                "tagName": "div"
+            },
+            "content": [
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "textAlign": null,
+                        "type": null
+                    },
+                    "type": "paragraph"
+                },
+                {
+                    "attrs": {
+                        "alt": null,
+                        "height": null,
+                        "imageAttributes": {
+                            "class": "image",
+                            "src": "https://rust-lang.org/static/images/rust-logo-blk.svg"
+                        },
+                        "src": "https://rust-lang.org/static/images/rust-logo-blk.svg",
+                        "title": null,
+                        "width": null,
+                        "wrapperAttributes": null
+                    },
+                    "type": "image"
+                },
+                {
+                    "attrs": {
+                        "htmlAttributes": {
+                            "class": "scp-image-caption alignright",
+                            "contenteditable": "true",
+                            "data-editor-export": "div"
+                        },
+                        "tagName": "div"
+                    },
+                    "content": [
+                        {
+                            "attrs": {
+                                "aria-controls": null,
+                                "aria-hidden": null,
+                                "aria-label": null,
+                                "aria-labelledby": null,
+                                "aria-selected": null,
+                                "class": null,
+                                "data-id": null,
+                                "data-type": null,
+                                "hidden": null,
+                                "id": null,
+                                "role": null,
+                                "style": null,
+                                "tabindex": null,
+                                "textAlign": null,
+                                "type": null
+                            },
+                            "content": [
+                                {
+                                    "text": "rust-lang",
+                                    "type": "text"
+                                }
+                            ],
+                            "type": "paragraph"
+                        }
+                    ],
+                    "type": "wjBlockTag"
+                }
+            ],
+            "type": "wjBlockTag"
+        },
+        {
+            "attrs": {
+                "aria-controls": null,
+                "aria-hidden": null,
+                "aria-label": null,
+                "aria-labelledby": null,
+                "aria-selected": null,
+                "class": null,
+                "data-id": null,
+                "data-type": null,
+                "hidden": null,
+                "id": null,
+                "role": null,
+                "style": null,
+                "tabindex": null,
+                "textAlign": null,
+                "type": null
+            },
+            "content": [
+                {
+                    "text": "f",
+                    "type": "text"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "type": null
+                    },
+                    "type": "hardBreak"
+                },
+                {
+                    "attrs": {
+                        "htmlAttributes": {
+                            "style": "white-space: pre-wrap;"
+                        },
+                        "tagName": "span"
+                    },
+                    "type": "wjInlineTag"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "type": null
+                    },
+                    "type": "hardBreak"
+                },
+                {
+                    "attrs": {
+                        "htmlAttributes": {
+                            "style": "white-space: pre-wrap;"
+                        },
+                        "tagName": "span"
+                    },
+                    "type": "wjInlineTag"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "type": null
+                    },
+                    "type": "hardBreak"
+                },
+                {
+                    "attrs": {
+                        "htmlAttributes": {
+                            "style": "white-space: pre-wrap;"
+                        },
+                        "tagName": "span"
+                    },
+                    "type": "wjInlineTag"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "type": null
+                    },
+                    "type": "hardBreak"
+                },
+                {
+                    "attrs": {
+                        "htmlAttributes": {
+                            "style": "white-space: pre-wrap;"
+                        },
+                        "tagName": "span"
+                    },
+                    "type": "wjInlineTag"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "type": null
+                    },
+                    "type": "hardBreak"
+                },
+                {
+                    "attrs": {
+                        "htmlAttributes": {
+                            "style": "white-space: pre-wrap;"
+                        },
+                        "tagName": "span"
+                    },
+                    "type": "wjInlineTag"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "type": null
+                    },
+                    "type": "hardBreak"
+                },
+                {
+                    "text": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                    "type": "text"
+                }
+            ],
+            "type": "paragraph"
+        },
+        {
+            "attrs": {
+                "htmlAttributes": {
+                    "class": "blockquote",
+                    "data-editor-export": "div"
+                },
+                "tagName": "div"
+            },
+            "content": [
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "textAlign": null,
+                        "type": null
+                    },
+                    "content": [
+                        {
+                            "text": "fffffffffffffff",
+                            "type": "text"
+                        }
+                    ],
+                    "type": "paragraph"
+                },
+                {
+                    "attrs": {
+                        "htmlAttributes": {
+                            "class": "image-container alignleft",
+                            "contenteditable": "false",
+                            "data-editor-export": "include",
+                            "data-editor-include": "component:image-block",
+                            "draggable": "true",
+                            "style": "width: 200px; margin: 0px 1em 0.8em 0px;"
+                        },
+                        "tagName": "div"
+                    },
+                    "content": [
+                        {
+                            "attrs": {
+                                "aria-controls": null,
+                                "aria-hidden": null,
+                                "aria-label": null,
+                                "aria-labelledby": null,
+                                "aria-selected": null,
+                                "class": null,
+                                "data-id": null,
+                                "data-type": null,
+                                "hidden": null,
+                                "id": null,
+                                "role": null,
+                                "style": null,
+                                "tabindex": null,
+                                "textAlign": null,
+                                "type": null
+                            },
+                            "type": "paragraph"
+                        },
+                        {
+                            "attrs": {
+                                "alt": null,
+                                "height": null,
+                                "imageAttributes": {
+                                    "class": "image",
+                                    "src": "https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg"
+                                },
+                                "src": "https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg",
+                                "title": null,
+                                "width": null,
+                                "wrapperAttributes": null
+                            },
+                            "type": "image"
+                        },
+                        {
+                            "attrs": {
+                                "htmlAttributes": {
+                                    "class": "scp-image-caption alignright",
+                                    "contenteditable": "true",
+                                    "data-editor-export": "div"
+                                },
+                                "tagName": "div"
+                            },
+                            "content": [
+                                {
+                                    "attrs": {
+                                        "aria-controls": null,
+                                        "aria-hidden": null,
+                                        "aria-label": null,
+                                        "aria-labelledby": null,
+                                        "aria-selected": null,
+                                        "class": null,
+                                        "data-id": null,
+                                        "data-type": null,
+                                        "hidden": null,
+                                        "id": null,
+                                        "role": null,
+                                        "style": null,
+                                        "tabindex": null,
+                                        "textAlign": null,
+                                        "type": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "rust-game",
+                                            "type": "text"
+                                        }
+                                    ],
+                                    "type": "paragraph"
+                                }
+                            ],
+                            "type": "wjBlockTag"
+                        }
+                    ],
+                    "type": "wjBlockTag"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "textAlign": null,
+                        "type": null
+                    },
+                    "content": [
+                        {
+                            "text": "fffffffffffffffffffffffffffffffffffff",
+                            "type": "text"
+                        }
+                    ],
+                    "type": "paragraph"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "textAlign": null,
+                        "type": null
+                    },
+                    "type": "paragraph"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "textAlign": null,
+                        "type": null
+                    },
+                    "type": "paragraph"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "textAlign": null,
+                        "type": null
+                    },
+                    "type": "paragraph"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "textAlign": null,
+                        "type": null
+                    },
+                    "type": "paragraph"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "textAlign": null,
+                        "type": null
+                    },
+                    "type": "paragraph"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "textAlign": null,
+                        "type": null
+                    },
+                    "type": "paragraph"
+                },
+                {
+                    "attrs": {
+                        "aria-controls": null,
+                        "aria-hidden": null,
+                        "aria-label": null,
+                        "aria-labelledby": null,
+                        "aria-selected": null,
+                        "class": null,
+                        "data-id": null,
+                        "data-type": null,
+                        "hidden": null,
+                        "id": null,
+                        "role": null,
+                        "style": null,
+                        "tabindex": null,
+                        "textAlign": null,
+                        "type": null
+                    },
+                    "type": "paragraph"
+                }
+            ],
+            "type": "wjBlockTag"
+        },
+        {
+            "attrs": {
+                "aria-controls": null,
+                "aria-hidden": null,
+                "aria-label": null,
+                "aria-labelledby": null,
+                "aria-selected": null,
+                "class": null,
+                "data-id": null,
+                "data-type": null,
+                "hidden": null,
+                "id": null,
+                "role": null,
+                "style": null,
+                "tabindex": null,
+                "textAlign": null,
+                "type": null
+            },
+            "content": [
+                {
+                    "attrs": {
+                        "htmlAttributes": {
+                            "style": "white-space: pre-wrap;"
+                        },
+                        "tagName": "span"
+                    },
+                    "type": "wjInlineTag"
+                }
+            ],
+            "type": "paragraph"
+        }
+    ],
+    "type": "doc"
+}

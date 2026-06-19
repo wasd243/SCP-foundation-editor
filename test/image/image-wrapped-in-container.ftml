@@ -1,0 +1,53 @@
+[[module css]]
+/* NO USER CSS */
+[[/module]]
+
+[[>]]
+[[module rate]]
+[[/>]]
+Hello FTML editor.
+
+[[include :component:image-block align=right|name=https://rust-lang.org/static/images/rust-logo-blk.svg|width=200px]]
+f
+@@@@
+@@@@
+@@@@
+@@@@
+@@@@
+ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+> fffffffffffffff
+> [[include :component:image-block align=right|name=https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg|width=200px]]
+@@@@
+
+[[footnoteblock]]
+
+
+-----------------------------------------------------
+
+[[module css]]
+/* NO USER CSS */
+[[/module]]
+
+[[>]]
+[[module rate]]
+[[/>]]
+Hello FTML editor.
+
+[[include :component:image-block align=right|name=https://rust-lang.org/static/images/rust-logo-blk.svg|width=200px|caption=rust-lang]]
+f
+@@@@
+@@@@
+@@@@
+@@@@
+@@@@
+ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+[[div class="blockquote"]]
+fffffffffffffff
+[[include :component:image-block align=right|name=https://files.facepunch.com/lewis/1b2911b1/rust-marque.svg|width=200px|caption=rust-game]]
+fffffffffffffffffffffffffffffffffffff
+[[/div]]
+@@@@
+
+[[footnoteblock]]
