@@ -15,3 +15,10 @@ SCP Foundation successfully occupied the WYSIWYG editor.
 ## 2026-05-27
 
 Article rendering pipeline is working.
+
+
+## 2026-06-18
+
+- Failed to implement the theme adapter.
+- Implement `[[span]]` pipeline and theme interceptor successfully.
+- Next step: test and fix `[[include]]` WYSIWYG pipeline.
