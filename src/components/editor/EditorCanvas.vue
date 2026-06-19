@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 import VueMoveable from "vue3-moveable";
 import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
+import { attachActiveFormats } from "../../stores/btnToolBar/activeFormats.ts";
 import { invoke } from "@tauri-apps/api/core";
 import {
     rateAlignment,
@@ -201,6 +202,7 @@ const editor = useEditor({
 
     onCreate: ({ editor }) => {
         setEditor(editor);
+        attachActiveFormats(editor);
         alertNoteExternalParserMarkers(editor);
         SyncJSONToExporter();
 
