@@ -39,10 +39,37 @@ export function toggleEditorQuote() {
 }
 
 export function insertEditorTable() {
-    getEditor()
-        ?.chain()
+    const editor = getEditor();
+
+    if (!editor) {
+        return;
+    }
+
+    // Seed every cell with placeholder text. Empty cells render as blank
+    // Wikidot cells (`|| ||`) on export and are awkward to click into, so the
+    // inserted table ships with visible "TABLE" content the user overwrites.
+    const cell = (type: "tableHeader" | "tableCell") => ({
+        type,
+        content: [
+            {
+                type: "paragraph",
+                content: [{ type: "text", text: "TABLE" }],
+            },
+        ],
+    });
+
+    const row = (type: "tableHeader" | "tableCell") => ({
+        type: "tableRow",
+        content: [cell(type), cell(type)],
+    });
+
+    editor
+        .chain()
         .focus()
-        .insertTable({ rows: 2, cols: 2, withHeaderRow: true })
+        .insertContent({
+            type: "table",
+            content: [row("tableHeader"), row("tableCell")],
+        })
         .run();
 }
 
