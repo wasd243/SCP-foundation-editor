@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import "vue3-colorpicker/style.css";
 import { connectIpc } from "./ipc/ipc";
+import { closeSplashscreen, SPLASH_FALLBACK_MS } from "./splashscreen.ts";
 
 import "./styles/global.css";
 import "./styles/varibles.css";
@@ -27,3 +28,7 @@ import "./styles/toolbar/insertion.css";
 
 connectIpc();
 createApp(App).mount("#app");
+
+// Fallback: if the editor never signals ready (see EditorCanvas onCreate),
+// close the splash anyway so the user is never stuck on it.
+setTimeout(closeSplashscreen, SPLASH_FALLBACK_MS);

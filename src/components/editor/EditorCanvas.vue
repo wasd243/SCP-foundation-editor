@@ -20,6 +20,7 @@ import {
 import { alertNoteExternalParserMarkers } from "../../stores/editor/noteExternalParserGuard.ts";
 import { selectedImageBlockElement } from "../../stores/editor/extensions/ImageE.ts";
 import { SyncJSONToExporter } from "../../ipc/Extensions/CodeExport/getJSON.ts";
+import { closeSplashscreen } from "../../splashscreen.ts";
 import ContextMenu from "./ContextMenu.vue";
 import EditorCanvasMoveable from "./EditorCanvas/Moveable.vue";
 
@@ -202,6 +203,10 @@ const editor = useEditor({
         setEditor(editor);
         alertNoteExternalParserMarkers(editor);
         SyncJSONToExporter();
+
+        // Editor is mounted and ready — dismiss the splash on the next frame
+        // so the main window appears already painted, not blank.
+        requestAnimationFrame(() => closeSplashscreen());
     },
     onUpdate: ({ editor }) => {
         alertNoteExternalParserMarkers(editor);

@@ -14,12 +14,26 @@
     },
 
     "app": {
+        "macOSPrivateApi": true,
         "windows": [
             {
+                "label": "main",
                 "title": "SCP-WYSIWYG",
                 "width": 1600,
                 "height": 900,
-                "resizable": true
+                "resizable": true,
+                "visible": false
+            },
+            {
+                "label": "splashscreen",
+                "url": "splashscreen.html",
+                "width": 400,
+                "height": 300,
+                "decorations": false,
+                "center": true,
+                "resizable": false,
+                "transparent": true,
+                "alwaysOnTop": true
             }
         ],
 

@@ -12,6 +12,7 @@ use handlers::{
     save::auto_save_ftml,
     save::read_autosave_ftml,
     save::save_ftml,
+    splashscreen::close_splashscreen,
 };
 
 use tauri::Builder;
@@ -30,6 +31,7 @@ fn main() {
             save_user_css_to_cache,
             read_module_rate_temp,
             rewrite_module_rate_temp,
+            close_splashscreen,
             // patch functions here
             patch_get_user_css,
         ])
