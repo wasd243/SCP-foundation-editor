@@ -9,6 +9,7 @@ use handlers::{
     open_code_view::open_code_view_window,
     open_code_view::patch_get_user_css,
     open_code_view::read_final_output,
+    save::auto_save_ftml,
     save::save_ftml,
 };
 
@@ -23,6 +24,7 @@ fn main() {
             export_code,
             export_css,
             save_ftml,
+            auto_save_ftml,
             save_user_css_to_cache,
             read_module_rate_temp,
             rewrite_module_rate_temp,

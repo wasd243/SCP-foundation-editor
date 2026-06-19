@@ -18,6 +18,10 @@
     --color-word-blue-dark: #0f3f8f;
     --color-word-blue-light: #eaf2ff;
 
+    /* Auto-save status lamp */
+    --color-autosave-live: #1faa59;
+    --color-autosave-idle: #9bb0cf;
+
     --color-bg-app: #f5f7fb;
     --color-bg-surface: #ffffff;
     --color-border: #c8d3e6;

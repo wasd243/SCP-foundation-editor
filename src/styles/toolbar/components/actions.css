@@ -43,6 +43,101 @@
     right: calc(var(--actions-btn-right) + 100px);
 }
 
+.actions-button.auto-save {
+    width: 116px;
+    right: calc(var(--actions-btn-right) + 280px);
+
+    gap: 8px;
+    padding: 0 10px;
+    border-radius: 4px;
+
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+    white-space: nowrap;
+
+    transition:
+        background 0.12s ease,
+        border-color 0.12s ease,
+        color 0.12s ease;
+}
+
+/* --- Status lamp (the heartbeat lives here) --- */
+.auto-save__lamp {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+}
+
+.auto-save__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    /* Off: hollow, muted slate. */
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--color-autosave-idle);
+}
+
+.actions-button.auto-save.is-on .auto-save__dot {
+    background: var(--color-autosave-live);
+    box-shadow: 0 0 0 2px rgba(31, 170, 89, 0.28);
+}
+
+.actions-button.auto-save.has-error .auto-save__dot {
+    background: var(--wikidot-red);
+    box-shadow: 0 0 0 2px rgba(163, 17, 17, 0.28);
+}
+
+/* Signature: a pulse ring emitted at the moment each save fires. */
+.auto-save__ring {
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-autosave-live);
+    pointer-events: none;
+    animation: auto-save-beat 0.9s ease-out;
+}
+
+@keyframes auto-save-beat {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(3.2);
+        opacity: 0;
+    }
+}
+
+/* --- Enabled state: filled Word blue --- */
+.actions-button.auto-save.is-on {
+    background: var(--color-word-blue);
+    border-color: var(--color-word-blue-dark);
+    color: var(--color-text-on-blue);
+}
+
+.actions-button.auto-save.is-on:hover {
+    background: var(--color-word-blue-dark);
+    border-color: var(--color-word-blue-dark);
+}
+
+.actions-button.auto-save.has-error {
+    color: #ffd7d7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .auto-save__ring {
+        animation: none;
+        display: none;
+    }
+}
+
 .actions-button.open-file {
     width: 72px;
     right: calc(var(--actions-btn-right) + 180px);
