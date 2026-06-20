@@ -29,7 +29,10 @@ use crate::resourcepack_includer::ResourcepackIncluder;
 
 mod ftml_interceptor;
 mod ftml_normalizer;
+pub mod paths;
 mod resourcepack_includer;
+
+pub use paths::set_temp_dir;
 
 const DEFAULT_RESOURCEPACK_ROOT: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack");
 

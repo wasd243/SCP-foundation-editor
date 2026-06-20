@@ -1,20 +1,19 @@
 use regex::Regex;
 use std::fs;
 
-const RATE_TEMP_PATH: &str = concat!(
-    env!("CARGO_MANIFEST_DIR"),
-    "/../../temp/module_rate_status.txt"
-);
+use crate::paths::temp_dir;
 
 pub fn rate_interceptor(text: &str) -> String {
     let re = Regex::new(r"(?i)\[\[module rate\]\]").unwrap();
 
+    let rate_temp_path = temp_dir().join("module_rate_status.txt");
+
     if re.is_match(text) {
         let alignment = detect_alignment(text);
         let content = format!("MODULE_RATE=TRUE\nALIGNMENTS={alignment}");
-        fs::write(RATE_TEMP_PATH, content).unwrap();
+        fs::write(&rate_temp_path, content).unwrap();
     } else {
-        fs::write(RATE_TEMP_PATH, "MODULE_RATE=FALSE\nALIGNMENTS=NONE").unwrap();
+        fs::write(&rate_temp_path, "MODULE_RATE=FALSE\nALIGNMENTS=NONE").unwrap();
     }
 
     re.replace_all(text, "").to_string()
@@ -52,6 +51,6 @@ mod tests {
     fn test_temp_file_is_created() {
         let text = "[[module rate]]This is a test";
         rate_interceptor(text);
-        assert!(fs::metadata(RATE_TEMP_PATH).is_ok());
+        assert!(fs::metadata(temp_dir().join("module_rate_status.txt")).is_ok());
     }
 }

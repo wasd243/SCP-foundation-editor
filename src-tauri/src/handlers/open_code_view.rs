@@ -1,7 +1,11 @@
+use crate::utils::path::temp_dir;
 use std::fs;
+use std::path::PathBuf;
 
-pub(crate) const FINAL_OUTPUT_PATH: &str =
-    concat!(env!("CARGO_MANIFEST_DIR"), "/../temp/final_output.ftml");
+/// Path to the exporter's final output file in the temp directory.
+pub(crate) fn final_output_path() -> PathBuf {
+    temp_dir().join("final_output.ftml")
+}
 
 /// Open the code view window.
 #[tauri::command]
@@ -12,14 +16,13 @@ pub fn open_code_view_window() -> &'static str {
 /// Read the final output file from the temp directory.
 #[tauri::command]
 pub fn read_final_output() -> Result<String, String> {
-    fs::read_to_string(FINAL_OUTPUT_PATH)
-        .map_err(|e| format!("Failed to read {}: {}", FINAL_OUTPUT_PATH, e))
+    let path = final_output_path();
+    fs::read_to_string(&path).map_err(|e| format!("Failed to read {}: {}", path.display(), e))
 }
 
 /// This patch function is used to solve the problem of the user CSS not being loaded by parser.
 /// I don't know why parser has blocked the user CSS, so do not remove this unless you fix the CSS blocking issue.
 #[tauri::command]
 pub fn patch_get_user_css() -> String {
-    const CSS_CACHE_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../temp/user_css.css");
-    fs::read_to_string(CSS_CACHE_PATH).unwrap_or_default()
+    fs::read_to_string(temp_dir().join("user_css.css")).unwrap_or_default()
 }

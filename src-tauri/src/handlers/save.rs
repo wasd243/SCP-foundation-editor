@@ -1,4 +1,5 @@
-use crate::handlers::open_code_view::FINAL_OUTPUT_PATH;
+use crate::handlers::open_code_view::final_output_path;
+use crate::utils::path::saves_dir;
 use std::fs;
 use std::path::Path;
 
@@ -19,26 +20,23 @@ pub fn save_ftml(path: String, name: String) -> Result<(), String> {
         fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     }
 
-    fs::copy(FINAL_OUTPUT_PATH, &save_path).map_err(|e| e.to_string())?;
+    fs::copy(final_output_path(), &save_path).map_err(|e| e.to_string())?;
     Ok(())
 }
 
-/// Hardcoded auto-save destination, anchored to the project root at build time.
-/// `CARGO_MANIFEST_DIR` is `<root>/src-tauri`, so one `..` reaches the repo root.
-const AUTO_SAVE_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../saves/autosave.ftml");
-
 /// Auto-save the final output to the fixed `saves/autosave.ftml` file.
 ///
-/// Reads the latest exporter output and writes it to the hardcoded path,
+/// Reads the latest exporter output and writes it to the runtime saves dir,
 /// overwriting on every tick. The `saves` folder is created if missing.
 #[tauri::command]
 pub fn auto_save_ftml() -> Result<(), String> {
-    if let Some(parent) = Path::new(AUTO_SAVE_PATH).parent() {
+    let auto_save_path = saves_dir().join("autosave.ftml");
+    if let Some(parent) = auto_save_path.parent() {
         fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     }
 
-    let content = fs::read_to_string(FINAL_OUTPUT_PATH).map_err(|e| e.to_string())?;
-    fs::write(AUTO_SAVE_PATH, content).map_err(|e| e.to_string())?;
+    let content = fs::read_to_string(final_output_path()).map_err(|e| e.to_string())?;
+    fs::write(&auto_save_path, content).map_err(|e| e.to_string())?;
     Ok(())
 }
 
@@ -48,9 +46,10 @@ pub fn auto_save_ftml() -> Result<(), String> {
 /// the same way opening a file does.
 #[tauri::command]
 pub fn read_autosave_ftml() -> Result<String, String> {
-    if !Path::new(AUTO_SAVE_PATH).exists() {
+    let auto_save_path = saves_dir().join("autosave.ftml");
+    if !auto_save_path.exists() {
         return Err("No auto-save file found yet.".into());
     }
 
-    fs::read_to_string(AUTO_SAVE_PATH).map_err(|e| e.to_string())
+    fs::read_to_string(&auto_save_path).map_err(|e| e.to_string())
 }

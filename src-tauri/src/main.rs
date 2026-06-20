@@ -1,4 +1,5 @@
 mod handlers;
+pub mod utils;
 
 use handlers::{
     connect_exporter::export_code,
@@ -20,6 +21,12 @@ use tauri::Builder;
 
 fn main() {
     Builder::default()
+        .setup(|app| {
+            // Resolve writable per-user temp/saves dirs and push the temp dir
+            // into the parser/exporter crates before any command runs.
+            utils::path::init(app.handle())?;
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             parse_wikidot,
             open_code_view_window,
