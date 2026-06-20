@@ -51,5 +51,11 @@ dev_output.json
 .vite-dev.err.log
 .vite-dev.log
 
+# AI
+.claude/
+AGENTS.md
+CLAUDE.md
+skills-lock.json
+
 # DO NOT IGNORE: Assets
 !src/assets/icons/
