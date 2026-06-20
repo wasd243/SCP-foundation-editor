@@ -2493,7 +2493,7 @@ checksum = "953f07c43838f8e6f9758cab68bf5bed85465e7587ebe0b823f1bcd81978ad3a"
 
 [[package]]
 name = "ltmf"
-version = "0.1.0"
+version = "3.0.0"
 dependencies = [
  "regex",
  "rusqlite",
@@ -3845,7 +3845,7 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
 name = "scpeditor-bin"
-version = "0.1.0"
+version = "3.0.0"
 dependencies = [
  "ltmf",
  "serde_json",
@@ -5286,7 +5286,7 @@ dependencies = [
 
 [[package]]
 name = "w_parser"
-version = "0.1.0"
+version = "3.0.0"
 dependencies = [
  "ftml",
  "kuchiki",
