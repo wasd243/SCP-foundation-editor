@@ -13,6 +13,18 @@
 
 </div>
 
+## Table of Contents
+
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Why `[[include]]` Cannot Be WYSIWYG](#why-include-cannot-be-wysiwyg)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Building from Source](#building-from-source)
+- [Contributing](#contributing)
+- [Credits](#credits)
+- [License](#license)
+
 A cross-platform **WYSIWYG editor** for writing SCP articles in Wikidot text,
 built for the SCP-CN wiki community. Write your article visually — see headings,
 blockquotes, tables, footnotes, tabviews, code blocks, and redacted spans render
@@ -63,7 +75,7 @@ Simple `autosave` settings.
 
 ---
 
-## On `[[include]]` — Why It Cannot Be Made WYSIWYG
+## Why `[[include]]` Cannot Be WYSIWYG
 
 `[[include]]` looks like C's `#include` or CSS's `@import`, but it is not.
 Those are **textual substitution** with fixed content. `[[include]]` is a
