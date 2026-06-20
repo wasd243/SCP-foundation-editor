@@ -1,0 +1,99 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+# Needed for tauri-action to create/upload GitHub Releases on tag pushes.
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            args: ""
+          - platform: macos-latest
+            args: "--target universal-apple-darwin"
+          - platform: ubuntu-22.04
+            args: ""
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: |
+            package-lock.json
+            public/code_view/package-lock.json
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # Universal macOS binary needs both arch targets.
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install Tauri system dependencies (Linux)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libsoup-3.0-dev \
+            libjavascriptcoregtk-4.1-dev
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # The Code View bundle (assets/bundle_editor.js) is gitignored, but
+      # index.html loads it and Vite copies public/ into dist/. Build it here
+      # so the packaged app ships a working code view. parser.js is committed,
+      # so `node build` (bundle only) is sufficient — no lezer-generator needed.
+      - name: Build Code View bundle
+        run: npm ci && node build
+        working-directory: public/code_view
+
+      - name: Build Tauri app
+        id: tauri
+        uses: tauri-apps/tauri-action@v0.6.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # On a tag push, create a draft pre-release with the installers.
+          # On workflow_dispatch there is no tag, so tagName is empty and
+          # tauri-action only builds (no release) — see the upload step below.
+          tagName: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
+          releaseName: "SCP-WYSIWYG ${{ github.ref_name }}"
+          releaseDraft: true
+          prerelease: true
+          args: ${{ matrix.args }}
+
+      # Manual (workflow_dispatch) runs: no release is created, so expose the
+      # built installers as downloadable run artifacts instead. The workspace
+      # Cargo.toml at the repo root puts the bundle under repo-root target/;
+      # the universal-apple-darwin leg nests under its own target triple.
+      - name: Upload build artifacts (manual runs)
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: scp-wysiwyg-${{ matrix.platform }}
+          path: |
+            target/release/bundle/**
+            target/universal-apple-darwin/release/bundle/**
+          if-no-files-found: error
