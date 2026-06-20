@@ -21,6 +21,7 @@ mod underline;
 
 use serde_json::Value;
 
+use crate::interpret::include::interpret_include;
 use crate::interpret::{
     text::{
         blockquote::{interpret_blockquote, is_blockquote},
@@ -51,7 +52,6 @@ use crate::interpret::{
     },
     wiki_component::{interpret_wiki_component, is_nested_wiki_component_node},
 };
-use crate::interpret::include::interpret_include;
 
 pub(super) fn interpret_text(_index: usize, node: &Value) -> Result<String, String> {
     let content = interpret_text_content(node).join("");

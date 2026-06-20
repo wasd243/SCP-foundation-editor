@@ -11,7 +11,7 @@ mod import_json;
 pub use ftml_fmt::ftml_fmt;
 pub use interpret::interpret;
 pub use merge::merge_final_output;
-pub use paths::set_temp_dir;
+pub use paths::temp_dir;
 pub use preprocess::preprocess;
 
 /// Quick export function

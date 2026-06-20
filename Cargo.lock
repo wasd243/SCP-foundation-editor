@@ -784,6 +784,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "directories"
+version = "6.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "16f5094c54661b38d03bd7e50df373292118db60b585c08a411c6d840017fe7d"
+dependencies = [
+ "dirs-sys",
+]
+
+[[package]]
 name = "dirs"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2495,6 +2504,7 @@ checksum = "953f07c43838f8e6f9758cab68bf5bed85465e7587ebe0b823f1bcd81978ad3a"
 name = "ltmf"
 version = "3.0.0"
 dependencies = [
+ "directories",
  "regex",
  "rusqlite",
  "serde_json",
@@ -3847,6 +3857,7 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 name = "scpeditor-bin"
 version = "3.0.0"
 dependencies = [
+ "directories",
  "ltmf",
  "serde_json",
  "tauri",
@@ -5288,6 +5299,7 @@ dependencies = [
 name = "w_parser"
 version = "3.0.0"
 dependencies = [
+ "directories",
  "ftml",
  "kuchiki",
  "regex",

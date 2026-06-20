@@ -12,6 +12,7 @@ tauri = { version = "2", features = ["macos-private-api"] }
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 serde_json.workspace = true
+directories.workspace = true
 
 # Parser
 w_parser = { path = "../crates/w_parser" }
