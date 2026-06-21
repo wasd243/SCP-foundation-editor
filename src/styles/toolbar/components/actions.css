@@ -144,7 +144,7 @@
 }
 
 .actions-button.open-auto-save {
-    width: 140px;
+    width: 180px;
     right: calc(var(--actions-btn-right) + 416px);
 
     gap: 6px;

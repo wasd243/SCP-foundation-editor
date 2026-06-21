@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import AutoSaveSetting from "./Settings/AutoSaveSetting.vue";
+import SavesPathSetting from "./Settings/SavesPathSetting.vue";
 import LogAndWriteJson from "./Settings/LogAndWriteJson.vue";
 </script>
 
 <template>
     <div class="settings-groups">
         <AutoSaveSetting />
+        <div class="settings-groups__divider" aria-hidden="true"></div>
+        <SavesPathSetting />
         <div class="settings-groups__divider" aria-hidden="true"></div>
         <LogAndWriteJson />
     </div>

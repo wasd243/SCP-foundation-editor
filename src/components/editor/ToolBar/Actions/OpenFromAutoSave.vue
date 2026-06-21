@@ -11,6 +11,6 @@ import { OpenFromAutoSave } from "../../../../stores/btnToolBar/btnActions/btnOp
         @click="OpenFromAutoSave"
     >
         <img :src="Open2" alt="Open auto-save" />
-        Auto-save file
+        Read From Auto Save
     </button>
 </template>

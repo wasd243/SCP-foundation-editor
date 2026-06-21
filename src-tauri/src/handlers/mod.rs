@@ -5,4 +5,5 @@ pub mod log_and_write_json;
 pub mod module_rate;
 pub mod open_code_view;
 pub mod save;
+pub mod settings;
 pub mod splashscreen;

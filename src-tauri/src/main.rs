@@ -14,6 +14,10 @@ use handlers::{
     save::auto_save_ftml,
     save::read_autosave_ftml,
     save::save_ftml,
+    settings::get_saves_path,
+    settings::open_saves_dir,
+    settings::reset_saves_path,
+    settings::set_saves_path,
     splashscreen::close_splashscreen,
 };
 
@@ -30,6 +34,10 @@ fn main() {
             save_ftml,
             auto_save_ftml,
             read_autosave_ftml,
+            get_saves_path,
+            set_saves_path,
+            reset_saves_path,
+            open_saves_dir,
             save_user_css_to_cache,
             read_module_rate_temp,
             rewrite_module_rate_temp,
