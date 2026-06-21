@@ -12,7 +12,7 @@ crate-type = ["rlib", "cdylib"]
 [dependencies]
 ftml = "1.41.0"
 kuchiki = "0.8"
-time = "=0.3.37" # This is time library must be added in toml because of ftml parser
+time = "=0.3.49" # This is time library must be added in toml because of ftml parser
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json.workspace = true
 regex.workspace = true
