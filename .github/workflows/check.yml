@@ -1,6 +1,6 @@
 name: Check
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   check:
@@ -8,9 +8,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
       - uses: dtolnay/rust-toolchain@stable
 
-      - uses: Swatinem/rust-cache@v2      # ← 缓存,check 提速
+      - uses: Swatinem/rust-cache@v2
 
       - name: Install Tauri system dependencies
         run: |
@@ -23,5 +27,12 @@ jobs:
             libsoup-3.0-dev \
             libjavascriptcoregtk-4.1-dev
 
+      - name: Frontend build
+        run: npm ci && npm run build
+
       - name: Cargo check (workspace)
         run: cargo check --workspace
+
+      - name: Code View bundle
+        run: npm ci && node build
+        working-directory: public/code_view
