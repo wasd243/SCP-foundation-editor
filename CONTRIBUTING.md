@@ -33,28 +33,30 @@ You'll need:
 ```bash
 npm install
 npm run dev        # Dev server on port 5173
-npm run build      # Type-check + build
+npm run build      # Build
 ```
 
 ### Tauri Desktop App
 ```bash
-cd src-tauri && cargo tauri dev     # Run full desktop app
-cd src-tauri && cargo tauri build   # Build for distribution
-cd src-tauri && cargo check         # Type-check Rust
+cargo tauri dev     # Run full desktop app
+cargo tauri build   # Build for distribution
+cargo check
 ```
 
 ### Rust Parser Tests (`w_parser`)
 ```bash
-cd src-tauri && cargo test -p w_parser                         # All tests
-cd src-tauri && cargo test -p w_parser <test_name> -- --exact  # Single test
+cd crates/w_parser/ && cargo test
+```
+
+### Rust Exporter Tests (`ltmf`)
+```bash
+cd crates/ltmf/ && cargo test 
 ```
 
 ### Code View Subproject (CodeMirror 6)
 ```bash
 cd public/code_view && npm install
-cd public/code_view && node build   # Regenerates Lezer parser from grammar
-cd public/code_view && npm run dev     # Watch mode
-cd public/code_view && npm run lint    # ESLint
+cd public/code_view && node build      # Regenerates Lezer parser from grammar
 ```
 
 ---
@@ -66,27 +68,25 @@ cd public/code_view && npm run lint    # ESLint
    - `feat/` — new feature or Wikidot node support
    - `fix/` — bug fix
    - `docs/` — documentation only
-   - `chore/` — tooling, deps, CI
+   - `chore/` — tooling, deps, CI 
+   - etc.
 3. Open a PR against `main` and fill out the PR template.
 
 ---
 
 ## Areas That Need Extra Care
 
-Before touching any of the following, read the relevant section of [`CLAUDE.md`](./CLAUDE.md) and leave a note in your PR explaining why the change is necessary.
+The following parts of the codebase are fragile. If your PR touches any of them, explain in the PR description why the change is necessary and how you verified it.
+
 
 ### Exporter pipeline (`crates/ltmf/`)
 Export correctness is the **highest priority** in this project. Any change that affects Wikidot output — even whitespace — can break round-tripping for real wiki pages. Test your change against a variety of Wikidot syntax and include the input/output in your PR description.
 
 ### Include pipeline module boundaries
-The include pipeline has strict separation of responsibilities:
-```
-variable_loader.rs → SQLite mapping → search.rs → generator.rs
-```
-Do not merge these responsibilities across files. If you're unsure whether a change respects this boundary, ask in the issue before implementing.
+Resourcepack `[[include]]` pipeline modules are abandoned due to their macro-like, non-reversible nature. See the full explanation in [Include_block.md](./docs/Include_block.md).
 
 ### `wj-*` attribute round-tripping
-Custom TipTap node extensions use `wj-*` tag mappings and ARIA/ID attributes to preserve structure across the Wikitext ↔ ProseMirror ↔ HTML pipeline. Changes to these attributes can silently break round-tripping. If your PR touches any custom node extension, verify that the node serializes and deserializes correctly end-to-end.
+FTML parser output node extensions use `wj-*` tag mappings and ARIA/ID attributes to preserve structure across the Wikitext ↔ ProseMirror ↔ HTML pipeline. Changes to these attributes can silently break round-tripping. If your PR touches any custom node extension, verify that the node serializes and deserializes correctly end-to-end.
 
 ---
 
