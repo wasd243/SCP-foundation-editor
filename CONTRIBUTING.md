@@ -92,9 +92,6 @@ FTML parser output node extensions use `wj-*` tag mappings and ARIA/ID attribute
 
 ## General Rules
 
-- **No new dependencies** without first checking if the functionality already exists in the codebase.
-- **No inline SQL** — use `.sql` files. The reference file is `crates/ltmf/src/interpreter/include/variable_name_config_table.sql`.
-- **No architectural redesigns** unless explicitly discussed in an issue first.
 - **Keep logs and error messages** — do not remove existing debugging output unless a change explicitly requires it.
 - **ProseMirror node data is the source of truth** — use node attrs, node content, and `data-editor` metadata. Avoid reconstructing state from rendered HTML.
 
