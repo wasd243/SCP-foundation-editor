@@ -2,6 +2,7 @@
 
 use directories::ProjectDirs;
 use serde_json::{Value, json};
+use std::fs;
 use std::path::{Path, PathBuf};
 
 fn project() -> ProjectDirs {
@@ -11,7 +12,7 @@ fn project() -> ProjectDirs {
 /// Runtime temp/cache directory for the Tauri handlers. Created if missing.
 pub fn temp_dir() -> PathBuf {
     let dir = project().cache_dir().join("temp");
-    std::fs::create_dir_all(&dir).unwrap();
+    fs::create_dir_all(&dir).unwrap();
     dir
 }
 
@@ -32,7 +33,7 @@ fn default_saves_dir() -> PathBuf {
 /// Missing file, unreadable file, parse error, or an empty value all map to
 /// `None` (i.e. "use the default"). Never panics.
 pub fn read_saves_setting() -> Option<String> {
-    let contents = std::fs::read_to_string(config_file_path()).ok()?;
+    let contents = fs::read_to_string(config_file_path()).ok()?;
     let value: Value = serde_json::from_str(&contents).ok()?;
     let path = value.get("saves_path")?.as_str()?.trim();
     if path.is_empty() {
@@ -47,23 +48,23 @@ pub fn read_saves_setting() -> Option<String> {
 pub fn write_saves_setting(path: Option<&str>) -> Result<(), String> {
     let file = config_file_path();
     if let Some(parent) = file.parent() {
-        std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+        fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     }
 
     let contents =
         serde_json::to_string_pretty(&json!({ "saves_path": path })).map_err(|e| e.to_string())?;
-    std::fs::write(&file, contents).map_err(|e| e.to_string())
+    fs::write(&file, contents).map_err(|e| e.to_string())
 }
 
 /// Validate that `dir` can be created and written to. Creates the directory if
 /// needed and writes/removes a probe file. Returns a clear error string on
 /// failure (e.g. read-only or removed/unplugged location). Never panics.
 pub fn validate_writable(dir: &Path) -> Result<(), String> {
-    std::fs::create_dir_all(dir).map_err(|e| format!("Cannot create directory: {e}"))?;
+    fs::create_dir_all(dir).map_err(|e| format!("Cannot create directory: {e}"))?;
 
     let probe = dir.join(".scpwysiwyg_write_test");
-    std::fs::write(&probe, b"test").map_err(|e| format!("Directory is not writable: {e}"))?;
-    let _ = std::fs::remove_file(&probe);
+    fs::write(&probe, b"test").map_err(|e| format!("Directory is not writable: {e}"))?;
+    let _ = fs::remove_file(&probe);
 
     Ok(())
 }
@@ -84,6 +85,34 @@ pub fn saves_dir() -> PathBuf {
     let dir = default_saves_dir();
     // Best-effort create; callers that write also create_dir_all the parent
     // with proper error handling, so a failure here must not abort.
-    let _ = std::fs::create_dir_all(&dir);
+    let _ = fs::create_dir_all(&dir);
     dir
+}
+
+/// Per-user resourcepack root (`data_dir()/resourcepack`).
+///
+/// This is where the bundled resourcepack is materialized at startup so the
+/// parser/exporter crates (which cannot depend on Tauri) can resolve the same
+/// path via `directories`. Mirrors `w_parser::resourcepack_dir` /
+/// `ltmf::resourcepack_dir`.
+pub fn resourcepack_dir() -> PathBuf {
+    project().data_dir().join("resourcepack")
+}
+
+/// Recursively copy `source` into `dest`, overwriting existing files. Best-effort
+/// per entry: a single failure is reported but does not abort the remaining
+/// copies. Used to materialize the bundled resourcepack into [`resourcepack_dir`].
+pub fn copy_dir_overwrite(source: &Path, dest: &Path) -> std::io::Result<()> {
+    fs::create_dir_all(dest)?;
+    for entry in fs::read_dir(source)? {
+        let entry = entry?;
+        let from = entry.path();
+        let to = dest.join(entry.file_name());
+        if from.is_dir() {
+            copy_dir_overwrite(&from, &to)?;
+        } else {
+            fs::copy(&from, &to)?;
+        }
+    }
+    Ok(())
 }

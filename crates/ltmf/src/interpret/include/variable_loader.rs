@@ -4,8 +4,6 @@ use std::path::Path;
 use regex::Regex;
 use rusqlite::{Connection, OptionalExtension, params};
 
-const RESOURCEPACK_INCLUDES_PATH: &str =
-    concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack/includes/");
 const VARIABLE_NAME_CONFIG_TABLE_SQL: &str = include_str!("variable_name_config_table.sql");
 
 pub(super) fn load_variables(connection: &Connection) -> Result<(), String> {
@@ -16,7 +14,11 @@ pub(super) fn load_variables(connection: &Connection) -> Result<(), String> {
         .execute_batch(create_table_sql)
         .map_err(|error| error.to_string())?;
 
-    let includes_path = Path::new(RESOURCEPACK_INCLUDES_PATH);
+    // The host copies the bundled resourcepack into this per-user path at
+    // startup. When the files are absent (e.g. before a copy, or in tests that
+    // never materialize them) there are no variables to load, so degrade
+    // gracefully instead of panicking.
+    let includes_path = crate::paths::resourcepack_dir().join("includes");
     if !includes_path.exists() {
         return Ok(());
     }
@@ -25,7 +27,7 @@ pub(super) fn load_variables(connection: &Connection) -> Result<(), String> {
 
     load_variables_from_directory(
         connection,
-        includes_path,
+        &includes_path,
         &variable_regex,
         &insert_variable_sql,
         &search_existing_variable_sql,
@@ -169,7 +171,8 @@ mod tests {
 
     #[test]
     fn resourcepack_include_path_matches_existing_layout() {
-        let includes_path = Path::new(RESOURCEPACK_INCLUDES_PATH);
+        crate::paths::ensure_test_resourcepack();
+        let includes_path = crate::paths::resourcepack_dir().join("includes");
 
         assert!(
             includes_path.exists(),
@@ -187,6 +190,7 @@ mod tests {
 
     #[test]
     fn loads_variables_from_resourcepack_includes() {
+        crate::paths::ensure_test_resourcepack();
         let connection = Connection::open_in_memory().unwrap();
 
         load_variables(&connection).unwrap();

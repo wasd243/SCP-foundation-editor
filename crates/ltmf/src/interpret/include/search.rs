@@ -38,6 +38,9 @@ mod tests {
 
     #[test]
     fn returns_all_unique_variables_for_matching_include_name() {
+        // Materialize the dev-tree resourcepack so load_variables finds the
+        // include `.ftml` files (mirrors the host's startup copy).
+        crate::paths::ensure_test_resourcepack();
         let connection = Connection::open_in_memory().unwrap();
 
         load_variables(&connection).unwrap();

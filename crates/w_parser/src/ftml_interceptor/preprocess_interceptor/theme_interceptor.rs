@@ -10,10 +10,6 @@ pub fn theme_status_temp_path() -> PathBuf {
     temp_dir().join("theme_status.json")
 }
 
-/// Root directory of the resource pack themes, where theme `.ftml` files live.
-pub const RESOURCEPACK_THEMES_PATH: &str =
-    concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack/themes");
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ThemeStatus {
     pub theme: bool,
@@ -96,6 +92,10 @@ fn site_to_branch(site: &str) -> &str {
 /// the file name, e.g.:
 /// - `[[include :scp-wiki:theme:test]]`     -> `resourcepack/themes/EN/test.ftml`
 /// - `[[include :scp-wiki-cn:theme:yore]]`  -> `resourcepack/themes/CN/yore.ftml`
+///
+/// Returns `None` when there is no theme include in `ftml`. The themes root is
+/// resolved from the per-user resourcepack dir; if the files are absent,
+/// `detect_parent_theme` simply reads nothing.
 fn generate_theme_path(ftml: &str) -> Option<String> {
     // Capture the site slug and the theme name out of the include.
     let re = Regex::new(r"\[\[include\s+:([\w-]+):theme:([\w-]+)").unwrap();
@@ -104,9 +104,14 @@ fn generate_theme_path(ftml: &str) -> Option<String> {
     let branch = site_to_branch(&caps[1]);
     let theme_name = &caps[2];
 
-    Some(format!(
-        "{RESOURCEPACK_THEMES_PATH}/{branch}/{theme_name}.ftml"
-    ))
+    let themes_root = crate::paths::resourcepack_dir().join("themes");
+    Some(
+        themes_root
+            .join(branch)
+            .join(format!("{theme_name}.ftml"))
+            .to_string_lossy()
+            .into_owned(),
+    )
 }
 
 /// Writes the theme status to the temp file. When a theme include is matched,
@@ -134,6 +139,17 @@ fn write_theme_status(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The themes path the interceptor resolves at runtime, under the per-user
+    /// resourcepack dir.
+    fn expected_theme_path(branch: &str, file: &str) -> String {
+        crate::paths::resourcepack_dir()
+            .join("themes")
+            .join(branch)
+            .join(file)
+            .to_string_lossy()
+            .into_owned()
+    }
 
     #[test]
     fn test_theme_interceptor() {
@@ -167,7 +183,7 @@ mod tests {
         let ftml = r#"[[include :scp-wiki:theme:test]]"#;
         assert_eq!(
             generate_theme_path(ftml),
-            Some(format!("{RESOURCEPACK_THEMES_PATH}/EN/test.ftml"))
+            Some(expected_theme_path("EN", "test.ftml"))
         );
     }
 
@@ -176,7 +192,7 @@ mod tests {
         let ftml = r#"[[include :scp-wiki-cn:theme:yore]]"#;
         assert_eq!(
             generate_theme_path(ftml),
-            Some(format!("{RESOURCEPACK_THEMES_PATH}/CN/yore.ftml"))
+            Some(expected_theme_path("CN", "yore.ftml"))
         );
     }
 
@@ -185,7 +201,7 @@ mod tests {
         let ftml = r#"[[include :scp-wiki-cn:theme:parallel|var1=value1]]"#;
         assert_eq!(
             generate_theme_path(ftml),
-            Some(format!("{RESOURCEPACK_THEMES_PATH}/CN/parallel.ftml"))
+            Some(expected_theme_path("CN", "parallel.ftml"))
         );
     }
 
@@ -216,7 +232,8 @@ mod tests {
     #[test]
     fn test_detect_parent_theme_with_parent() {
         // CN/yore.ftml declares `~_PARENT_THEME=parallel_~`.
-        let path = format!("{RESOURCEPACK_THEMES_PATH}/CN/yore.ftml");
+        crate::paths::ensure_test_resourcepack();
+        let path = expected_theme_path("CN", "yore.ftml");
         assert_eq!(
             detect_parent_theme(Some(&path)),
             (true, vec!["parallel".to_string()])
@@ -226,7 +243,8 @@ mod tests {
     #[test]
     fn test_detect_parent_theme_null() {
         // CN/parallel.ftml declares `~_PARENT_THEME=null_~`.
-        let path = format!("{RESOURCEPACK_THEMES_PATH}/CN/parallel.ftml");
+        crate::paths::ensure_test_resourcepack();
+        let path = expected_theme_path("CN", "parallel.ftml");
         assert_eq!(detect_parent_theme(Some(&path)), (false, vec![]));
     }
 
@@ -237,7 +255,7 @@ mod tests {
 
     #[test]
     fn test_detect_parent_theme_missing_file() {
-        let path = format!("{RESOURCEPACK_THEMES_PATH}/CN/does_not_exist.ftml");
+        let path = expected_theme_path("CN", "does_not_exist.ftml");
         assert_eq!(detect_parent_theme(Some(&path)), (false, vec![]));
     }
 

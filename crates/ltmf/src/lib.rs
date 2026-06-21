@@ -11,7 +11,7 @@ mod import_json;
 pub use ftml_fmt::ftml_fmt;
 pub use interpret::interpret;
 pub use merge::merge_final_output;
-pub use paths::temp_dir;
+pub use paths::{resourcepack_dir, temp_dir};
 pub use preprocess::preprocess;
 
 /// Quick export function
@@ -29,6 +29,10 @@ mod tests {
 
     #[test]
     fn test_export() -> Result<(), String> {
+        // Materialize the dev-tree resourcepack so include variables resolve
+        // (mirrors the host's startup copy).
+        crate::paths::ensure_test_resourcepack();
+
         let mut json = String::new();
         import_json(&mut json)?;
         let output = export_wikitext(&json)?;

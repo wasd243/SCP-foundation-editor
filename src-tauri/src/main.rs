@@ -22,11 +22,28 @@ use handlers::{
     splashscreen::close_splashscreen,
 };
 
-use tauri::Builder;
+use tauri::{Builder, Manager};
 
 fn main() {
     env_logger::init();
     Builder::default()
+        .setup(|app| {
+            // The resourcepack ships as a bundled Tauri resource (see
+            // tauri.conf.json `bundle.resources`). Copy it from the read-only
+            // install location into the per-user resourcepack dir at startup so
+            // the parser/exporter crates — which cannot depend on Tauri — can
+            // resolve the same path via `directories`.
+            let bundled = app.path().resource_dir()?.join("resourcepack");
+            let dest = utils::path::resourcepack_dir();
+            if let Err(error) = utils::path::copy_dir_overwrite(&bundled, &dest) {
+                log::warn!(
+                    "failed to copy bundled resourcepack from {} to {}: {error}",
+                    bundled.display(),
+                    dest.display()
+                );
+            }
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             parse_wikidot,
             open_code_view_window,

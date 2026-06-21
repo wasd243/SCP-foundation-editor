@@ -32,9 +32,7 @@ mod ftml_normalizer;
 pub mod paths;
 mod resourcepack_includer;
 
-pub use paths::temp_dir;
-
-const DEFAULT_RESOURCEPACK_ROOT: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../resourcepack");
+pub use paths::{resourcepack_dir, temp_dir};
 
 #[derive(Serialize)]
 pub struct FtmlParseOutput {
@@ -149,7 +147,10 @@ pub fn render_wikidot_to_html_with_resourcepack(
 
 // Final handler to tauri
 pub fn render_wikidot_to_html(source_text: &str) -> Result<FtmlParseOutput, String> {
-    render_wikidot_to_html_with_resourcepack(source_text, DEFAULT_RESOURCEPACK_ROOT)
+    // The host copies the bundled resourcepack into this per-user path at
+    // startup. If the files are missing the includer simply reports
+    // no_such_include rather than panicking.
+    render_wikidot_to_html_with_resourcepack(source_text, paths::resourcepack_dir())
 }
 
 #[cfg(test)]
