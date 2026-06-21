@@ -17,3 +17,4 @@ serde = { version = "1.0.228", features = ["derive"] }
 serde_json.workspace = true
 regex.workspace = true
 directories.workspace = true
+log.workspace = true

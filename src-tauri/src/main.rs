@@ -25,6 +25,7 @@ use handlers::{
 use tauri::Builder;
 
 fn main() {
+    env_logger::init();
     Builder::default()
         .invoke_handler(tauri::generate_handler![
             parse_wikidot,

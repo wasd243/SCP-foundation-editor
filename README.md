@@ -94,7 +94,7 @@ I hardcoded `[[include :component:image-block]]` include WYSIWYG generator
 and I used to want to do a resourcepack includer, 
 but now the resourcepack only works on parser rather than generator.
 
-So now you can see a `.sql` file exists in `crate/ltmf/src/interpret/include/`. 
+So now you can see a `.sql` file exists in `crates/ltmf/src/interpret/include/`. 
 That's my legacy version based on `{$ }` variables and meta data attacher 
 (already removed, that's an attacher for `data-editor-export` and `data-editor-include`).
 

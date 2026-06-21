@@ -13,6 +13,8 @@ tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 serde_json.workspace = true
 directories.workspace = true
+log.workspace = true
+env_logger.workspace = true
 
 # Parser
 w_parser = { path = "../crates/w_parser" }
