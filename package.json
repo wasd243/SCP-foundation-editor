@@ -41,7 +41,7 @@
         "vue3-moveable": "^0.28.0"
     },
     "devDependencies": {
-        "@vitejs/plugin-vue": "^5.0.0",
+        "@vitejs/plugin-vue": "^6.0.7",
         "prettier": "3.8.4",
         "sass": "^1.100.0",
         "typescript": "^5.0.0",
