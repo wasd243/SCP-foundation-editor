@@ -9,14 +9,14 @@
 		}
 
 		#background {
-			-webkit-animation: cont-spin 15s linear infinite;
-			animation: cont-spin 15s linear infinite;
+			-webkit-animation: cont-spin 5s linear infinite;
+			animation: cont-spin 5s linear infinite;
 		}
 
 		#btm-arrows,
 		#top-arrows {
-			-webkit-animation: clock-spin cubic-bezier(.62, 0, .52, 1.3) 10s infinite;
-			animation: clock-spin cubic-bezier(.62, 0, .52, 1.3) 10s infinite;
+			-webkit-animation: clock-spin cubic-bezier(.62, 0, .52, 1.3) 5s infinite;
+			animation: clock-spin cubic-bezier(.62, 0, .52, 1.3) 5s infinite;
 		}
 
 		#top-arrows {
