@@ -5,6 +5,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "@tiptap/*"
 
   # Code View subproject
   - package-ecosystem: "npm"
@@ -17,6 +19,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "time"
+      - dependency-name: "rusqlite"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
