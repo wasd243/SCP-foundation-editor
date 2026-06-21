@@ -7,6 +7,12 @@ updates:
       interval: "weekly"
     ignore:
       - dependency-name: "@tiptap/*"
+      - dependency-name: "typescript"
+      - dependency-name: "vite"
+      - dependency-name: "eslint"
+      - dependency-name: "esbuild"
+      - dependency-name: "prettier"
+      - dependency-name: "@vitejs/plugin-vue"
 
   # Code View subproject
   - package-ecosystem: "npm"
