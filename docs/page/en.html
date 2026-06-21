@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SCP-WYSIWYG — WYSIWYG editor for SCP / Wikidot articles</title>
+        <meta
+            name="description"
+            content="A cross-platform desktop WYSIWYG editor for writing SCP articles in Wikidot text. Render as you type, export clean wikitext."
+        />
+        <link rel="icon" type="image/png" href="icon.png" />
+        <link rel="alternate" hreflang="zh" href="cn.html" />
+        <link rel="alternate" hreflang="en" href="en.html" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- ===================================================== top bar -->
+        <header class="topbar">
+            <div class="wrap">
+                <a class="brand" href="#top" aria-label="SCP-WYSIWYG home">
+                    <img src="icon.png" alt="" aria-hidden="true" />
+                    <b>SCP-WYSIWYG</b>
+                </a>
+                <nav class="nav" aria-label="Sections">
+                    <a href="#how">How it works</a>
+                    <a href="#features">Features</a>
+                    <a href="#download">Download</a>
+                </nav>
+                <a
+                    class="lang-toggle"
+                    href="cn.html"
+                    lang="zh"
+                    aria-label="切换到中文"
+                >
+                    <span class="dot" aria-hidden="true"></span>
+                    <span>中文</span>
+                </a>
+            </div>
+        </header>
+
+        <main id="top">
+            <!-- =============================================== hero -->
+            <section class="hero">
+                <div class="wrap">
+                    <div class="hero-copy reveal">
+                        <p class="eyebrow">
+                            Desktop WYSIWYG editor for Wikidot
+                        </p>
+
+                        <div class="stamps">
+                            <span class="stamp">Cross-platform</span>
+                            <span class="stamp">Fully offline</span>
+                            <span class="stamp">Open source</span>
+                        </div>
+
+                        <h1>Write SCP articles the way they’ll look.</h1>
+                        <p class="lede">
+                            A desktop editor for the SCP Wiki. Write in a visual
+                            editor — headings, blockquotes, tables, footnotes,
+                            tabviews and more render as you type — then export
+                            clean Wikidot wikitext, ready to paste into the
+                            wiki.
+                        </p>
+
+                        <div class="cta-row">
+                            <a
+                                class="btn btn-primary"
+                                href="https://github.com/wasd243/SCP-foundation-editor/releases"
+                                >Download latest</a
+                            >
+                            <a
+                                class="btn btn-ghost"
+                                href="https://github.com/wasd243/SCP-foundation-editor"
+                                >View on GitHub</a
+                            >
+                        </div>
+                    </div>
+
+                    <!-- the real editor, as captured -->
+                    <figure class="shot reveal">
+                        <img
+                            src="ScreenShot1.jpeg"
+                            alt="The SCP-WYSIWYG editor showing a ribbon toolbar, an article with tabviews, a rendered note, a table, formatted text, an include block, and the footnotes side panel."
+                        />
+                        <figcaption>
+                            Live editor — tabviews, tables, footnotes &amp;
+                            includes rendered as you type.
+                        </figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <!-- =============================================== how it works -->
+            <section class="section" id="how">
+                <div class="wrap reveal">
+                    <p class="class-head">How it works</p>
+                    <h2 class="section-title">Reversible by design.</h2>
+                    <p class="section-sub">
+                        Your text moves through a two-way pipeline, so what you
+                        see and what you export stay in sync.
+                    </p>
+
+                    <div class="pipeline">
+                        <div class="stage">
+                            <span class="tag">Source</span>
+                            <h3>Wikitext</h3>
+                            <p>
+                                Your raw Wikidot source — the text the wiki
+                                actually accepts.
+                            </p>
+                        </div>
+                        <div class="flow">⇄</div>
+                        <div class="stage">
+                            <span class="tag">Model</span>
+                            <h3>ProseMirror JSON</h3>
+                            <p>
+                                A structured document tree — the single source
+                                of truth while you edit.
+                            </p>
+                        </div>
+                        <div class="flow">⇄</div>
+                        <div class="stage">
+                            <span class="tag">View</span>
+                            <h3>WYSIWYG</h3>
+                            <p>
+                                The rendered editor — headings, tables and
+                                footnotes shown as they’ll appear.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================== features -->
+            <section class="section" id="features">
+                <div class="wrap reveal">
+                    <p class="class-head">Features</p>
+                    <h2 class="section-title">Built for SCP articles.</h2>
+                    <p class="section-sub">
+                        Not a generic rich-text editor. Every element converts
+                        back to clean Wikidot wikitext.
+                    </p>
+
+                    <div class="feature-grid">
+                        <div class="feature">
+                            <span class="syntax">** _ ^^ ,,</span>
+                            <h3>Visual editing</h3>
+                            <p>
+                                Headings, bold, italic, underline, strike,
+                                super/subscript and alignment.
+                            </p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">[[div]] &gt;</span>
+                            <h3>Blockquotes</h3>
+                            <p>
+                                Both <code>[[div class="blockquote"]]</code> and
+                                line-prefix <code>&gt;</code> syntax.
+                            </p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">[[table]]</span>
+                            <h3>Tables</h3>
+                            <p>Full table editing with header rows.</p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">[[footnote]]</span>
+                            <h3>Footnotes</h3>
+                            <p>
+                                Wikidot-style footnotes with a dedicated side
+                                panel.
+                            </p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">[[tabview]]</span>
+                            <h3>Tabviews</h3>
+                            <p>
+                                <code>[[tabview]]</code> / <code>[[tab]]</code>
+                                as editable tabs.
+                            </p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">[[span]]</span>
+                            <h3>Redacted spans</h3>
+                            <p>Blackout / redaction styling for hidden text.</p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">⌁ auto</span>
+                            <h3>Autosave</h3>
+                            <p>
+                                Automatic local saving to
+                                <code>.txt</code> while you write.
+                            </p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">⦿ offline</span>
+                            <h3>Fully local</h3>
+                            <p>
+                                Runs entirely offline. Your work never leaves
+                                your machine.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================== limitation -->
+            <section class="section" id="limitation">
+                <div class="wrap reveal">
+                    <p class="class-head">Known limitation</p>
+                    <h2 class="section-title">
+                        Why <code>[[include]]</code> can’t be WYSIWYG.
+                    </h2>
+
+                    <div class="note">
+                        <p>
+                            <code>[[include]]</code> looks like C’s
+                            <code>#include</code>, but it isn’t textual
+                            substitution — it’s a parameterized macro with
+                            variable interpolation and silent fallback.
+                        </p>
+                        <p>
+                            Macro expansion is lossy and, when nested,
+                            irreversible: after expansion, template content,
+                            interpolated arguments and authored text are
+                            indistinguishable, so there’s no correct place to
+                            write an edit back. Includes are one-way only.
+                        </p>
+                        <p>
+                            <a
+                                href="https://github.com/wasd243/SCP-foundation-editor/blob/main/docs/Include_block.md"
+                                >Read the full write-up →</a
+                            >
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================== download -->
+            <section class="section" id="download">
+                <div class="wrap reveal">
+                    <p class="class-head">Download</p>
+                    <h2 class="section-title">Get it, or build it.</h2>
+                    <p class="section-sub">
+                        Grab a build for your platform, or compile from source.
+                    </p>
+
+                    <div class="acq">
+                        <div class="platforms">
+                            <div class="row">
+                                <span>Windows</span><span>.exe</span>
+                            </div>
+                            <div class="row">
+                                <span>macOS</span><span>.dmg</span>
+                            </div>
+                            <div class="row">
+                                <span>Linux</span><span>.AppImage · .deb</span>
+                            </div>
+                        </div>
+
+                        <div class="codeblock">
+                            <div class="head">Build from source</div>
+                            <pre><span class="c"># prerequisites: Rust, Node.js, Tauri deps</span>
+<span class="cmd">npm install</span>
+<span class="cmd">cargo tauri dev</span>     <span class="c"># run</span>
+<span class="cmd">cargo tauri build</span>   <span class="c"># release</span></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================== tech stack -->
+            <section class="section" id="tech">
+                <div class="wrap reveal">
+                    <p class="class-head">Tech stack</p>
+                    <h2 class="section-title">What it’s built with.</h2>
+
+                    <div class="stack">
+                        <div class="tech">
+                            <b>Tauri 2</b>
+                            <span>Cross-platform desktop shell.</span>
+                        </div>
+                        <div class="tech">
+                            <b>Vue 3 + TS</b>
+                            <span>Editor interface.</span>
+                        </div>
+                        <div class="tech">
+                            <b>TipTap / ProseMirror</b>
+                            <span>The WYSIWYG core.</span>
+                        </div>
+                        <div class="tech credit">
+                            <b>ftml <span class="badge">third-party</span></b>
+                            <span
+                                >Wikidot → HTML parser by the SCP Wiki team
+                                <a href="https://github.com/scpwiki/ftml.git"
+                                    >github.com/scpwiki/ftml ↗</a
+                                ></span
+                            >
+                        </div>
+                        <div class="tech">
+                            <b>Rust</b>
+                            <span>Parsing pipeline, exporter and IPC.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="foot-stripe" aria-hidden="true"></div>
+        <footer>
+            <div class="wrap">
+                <div>
+                    <div class="mark">SCP-WYSIWYG</div>
+                    <p class="disc">
+                        A community tool for writing SCP Wiki articles. Wikidot
+                        parsing is powered by
+                        <a href="https://github.com/scpwiki/ftml.git">ftml</a>,
+                        an independent library by the SCP Wiki team. Theme
+                        assets are licensed CC BY-SA 3.0.
+                    </p>
+                </div>
+                <div class="meta">
+                    <div>
+                        <a
+                            href="https://github.com/wasd243/SCP-foundation-editor"
+                            >GitHub ↗</a
+                        >
+                    </div>
+                    <div>
+                        <a
+                            href="https://github.com/wasd243/SCP-foundation-editor/releases"
+                            >Releases ↗</a
+                        >
+                    </div>
+                    <div>
+                        <a
+                            href="https://github.com/wasd243/SCP-foundation-editor/blob/main/CREDITS.md"
+                            >Credits ↗</a
+                        >
+                    </div>
+                    <div>License · AGPLv3</div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            // Scroll reveals (respecting reduced-motion).
+            const prefersReduced = window.matchMedia(
+                "(prefers-reduced-motion: reduce)",
+            ).matches;
+            if (!prefersReduced && "IntersectionObserver" in window) {
+                const io = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach((e) => {
+                            if (e.isIntersecting) {
+                                e.target.classList.add("in");
+                                io.unobserve(e.target);
+                            }
+                        });
+                    },
+                    { threshold: 0.12 },
+                );
+                document
+                    .querySelectorAll(".reveal")
+                    .forEach((el) => io.observe(el));
+            } else {
+                document
+                    .querySelectorAll(".reveal")
+                    .forEach((el) => el.classList.add("in"));
+            }
+        </script>
+    </body>
+</html>

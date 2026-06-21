@@ -1,0 +1,803 @@
+/* ============================================================================
+   SCP-WYSIWYG — project page
+   Palette and motto inherited from the app's own splash screen so the page
+   reads as the same artifact as the product. The page is dressed as an SCP
+   containment file: classification headers, numbered addenda, redaction bars.
+   ========================================================================== */
+
+:root {
+    /* Inherited app tokens (see public/splashscreen.html). */
+    --void: #0d0f12;
+    --ink: #14171c; /* raised panel */
+    --ink-2: #181c22; /* card */
+    --paper: #e8e6df;
+    --steel: #8a929c;
+    --steel-dim: #5b626b;
+    --hazard: #d23b2e;
+    --line: #2a2f36;
+    --line-soft: #20242a;
+
+    --mono:
+        "IBM Plex Mono", ui-monospace, "Cascadia Code", "Consolas",
+        "Courier New", monospace;
+    --sans:
+        "IBM Plex Sans", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    --display:
+        "IBM Plex Sans Condensed", "IBM Plex Sans", "Noto Sans SC", system-ui,
+        sans-serif;
+
+    --wrap: 1080px;
+    --pad: 24px;
+}
+
+/* When Chinese is active, lead with Noto Sans SC for even color/weight. */
+html[lang="zh"] {
+    --sans: "Noto Sans SC", "IBM Plex Sans", system-ui, sans-serif;
+    --display: "Noto Sans SC", "IBM Plex Sans Condensed", system-ui, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--void);
+    color: var(--paper);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    /* Faint document grid + vignette — barely perceptible, sets "field file". */
+    background-image:
+        radial-gradient(
+            120% 80% at 50% -10%,
+            rgba(210, 59, 46, 0.05),
+            transparent 60%
+        ),
+        linear-gradient(var(--line-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size:
+        100% 100%,
+        46px 46px,
+        46px 46px;
+    background-position: center, center, center;
+    background-attachment: fixed;
+}
+
+/* Knock the grid back so it never competes with text. */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: var(--void);
+    opacity: 0.86;
+    z-index: -1;
+    pointer-events: none;
+}
+
+a {
+    color: inherit;
+}
+
+.wrap {
+    width: 100%;
+    max-width: var(--wrap);
+    margin-inline: auto;
+    padding-inline: var(--pad);
+}
+
+/* Language visibility: JS sets textContent, so nothing to toggle in CSS here,
+   but utility for the few dual-rendered bits if needed. */
+:focus-visible {
+    outline: 2px solid var(--hazard);
+    outline-offset: 3px;
+}
+
+/* ----------------------------------------------------------------- top bar */
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(8px);
+    background: rgba(13, 15, 18, 0.72);
+    border-bottom: 1px solid var(--line);
+}
+
+.topbar .wrap {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 60px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    margin-right: auto;
+}
+
+.brand svg,
+.brand img {
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
+/* The app icon is a black drawing — recolor it white for the dark header
+   (brightness(0) -> black, invert(1) -> white; alpha/edges preserved). */
+.brand img {
+    filter: brightness(0) invert(1);
+}
+
+.brand b {
+    font-family: var(--mono);
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-size: 0.95rem;
+}
+
+.nav {
+    display: flex;
+    gap: 26px;
+}
+
+.nav a {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--steel);
+    text-decoration: none;
+    padding: 4px 0;
+    border-bottom: 1px solid transparent;
+    transition:
+        color 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.nav a:hover {
+    color: var(--paper);
+    border-color: var(--hazard);
+}
+
+.lang-toggle {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--paper);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 6px 12px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease;
+}
+
+.lang-toggle:hover {
+    border-color: var(--hazard);
+    background: rgba(210, 59, 46, 0.08);
+}
+
+.lang-toggle .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--hazard);
+    border-radius: 50%;
+    flex: none;
+}
+
+/* ----------------------------------------------------- classification head */
+/* The signature structural device: a red containment square, a mono uppercase
+   label, and a hairline rule running to the edge — the SCP section header. */
+
+.class-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.74rem;
+    color: var(--steel);
+    margin: 0 0 18px;
+}
+
+.class-head::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    background: var(--hazard);
+    flex: none;
+}
+
+.class-head::after {
+    content: "";
+    height: 1px;
+    background: var(--line);
+    flex: 1;
+}
+
+.class-head .idx {
+    color: var(--hazard);
+    font-weight: 600;
+}
+
+.section-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+}
+
+.section-sub {
+    color: var(--steel);
+    max-width: 56ch;
+    margin: 0 0 40px;
+}
+
+.section {
+    padding: 84px 0;
+    border-top: 1px solid var(--line-soft);
+}
+
+/* --------------------------------------------------------------- hero */
+
+.hero {
+    padding: 78px 0 64px;
+}
+
+.hero .wrap {
+    display: block;
+}
+
+.hero-copy {
+    max-width: none;
+}
+
+.eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--steel);
+    margin: 0 0 26px;
+}
+
+/* Item / object-class file stamps. */
+.stamps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.stamp {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--steel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+.stamp b {
+    color: var(--paper);
+    font-weight: 600;
+}
+
+.stamp.class b {
+    color: var(--hazard);
+}
+
+.hero h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(2.3rem, 5.4vw, 3.9rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 0 0 22px;
+}
+
+.hero p.lede {
+    color: var(--steel);
+    font-size: 1.05rem;
+    max-width: none;
+    margin: 0 0 34px;
+}
+
+.cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.btn {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    padding: 13px 22px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    transition:
+        transform 0.15s ease,
+        background 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background: var(--paper);
+    color: var(--void);
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: #fff;
+}
+
+.btn-ghost {
+    border: 1px solid var(--line);
+    color: var(--paper);
+}
+
+.btn-ghost:hover {
+    border-color: var(--steel);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* --------------------------------------------------- hero screenshot */
+/* The real editor, framed as a captured exhibit. A red containment tab on the
+   corner keeps it inside the file's visual language. */
+
+.shot {
+    position: relative;
+    margin: 56px 0 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--ink);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+.shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.shot figcaption {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--steel-dim);
+    padding: 13px 16px;
+    border-top: 1px solid var(--line);
+    background: var(--ink-2);
+}
+
+.shot figcaption::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: var(--hazard);
+    border-radius: 50%;
+    flex: none;
+}
+
+/* ------------------------------------------------- containment procedures */
+/* The pipeline. A genuine ordered sequence (wikitext -> JSON -> wysiwyg),
+   so the stepped layout encodes real information. */
+
+.pipeline {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.stage {
+    padding: 26px 22px;
+    background: var(--ink);
+}
+
+.stage h3 {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    margin: 0 0 8px;
+    letter-spacing: 0.01em;
+}
+
+.stage p {
+    margin: 0;
+    color: var(--steel);
+    font-size: 0.84rem;
+}
+
+.stage .tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--steel-dim);
+    display: block;
+    margin-bottom: 12px;
+}
+
+.flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    background: var(--ink-2);
+    color: var(--hazard);
+    font-family: var(--mono);
+    font-size: 1.2rem;
+}
+
+/* ----------------------------------------------------------- description */
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.feature {
+    background: var(--void);
+    padding: 24px 22px;
+    transition: background 0.2s ease;
+}
+
+.feature:hover {
+    background: var(--ink);
+}
+
+.feature .syntax {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    color: var(--hazard);
+    letter-spacing: 0.02em;
+    display: inline-block;
+    margin-bottom: 14px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 2px 7px;
+}
+
+.feature h3 {
+    font-family: var(--display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0 0 6px;
+}
+
+.feature p {
+    margin: 0;
+    color: var(--steel);
+    font-size: 0.86rem;
+}
+
+/* ----------------------------------------------------------- addendum: limit */
+
+.note {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--hazard);
+    border-radius: 4px;
+    background: var(--ink);
+    padding: 26px 28px;
+}
+
+.note p {
+    margin: 0 0 14px;
+    color: #cfd3d9;
+}
+
+.note p:last-child {
+    margin-bottom: 0;
+}
+
+.note code {
+    font-family: var(--mono);
+    font-size: 0.85em;
+    color: var(--paper);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1px 6px;
+    border-radius: 3px;
+}
+
+.note a {
+    color: var(--hazard);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(210, 59, 46, 0.4);
+}
+
+.note a:hover {
+    border-color: var(--hazard);
+}
+
+/* ----------------------------------------------------------- acquisition */
+
+.acq {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.platforms {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.platforms .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 0.92rem;
+}
+
+.platforms .row:last-child {
+    border-bottom: none;
+}
+
+.platforms .row span:last-child {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--steel);
+}
+
+.codeblock {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.codeblock .head {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--steel-dim);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--ink-2);
+}
+
+.codeblock pre {
+    margin: 0;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.85;
+    color: #c9cdd3;
+    overflow-x: auto;
+}
+
+.codeblock pre .c {
+    color: var(--steel-dim);
+}
+
+.codeblock pre .cmd {
+    color: var(--paper);
+}
+
+/* ----------------------------------------------------------- assay (tech) */
+
+.stack {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+}
+
+.tech {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px 18px;
+    background: var(--ink);
+}
+
+.tech b {
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    color: var(--paper);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.tech span {
+    color: var(--steel);
+    font-size: 0.82rem;
+}
+
+/* The ftml parser is third-party — flag it so credit is unmistakable. */
+.tech.credit {
+    border-left: 3px solid var(--hazard);
+}
+
+.tech .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--hazard);
+    border: 1px solid rgba(210, 59, 46, 0.45);
+    border-radius: 3px;
+    padding: 1px 6px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.tech a {
+    color: var(--hazard);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(210, 59, 46, 0.4);
+}
+
+.tech a:hover {
+    border-color: var(--hazard);
+}
+
+/* ----------------------------------------------------------- footer */
+
+.foot-stripe {
+    height: 7px;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(210, 59, 46, 0.5),
+        rgba(210, 59, 46, 0.5) 12px,
+        var(--void) 12px,
+        var(--void) 24px
+    );
+    opacity: 0.5;
+}
+
+footer {
+    padding: 48px 0 56px;
+    border-top: 1px solid var(--line);
+}
+
+footer .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+footer .mark {
+    font-family: var(--mono);
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+footer .disc {
+    color: var(--steel-dim);
+    font-size: 0.78rem;
+    max-width: 52ch;
+    line-height: 1.7;
+}
+
+footer .disc a {
+    color: var(--steel);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+}
+
+footer .disc a:hover {
+    color: var(--paper);
+    border-color: var(--hazard);
+}
+
+footer .meta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--steel);
+    text-align: right;
+    line-height: 2;
+}
+
+footer .meta a {
+    color: var(--steel);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+}
+
+footer .meta a:hover {
+    color: var(--paper);
+    border-color: var(--hazard);
+}
+
+/* ----------------------------------------------------------- reveal motion */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+        opacity 0.6s ease,
+        transform 0.6s ease;
+}
+
+.reveal.in {
+    opacity: 1;
+    transform: none;
+}
+
+/* ----------------------------------------------------------- responsive */
+
+@media (max-width: 860px) {
+    .acq {
+        grid-template-columns: 1fr;
+    }
+
+    .pipeline {
+        grid-template-columns: 1fr;
+    }
+
+    .flow {
+        padding: 8px;
+        transform: rotate(90deg);
+    }
+
+    .nav {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
