@@ -1,7 +1,7 @@
 //! Runtime path resolution for the desktop app, resolved per-user.
 
 use directories::ProjectDirs;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
 
 fn project() -> ProjectDirs {
@@ -50,8 +50,8 @@ pub fn write_saves_setting(path: Option<&str>) -> Result<(), String> {
         std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     }
 
-    let contents = serde_json::to_string_pretty(&json!({ "saves_path": path }))
-        .map_err(|e| e.to_string())?;
+    let contents =
+        serde_json::to_string_pretty(&json!({ "saves_path": path })).map_err(|e| e.to_string())?;
     std::fs::write(&file, contents).map_err(|e| e.to_string())
 }
 

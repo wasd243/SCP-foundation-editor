@@ -12,7 +12,7 @@ pub fn rewrite_module_rate_temp(status: &str, alignment: &str) -> Result<(), Str
         temp_dir().join("module_rate_status.txt"),
         format!("{status}\n{alignment}"),
     )
-        .map_err(|e| e.to_string())
+    .map_err(|e| e.to_string())
 }
 
 #[cfg(test)]

@@ -30,6 +30,7 @@
                 justify-content: center;
                 overflow: hidden;
                 font-family: var(--mono);
+                /* Clickable only once the editor is ready (body.ready). */
                 cursor: default;
                 user-select: none;
                 -webkit-user-select: none;
@@ -79,6 +80,43 @@
                 letter-spacing: 1px;
             }
 
+            /* Subtle affordance: tells the user the splash can be clicked.
+               Hidden until the editor is ready, where it replaces the status
+               line so the fixed-height card never overflows. */
+            .hint {
+                display: none;
+                margin: 0;
+                color: var(--steel);
+                opacity: 0.6;
+                font-size: 10px;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                animation: hint-fade 2.2s ease-in-out infinite;
+            }
+
+            /* Once ready: enable the click affordance and swap status -> hint. */
+            body.ready {
+                cursor: pointer;
+            }
+
+            body.ready .status {
+                display: none;
+            }
+
+            body.ready .hint {
+                display: block;
+            }
+
+            @keyframes hint-fade {
+                0%,
+                100% {
+                    opacity: 0.35;
+                }
+                50% {
+                    opacity: 0.7;
+                }
+            }
+
             @keyframes spin {
                 to {
                     transform: rotate(360deg);
@@ -107,7 +145,8 @@
             }
 
             @media (prefers-reduced-motion: reduce) {
-                .card {
+                .card,
+                .hint {
                     animation: none;
                 }
             }
@@ -121,6 +160,49 @@
 
             <h1 class="title">SCP-WYSIWYG</h1>
             <p class="status">Initializing editor&hellip;</p>
+            <p class="hint">Click to continue</p>
         </div>
+
+        <script>
+            // The splash owns the dismissal, but only once the main window
+            // reports it is ready ("main-ready") — before that, clicking would
+            // reveal a blank editor, so it is inert. From readiness, two triggers
+            // can fire (a click, or the 5s timer); we guard so we only invoke
+            // once. The backend `close_splashscreen` is the authoritative
+            // run-once guard.
+            let ready = false;
+            let dismissed = false;
+
+            function dismiss() {
+                // Ignore clicks until the editor is actually usable.
+                if (!ready || dismissed) return;
+                dismissed = true;
+                // `window.__TAURI__` is injected by withGlobalTauri; accessed
+                // lazily here (not at top level) so it is reliably defined.
+                try {
+                    window.__TAURI__?.core?.invoke("close_splashscreen");
+                } catch (e) {
+                    console.warn("Could not close splashscreen:", e);
+                }
+            }
+
+            // Wait for the global to be injected before wiring Tauri APIs.
+            window.addEventListener("DOMContentLoaded", () => {
+                // Click anywhere to skip the wait (no-op until ready).
+                document.addEventListener("click", dismiss);
+
+                // From the moment the main window is ready: reveal the click
+                // hint, enable the pointer cursor, and start the 5s auto-close.
+                try {
+                    window.__TAURI__?.event?.listen("main-ready", () => {
+                        ready = true;
+                        document.body.classList.add("ready");
+                        setTimeout(dismiss, 5000);
+                    });
+                } catch (e) {
+                    console.warn("Could not listen for main-ready:", e);
+                }
+            });
+        </script>
     </body>
 </html>

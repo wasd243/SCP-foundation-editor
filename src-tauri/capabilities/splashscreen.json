@@ -1,0 +1,6 @@
+{
+    "identifier": "splashscreen",
+    "description": "Let the splashscreen listen for the main-ready event.",
+    "windows": ["splashscreen"],
+    "permissions": ["core:event:default"]
+}
