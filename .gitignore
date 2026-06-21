@@ -29,16 +29,7 @@ Thumbs.db
 
 # Cache
 **.db
-origin.ftml
-output.ftml
-final_output.ftml
-patch_origin.ftml
-user_css.css
-module_rate_status.txt
-theme_status.json
-parallel_test.css
-saves/autosave.ftml
-dev_output.json
+crates/wiki_css/test/parallel_test.css
 
 # MacOS
 .DS_Store
