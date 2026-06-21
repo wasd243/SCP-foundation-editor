@@ -1,10 +1,14 @@
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs;
+use std::path::PathBuf;
 
-/// This constant is public for the whole project to use.
-pub const THEME_STATUS_TEMP_PATH: &str =
-    concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/theme_status.json");
+use crate::paths::temp_dir;
+
+/// Temp file recording the active theme status. Public for the whole project to use.
+pub fn theme_status_temp_path() -> PathBuf {
+    temp_dir().join("theme_status.json")
+}
 
 /// Root directory of the resource pack themes, where theme `.ftml` files live.
 pub const RESOURCEPACK_THEMES_PATH: &str =
@@ -123,7 +127,7 @@ fn write_theme_status(
     };
 
     if let Ok(contents) = serde_json::to_string_pretty(&status) {
-        let _ = fs::write(THEME_STATUS_TEMP_PATH, contents);
+        let _ = fs::write(theme_status_temp_path(), contents);
     }
 }
 

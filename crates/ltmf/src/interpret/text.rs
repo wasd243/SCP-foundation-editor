@@ -21,6 +21,7 @@ mod underline;
 
 use serde_json::Value;
 
+use crate::interpret::include::interpret_include;
 use crate::interpret::{
     text::{
         blockquote::{interpret_blockquote, is_blockquote},
@@ -140,6 +141,11 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
             interpret_new_line(node, String::new())
                 .unwrap_or_else(|error| format!("ERROR:{error}")),
         ),
+        Some("Include") => Some(
+            interpret_include(0, node)
+                .map(|output| format!("{output}\n"))
+                .unwrap_or_else(|error| format!("ERROR:{error}")),
+        ),
         Some("paragraph") if is_empty_paragraph_node(node) => Some(
             interpret_empty_paragraph(node, String::new())
                 .unwrap_or_else(|error| format!("ERROR:{error}")),
@@ -172,6 +178,7 @@ fn interpret_content_node(content_node: ContentNode<'_>) -> Option<String> {
 /// wiki component node.
 fn stop_collecting_children(node: &Value) -> bool {
     is_empty_paragraph_node(node)
+        || has_type(node, "Include")
         || is_blockquote(node)
         || is_horizontal_rule(node)
         || is_unordered_list(node)

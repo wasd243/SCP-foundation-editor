@@ -1,8 +1,7 @@
 use regex::Regex;
 use std::fs;
 
-const CSS_CACHE_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp");
-const CSS_CACHE_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/user_css.css");
+use crate::paths::temp_dir;
 
 /// Extracts the CSS from the ftml and saves it to a file.
 /// The exporter will read `user_css.css` to generate `[[module css]]` blocks.
@@ -10,6 +9,8 @@ const CSS_CACHE_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/us
 /// ```css
 /// /* NO USER CSS */
 /// ```
+/// TODO: CSS caching disabled — currently unused.
+/// Generated CSS is handled via static or in-memory, not from disk cache.
 pub fn css_cacher(ftml: &str) {
     let re = Regex::new(r"(?is)\[\[module css]](.*?)\[\[/module]]").unwrap();
     let css = re
@@ -25,9 +26,10 @@ pub fn css_cacher(ftml: &str) {
         css
     };
 
-    fs::create_dir_all(CSS_CACHE_DIR).unwrap();
+    let cache_dir = temp_dir();
+    fs::create_dir_all(&cache_dir).unwrap();
 
-    fs::write(CSS_CACHE_PATH, css).unwrap()
+    fs::write(cache_dir.join("user_css.css"), css).unwrap()
 }
 
 #[cfg(test)]

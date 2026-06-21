@@ -21,9 +21,7 @@ use crate::interpret::{
     text::{guard_output_empty_paragraphs, interpret_text},
     wiki_component::{interpret_wiki_component, is_wiki_component_node},
 };
-
-const OUTPUT_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp/output.ftml");
-const CACHE_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../temp");
+use crate::paths::temp_dir;
 
 pub fn interpret(json: &str) -> Result<String, String> {
     let value: Value = serde_json::from_str(json).map_err(|error| error.to_string())?;
@@ -42,8 +40,9 @@ pub fn interpret(json: &str) -> Result<String, String> {
 
     let output = guard_output_empty_paragraphs(output)?;
 
-    fs::create_dir_all(CACHE_DIR).map_err(|error| error.to_string())?;
-    fs::write(OUTPUT_PATH, &output).map_err(|error| error.to_string())?;
+    let cache_dir = temp_dir();
+    fs::create_dir_all(&cache_dir).map_err(|error| error.to_string())?;
+    fs::write(cache_dir.join("output.ftml"), &output).map_err(|error| error.to_string())?;
 
     Ok(output)
 }

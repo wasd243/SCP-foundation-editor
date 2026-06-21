@@ -104,7 +104,7 @@ impl<'t> Includer<'t> for ResourcepackIncluder {
     }
 
     fn no_such_include(&mut self, page_ref: &PageRef) -> Result<Cow<'t, str>, Self::Error> {
-        eprintln!("[w_parser::ResourcepackIncluder] no_such_include: {page_ref}");
+        log::warn!(target: "[w_parser::ResourcepackIncluder]", "no_such_include: {page_ref}");
 
         Ok(Cow::Owned(format!("[[include-missing {page_ref}]]")))
     }

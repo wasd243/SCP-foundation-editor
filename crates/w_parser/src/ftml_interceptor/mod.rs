@@ -60,5 +60,5 @@ pub mod module_css;
 pub mod module_rate;
 pub mod note;
 pub mod preprocess_interceptor;
-pub mod user;
 pub mod span;
+pub mod user;

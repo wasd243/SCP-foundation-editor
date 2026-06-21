@@ -29,14 +29,7 @@ Thumbs.db
 
 # Cache
 **.db
-origin.ftml
-output.ftml
-final_output.ftml
-patch_origin.ftml
-user_css.css
-module_rate_status.txt
-theme_status.json
-parallel_test.css
+crates/wiki_css/test/parallel_test.css
 
 # MacOS
 .DS_Store
@@ -48,6 +41,12 @@ parallel_test.css
 # Vite
 .vite-dev.err.log
 .vite-dev.log
+
+# AI
+.claude/
+AGENTS.md
+CLAUDE.md
+skills-lock.json
 
 # DO NOT IGNORE: Assets
 !src/assets/icons/

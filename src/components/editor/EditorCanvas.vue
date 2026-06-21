@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 import VueMoveable from "vue3-moveable";
 import { editorExtensions, getEditor, setEditor } from "../../stores/editor.ts";
+import { attachActiveFormats } from "../../stores/btnToolBar/activeFormats.ts";
 import { invoke } from "@tauri-apps/api/core";
 import {
     rateAlignment,
@@ -20,6 +21,7 @@ import {
 import { alertNoteExternalParserMarkers } from "../../stores/editor/noteExternalParserGuard.ts";
 import { selectedImageBlockElement } from "../../stores/editor/extensions/ImageE.ts";
 import { SyncJSONToExporter } from "../../ipc/Extensions/CodeExport/getJSON.ts";
+import { signalMainReady } from "../../splashscreen.ts";
 import ContextMenu from "./ContextMenu.vue";
 import EditorCanvasMoveable from "./EditorCanvas/Moveable.vue";
 
@@ -200,8 +202,14 @@ const editor = useEditor({
 
     onCreate: ({ editor }) => {
         setEditor(editor);
+        attachActiveFormats(editor);
         alertNoteExternalParserMarkers(editor);
         SyncJSONToExporter();
+
+        // Editor is mounted and ready — signal the splash on the next frame
+        // (once the window has painted, not blank) so it can start its 5s
+        // auto-close countdown anchored to this readiness moment.
+        requestAnimationFrame(() => signalMainReady());
     },
     onUpdate: ({ editor }) => {
         alertNoteExternalParserMarkers(editor);

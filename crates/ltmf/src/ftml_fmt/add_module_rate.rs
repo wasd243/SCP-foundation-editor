@@ -1,15 +1,13 @@
 use regex::Regex;
 use std::fs;
 
-const MODULE_RATE_STATUS: &str = concat!(
-    env!("CARGO_MANIFEST_DIR"),
-    "/../../temp/module_rate_status.txt"
-);
+use crate::paths::temp_dir;
 
 /// Prepend the `[[module rate]]` Wikitext block (built from the module-rate
 /// status file) to the editor content.
 pub(super) fn add_module_rate(ftml: &str) -> Result<String, String> {
-    let status = fs::read_to_string(MODULE_RATE_STATUS).map_err(|e| e.to_string())?;
+    let status =
+        fs::read_to_string(temp_dir().join("module_rate_status.txt")).map_err(|e| e.to_string())?;
     let module_rate = build_module_rate(&status);
 
     // MODULE_RATE=FALSE yields an empty block; leave the content untouched.

@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SCP-WYSIWYG — 面向 SCP / Wikidot 的所见即所得编辑器</title>
+        <meta
+            name="description"
+            content="一款跨平台桌面所见即所得编辑器，用于以 Wikidot 源码撰写 SCP 文章。边写边渲染，导出整洁源码。"
+        />
+        <link rel="icon" type="image/png" href="icon.png" />
+        <link rel="alternate" hreflang="zh" href="cn.html" />
+        <link rel="alternate" hreflang="en" href="en.html" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <!-- ===================================================== 顶栏 -->
+        <header class="topbar">
+            <div class="wrap">
+                <a class="brand" href="#top" aria-label="SCP-WYSIWYG 首页">
+                    <img src="icon.png" alt="" aria-hidden="true" />
+                    <b>SCP-WYSIWYG</b>
+                </a>
+                <nav class="nav" aria-label="章节">
+                    <a href="#how">工作原理</a>
+                    <a href="#features">功能</a>
+                    <a href="#download">下载</a>
+                </nav>
+                <a
+                    class="lang-toggle"
+                    href="en.html"
+                    lang="en"
+                    aria-label="Switch to English"
+                >
+                    <span class="dot" aria-hidden="true"></span>
+                    <span>EN</span>
+                </a>
+            </div>
+        </header>
+
+        <main id="top">
+            <!-- =============================================== 首屏 -->
+            <section class="hero">
+                <div class="wrap">
+                    <div class="hero-copy reveal">
+                        <p class="eyebrow">
+                            面向 Wikidot 的桌面所见即所得编辑器
+                        </p>
+
+                        <div class="stamps">
+                            <span class="stamp">跨平台</span>
+                            <span class="stamp">完全离线</span>
+                            <span class="stamp">开源</span>
+                        </div>
+
+                        <h1>所见即所得地撰写 SCP 文章。</h1>
+                        <p class="lede">
+                            一款面向 SCP 基金会 wiki
+                            的桌面编辑器。在可视化编辑器中书写——标题、引用块、表格、脚注、标签页等都会边写边渲染——随后导出整洁的
+                            Wikidot 源码，可直接粘贴到 wiki。
+                        </p>
+
+                        <div class="cta-row">
+                            <a
+                                class="btn btn-primary"
+                                href="https://github.com/wasd243/SCP-foundation-editor/releases"
+                                >下载最新版</a
+                            >
+                            <a
+                                class="btn btn-ghost"
+                                href="https://github.com/wasd243/SCP-foundation-editor"
+                                >在 GitHub 查看</a
+                            >
+                        </div>
+                    </div>
+
+                    <!-- 编辑器实景截图 -->
+                    <figure class="shot reveal">
+                        <img
+                            src="ScreenShot1.jpeg"
+                            alt="SCP-WYSIWYG 编辑器界面：功能区工具栏、含标签页的文章、渲染后的注释框、表格、格式化文本、包含块，以及脚注侧边面板。"
+                        />
+                        <figcaption>
+                            编辑器实景 ——
+                            标签页、表格、脚注与包含块，边写边渲染。
+                        </figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <!-- =============================================== 工作原理 -->
+            <section class="section" id="how">
+                <div class="wrap reveal">
+                    <p class="class-head">工作原理</p>
+                    <h2 class="section-title">设计上即可逆。</h2>
+                    <p class="section-sub">
+                        你的文本流经一条双向管线，让你所见与导出的内容始终保持一致。
+                    </p>
+
+                    <div class="pipeline">
+                        <div class="stage">
+                            <span class="tag">源码</span>
+                            <h3>Wikitext</h3>
+                            <p>你的原始 Wikidot 源码——wiki 真正接受的文本。</p>
+                        </div>
+                        <div class="flow">⇄</div>
+                        <div class="stage">
+                            <span class="tag">模型</span>
+                            <h3>ProseMirror JSON</h3>
+                            <p>结构化的文档树——编辑过程中的唯一真实来源。</p>
+                        </div>
+                        <div class="flow">⇄</div>
+                        <div class="stage">
+                            <span class="tag">视图</span>
+                            <h3>WYSIWYG</h3>
+                            <p>
+                                渲染后的编辑器——标题、表格与脚注皆按最终样式呈现。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================== 功能 -->
+            <section class="section" id="features">
+                <div class="wrap reveal">
+                    <p class="class-head">功能</p>
+                    <h2 class="section-title">专为 SCP 文章打造。</h2>
+                    <p class="section-sub">
+                        并非通用富文本编辑器。每一种元素都能转换回整洁的 Wikidot
+                        源码。
+                    </p>
+
+                    <div class="feature-grid">
+                        <div class="feature">
+                            <span class="syntax">** _ ^^ ,,</span>
+                            <h3>可视化编辑</h3>
+                            <p>
+                                标题、加粗、斜体、下划线、删除线、上/下标与对齐。
+                            </p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">[[div]] &gt;</span>
+                            <h3>引用块</h3>
+                            <p>
+                                同时支持
+                                <code>[[div class="blockquote"]]</code> 与行首
+                                <code>&gt;</code> 两种写法。
+                            </p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">[[table]]</span>
+                            <h3>表格</h3>
+                            <p>完整的表格编辑，支持表头行。</p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">[[footnote]]</span>
+                            <h3>脚注</h3>
+                            <p>Wikidot 风格脚注，配有专属侧边面板。</p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">[[tabview]]</span>
+                            <h3>标签页</h3>
+                            <p>
+                                将 <code>[[tabview]]</code> /
+                                <code>[[tab]]</code> 作为可编辑的标签页。
+                            </p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">[[span]]</span>
+                            <h3>删隐文本</h3>
+                            <p>为隐藏文本提供涂黑 / 删隐样式。</p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">⌁ auto</span>
+                            <h3>自动保存</h3>
+                            <p>书写时自动保存到本地 <code>.txt</code> 文件。</p>
+                        </div>
+                        <div class="feature">
+                            <span class="syntax">⦿ offline</span>
+                            <h3>完全本地</h3>
+                            <p>完全离线运行，你的作品绝不离开本机。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================== 已知限制 -->
+            <section class="section" id="limitation">
+                <div class="wrap reveal">
+                    <p class="class-head">已知限制</p>
+                    <h2 class="section-title">
+                        为何 <code>[[include]]</code> 无法所见即所得。
+                    </h2>
+
+                    <div class="note">
+                        <p>
+                            <code>[[include]]</code> 看似 C 语言的
+                            <code>#include</code
+                            >，但它并非文本替换——而是带变量插值与静默回退的参数化宏。
+                        </p>
+                        <p>
+                            宏展开是有损的，嵌套时更不可逆：展开之后，模板内容、传入参数与作者文本已无法区分——因此没有任何正确的位置可以把编辑写回。包含块只能单向工作。
+                        </p>
+                        <p>
+                            <a
+                                href="https://github.com/wasd243/SCP-foundation-editor/blob/main/docs/Include_block.md"
+                                >阅读完整说明 →</a
+                            >
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================== 下载 -->
+            <section class="section" id="download">
+                <div class="wrap reveal">
+                    <p class="class-head">下载</p>
+                    <h2 class="section-title">下载，或自行构建。</h2>
+                    <p class="section-sub">
+                        为你的平台获取构建，或从源码编译。
+                    </p>
+
+                    <div class="acq">
+                        <div class="platforms">
+                            <div class="row">
+                                <span>Windows</span><span>.exe</span>
+                            </div>
+                            <div class="row">
+                                <span>macOS</span><span>.dmg</span>
+                            </div>
+                            <div class="row">
+                                <span>Linux</span><span>.AppImage · .deb</span>
+                            </div>
+                        </div>
+
+                        <div class="codeblock">
+                            <div class="head">从源码构建</div>
+                            <pre><span class="c"># 前置依赖：Rust、Node.js、Tauri 依赖</span>
+<span class="cmd">npm install</span>
+<span class="cmd">cargo tauri dev</span>     <span class="c"># 运行</span>
+<span class="cmd">cargo tauri build</span>   <span class="c"># 发布构建</span></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================== 技术栈 -->
+            <section class="section" id="tech">
+                <div class="wrap reveal">
+                    <p class="class-head">技术栈</p>
+                    <h2 class="section-title">它由什么构成。</h2>
+
+                    <div class="stack">
+                        <div class="tech">
+                            <b>Tauri 2</b>
+                            <span>跨平台桌面外壳。</span>
+                        </div>
+                        <div class="tech">
+                            <b>Vue 3 + TS</b>
+                            <span>编辑器界面。</span>
+                        </div>
+                        <div class="tech">
+                            <b>TipTap / ProseMirror</b>
+                            <span>所见即所得的核心。</span>
+                        </div>
+                        <div class="tech credit">
+                            <b>ftml <span class="badge">第三方</span></b>
+                            <span
+                                >Wikidot → HTML 解析器，由 SCP Wiki 团队开发。
+                                <a href="https://github.com/scpwiki/ftml.git"
+                                    >github.com/scpwiki/ftml ↗</a
+                                ></span
+                            >
+                        </div>
+                        <div class="tech">
+                            <b>Rust</b>
+                            <span>解析管线、导出器与 IPC。</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="foot-stripe" aria-hidden="true"></div>
+        <footer>
+            <div class="wrap">
+                <div>
+                    <div class="mark">SCP-WYSIWYG</div>
+                    <p class="disc">
+                        用于撰写 SCP Wiki 文章的社区工具。Wikidot 解析由
+                        <a href="https://github.com/scpwiki/ftml.git">ftml</a>
+                        驱动——它是由 SCP Wiki 团队维护的独立库。主题素材以 CC
+                        BY-SA 3.0 授权。
+                    </p>
+                </div>
+                <div class="meta">
+                    <div>
+                        <a
+                            href="https://github.com/wasd243/SCP-foundation-editor"
+                            >GitHub ↗</a
+                        >
+                    </div>
+                    <div>
+                        <a
+                            href="https://github.com/wasd243/SCP-foundation-editor/releases"
+                            >发行版 ↗</a
+                        >
+                    </div>
+                    <div>
+                        <a
+                            href="https://github.com/wasd243/SCP-foundation-editor/blob/main/CREDITS.md"
+                            >鸣谢 ↗</a
+                        >
+                    </div>
+                    <div>许可证 · AGPLv3</div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            // 滚动渐显（遵循 reduced-motion 偏好）。
+            const prefersReduced = window.matchMedia(
+                "(prefers-reduced-motion: reduce)",
+            ).matches;
+            if (!prefersReduced && "IntersectionObserver" in window) {
+                const io = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach((e) => {
+                            if (e.isIntersecting) {
+                                e.target.classList.add("in");
+                                io.unobserve(e.target);
+                            }
+                        });
+                    },
+                    { threshold: 0.12 },
+                );
+                document
+                    .querySelectorAll(".reveal")
+                    .forEach((el) => io.observe(el));
+            } else {
+                document
+                    .querySelectorAll(".reveal")
+                    .forEach((el) => el.classList.add("in"));
+            }
+        </script>
+    </body>
+</html>

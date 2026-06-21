@@ -5,10 +5,10 @@ mod div;
 pub(crate) mod footnote;
 mod image;
 mod note;
+mod span;
 mod table;
 mod tabview;
 mod user;
-mod span;
 
 use serde_json::Value;
 

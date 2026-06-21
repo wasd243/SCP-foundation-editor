@@ -16,3 +16,5 @@ time = "=0.3.37" # This is time library must be added in toml because of ftml pa
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json.workspace = true
 regex.workspace = true
+directories.workspace = true
+log.workspace = true

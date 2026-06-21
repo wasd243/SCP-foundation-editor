@@ -1,9 +1,0 @@
-[[module css]]
-.test {
-    color: red;
-    border: 1px solid red;
-}
-[[/module]]
-
-Hello FTML editor.
-

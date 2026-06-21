@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SCP-WYSIWYG</title>
+        <!-- Default to English for crawlers / no-JS; JS redirects zh visitors. -->
+        <meta http-equiv="refresh" content="0; url=en.html" />
+        <link rel="canonical" href="en.html" />
+        <link rel="alternate" hreflang="zh" href="cn.html" />
+        <link rel="alternate" hreflang="en" href="en.html" />
+        <script>
+            // Send Chinese-locale visitors to cn.html; everyone else to en.html.
+            var zh =
+                navigator.language &&
+                navigator.language.toLowerCase().indexOf("zh") === 0;
+            location.replace(zh ? "cn.html" : "en.html");
+        </script>
+    </head>
+    <body>
+        <p>
+            Redirecting… If nothing happens, choose
+            <a href="en.html">English</a> or <a href="cn.html">中文</a>.
+        </p>
+    </body>
+</html>

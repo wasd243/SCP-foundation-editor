@@ -5,8 +5,9 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vue-tsc && vite build",
-        "preview": "vite preview"
+        "build": "vite build",
+        "preview": "vite preview",
+        "type-check": "vue-tsc --noEmit"
     },
     "dependencies": {
         "@codemirror/lang-css": "^6.3.1",
@@ -20,6 +21,7 @@
         "@tiptap/core": "3.22.5",
         "@tiptap/extension-code-block-lowlight": "3.22.5",
         "@tiptap/extension-details": "3.22.5",
+        "@tiptap/extension-gapcursor": "^3.22.5",
         "@tiptap/extension-image": "3.22.5",
         "@tiptap/extension-invisible-characters": "3.22.5",
         "@tiptap/extension-link": "3.22.5",
