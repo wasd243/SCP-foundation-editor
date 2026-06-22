@@ -2,11 +2,16 @@
 import FormatCleaner from "../../../../assets/icons/FormatCleaner.svg";
 import { getEditor } from "../../../../stores/editor/instance.ts";
 
-//
 function formatCleaner() {
     const editor = getEditor();
     if (!editor) return;
-    editor.chain().focus().unsetAllMarks().run();
+
+    const state = editor.state;
+    if (state.selection.empty) {
+        editor.view.dispatch(state.tr.setStoredMarks([]));
+    } else {
+        editor.chain().focus().unsetAllMarks().run();
+    }
 }
 </script>
 
