@@ -206,10 +206,14 @@ const editor = useEditor({
         alertNoteExternalParserMarkers(editor);
         SyncJSONToExporter();
 
-        // Editor is mounted and ready — signal the splash on the next frame
-        // (once the window has painted, not blank) so it can start its 5s
-        // auto-close countdown anchored to this readiness moment.
-        requestAnimationFrame(() => signalMainReady());
+        // Editor is mounted and ready — signal the splash so it can start its
+        // 5s auto-close countdown anchored to this readiness moment.
+        //
+        // Call directly, NOT via requestAnimationFrame: the main window starts
+        // hidden (tauri.conf.json `visible: false`), and on macOS a hidden
+        // WebView's display-link is suspended, so an rAF callback would never
+        // fire — leaving the splash stuck on "Initializing editor…" forever.
+        signalMainReady();
     },
     onUpdate: ({ editor }) => {
         alertNoteExternalParserMarkers(editor);

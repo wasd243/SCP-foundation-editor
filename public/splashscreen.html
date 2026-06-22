@@ -164,18 +164,22 @@
         </div>
 
         <script>
-            // The splash owns the dismissal, but only once the main window
-            // reports it is ready ("main-ready") — before that, clicking would
-            // reveal a blank editor, so it is inert. From readiness, two triggers
-            // can fire (a click, or the 5s timer); we guard so we only invoke
-            // once. The backend `close_splashscreen` is the authoritative
-            // run-once guard.
+            // The splash owns the dismissal. On the happy path it waits for the
+            // main window to report it is ready ("main-ready"), then enables a
+            // click affordance and a 5s auto-close. But the main window starts
+            // hidden, and on macOS a hidden WebView has its display-link/timers
+            // suspended — so "main-ready" can be late or never arrive. The splash
+            // itself is always visible, so its own timer is reliable: an
+            // independent fallback force-dismisses after a hard ceiling,
+            // guaranteeing the main window is revealed even if the signal never
+            // comes. The backend `close_splashscreen` is the run-once guard.
+            const FALLBACK_MS = 10000;
+
             let ready = false;
             let dismissed = false;
 
             function dismiss() {
-                // Ignore clicks until the editor is actually usable.
-                if (!ready || dismissed) return;
+                if (dismissed) return;
                 dismissed = true;
                 // `window.__TAURI__` is injected by withGlobalTauri; accessed
                 // lazily here (not at top level) so it is reliably defined.
@@ -188,8 +192,10 @@
 
             // Wait for the global to be injected before wiring Tauri APIs.
             window.addEventListener("DOMContentLoaded", () => {
-                // Click anywhere to skip the wait (no-op until ready).
-                document.addEventListener("click", dismiss);
+                // Click to skip the wait — inert until the editor reports ready.
+                document.addEventListener("click", () => {
+                    if (ready) dismiss();
+                });
 
                 // From the moment the main window is ready: reveal the click
                 // hint, enable the pointer cursor, and start the 5s auto-close.
@@ -202,6 +208,13 @@
                 } catch (e) {
                     console.warn("Could not listen for main-ready:", e);
                 }
+
+                // macOS safety net (see note above): force the reveal after a
+                // hard ceiling even if "main-ready" never arrives, so the user
+                // is never stranded on the splash. This timer runs in the
+                // visible splash window, so unlike the fallback in main.ts it is
+                // not throttled by a hidden WebView.
+                setTimeout(dismiss, FALLBACK_MS);
             });
         </script>
     </body>
