@@ -5,6 +5,7 @@ use std::borrow::Cow;
 use std::path::PathBuf;
 
 use crate::ftml_interceptor::div::div_data_attacher::attach_div_meta_data;
+use crate::ftml_interceptor::footnoteblock::footnoteblock_interceptor::intercept_footnote_block;
 use crate::ftml_interceptor::module_css::css_cacher::css_cacher;
 use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
 use crate::ftml_interceptor::span::span_data_attacher::attach_span_meta_data;
@@ -94,6 +95,9 @@ pub fn render_wikidot_to_html_with_resourcepack(
     wikitext = user_with_img_interceptor(&wikitext);
     wikitext = user_interceptor(&wikitext);
 
+    // Intercept footnote blockes
+    wikitext = intercept_footnote_block(&wikitext);
+
     // Include blocks:
     // Sometimes preprocessing leaves malformed wikitext after include expansion.
     // Then FTML tokenization receives incorrect content,
@@ -150,7 +154,7 @@ pub fn render_wikidot_to_html(source_text: &str) -> Result<FtmlParseOutput, Stri
     // The host copies the bundled resourcepack into this per-user path at
     // startup. If the files are missing the includer simply reports
     // no_such_include rather than panicking.
-    render_wikidot_to_html_with_resourcepack(source_text, paths::resourcepack_dir())
+    render_wikidot_to_html_with_resourcepack(source_text, resourcepack_dir())
 }
 
 #[cfg(test)]

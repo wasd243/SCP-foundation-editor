@@ -1,5 +1,5 @@
-use serde_json::Value;
 use crate::interpret::{text::interpret_wrapped_text_content, utils::get_types::has_type};
+use serde_json::Value;
 
 pub(super) fn interpret_footnote(node: &Value, output: String) -> Result<String, String> {
     if !has_type(node, "Footnote") {
