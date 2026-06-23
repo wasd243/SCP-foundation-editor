@@ -46,7 +46,7 @@ use crate::interpret::{
         underline::interpret_underline_text,
     },
     utils::{
-        get_content::{ContentNode, get_content_nodes},
+        get_content::{ContentNode, get_child_content_nodes, get_content_nodes},
         get_marks::get_marks,
         get_types::{has_type, node_type},
     },
@@ -75,6 +75,19 @@ pub(crate) fn interpret_text_content(node: &Value) -> Vec<String> {
         .into_iter()
         .filter_map(interpret_content_node)
         .collect()
+}
+
+/// Interprets the inline content of a wrapper node, attributing `parent_type`
+/// to its direct children so parent-scoped rules (such as original text) apply.
+///
+/// Used by inline wrapper components like footnotes whose children are stored
+/// directly under `content` rather than wrapped in paragraphs.
+pub(crate) fn interpret_wrapped_text_content(node: &Value, parent_type: &str) -> String {
+    get_child_content_nodes(node, Some(parent_type), stop_collecting_children)
+        .into_iter()
+        .filter_map(interpret_content_node)
+        .collect::<Vec<_>>()
+        .join("")
 }
 
 pub(crate) fn patch_wiki_component_text(node: &Value) -> Result<String, String> {
@@ -208,7 +221,7 @@ fn interpret_text_node(node: &Value, parent_type: Option<&str>) -> Result<String
     }?;
 
     match parent_type {
-        Some("paragraph") => interpret_original_text(node, text),
+        Some("paragraph") | Some("Footnote") => interpret_original_text(node, text),
         _ => Ok(text),
     }
 }
