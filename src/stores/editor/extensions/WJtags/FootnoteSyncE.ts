@@ -5,7 +5,6 @@ import { Plugin, PluginKey, TextSelection } from "@tiptap/pm/state";
 
 import {
     collectFootnoteDocumentInfo,
-    ensureFootnoteListLeadingBlankLine,
     findClosestEmptyFootnoteContentsSelection,
     getDeletedFootnoteRefKeys,
     getFootnoteListItemDeletionRanges,
@@ -57,8 +56,6 @@ export function createFootnoteSyncPlugin() {
                     }
                 }
 
-                ensureFootnoteListLeadingBlankLine(transaction);
-
                 return transaction;
             }
 
@@ -80,17 +77,13 @@ export function createFootnoteSyncPlugin() {
                 });
 
                 renumberFootnotes(transaction);
-                ensureFootnoteListLeadingBlankLine(transaction);
 
                 return transaction;
             }
 
             const renumberTransaction = newState.tr;
 
-            if (
-                renumberFootnotes(renumberTransaction) ||
-                ensureFootnoteListLeadingBlankLine(renumberTransaction)
-            ) {
+            if (renumberFootnotes(renumberTransaction)) {
                 return renumberTransaction;
             }
 
@@ -133,7 +126,7 @@ export function createFootnoteSyncPlugin() {
                     changed = true;
                 });
 
-            if (!changed && !ensureFootnoteListLeadingBlankLine(transaction)) {
+            if (!changed) {
                 return null;
             }
 
