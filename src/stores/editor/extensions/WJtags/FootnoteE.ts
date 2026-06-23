@@ -671,53 +671,6 @@ export function renumberFootnotes(transaction: Transaction) {
     return operations.length > 0;
 }
 
-function isEmptyParagraphNode(node: ProseMirrorNode) {
-    return (
-        node.type.name === "paragraph" && node.textContent.trim().length === 0
-    );
-}
-
-export function ensureFootnoteListLeadingBlankLine(transaction: Transaction) {
-    const paragraphNode = transaction.doc.type.schema.nodes.paragraph;
-
-    if (!paragraphNode) {
-        return false;
-    }
-
-    let footnoteListPos: number | null = null;
-    let previousNode: ProseMirrorNode | null = null;
-    let offset = 0;
-
-    for (let index = 0; index < transaction.doc.childCount; index += 1) {
-        const child = transaction.doc.child(index);
-
-        if (nodeHasClass(child, "wj-footnote-list")) {
-            footnoteListPos = offset;
-            break;
-        }
-
-        previousNode = child;
-        offset += child.nodeSize;
-    }
-
-    if (
-        footnoteListPos === null ||
-        (previousNode && isEmptyParagraphNode(previousNode))
-    ) {
-        return false;
-    }
-
-    const blankParagraph = paragraphNode.createAndFill();
-
-    if (!blankParagraph) {
-        return false;
-    }
-
-    transaction.insert(footnoteListPos, blankParagraph);
-
-    return true;
-}
-
 export function findClosestEmptyFootnoteContentsSelection(
     doc: ProseMirrorNode,
     pos: number,
