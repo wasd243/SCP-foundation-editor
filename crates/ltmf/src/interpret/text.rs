@@ -221,7 +221,7 @@ fn interpret_text_node(node: &Value, parent_type: Option<&str>) -> Result<String
     }?;
 
     match parent_type {
-        Some("paragraph") | Some("Footnote") => interpret_original_text(node, text),
+        Some("paragraph") | Some("footnote") => interpret_original_text(node, text),
         _ => Ok(text),
     }
 }

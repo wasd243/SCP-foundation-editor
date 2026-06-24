@@ -39,7 +39,7 @@ fn normalize_footnote_ref_contents(value: Value) -> Value {
                 })
                 .collect::<serde_json::Map<String, Value>>();
 
-            normalized.insert("type".to_string(), Value::String("Footnote".to_string()));
+            normalized.insert("type".to_string(), Value::String("footnote".to_string()));
             Value::Object(normalized)
         }
         _ => value,

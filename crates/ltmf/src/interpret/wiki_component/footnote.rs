@@ -2,11 +2,11 @@ use crate::interpret::{text::interpret_wrapped_text_content, utils::get_types::h
 use serde_json::Value;
 
 pub(super) fn interpret_footnote(node: &Value, output: String) -> Result<String, String> {
-    if !has_type(node, "Footnote") {
+    if !has_type(node, "footnote") {
         return Ok(output);
     }
 
-    let output = interpret_wrapped_text_content(node, "Footnote");
+    let output = interpret_wrapped_text_content(node, "footnote");
 
     Ok(format!("[[footnote]]{output}[[/footnote]]"))
 }
@@ -19,7 +19,7 @@ mod tests {
     #[test]
     fn keeps_marks_inside_footnote() {
         let node = json!({
-            "type": "Footnote",
+            "type": "footnote",
             "content": [
                 {
                     "type": "text",
@@ -47,7 +47,7 @@ mod tests {
     #[test]
     fn escapes_brackets_with_original_text() {
         let node = json!({
-            "type": "Footnote",
+            "type": "footnote",
             "content": [
                 {
                     "type": "text",

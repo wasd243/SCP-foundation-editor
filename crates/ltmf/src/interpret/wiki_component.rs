@@ -71,5 +71,5 @@ pub(crate) fn is_nested_wiki_component_node(node: &Value) -> bool {
         || is_span(node)
         || is_user(node)
         || is_code(node)
-        || matches!(node_type(node), Some("Collapsible" | "Footnote"))
+        || matches!(node_type(node), Some("Collapsible" | "footnote"))
 }
