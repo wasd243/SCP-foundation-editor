@@ -1,6 +1,14 @@
+use regex::Regex;
+
 /// Removes only the last `@@@@` (forced newline) token from the ftml string.
 /// Earlier `@@@@` tokens are left untouched; if none exist the input is returned as-is.
 pub(super) fn remove_trailing_break_force_newline(ftml: &str) -> String {
+    let re_ignore_when_no_footnote = Regex::new(r"(?is)\[\[footnote]].*?\[\[/footnote]]").unwrap();
+
+    if !re_ignore_when_no_footnote.is_match(ftml) {
+        return ftml.to_string();
+    }
+
     match ftml.rfind("@@@@") {
         Some(index) => {
             let mut output = String::with_capacity(ftml.len());
@@ -17,22 +25,22 @@ mod tests {
     use super::*;
 
     #[test]
-    fn removes_the_only_token() {
-        assert_eq!(remove_trailing_break_force_newline("a@@@@b"), "ab");
-    }
+    fn test_remove_trailing_break_force_newline() {
+        assert_eq!(
+            remove_trailing_break_force_newline("a\n\n\n\n\nb"),
+            "a\n\n\n\n\nb"
+        );
 
-    #[test]
-    fn removes_only_the_last_token() {
-        assert_eq!(remove_trailing_break_force_newline("@@@@x@@@@y"), "@@@@xy");
-    }
+        assert_eq!(
+            remove_trailing_break_force_newline("a\n@@@@\n@@@@\nb"),
+            "a\n@@@@\n@@@@\nb"
+        );
 
-    #[test]
-    fn leaves_string_without_token_unchanged() {
-        assert_eq!(remove_trailing_break_force_newline("abc"), "abc");
-    }
-
-    #[test]
-    fn removes_trailing_token() {
-        assert_eq!(remove_trailing_break_force_newline("a\n@@@@"), "a\n");
+        assert_eq!(
+            remove_trailing_break_force_newline(
+                "a[[footnote]]a[[/footnote]]\n@@@@\n@@@@\n@@@@\nb\n@@@@"
+            ),
+            "a[[footnote]]a[[/footnote]]\n@@@@\n@@@@\n@@@@\nb\n"
+        );
     }
 }

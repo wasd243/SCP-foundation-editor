@@ -1,6 +1,7 @@
 import type { JSONContent } from "@tiptap/core";
 
 import { getEditor } from "../../editor.ts";
+import { promptInput } from "../../inputWindow.ts";
 import {
     alertUnsupportedImageUrl,
     isSupportedImageUrl,
@@ -70,8 +71,13 @@ export function insertEditorImageBlock(rawUrl: string) {
     editor.chain().focus().insertContent(createImageBlockContent(src)).run();
 }
 
-export function promptEditorImageBlock() {
-    const url = window.prompt("Enter image URL");
+export async function promptEditorImageBlock() {
+    const url = await promptInput({
+        title: "Insert image block",
+        label: "Image URL",
+        placeholder: "https://…",
+        confirmText: "Insert",
+    });
 
     if (url === null) {
         return;
