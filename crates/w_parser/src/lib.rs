@@ -4,13 +4,14 @@ use serde::Serialize;
 use std::borrow::Cow;
 use std::path::PathBuf;
 
-use crate::ftml_interceptor::div::div_data_attacher::attach_div_meta_data;
-use crate::ftml_interceptor::footnote::footnote_interceptor::footnote_interceptor;
-use crate::ftml_interceptor::footnote::footnote_parser::footnote_parser;
-use crate::ftml_interceptor::footnoteblock::footnoteblock_interceptor::intercept_footnote_block;
-use crate::ftml_interceptor::module_css::css_cacher::css_cacher;
-use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
-use crate::ftml_interceptor::span::span_data_attacher::attach_span_meta_data;
+use crate::ftml_interceptor::{
+    div::div_data_attacher::attach_div_meta_data,
+    footnote::footnote_interceptor::footnote_interceptor,
+    footnote::footnote_parser::footnote_parser,
+    footnoteblock::footnoteblock_interceptor::intercept_footnote_block,
+    module_css::css_cacher::css_cacher, module_rate::rate_interceptor::rate_interceptor,
+    span::span_data_attacher::attach_span_meta_data,
+};
 
 use crate::ftml_interceptor::note::{
     note_cleaner::note_cleaner, note_interceptor::note_interceptor, note_parser::note_parser,
@@ -26,8 +27,11 @@ use crate::ftml_interceptor::preprocess_interceptor::{
     unused_variable_interceptor::unused_variable_interceptor,
 };
 
-use crate::ftml_normalizer::image_normalizer::normalize_images;
-use crate::ftml_normalizer::include_normalizer::component_image_normalizer::normalize_component_images;
+use crate::ftml_normalizer::{
+    image_normalizer::normalize_images,
+    include_normalizer::component_image_normalizer::normalize_component_images,
+};
+
 use crate::resourcepack_includer::ResourcepackIncluder;
 
 mod ftml_interceptor;
