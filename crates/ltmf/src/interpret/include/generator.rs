@@ -12,7 +12,7 @@ pub(super) fn generate_include(
         return NO_SUCH_INCLUDE_FALLBACK.to_string();
     }
 
-    let mut output = format!("[[include :{include_name}");
+    let mut output = format!("[[include {include_name}");
     let mut has_variable = false;
 
     for include_variable in include_variables {
@@ -242,7 +242,7 @@ mod tests {
 
         assert_eq!(
             output,
-            "[[include :component:image-block align=right|caption=image preview test|name=example.png|width=200px]]"
+            "[[include component:image-block align=right|caption=image preview test|name=example.png|width=200px]]"
         );
     }
 
