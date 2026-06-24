@@ -21,6 +21,7 @@ import { TextAlignExtension } from "./extensions/TextAlignE.ts";
 import { TextColorExtension } from "./extensions/TextColorE.ts";
 import { UserExtension } from "./extensions/User/UserE.ts";
 import { UserWithImgExtension } from "./extensions/User/UserWithImgE.ts";
+import { FootnoteExtension } from "./extensions/WJtags/FootnoteE.ts";
 import { WJTagExtension } from "./extensions/WJtagsE.ts";
 import Gapcursor from "@tiptap/extension-gapcursor";
 
@@ -60,6 +61,7 @@ export const editorExtensions = [
     UserExtension,
     Gapcursor,
     UserWithImgExtension,
+    FootnoteExtension,
     WJTagExtension,
     HardBreakAndNewParagraphExtension,
 ];

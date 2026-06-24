@@ -113,6 +113,9 @@ const dedicatedExtensionTags = new Set([
     "summary",
     "wj-tabs",
     "wj-tabs-button",
+    // Handled by FootnoteExtension; must not be swallowed by the generic
+    // inline-tag preserver (which would strip the footnote node view).
+    "footnote",
 ]);
 
 const dedicatedExtensionClassNames = new Set([
@@ -199,27 +202,6 @@ function isNestedImageContainerElement(element: HTMLElement) {
     );
 }
 
-function isFootnoteListOrderedElement(element: HTMLElement) {
-    return (
-        element.tagName.toLowerCase() === "ol" &&
-        Boolean(element.closest(".wj-footnote-list"))
-    );
-}
-
-function isFootnoteListItemElement(element: HTMLElement) {
-    return (
-        element.tagName.toLowerCase() === "li" &&
-        hasElementClass(element, "wj-footnote-list-item")
-    );
-}
-
-function shouldPreserveNativeElement(element: HTMLElement) {
-    return (
-        isFootnoteListOrderedElement(element) ||
-        isFootnoteListItemElement(element)
-    );
-}
-
 function isDedicatedExtensionElement(element: HTMLElement) {
     const tagName = element.tagName.toLowerCase();
 
@@ -240,8 +222,6 @@ function isDedicatedExtensionElement(element: HTMLElement) {
 }
 
 function isNativeTipTapElement(element: HTMLElement) {
-    if (shouldPreserveNativeElement(element)) return false;
-
     return tiptapNativeTags.has(element.tagName.toLowerCase());
 }
 

@@ -1,5 +1,4 @@
 import { getEditor } from "../../editor.ts";
-import { isInsideFootnoteRef } from "../../editor/extensions/WJtags/FootnoteRefFormatGuardE.ts";
 import type { Level } from "@tiptap/extension-heading";
 
 const defaultFontSize = 16;
@@ -39,7 +38,7 @@ export function setEditorFontSize(size: number) {
         .focus()
         .command(({ tr, dispatch }) => {
             tr.doc.nodesBetween(from, to, (node, pos) => {
-                if (!node.isText || isInsideFootnoteRef(tr.doc.resolve(pos))) {
+                if (!node.isText) {
                     return;
                 }
 
