@@ -64,9 +64,6 @@
 
     --text-main: #1f2937;
 
-    /* Wikidot footnote reference marker (fixed; not inherited from title/size tools) */
-    --wj-footnote-ref-font-size: 12px;
-
     /* Wikidot red */
     --wikidot-red: #a31111;
 

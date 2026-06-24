@@ -6,6 +6,9 @@
         line-height: 1.65;
         color: #111827;
 
+        // Footnote auto-numbering (CSS counter, per PM official example).
+        counter-reset: footnote;
+
         p {
             margin: 0 0 0.8em;
         }
@@ -62,6 +65,70 @@
             p {
                 &:last-child {
                     margin-bottom: 0;
+                }
+            }
+        }
+
+        // Footnote node view (PM official example): the <footnote> element shows
+        // an auto-numbered superscript; clicking it opens the editing tooltip.
+        footnote {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+
+            &::after {
+                content: counter(footnote);
+                vertical-align: super;
+                font-size: 75%;
+                counter-increment: footnote;
+                color: var(--wikidot-red);
+            }
+
+            // The nested sub-editor that opens on selection.
+            .footnote-tooltip {
+                cursor: auto;
+                position: absolute;
+                left: -30px;
+                top: calc(100% + 10px);
+                z-index: 20;
+                width: 500px;
+                max-width: 90vw;
+                padding: 3px;
+                background: silver;
+                border-radius: 2px;
+
+                &::before {
+                    content: " ";
+                    position: absolute;
+                    top: -5px;
+                    left: 27px;
+                    width: 0;
+                    height: 0;
+                    border: 5px solid silver;
+                    border-top-width: 0;
+                    border-left-color: transparent;
+                    border-right-color: transparent;
+                }
+
+                // Reset the editor-canvas .ProseMirror sizing for the nested
+                // editor so the tooltip is compact rather than 2000px tall.
+                .ProseMirror {
+                    width: auto;
+                    min-width: 0;
+                    min-height: 0;
+                    margin: 0;
+                    padding: 6px 8px;
+                    background: #ffffff;
+                    color: #111827;
+                    font-size: 14px;
+                    line-height: 1.5;
+                    outline: none;
+                }
+
+                // Inner footnote markers must not re-trigger the counter.
+                footnote::after {
+                    content: none;
+                    counter-increment: none;
                 }
             }
         }
@@ -492,138 +559,4 @@
         }
     }
 
-    // =============================
-    // Wikidot-style footnote
-    // =============================
-    .wj-footnote-ref {
-        position: relative;
-        display: inline-block;
-        color: #000000;
-        cursor: pointer;
-        font-size: var(--wj-footnote-ref-font-size, 12px);
-        font-weight: normal;
-        font-style: normal;
-        line-height: 1;
-        vertical-align: super;
-
-        [style*="font-size"] {
-            font-size: 1em !important;
-        }
-
-        &:hover,
-        &:focus-within {
-            .wj-footnote-ref-tooltip {
-                opacity: 1;
-            }
-        }
-    }
-
-    .wj-footnote-ref-marker {
-        display: inline;
-        color: var(--wikidot-red);
-        background: transparent;
-        border: none;
-        font-size: 1em;
-        font-weight: normal;
-        font-style: normal;
-        line-height: 1;
-
-        &::after {
-            content: ".";
-        }
-    }
-
-    .wj-footnote-ref-tooltip {
-        position: absolute;
-        left: 50%;
-        bottom: 1.6em;
-        z-index: 20;
-        display: block;
-        min-width: 500px;
-        max-width: 1000px;
-        padding: 10px 12px;
-        box-sizing: border-box;
-        border: 1px solid var(--wikidot-red);
-        background: #ffffff;
-        color: #000000;
-        font-size: 14px;
-        line-height: 1.55;
-        text-align: left;
-        white-space: normal;
-        vertical-align: baseline;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateX(-50%);
-    }
-
-    .wj-footnote-ref-tooltip-label {
-        display: block;
-        margin-bottom: 6px;
-        font-size: 14px;
-        line-height: 1.35;
-        font-weight: bold;
-        color: var(--wikidot-red);
-    }
-
-    .wj-footnote-ref-contents {
-        display: block;
-        min-width: 500px;
-        max-width: 1000px;
-    }
-
-    .wj-footnote-list {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        margin: 16px 0 0;
-        padding: 8px 0 0;
-        background: transparent;
-        border: none;
-        color: #000000;
-        font-size: 13px;
-        line-height: 1.35;
-        border-top: var(--wikidot-red) solid 1px;
-
-        .wj-title {
-            color: #000000;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        ol {
-            margin: 0;
-            padding-left: 24px;
-            list-style: none;
-        }
-    }
-
-    .wj-footnote-list-item {
-        display: block;
-        color: #000000;
-        background: transparent;
-        border: none;
-    }
-
-    .wj-footnote-list-item-marker {
-        display: inline;
-        color: #000000;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        font: inherit;
-    }
-
-    .wj-footnote-sep {
-        color: #000000;
-    }
-
-    .wj-footnote-list-item-contents {
-        color: #000000;
-
-        &:empty {
-            display: inline-block;
-            min-width: 1ch;
-            min-height: 1em;
-        }
-    }
 }

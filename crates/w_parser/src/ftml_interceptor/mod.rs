@@ -56,6 +56,7 @@
 //! `data-editor-exporte="span"`.
 
 pub mod div;
+pub mod footnote;
 pub mod footnoteblock;
 pub mod module_css;
 pub mod module_rate;
