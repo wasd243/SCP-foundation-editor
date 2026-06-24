@@ -5,9 +5,9 @@ use std::borrow::Cow;
 use std::path::PathBuf;
 
 use crate::ftml_interceptor::div::div_data_attacher::attach_div_meta_data;
-use crate::ftml_interceptor::footnoteblock::footnoteblock_interceptor::intercept_footnote_block;
 use crate::ftml_interceptor::footnote::footnote_interceptor::footnote_interceptor;
 use crate::ftml_interceptor::footnote::footnote_parser::footnote_parser;
+use crate::ftml_interceptor::footnoteblock::footnoteblock_interceptor::intercept_footnote_block;
 use crate::ftml_interceptor::module_css::css_cacher::css_cacher;
 use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
 use crate::ftml_interceptor::span::span_data_attacher::attach_span_meta_data;

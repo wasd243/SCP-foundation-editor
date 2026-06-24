@@ -2,8 +2,7 @@ use regex::Regex;
 
 pub fn footnote_parser(text: &str) -> String {
     // Identify content inside ~_FOOTNOTE_~
-    let footnote_re =
-        Regex::new(r"(?is)~_FOOTNOTE_BEGIN_~(.*?)~_FOOTNOTE_END_~").unwrap();
+    let footnote_re = Regex::new(r"(?is)~_FOOTNOTE_BEGIN_~(.*?)~_FOOTNOTE_END_~").unwrap();
 
     if !footnote_re.is_match(text) {
         return text.into();
@@ -30,7 +29,8 @@ mod tests {
 
     #[test]
     fn test_footnote_parser_multiple() {
-        let text = "a ~_FOOTNOTE_BEGIN_~one~_FOOTNOTE_END_~ b ~_FOOTNOTE_BEGIN_~two~_FOOTNOTE_END_~";
+        let text =
+            "a ~_FOOTNOTE_BEGIN_~one~_FOOTNOTE_END_~ b ~_FOOTNOTE_BEGIN_~two~_FOOTNOTE_END_~";
         let expected = "a <footnote>one</footnote> b <footnote>two</footnote>";
         assert_eq!(footnote_parser(text), expected);
     }
