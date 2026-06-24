@@ -63,3 +63,4 @@ pub mod note;
 pub mod preprocess_interceptor;
 pub mod span;
 pub mod user;
+pub mod footnote;

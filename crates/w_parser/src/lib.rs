@@ -6,6 +6,8 @@ use std::path::PathBuf;
 
 use crate::ftml_interceptor::div::div_data_attacher::attach_div_meta_data;
 use crate::ftml_interceptor::footnoteblock::footnoteblock_interceptor::intercept_footnote_block;
+use crate::ftml_interceptor::footnote::footnote_interceptor::footnote_interceptor;
+use crate::ftml_interceptor::footnote::footnote_parser::footnote_parser;
 use crate::ftml_interceptor::module_css::css_cacher::css_cacher;
 use crate::ftml_interceptor::module_rate::rate_interceptor::rate_interceptor;
 use crate::ftml_interceptor::span::span_data_attacher::attach_span_meta_data;
@@ -95,7 +97,8 @@ pub fn render_wikidot_to_html_with_resourcepack(
     wikitext = user_with_img_interceptor(&wikitext);
     wikitext = user_interceptor(&wikitext);
 
-    // Intercept footnote blockes
+    // Intercept footnote blocks
+    wikitext = footnote_interceptor(&wikitext);
     wikitext = intercept_footnote_block(&wikitext);
 
     // Include blocks:
@@ -137,6 +140,8 @@ pub fn render_wikidot_to_html_with_resourcepack(
     html_output.body = parse_user_with_img(&html_output.body);
     html_output.body = parse_user(&html_output.body);
 
+    html_output.body = footnote_parser(&html_output.body);
+
     html_output.body = normalize_images(&html_output.body);
     html_output.body = normalize_component_images(&html_output.body);
 
@@ -152,7 +157,7 @@ pub fn render_wikidot_to_html_with_resourcepack(
 // Final handler to tauri
 pub fn render_wikidot_to_html(source_text: &str) -> Result<FtmlParseOutput, String> {
     // The host copies the bundled resourcepack into this per-user path at
-    // startup. If the files are missing the includer simply reports
+    // startup. If the files are missing, the includer simply reports
     // no_such_include rather than panicking.
     render_wikidot_to_html_with_resourcepack(source_text, resourcepack_dir())
 }
