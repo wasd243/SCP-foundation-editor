@@ -1,4 +1,5 @@
 import { getEditor } from "../../editor.ts";
+import { promptInput } from "../../inputWindow.ts";
 
 // This function is used to normalize URLs which entered by user but without `http` or `https` begin
 function normalizeUrl(url: string) {
@@ -102,12 +103,16 @@ export function insertEditorLink(rawUrl: string, options: LinkOptions = {}) {
         .run();
 }
 
-export function promptEditorLink(options: LinkOptions = {}) {
+export async function promptEditorLink(options: LinkOptions = {}) {
     const currentHref = getCurrentEditorLinkHref();
-    const url = window.prompt(
-        options.promptLabel ?? "Enter URL",
-        currentHref ?? "",
-    );
+    const title = options.promptLabel ?? "Insert link";
+    const url = await promptInput({
+        title,
+        label: title,
+        defaultValue: currentHref ?? "",
+        placeholder: options.leadingSlash ? "page-name" : "https://…",
+        confirmText: "Insert",
+    });
 
     if (url === null) {
         return;
