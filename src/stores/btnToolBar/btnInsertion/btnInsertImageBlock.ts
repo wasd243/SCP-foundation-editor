@@ -36,18 +36,24 @@ function createImageBlockContent(src: string): JSONContent {
                 },
             },
             {
-                type: "wjTextBlockTag",
+                type: "wjBlockTag",
                 attrs: {
                     tagName: "div",
                     htmlAttributes: {
-                        class: "scp-image-caption",
+                        class: "scp-image-caption alignright",
                         contenteditable: "true",
+                        "data-editor-export": "div",
                     },
                 },
                 content: [
                     {
-                        type: "text",
-                        text: defaultImageBlockCaption,
+                        type: "paragraph",
+                        content: [
+                            {
+                                type: "text",
+                                text: defaultImageBlockCaption,
+                            },
+                        ],
                     },
                 ],
             },
