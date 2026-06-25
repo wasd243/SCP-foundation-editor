@@ -27,12 +27,16 @@ jobs:
             libsoup-3.0-dev \
             libjavascriptcoregtk-4.1-dev
 
-      - name: Frontend build
-        run: npm ci && npm run build
+      - name: Cargo clippy (workspace)
+        run: cargo clippy --workspace --all-targets -- -D warnings
 
-      - name: Cargo check (workspace)
-        run: cargo check --workspace
+      # Cargo test is disabled because of CI environment issues
+      # - name: Cargo test (workspace)
+      # run: cargo test --workspace
 
       - name: Code View bundle
         run: npm ci && node build
         working-directory: public/code_view
+
+      - name: Frontend build
+        run: npm ci && npm run build
