@@ -305,6 +305,17 @@
             content: "↵";
         }
 
+        // Hide the ↵ marker on the empty paragraph that sits directly before a
+        // block image, so the image isn't preceded by a dangling enter glyph.
+        // `:has` must live on the paragraph (the element with the image as its
+        // next sibling) — putting it on `::before` matches nothing, since
+        // pseudo-elements have no siblings.
+        .image-container
+            > p:has(+ img.image)
+            .tiptap-invisible-character--paragraph::before {
+            display: none;
+        }
+
         // Some parts of Collapsible is IMMUTABLE
         // This details part are all mutable, used to define "details" rendering
         [data-type="details"] {
@@ -558,5 +569,4 @@
             }
         }
     }
-
 }
