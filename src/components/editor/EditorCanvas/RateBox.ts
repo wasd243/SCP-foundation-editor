@@ -30,7 +30,7 @@ export const rateBoxStyle = computed<Record<string, string>>(() => {
 
     switch (rateAlignment.value) {
         case "left":
-            return { ...baseStyle, left: "500px", right: "auto" };
+            return { ...baseStyle, left: "0", right: "auto" };
         case "center":
             return {
                 ...baseStyle,
@@ -38,7 +38,7 @@ export const rateBoxStyle = computed<Record<string, string>>(() => {
                 right: "auto",
             };
         case "right":
-            return { ...baseStyle, left: "auto", right: "500px" };
+            return { ...baseStyle, left: "auto", right: "0" };
         default:
             return baseStyle;
     }
