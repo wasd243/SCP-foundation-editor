@@ -3,6 +3,7 @@ import AutoSaveSetting from "./Settings/AutoSaveSetting.vue";
 import InvisibleCharactersSetting from "./Settings/InvisibleCharactersSetting.vue";
 import SavesPathSetting from "./Settings/SavesPathSetting.vue";
 import LogAndWriteJson from "./Settings/LogAndWriteJson.vue";
+import UpdateSetting from "./Settings/UpdateSetting.vue";
 </script>
 
 <template>
@@ -14,6 +15,8 @@ import LogAndWriteJson from "./Settings/LogAndWriteJson.vue";
         <SavesPathSetting />
         <div class="settings-groups__divider" aria-hidden="true"></div>
         <LogAndWriteJson />
+        <div class="settings-groups__divider" aria-hidden="true"></div>
+        <UpdateSetting />
     </div>
 </template>
 

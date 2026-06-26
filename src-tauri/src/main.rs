@@ -26,7 +26,7 @@ use tauri::{Builder, Manager};
 
 fn main() {
     env_logger::init();
-    Builder::default()
+    let builder = Builder::default()
         .setup(|app| {
             // The resourcepack ships as a bundled Tauri resource (see
             // tauri.conf.json `bundle.resources`). Copy it from the read-only
@@ -66,7 +66,16 @@ fn main() {
             patch_get_user_css,
         ])
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_fs::init());
+
+    // Desktop-only: auto-update + relaunch. The plugin crates are target-gated
+    // to non-mobile in Cargo.toml, so registration must be gated to match.
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    let builder = builder
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init());
+
+    builder
         .run(tauri::generate_context!())
         .expect("failed to run Tauri application");
 }

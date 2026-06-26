@@ -74,6 +74,12 @@ jobs:
         uses: tauri-apps/tauri-action@v0.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Updater signing. With `createUpdaterArtifacts` set in
+          # tauri.conf.json, these make tauri-action sign the bundles and emit
+          # `latest.json` (+ `.sig` files) onto the release for the updater to
+          # consume. The public half lives in tauri.conf.json `plugins.updater`.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           # On a tag push, create a draft pre-release with the installers.
           # On workflow_dispatch there is no tag, so tagName is empty and
@@ -97,3 +103,41 @@ jobs:
             target/release/bundle/**
             target/universal-apple-darwin/release/bundle/**
           if-no-files-found: error
+
+  # GitHub's `/releases/latest/` only resolves to non-prerelease releases, so a
+  # beta/rc would never be discovered there. Instead, publish the cross-platform
+  # `latest.json` (which tauri-action merged onto the release across the build
+  # matrix) into the Pages source `docs/page/`. Committing it triggers the
+  # "Deploy Pages" workflow, which serves it at the updater endpoint configured
+  # in tauri.conf.json — and that path includes prereleases.
+  publish-updater-manifest:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Fetch latest.json from the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download "${{ github.ref_name }}" \
+            --repo "${{ github.repository }}" \
+            --pattern "latest.json" \
+            --dir docs/page --clobber
+
+      - name: Commit manifest to Pages source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/page/latest.json
+          if git diff --cached --quiet; then
+            echo "latest.json unchanged — nothing to publish"
+          else
+            git commit -m "chore(updater): publish ${{ github.ref_name }} manifest"
+            git push origin main
+          fi

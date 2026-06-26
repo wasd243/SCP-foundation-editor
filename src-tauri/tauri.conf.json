@@ -2,7 +2,6 @@
     "$schema": "https://schema.tauri.app/config/2",
 
     "productName": "SCP-WYSIWYG",
-    "version": "3.0.0",
     "identifier": "com.wasd243.scpwysiwyg",
 
     "build": {
@@ -43,8 +42,18 @@
         }
     },
 
+    "plugins": {
+        "updater": {
+            "endpoints": [
+                "https://wasd243.github.io/SCP-foundation-editor/latest.json"
+            ],
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEMyQzdFNzQwN0I4MjBCMQpSV1N4SUxnSGRINHNET0ZIWmlLNTFKV0lFT0R1cUJGeG1maVZ0US9ZSDlLOUpJZllDTVpac2hqMwo="
+        }
+    },
+
     "bundle": {
         "active": true,
+        "createUpdaterArtifacts": true,
         "targets": ["nsis", "app", "dmg", "deb", "appimage"],
         "icon": ["icons/icon.png", "icons/icon.ico", "icons/icon.icns"],
         "resources": {

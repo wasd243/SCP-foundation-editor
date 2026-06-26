@@ -50,3 +50,7 @@ skills-lock.json
 
 # DO NOT IGNORE: Assets
 !src/assets/icons/
+
+# Tauri updater signing keys — NEVER commit. Keep private key as a CI secret.
+*.key
+~/

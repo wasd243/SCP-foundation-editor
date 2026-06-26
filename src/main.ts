@@ -3,6 +3,7 @@ import App from "./App.vue";
 import "vue3-colorpicker/style.css";
 import { connectIpc } from "./ipc/ipc";
 import { closeSplashscreen, SPLASH_FALLBACK_MS } from "./splashscreen.ts";
+import { checkForUpdates } from "./stores/updater.ts";
 
 import "./styles/global.css";
 import "./styles/varibles.css";
@@ -32,3 +33,8 @@ createApp(App).mount("#app");
 // Fallback: if the editor never signals ready (see EditorCanvas onCreate),
 // close the splash anyway so the user is never stuck on it.
 setTimeout(closeSplashscreen, SPLASH_FALLBACK_MS);
+
+// Silent startup update check, delayed so it never competes with the splash /
+// boot path. If an update is found the notification bar surfaces it; staying up
+// to date is invisible. A rejected check (e.g. running in a browser) is a no-op.
+setTimeout(() => void checkForUpdates(true), 4000);

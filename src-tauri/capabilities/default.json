@@ -6,6 +6,8 @@
         "core:default",
         "dialog:allow-save",
         "dialog:allow-open",
-        "fs:allow-read-text-file"
+        "fs:allow-read-text-file",
+        "updater:default",
+        "process:allow-restart"
     ]
 }
