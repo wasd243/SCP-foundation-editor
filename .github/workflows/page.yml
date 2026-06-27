@@ -2,7 +2,7 @@ name: Deploy Pages
 
 on:
   push:
-    branches: [main, demo]
+    branches: [demo]          # 只发 demo,main 不参与
   workflow_dispatch:
 
 permissions:
@@ -10,7 +10,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages-${{ github.ref_name }}"
+  group: "pages"
   cancel-in-progress: false
 
 jobs:
@@ -21,22 +21,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
-
       - uses: actions/configure-pages@v6
-
-      - name: Stage site
-        run: |
-          mkdir -p _site
-          if [ "${{ github.ref_name }}" = "demo" ]; then
-            mkdir -p _site/demo
-            cp -r docs/page/. _site/demo/
-          else
-            cp -r docs/page/. _site/
-          fi
-
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: _site
-
+          path: docs/page       # 根=docs/page,里面有 index.html + demo/index.html
       - id: deployment
         uses: actions/deploy-pages@v5
