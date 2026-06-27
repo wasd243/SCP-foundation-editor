@@ -2,10 +2,7 @@ name: Deploy Pages
 
 on:
   push:
-    branches: [main]
-    paths:
-      - 'docs/page/**'
-  workflow_dispatch:
+    branches: [main, demo]
 
 permissions:
   pages: write
