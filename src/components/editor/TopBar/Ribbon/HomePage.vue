@@ -2,13 +2,11 @@
 
 <script setup lang="ts">
 import Formats from "../../ToolBar/Formats.vue";
-import CodeView from "../../ToolBar/CodeView.vue";
 import NonIncludeComponents from "../../ToolBar/NonIncludeComponents.vue";
 </script>
 <template>
     <div class="ribbon-layout" data-ribbon-page="home">
         <Formats />
-        <CodeView />
         <NonIncludeComponents />
         <div class="ribbon-separator"></div>
         <div class="ribbon-separator small-1"></div>

@@ -176,4 +176,12 @@ mod tests {
         let output = render_wikidot_to_html(source_text).unwrap();
         eprintln!("output:\n{:#?}", output.html);
     }
+
+    #[test]
+    fn test_parsed_output() {
+        let source_text = include_str!("../test/demo.ftml");
+        let output = render_wikidot_to_html(source_text).unwrap();
+        println!("{:#?}", output.html);
+        std::fs::write("test/demo.html", output.html).unwrap();
+    }
 }

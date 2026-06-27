@@ -198,7 +198,66 @@ function onRateDragEnd(e: any) {
 
 const editor = useEditor({
     extensions: editorExtensions,
-    content: "<p>Hello FTML editor.</p>",
+    content: `<p><em>web
+    DEMO功能不全，只是想给各位试试手感，代码生成/图片插入/自定义CSS/DIV等功能均在本地版。</em><br><strong>这是一行加粗文本</strong><br><em><strong>这是一行斜体</strong></em><br><u><em><strong>这是一行下划线</strong></em></u><br><s><u><em><strong>再加上删除线</strong></em></u></s><br>和各种<sup>角</sup><sub>标</sub>还有
+</p>
+<blockquote><p>引用</p></blockquote>
+<table class="wiki-content-table">
+    <tbody>
+    <tr>
+        <th>表格</th>
+        <th>表格</th>
+    </tr>
+    <tr>
+        <td>表格</td>
+        <td>表格</td>
+    </tr>
+    </tbody>
+</table>
+<div style="text-align: right;"><p>对齐</p></div>
+<div style="text-align: left;">
+    <p><a href="https://github.com">链接</a>点那个扫把就能清除样式，包括链接<br>站内链接只是生成格式不一样
+        <footnote>脚注编辑器，点一下就能打开</footnote>
+        ，比如：<a class="active" href="/scp-173">花生</a></p>
+</div>
+<wj-tabs class="wj-tabs">
+    <div class="wj-tabs-button-list" role="tablist">
+        <wj-tabs-button aria-controls="wj-id-90iorOM6Psbdo4nX" aria-label="Tab 1" aria-selected="true"
+                        class="wj-tabs-button" id="wj-id-BKmrs54aJBrcFzpC" role="tab" tabindex="0">Tab 1
+        </wj-tabs-button>
+        <wj-tabs-button aria-controls="wj-id-j4s8681iQXjmV2ur" aria-label="Tab 2" aria-selected="false"
+                        class="wj-tabs-button" id="wj-id-IU3yipKBDbjDXU2k" role="tab" tabindex="-1">Tab 2
+        </wj-tabs-button>
+    </div>
+    <div class="wj-tabs-panel-list">
+        <div aria-labelledby="wj-id-BKmrs54aJBrcFzpC" class="wj-tabs-panel" id="wj-id-90iorOM6Psbdo4nX" role="tabpanel"
+             tabindex="0"><p>tabview</p></div>
+        <div aria-labelledby="wj-id-IU3yipKBDbjDXU2k" class="wj-tabs-panel" hidden="" id="wj-id-j4s8681iQXjmV2ur"
+             role="tabpanel" tabindex="0"><p><span style="white-space: pre-wrap;"></span></p></div>
+    </div>
+</wj-tabs>
+<details class="wj-collapsible" data-show-top="">
+    <summary class="wj-collapsible-button wj-collapsible-button-top"><span class="wj-collapsible-show-text">+生成折叠块的时候记得放上加减号</span><span
+        class="wj-collapsible-hide-text">-生成折叠块的时候记得放上加减号</span></summary>
+    <div class="wj-collapsible-content"><p>左边这个灰条是提示文本再折叠块内的</p>
+        <p>折叠块内啥都能放</p>
+        <wj-tabs class="wj-tabs">
+            <div class="wj-tabs-button-list" role="tablist">
+                <wj-tabs-button aria-controls="wj-id-TeQUS4gqi0Dmpnvh" aria-label="Tab 1" aria-selected="true"
+                                class="wj-tabs-button" id="wj-id-LagIkYqB1gENDat3" role="tab" tabindex="0">Tab 1
+                </wj-tabs-button>
+            </div>
+            <div class="wj-tabs-panel-list">
+                <div aria-labelledby="wj-id-LagIkYqB1gENDat3" class="wj-tabs-panel" id="wj-id-TeQUS4gqi0Dmpnvh"
+                     role="tabpanel" tabindex="0"><p>比如tabview</p></div>
+            </div>
+        </wj-tabs>
+    </div>
+</details>
+<div class="wj-note"><p>笔记模块</p>
+    <p>和分割线</p></div>
+<hr><p>字体<span style="color: #D81B43;">颜色</span>设置点<span style="color: #D81B43;">A</span>再点对应颜色，生成的维基代码默认为十六进制颜色格式。
+</p>`,
 
     onCreate: ({ editor }) => {
         setEditor(editor);

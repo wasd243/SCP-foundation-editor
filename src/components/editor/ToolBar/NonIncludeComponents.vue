@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Code from "./NonIncludeComponents/Code.vue";
 import Footnotes from "./NonIncludeComponents/Footnotes.vue";
-import ModuleRate from "./NonIncludeComponents/ModuleRate.vue";
 import Note from "./NonIncludeComponents/Note.vue";
 import TabView from "./NonIncludeComponents/TabView.vue";
 import User from "./NonIncludeComponents/User.vue";
@@ -14,6 +13,5 @@ import User from "./NonIncludeComponents/User.vue";
         <Code />
         <Note />
         <User />
-        <ModuleRate />
     </div>
 </template>
