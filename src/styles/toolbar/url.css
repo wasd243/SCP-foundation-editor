@@ -34,8 +34,9 @@ variables:
     width: 260px;
     height: 26px;
     position: absolute;
-    /* Hard code position for URL renderer */
-    left: 1500px;
+    /* Anchored to the toolbar button band so the preview sits centered under
+       the format buttons instead of off the right edge. */
+    left: 1000px;
     top: 150px;
     z-index: 1;
 
