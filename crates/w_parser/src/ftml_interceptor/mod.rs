@@ -54,8 +54,6 @@
 //!
 //! To let the exporter know that a span tag rather than include, the function will attach
 //! `data-editor-exporte="span"`.
-
-pub mod catch_include;
 pub mod div;
 pub mod footnote;
 pub mod footnoteblock;
