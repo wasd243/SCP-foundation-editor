@@ -20,6 +20,8 @@ use handlers::{
     settings::reset_saves_path,
     settings::set_saves_path,
     splashscreen::close_splashscreen,
+    write_ignore_lines_metadata::read_ignore_lines_metadata,
+    write_ignore_lines_metadata::write_ignore_lines_metadata,
 };
 
 use tauri::{Builder, Manager};
@@ -62,6 +64,8 @@ fn main() {
             rewrite_module_rate_temp,
             close_splashscreen,
             log_and_write_json,
+            read_ignore_lines_metadata,
+            write_ignore_lines_metadata,
             // patch functions here
             patch_get_user_css,
         ])

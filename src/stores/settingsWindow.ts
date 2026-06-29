@@ -9,7 +9,12 @@ import { ref } from "vue";
  * button) staying thin and only binding to / calling into these.
  */
 
-export type SettingsCategory = "save" | "display" | "advanced" | "updates";
+export type SettingsCategory =
+    | "save"
+    | "display"
+    | "editor"
+    | "advanced"
+    | "updates";
 
 /** Whether the settings modal is open. */
 export const settingsOpen = ref(false);

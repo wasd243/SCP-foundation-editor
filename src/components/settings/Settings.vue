@@ -10,12 +10,14 @@ import {
 import AutoSaveSetting from "./sections/AutoSaveSetting.vue";
 import SavesPathSetting from "./sections/SavesPathSetting.vue";
 import InvisibleCharactersSetting from "./sections/InvisibleCharactersSetting.vue";
+import IgnoreLines from "./sections/IgnoreLines.vue";
 import LogAndWriteJson from "./sections/LogAndWriteJson.vue";
 import UpdateSetting from "./sections/UpdateSetting.vue";
 
 const CATEGORIES: { id: SettingsCategory; label: string }[] = [
     { id: "save", label: "Save" },
     { id: "display", label: "Display" },
+    { id: "editor", label: "Editor" },
     { id: "advanced", label: "Advanced" },
     { id: "updates", label: "Updates" },
 ];
@@ -108,6 +110,10 @@ watch(settingsOpen, (open) => {
 
                             <template v-else-if="activeCategory === 'display'">
                                 <InvisibleCharactersSetting />
+                            </template>
+
+                            <template v-else-if="activeCategory === 'editor'">
+                                <IgnoreLines />
                             </template>
 
                             <template v-else-if="activeCategory === 'advanced'">
