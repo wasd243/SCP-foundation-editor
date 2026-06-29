@@ -25,6 +25,32 @@ pub fn resourcepack_dir() -> PathBuf {
     project().data_dir().join("resourcepack")
 }
 
+/// Persistent ignored-lines settings file (`config_dir()/ignore_lines.json`),
+/// written by the host. w_parser reads it directly as the single source of truth.
+fn ignore_lines_file_path() -> PathBuf {
+    project().config_dir().join("ignore_lines.json")
+}
+
+/// Read the saved ignored-line tokens (e.g. `["1-10", "15"]`). A missing,
+/// unreadable, or malformed file all map to an empty list. Never panics.
+pub fn read_ignore_lines() -> Vec<String> {
+    let Ok(contents) = fs::read_to_string(ignore_lines_file_path()) else {
+        return Vec::new();
+    };
+    let Ok(value) = serde_json::from_str::<serde_json::Value>(&contents) else {
+        return Vec::new();
+    };
+    value
+        .get("ignore_lines")
+        .and_then(|v| v.as_array())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_str().map(str::to_string))
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
 /// Test-only: materialize the dev-tree resourcepack into [`resourcepack_dir`]
 /// so unit tests that read include/theme files find them, mirroring the host's
 /// startup copy. This is a compile-time *test* fixture, never used at runtime.

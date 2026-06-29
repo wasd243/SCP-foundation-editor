@@ -1,50 +1,23 @@
-use similar::{ChangeTag, TextDiff};
+use similar::TextDiff;
 
-pub(super) struct MergeDiff {
-    pub(super) patch: String,
-    pub(super) final_output: String,
-}
-
-pub(super) fn diff(origin: &str, output: &str) -> MergeDiff {
-    let diff = TextDiff::from_lines(origin, output);
-    let patch = diff
+/// Unified line diff between the cached origin and the exporter output, used only
+/// for the `patch_origin.ftml` debug artifact. The final output is rebuilt by
+/// `insert_ignore_lines::splice`, which also handles ignored-line re-insertion.
+pub(super) fn diff(origin: &str, output: &str) -> String {
+    TextDiff::from_lines(origin, output)
         .unified_diff()
         .header("@origin.ftml", "@output.ftml")
-        .to_string();
-    let final_output = patch_origin(&diff);
-
-    MergeDiff {
-        patch,
-        final_output,
-    }
-}
-
-fn patch_origin(diff: &TextDiff<'_, '_, str>) -> String {
-    let mut output = String::new();
-
-    for change in diff.iter_all_changes() {
-        match change.tag() {
-            ChangeTag::Delete => {}
-            ChangeTag::Equal | ChangeTag::Insert => output.push_str(change.value()),
-        }
-    }
-
-    output
+        .to_string()
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::diff;
 
     #[test]
-    fn patches_origin_into_output() {
-        let origin = "a\nb\nc\n";
-        let output = "a\nB\nc\nd\n";
-
-        let diff = diff(origin, output);
-
-        assert_eq!(diff.final_output, output);
-        assert!(diff.patch.contains("--- @origin.ftml"));
-        assert!(diff.patch.contains("+++ @output.ftml"));
+    fn produces_unified_headers() {
+        let patch = diff("a\nb\nc\n", "a\nB\nc\nd\n");
+        assert!(patch.contains("--- @origin.ftml"));
+        assert!(patch.contains("+++ @output.ftml"));
     }
 }

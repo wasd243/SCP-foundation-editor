@@ -25,6 +25,48 @@ pub fn resourcepack_dir() -> PathBuf {
     project().data_dir().join("resourcepack")
 }
 
+/// Persistent ignored-lines settings file (`config_dir()/ignore_lines.json`).
+/// The host seeds it from the settings UI; ltmf both reads it (to know which
+/// lines to splice back) and writes it (to update the line numbers after export).
+fn ignore_lines_file_path() -> PathBuf {
+    project().config_dir().join("ignore_lines.json")
+}
+
+/// Read the saved ignored-line tokens (e.g. `["1-10", "15"]`). A missing,
+/// unreadable, or malformed file all map to an empty list. Never panics.
+pub fn read_ignore_lines() -> Vec<String> {
+    let Ok(contents) = fs::read_to_string(ignore_lines_file_path()) else {
+        return Vec::new();
+    };
+    let Ok(value) = serde_json::from_str::<serde_json::Value>(&contents) else {
+        return Vec::new();
+    };
+    value
+        .get("ignore_lines")
+        .and_then(|v| v.as_array())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_str().map(str::to_string))
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+/// Write the ignored-line tokens back to `config/ignore_lines.json`. The exporter
+/// calls this to update the saved line numbers after splicing ignored lines into
+/// the final output. Panics on any IO/serialization failure (treated as
+/// unreachable — the same path was just read).
+pub fn write_ignore_lines(lines: &[String]) {
+    let file = ignore_lines_file_path();
+    if let Some(parent) = file.parent() {
+        fs::create_dir_all(parent).unwrap_or_else(|e| panic!("{e}"));
+    }
+
+    let contents = serde_json::to_string_pretty(&serde_json::json!({ "ignore_lines": lines }))
+        .unwrap_or_else(|e| panic!("{e}"));
+    fs::write(&file, contents).unwrap_or_else(|e| panic!("{e}"));
+}
+
 /// Test-only: materialize the dev-tree resourcepack into [`resourcepack_dir`]
 /// so unit tests that read include files find them, mirroring the host's
 /// startup copy. This is a compile-time *test* fixture, never used at runtime.

@@ -1,11 +1,11 @@
-mod add_footnote_block;
 mod add_module_rate;
 mod add_user_css;
 mod fmt_alignments;
 mod fmt_newline;
+mod remove_trailing_break_force_newline;
 
-use crate::ftml_fmt::add_footnote_block::add_footnote_block;
 use crate::ftml_fmt::add_module_rate::add_module_rate;
+use crate::ftml_fmt::remove_trailing_break_force_newline::remove_trailing_break_force_newline;
 use crate::ftml_fmt::add_user_css::{add_user_css, remove_unused_module_css};
 use crate::ftml_fmt::{fmt_alignments::format_alignments, fmt_newline::format_newline};
 use crate::paths::temp_dir;
@@ -41,10 +41,9 @@ pub fn ftml_fmt(ftml: &str) -> String {
     let output = add_user_css(&output, user_css.as_deref().ok());
 
     // strip the placeholder module when no user css was provided
+    // and then remove trailing break force newline
     let output = remove_unused_module_css(&output);
-
-    // add footnote block
-    let output = add_footnote_block(&output);
+    let output = remove_trailing_break_force_newline(&output);
 
     // write output to interpreter's temp output file back
     if read_ftml.is_ok() {
