@@ -16,6 +16,8 @@ updates:
       - dependency-name: "vue"
       - dependency-name: "vue-tsc"
       - dependency-name: "sass"
+      - dependency-name: "@codemirror/*"
+      - dependency-name: "public/code_view/eslint"
 
   # Code View subproject
   - package-ecosystem: "npm"
@@ -31,6 +33,7 @@ updates:
     ignore:
       - dependency-name: "time"
       - dependency-name: "rusqlite"
+      - dependency-name: "env_logger"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"

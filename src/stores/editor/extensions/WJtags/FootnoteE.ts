@@ -23,6 +23,10 @@ import { StepMap } from "@tiptap/pm/transform";
 import { EditorView } from "@tiptap/pm/view";
 import { keymap } from "@tiptap/pm/keymap";
 import { undo, redo } from "@tiptap/pm/history";
+import {
+    setActiveFootnoteView,
+    clearActiveFootnoteView,
+} from "./footnoteActiveView.ts";
 
 declare module "@tiptap/core" {
     interface Commands<ReturnType> {
@@ -98,9 +102,17 @@ class FootnoteView {
                 },
             },
         });
+
+        // Register this inner view so toolbar style commands target its
+        // selection instead of the outer NodeSelection over the whole footnote.
+        setActiveFootnoteView(this.innerView);
     }
 
     close() {
+        if (this.innerView) {
+            clearActiveFootnoteView(this.innerView);
+        }
+
         this.innerView?.destroy();
         this.innerView = null;
         this.dom.textContent = "";

@@ -1,4 +1,8 @@
 import { getEditor } from "../../editor.ts";
+import {
+    addFontSizeOverSelection,
+    getActiveFootnoteFontSize,
+} from "../../editor/extensions/WJtags/footnoteActiveView.ts";
 import type { Level } from "@tiptap/extension-heading";
 
 const defaultFontSize = 16;
@@ -7,7 +11,8 @@ const minFontSize = 8;
 const maxFontSize = 72;
 
 function getCurrentFontSize() {
-    const size = getEditor()?.getAttributes("fontSize").size;
+    const size =
+        getActiveFootnoteFontSize() ?? getEditor()?.getAttributes("fontSize").size;
 
     if (typeof size !== "string") {
         return defaultFontSize;
@@ -22,6 +27,12 @@ function normalizeFontSize(size: number) {
 }
 
 export function setEditorFontSize(size: number) {
+    if (
+        addFontSizeOverSelection({ size: `${normalizeFontSize(size)}px` })
+    ) {
+        return;
+    }
+
     const editor = getEditor();
     const markType = editor?.schema.marks.fontSize;
 

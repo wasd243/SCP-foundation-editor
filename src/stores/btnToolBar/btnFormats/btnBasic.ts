@@ -1,22 +1,43 @@
 import { getEditor } from "../../editor.ts";
+import { toggleFootnoteMark } from "../../editor/extensions/WJtags/footnoteActiveView.ts";
 
 export function toggleEditorBold() {
+    if (toggleFootnoteMark("bold")) {
+        return;
+    }
+
     getEditor()?.chain().focus().toggleMark("bold").run();
 }
 
 export function toggleEditorItalic() {
+    if (toggleFootnoteMark("italic")) {
+        return;
+    }
+
     getEditor()?.chain().focus().toggleMark("italic").run();
 }
 
 export function toggleEditorUnderline() {
+    if (toggleFootnoteMark("underline")) {
+        return;
+    }
+
     getEditor()?.chain().focus().toggleMark("underline").run();
 }
 
 export function toggleEditorStrikethrough() {
+    if (toggleFootnoteMark("strike")) {
+        return;
+    }
+
     getEditor()?.chain().focus().toggleMark("strike").run();
 }
 
 export function toggleEditorSubscript() {
+    if (toggleFootnoteMark("subscript", "superscript")) {
+        return;
+    }
+
     getEditor()
         ?.chain()
         .focus()
@@ -26,6 +47,10 @@ export function toggleEditorSubscript() {
 }
 
 export function toggleEditorSuperscript() {
+    if (toggleFootnoteMark("superscript", "subscript")) {
+        return;
+    }
+
     getEditor()
         ?.chain()
         .focus()

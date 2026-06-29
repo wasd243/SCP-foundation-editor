@@ -1,6 +1,8 @@
 import { reactive } from "vue";
 import type { Editor } from "@tiptap/core";
+import type { EditorView } from "@tiptap/pm/view";
 import { type EditorTextAlign } from "../editor.ts";
+import { getActiveFootnoteView } from "../editor/extensions/WJtags/footnoteActiveView.ts";
 
 /**
  * Word-style toolbar state: which formats the caret currently sits inside.
@@ -58,7 +60,52 @@ function readBlockAlign(editor: Editor): EditorTextAlign | null {
     return null;
 }
 
+// Whether `markName` is active in the inner footnote view's selection.
+function isFootnoteMarkActive(view: EditorView, markName: string): boolean {
+    const markType = view.state.schema.marks[markName];
+
+    if (!markType) {
+        return false;
+    }
+
+    const { from, to, empty, $from } = view.state.selection;
+
+    if (empty) {
+        const marks = view.state.storedMarks ?? $from.marks();
+
+        return Boolean(markType.isInSet(marks));
+    }
+
+    return view.state.doc.rangeHasMark(from, to, markType);
+}
+
+// While a footnote sub-editor is open, the outer selection is a NodeSelection
+// over the whole footnote, so the highlight flags must come from the inner
+// view. Block formats (lists/quote/align) can't live in a footnote's `text*`
+// content, so they read as off.
+function refreshFootnoteFormats(view: EditorView) {
+    activeFormats.bold = isFootnoteMarkActive(view, "bold");
+    activeFormats.italic = isFootnoteMarkActive(view, "italic");
+    activeFormats.underline = isFootnoteMarkActive(view, "underline");
+    activeFormats.strike = isFootnoteMarkActive(view, "strike");
+    activeFormats.subscript = isFootnoteMarkActive(view, "subscript");
+    activeFormats.superscript = isFootnoteMarkActive(view, "superscript");
+    activeFormats.blockquote = false;
+    activeFormats.orderedList = false;
+    activeFormats.bulletList = false;
+    activeFormats.alignLeft = true;
+    activeFormats.alignCenter = false;
+    activeFormats.alignRight = false;
+}
+
 function refreshActiveFormats(editor: Editor) {
+    const footnoteView = getActiveFootnoteView();
+
+    if (footnoteView) {
+        refreshFootnoteFormats(footnoteView);
+        return;
+    }
+
     activeFormats.bold = editor.isActive("bold");
     activeFormats.italic = editor.isActive("italic");
     activeFormats.underline = editor.isActive("underline");
