@@ -37,7 +37,7 @@
     "devDependencies": {
         "@lezer/generator": "^1.8.0",
         "esbuild": "^0.25.12",
-        "eslint": "^8.57.0",
+        "eslint": "^10.6.0",
         "prettier": "^3.2.5",
         "serve": "^14.2.1"
     },
