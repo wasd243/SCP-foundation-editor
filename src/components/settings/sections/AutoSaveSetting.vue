@@ -8,7 +8,7 @@ import {
     autoSaveLastSavedAt,
     setAutoSaveInterval,
     toggleAutoSave,
-} from "../../../../stores/btnToolBar/btnActions/btnAutoSave.ts";
+} from "../../../stores/btnToolBar/btnActions/btnAutoSave.ts";
 
 const PRESETS = [
     { label: "30s", seconds: 30 },

@@ -143,6 +143,10 @@
     right: calc(var(--actions-btn-right) + 180px);
 }
 
+.actions-button.settings {
+    right: calc(var(--actions-btn-right) + 608px);
+}
+
 .actions-button.open-auto-save {
     width: 180px;
     right: calc(var(--actions-btn-right) + 416px);

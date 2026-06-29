@@ -7,7 +7,7 @@ import {
     checkForUpdates,
     loadCurrentVersion,
     openUpdateDialog,
-} from "../../../../stores/updater.ts";
+} from "../../../stores/updater.ts";
 
 onMounted(loadCurrentVersion);
 

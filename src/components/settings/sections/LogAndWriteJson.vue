@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref } from "vue";
-import { LogAndWriteJson } from "../../../../stores/btnToolBar/btnActions/btnLogAndWriteJson.ts";
+import { LogAndWriteJson } from "../../../stores/btnToolBar/btnActions/btnLogAndWriteJson.ts";
 
 const OUTPUT_PATH = "temp/dev_output.json";
 

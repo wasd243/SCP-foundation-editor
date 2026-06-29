@@ -9,10 +9,9 @@ import { ref } from "vue";
 import TopBarHome from "./TopBar/Home.vue";
 import Insert from "./TopBar/Insert.vue";
 import Ribbon from "./TopBar/Ribbon.vue";
-import Settings from "./TopBar/Settings.vue";
 import Actions from "./ToolBar/Actions.vue";
 
-type Tab = "home" | "insert" | "settings";
+type Tab = "home" | "insert";
 
 const activeTab = ref<Tab>("home");
 </script>
@@ -27,10 +26,6 @@ const activeTab = ref<Tab>("home");
             <Insert
                 :active="activeTab === 'insert'"
                 @select="activeTab = 'insert'"
-            />
-            <Settings
-                :active="activeTab === 'settings'"
-                @select="activeTab = 'settings'"
             />
         </nav>
 

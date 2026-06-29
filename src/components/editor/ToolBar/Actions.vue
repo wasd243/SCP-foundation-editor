@@ -5,6 +5,7 @@ import Save from "./Actions/Save.vue";
 import OpenFile from "./Actions/OpenFile.vue";
 import AutoSave from "./Actions/AutoSave.vue";
 import OpenFromAutoSave from "./Actions/OpenFromAutoSave.vue";
+import Settings from "./Actions/Settings.vue";
 </script>
 
 <template>
@@ -14,4 +15,5 @@ import OpenFromAutoSave from "./Actions/OpenFromAutoSave.vue";
     <OpenFile />
     <AutoSave />
     <OpenFromAutoSave />
+    <Settings />
 </template>
