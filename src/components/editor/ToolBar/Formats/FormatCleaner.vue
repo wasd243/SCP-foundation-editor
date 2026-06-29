@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import FormatCleaner from "../../../../assets/icons/FormatCleaner.svg";
 import { getEditor } from "../../../../stores/editor/instance.ts";
+import { clearFootnoteMarks } from "../../../../stores/editor/extensions/WJtags/footnoteActiveView.ts";
 
 function formatCleaner() {
+    if (clearFootnoteMarks()) return;
+
     const editor = getEditor();
     if (!editor) return;
 
