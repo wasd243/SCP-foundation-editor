@@ -1,43 +1,43 @@
 {
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "notes": "",
-  "pub_date": "2026-06-26T18:14:13.198Z",
+  "pub_date": "2026-06-30T16:09:19.128Z",
   "platforms": {
     "linux-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREE0VU9iUjRONU5YL0p6RlBBdWdYY3l6NEpnK2MyN3d5TFdjUFhtVkZhaXRVV3dWRmdGUVRDdG9xa3V6QkRhUkxKS0lPampOb1lhNUdSOTUwZzltZHc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyNDk3MTUzCWZpbGU6U0NQLVdZU0lXWUdfMy4wLjAtYmV0YS4xX2FtZDY0LkFwcEltYWdlCllpbVBEMGR0OEkzTm1BTVNoLzBIell0Nk9QYkJRVTZYU29LZ3dQQkQrT0xGT2x2V2ZzZGpmVGlMR0lqL3o3Z3pwc0FOUzgvSEZHTnNkWHpQWDhYY0JRPT0K",
-      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.1/SCP-WYSIWYG_3.0.0-beta.1_amd64.AppImage"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzRE4rRDhNK29HY0h1aWhMeXlxZGtGd3RPU2pWcXlKSVgzUmo5dnYwb2tQQnE2S1loTVhpMWhtQmM3Vk9xMmlISEZDVWcyY0hwdUNjamE1ZFlyOHA3RWdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyODM1NDc2CWZpbGU6U0NQLVdZU0lXWUdfMy4wLjAtYmV0YS4yX2FtZDY0LkFwcEltYWdlCm5mcGgreUE3ZFI3cUliSkMyeFJ6VjVLZU9lNjVXalNUTzgxT3B6eVRUa2psalRCUWplQnR2dmZpWll5QWpodUVsM3FFejVMc2dtSUtvUXlEV0lmeENnPT0K",
+      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.2/SCP-WYSIWYG_3.0.0-beta.2_amd64.AppImage"
     },
     "linux-x86_64-appimage": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREE0VU9iUjRONU5YL0p6RlBBdWdYY3l6NEpnK2MyN3d5TFdjUFhtVkZhaXRVV3dWRmdGUVRDdG9xa3V6QkRhUkxKS0lPampOb1lhNUdSOTUwZzltZHc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyNDk3MTUzCWZpbGU6U0NQLVdZU0lXWUdfMy4wLjAtYmV0YS4xX2FtZDY0LkFwcEltYWdlCllpbVBEMGR0OEkzTm1BTVNoLzBIell0Nk9QYkJRVTZYU29LZ3dQQkQrT0xGT2x2V2ZzZGpmVGlMR0lqL3o3Z3pwc0FOUzgvSEZHTnNkWHpQWDhYY0JRPT0K",
-      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.1/SCP-WYSIWYG_3.0.0-beta.1_amd64.AppImage"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzRE4rRDhNK29HY0h1aWhMeXlxZGtGd3RPU2pWcXlKSVgzUmo5dnYwb2tQQnE2S1loTVhpMWhtQmM3Vk9xMmlISEZDVWcyY0hwdUNjamE1ZFlyOHA3RWdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyODM1NDc2CWZpbGU6U0NQLVdZU0lXWUdfMy4wLjAtYmV0YS4yX2FtZDY0LkFwcEltYWdlCm5mcGgreUE3ZFI3cUliSkMyeFJ6VjVLZU9lNjVXalNUTzgxT3B6eVRUa2psalRCUWplQnR2dmZpWll5QWpodUVsM3FFejVMc2dtSUtvUXlEV0lmeENnPT0K",
+      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.2/SCP-WYSIWYG_3.0.0-beta.2_amd64.AppImage"
     },
     "linux-x86_64-deb": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzRElCZ29ZSnFKODZDOWg4UERsc0xWc1NzREowdWkvek5LMlduTkVXejUwK2NzZHVMWVpqbksyaDZZbUtLNjFvM0d3MkZFaDNLL1BlQ0hCa0ZubjQ1ZWcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyNDk3MTUzCWZpbGU6U0NQLVdZU0lXWUdfMy4wLjAtYmV0YS4xX2FtZDY0LmRlYgpRZGhEdDZPeVpIeWQxSW10OFp4eXBST040bnlpRzduSFdaOXd2UUU5UkwzYmNnSUpXQ1JRajBCeE9PUlcrd3B0WlpZYURYa2dXbndxanhTWXN0akVCUT09Cg==",
-      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.1/SCP-WYSIWYG_3.0.0-beta.1_amd64.deb"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREZSNUJFTTdjM0xtOWpDVmcrSis5a1NPQXVrMnRvR1lQRGo2djFOT3ZjQnZUZStVL252WCtScWNSSWNwZ2RDZ01obVJNNi9RT1h2Y0FBclNnRTY2RkFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyODM1NDc2CWZpbGU6U0NQLVdZU0lXWUdfMy4wLjAtYmV0YS4yX2FtZDY0LmRlYgpNQ1dVZTdTOVpzTFMwOVgxQ2FSdTU3WW9HaW1NNW82MnNaUjM3cVhlZk1WcGVOYUk5aWsybzJUVERqVVN5SE95aU1XZFYwU1E3QWZtVU0vdjR5dXNEUT09Cg==",
+      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.2/SCP-WYSIWYG_3.0.0-beta.2_amd64.deb"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzRE05T0JnaVdpWmUrc2pISlBNczZBWkVTWFFlenZuUm5WMEpGTlY2YmpxcG9zdEk0dlF6OG5iNHJVREhmelJJVXV3VnFjUE9IaGtYTFhrYlZGTm1BUVFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyNDk3MzQxCWZpbGU6U0NQLVdZU0lXWUdfMy4wLjAtYmV0YS4xX3g2NC1zZXR1cC5leGUKdHQrdVJObXZqVnAreTIrY29HRzNESWp0dnl2WTlIbEloTUYwZi9wLzFNOWRpVzRDVEhvS1RIZUNWRUkya3pWRDBpQ1ZOSm43T2hRNlF4RmZiSkMzQWc9PQo=",
-      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.1/SCP-WYSIWYG_3.0.0-beta.1_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREw4YXhKYmI2OEhkMXlqQXVLRGFSeUhmNXhQbW1jSCt4RTRRRnpUYkp6TnlGUGtEVTByRGFwVnh1U08rVnpkTEJZU2NTeDZSSGxLRHJ5N2pCK3p1aUFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyODM1NzA0CWZpbGU6U0NQLVdZU0lXWUdfMy4wLjAtYmV0YS4yX3g2NC1zZXR1cC5leGUKa2pJRU51dnB6YnNVdXVlZEtPUVpWWWlrYmxFYXVESnlCMlZzZVpncjNYK1RaR2dlRnhhR2RQZEU0SDdPdjNaVmlhamEwNFJ5KzBVT2NVNVdud1NzQUE9PQo=",
+      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.2/SCP-WYSIWYG_3.0.0-beta.2_x64-setup.exe"
     },
     "windows-x86_64-nsis": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzRE05T0JnaVdpWmUrc2pISlBNczZBWkVTWFFlenZuUm5WMEpGTlY2YmpxcG9zdEk0dlF6OG5iNHJVREhmelJJVXV3VnFjUE9IaGtYTFhrYlZGTm1BUVFNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyNDk3MzQxCWZpbGU6U0NQLVdZU0lXWUdfMy4wLjAtYmV0YS4xX3g2NC1zZXR1cC5leGUKdHQrdVJObXZqVnAreTIrY29HRzNESWp0dnl2WTlIbEloTUYwZi9wLzFNOWRpVzRDVEhvS1RIZUNWRUkya3pWRDBpQ1ZOSm43T2hRNlF4RmZiSkMzQWc9PQo=",
-      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.1/SCP-WYSIWYG_3.0.0-beta.1_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREw4YXhKYmI2OEhkMXlqQXVLRGFSeUhmNXhQbW1jSCt4RTRRRnpUYkp6TnlGUGtEVTByRGFwVnh1U08rVnpkTEJZU2NTeDZSSGxLRHJ5N2pCK3p1aUFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyODM1NzA0CWZpbGU6U0NQLVdZU0lXWUdfMy4wLjAtYmV0YS4yX3g2NC1zZXR1cC5leGUKa2pJRU51dnB6YnNVdXVlZEtPUVpWWWlrYmxFYXVESnlCMlZzZVpncjNYK1RaR2dlRnhhR2RQZEU0SDdPdjNaVmlhamEwNFJ5KzBVT2NVNVdud1NzQUE9PQo=",
+      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.2/SCP-WYSIWYG_3.0.0-beta.2_x64-setup.exe"
     },
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREJPOUtja0JrNnBlVkRuZnh0YUpOa09CaWpmWkxhR2s4S3lNOE9uRlh2QnluUDlCajAyajJ0dmlsQ3NQUW5KZUVZUXBjc3piNDMxbXloai9xRFFWM3c0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyNDk3NjQ1CWZpbGU6U0NQLVdZU0lXWUcuYXBwLnRhci5negpqTmJ3cE1rWWhlcjVCaGJUR1JySkRNV25oL2h5Z2dFQWNadE1zNFRVTkRLcCsxb2ZkNnRoZVVNZjhsTzBTOGErRlh4K0I2T1U1eXFMbTZyZW1kQUREQT09Cg==",
-      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.1/SCP-WYSIWYG_universal.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREk0N0o1TnFCVGFxZXpPMVFFUXlDb0hyaW5VaVhDUUx5LzFPVEJmNmJsZnVSMFdsNFVoQjE3SzhBVkJNa1BPeDQ2SG9oS1ppYWI4TVk4UTRiVU9xTkFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyODM1NzUwCWZpbGU6U0NQLVdZU0lXWUcuYXBwLnRhci5negpaN3VsQy82ZGMrUWk0NkhvZTdZaUttUElrTzM3bnJiVUFVc0NqZDBITmJha2Zpa21KUHNmMEhYY3Z5ZTlKdFN5SlNHdGtVUWUvZGhycFU3MjRjR1FDdz09Cg==",
+      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.2/SCP-WYSIWYG_universal.app.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREJPOUtja0JrNnBlVkRuZnh0YUpOa09CaWpmWkxhR2s4S3lNOE9uRlh2QnluUDlCajAyajJ0dmlsQ3NQUW5KZUVZUXBjc3piNDMxbXloai9xRFFWM3c0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyNDk3NjQ1CWZpbGU6U0NQLVdZU0lXWUcuYXBwLnRhci5negpqTmJ3cE1rWWhlcjVCaGJUR1JySkRNV25oL2h5Z2dFQWNadE1zNFRVTkRLcCsxb2ZkNnRoZVVNZjhsTzBTOGErRlh4K0I2T1U1eXFMbTZyZW1kQUREQT09Cg==",
-      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.1/SCP-WYSIWYG_universal.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREk0N0o1TnFCVGFxZXpPMVFFUXlDb0hyaW5VaVhDUUx5LzFPVEJmNmJsZnVSMFdsNFVoQjE3SzhBVkJNa1BPeDQ2SG9oS1ppYWI4TVk4UTRiVU9xTkFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyODM1NzUwCWZpbGU6U0NQLVdZU0lXWUcuYXBwLnRhci5negpaN3VsQy82ZGMrUWk0NkhvZTdZaUttUElrTzM3bnJiVUFVc0NqZDBITmJha2Zpa21KUHNmMEhYY3Z5ZTlKdFN5SlNHdGtVUWUvZGhycFU3MjRjR1FDdz09Cg==",
+      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.2/SCP-WYSIWYG_universal.app.tar.gz"
     },
     "darwin-aarch64-app": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREJPOUtja0JrNnBlVkRuZnh0YUpOa09CaWpmWkxhR2s4S3lNOE9uRlh2QnluUDlCajAyajJ0dmlsQ3NQUW5KZUVZUXBjc3piNDMxbXloai9xRFFWM3c0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyNDk3NjQ1CWZpbGU6U0NQLVdZU0lXWUcuYXBwLnRhci5negpqTmJ3cE1rWWhlcjVCaGJUR1JySkRNV25oL2h5Z2dFQWNadE1zNFRVTkRLcCsxb2ZkNnRoZVVNZjhsTzBTOGErRlh4K0I2T1U1eXFMbTZyZW1kQUREQT09Cg==",
-      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.1/SCP-WYSIWYG_universal.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREk0N0o1TnFCVGFxZXpPMVFFUXlDb0hyaW5VaVhDUUx5LzFPVEJmNmJsZnVSMFdsNFVoQjE3SzhBVkJNa1BPeDQ2SG9oS1ppYWI4TVk4UTRiVU9xTkFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyODM1NzUwCWZpbGU6U0NQLVdZU0lXWUcuYXBwLnRhci5negpaN3VsQy82ZGMrUWk0NkhvZTdZaUttUElrTzM3bnJiVUFVc0NqZDBITmJha2Zpa21KUHNmMEhYY3Z5ZTlKdFN5SlNHdGtVUWUvZGhycFU3MjRjR1FDdz09Cg==",
+      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.2/SCP-WYSIWYG_universal.app.tar.gz"
     },
     "darwin-x86_64-app": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREJPOUtja0JrNnBlVkRuZnh0YUpOa09CaWpmWkxhR2s4S3lNOE9uRlh2QnluUDlCajAyajJ0dmlsQ3NQUW5KZUVZUXBjc3piNDMxbXloai9xRFFWM3c0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyNDk3NjQ1CWZpbGU6U0NQLVdZU0lXWUcuYXBwLnRhci5negpqTmJ3cE1rWWhlcjVCaGJUR1JySkRNV25oL2h5Z2dFQWNadE1zNFRVTkRLcCsxb2ZkNnRoZVVNZjhsTzBTOGErRlh4K0I2T1U1eXFMbTZyZW1kQUREQT09Cg==",
-      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.1/SCP-WYSIWYG_universal.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTeElMZ0hkSDRzREk0N0o1TnFCVGFxZXpPMVFFUXlDb0hyaW5VaVhDUUx5LzFPVEJmNmJsZnVSMFdsNFVoQjE3SzhBVkJNa1BPeDQ2SG9oS1ppYWI4TVk4UTRiVU9xTkFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzgyODM1NzUwCWZpbGU6U0NQLVdZU0lXWUcuYXBwLnRhci5negpaN3VsQy82ZGMrUWk0NkhvZTdZaUttUElrTzM3bnJiVUFVc0NqZDBITmJha2Zpa21KUHNmMEhYY3Z5ZTlKdFN5SlNHdGtVUWUvZGhycFU3MjRjR1FDdz09Cg==",
+      "url": "https://github.com/wasd243/SCP-foundation-editor/releases/download/v3.0.0-beta.2/SCP-WYSIWYG_universal.app.tar.gz"
     }
   }
 }
