@@ -25,6 +25,7 @@ use crate::ftml_interceptor::user::{
 use crate::ftml_interceptor::preprocess_interceptor::{
     theme_interceptor::theme_interceptor, unused_newline_interceptor::unused_newline_interceptor,
     unused_variable_interceptor::unused_variable_interceptor,
+    user_ignore_interceptor::user_ignore_interceptor,
 };
 
 use crate::ftml_normalizer::{
@@ -68,6 +69,11 @@ pub fn render_wikidot_to_html_with_resourcepack(
     };
 
     let mut wikitext = source_text.to_string();
+
+    // Blank user-ignored source lines before FTML sees them, keeping line
+    // positions intact so the exporter merge can restore the originals by number.
+    // Runs on the raw source so the line numbers match origin.ftml.
+    wikitext = user_ignore_interceptor(&wikitext);
 
     ftml::preprocess(&mut wikitext);
 

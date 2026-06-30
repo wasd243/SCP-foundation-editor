@@ -7,3 +7,4 @@ pub mod open_code_view;
 pub mod save;
 pub mod settings;
 pub mod splashscreen;
+pub mod write_ignore_lines_metadata;

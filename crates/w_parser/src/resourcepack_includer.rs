@@ -82,6 +82,15 @@ impl ResourcepackIncluder {
     }
 }
 
+/// Includer will try to read the included file from the resourcepack.
+///
+/// Because of `[[include]]` macro-like status and different kinds of
+/// editing limitations (e.g.: img component/licensing component/ACS/AIM),
+/// the exporter could NOT generate code correctly.
+///
+/// This includer exists solely for legacy `[[include]]` support
+///
+/// Fallback to none if the file is not found.
 impl<'t> Includer<'t> for ResourcepackIncluder {
     type Error = std::io::Error;
 
@@ -103,9 +112,12 @@ impl<'t> Includer<'t> for ResourcepackIncluder {
         Ok(pages)
     }
 
+    /// Fallback for missing `[[include]]`.
     fn no_such_include(&mut self, page_ref: &PageRef) -> Result<Cow<'t, str>, Self::Error> {
         log::warn!(target: "[w_parser::ResourcepackIncluder]", "no_such_include: {page_ref}");
 
-        Ok(Cow::Owned(format!("[[include-missing {page_ref}]]")))
+        Ok(Cow::Borrowed(""))
+        // Missing includes are silently ignored to preserve full editor experience
+        // for pages that use unsupported Wikidot components.
     }
 }

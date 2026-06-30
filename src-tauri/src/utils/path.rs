@@ -28,6 +28,47 @@ fn default_saves_dir() -> PathBuf {
     project().data_dir().join("saves")
 }
 
+/// Fixed location of the ignored-lines metadata file. Lives alongside
+/// `settings.json` under `config_dir()`.
+fn ignore_lines_file_path() -> PathBuf {
+    project().config_dir().join("ignore_lines.json")
+}
+
+/// Read the saved ignored-line tokens (e.g. `["1-10", "15"]`).
+///
+/// Missing file, unreadable file, or a parse error all map to an empty list, so
+/// a fresh install or a corrupt file simply means "nothing ignored". Never panics.
+pub fn read_ignore_lines() -> Vec<String> {
+    let Ok(contents) = fs::read_to_string(ignore_lines_file_path()) else {
+        return Vec::new();
+    };
+    let Ok(value) = serde_json::from_str::<Value>(&contents) else {
+        return Vec::new();
+    };
+    value
+        .get("ignore_lines")
+        .and_then(|v| v.as_array())
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|v| v.as_str().map(str::to_string))
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+/// Persist the ignored-line tokens into the metadata file. Creates `config_dir()`
+/// if missing.
+pub fn write_ignore_lines(lines: &[String]) -> Result<(), String> {
+    let file = ignore_lines_file_path();
+    if let Some(parent) = file.parent() {
+        fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+    }
+
+    let contents = serde_json::to_string_pretty(&json!({ "ignore_lines": lines }))
+        .map_err(|e| e.to_string())?;
+    fs::write(&file, contents).map_err(|e| e.to_string())
+}
+
 /// Read the user's custom saves path from the settings file, if any.
 ///
 /// Missing file, unreadable file, parse error, or an empty value all map to

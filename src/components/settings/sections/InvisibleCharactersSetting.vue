@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { getEditor } from "../../../../stores/editor.ts";
-import { useEditorSubscription } from "../../../../composables/useEditorSubscription.ts";
+import { getEditor } from "../../../stores/editor.ts";
+import { useEditorSubscription } from "../../../composables/useEditorSubscription.ts";
 
 // Source of truth is the ProseMirror plugin's own visibility flag; this ref is
 // only a mirror kept in lockstep with it. `visibility()` can be undefined for a

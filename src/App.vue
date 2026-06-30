@@ -5,6 +5,7 @@ import EditorCanvas from "./components/editor/EditorCanvas.vue";
 import InputWindow from "./components/editor/InputWindow.vue";
 import UpdateBanner from "./components/editor/UpdateBanner.vue";
 import UpdateDialog from "./components/editor/UpdateDialog.vue";
+import Settings from "./components/settings/Settings.vue";
 </script>
 
 <template>
@@ -13,6 +14,7 @@ import UpdateDialog from "./components/editor/UpdateDialog.vue";
     <EditorCanvas />
     <InputWindow />
     <UpdateDialog />
+    <Settings />
 </template>
 
 <style scoped></style>

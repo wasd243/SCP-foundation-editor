@@ -10,8 +10,10 @@ All `(RibbonName).vue` files will be imported to `Ribbon.vue` file.
 
 ### Ribbon Pages
 
-| Ribbon   | Page                      | Ribbon Button         |
-| -------- | ------------------------- | --------------------- |
-| Home     | `Ribbon/HomePage.vue`     | `Topbar/Home.vue`     |
-| Insert   | `Ribbon/InsertPage.vue`   | `Topbar/Insert.vue`   |
-| Settings | `Ribbon/SettingsPage.vue` | `Topbar/Settings.vue` |
+| Ribbon | Page                    | Ribbon Button       |
+| ------ | ----------------------- | ------------------- |
+| Home   | `Ribbon/HomePage.vue`   | `Topbar/Home.vue`   |
+| Insert | `Ribbon/InsertPage.vue` | `Topbar/Insert.vue` |
+
+Settings now live in a modal window (`src/components/settings/Settings.vue`),
+opened from the gear button in the Actions bar — they are no longer a ribbon page.

@@ -7,7 +7,7 @@ import {
     resetSavesPath,
     savesPath,
     savesPathError,
-} from "../../../../stores/btnToolBar/settings/savesPath.ts";
+} from "../../../stores/btnToolBar/settings/savesPath.ts";
 
 onMounted(loadSavesPath);
 </script>

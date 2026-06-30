@@ -125,6 +125,9 @@
     - LICENSE: CC0 License
     - UPLOADER: SVG Repo
 
+- [Settings](https://www.svgrepo.com/svg/469755/settings)
+    - PD
+
 ---
 
 ### Editor Icon [SCP-Wiki-CN](https://scp-wiki-cn.wikidot.com/o9-ppt)
