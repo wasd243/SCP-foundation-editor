@@ -28,7 +28,10 @@ pub fn user_ignore_interceptor(wikitext: &str) -> String {
 /// Split/join on `'\n'` so a trailing newline round-trips; lines beyond the text
 /// are simply never matched.
 fn remove_lines(wikitext: &str, ranges: &[(usize, usize)]) -> String {
-    let ignored: HashSet<usize> = ranges.iter().flat_map(|&(start, end)| start..=end).collect();
+    let ignored: HashSet<usize> = ranges
+        .iter()
+        .flat_map(|&(start, end)| start..=end)
+        .collect();
 
     wikitext
         .split('\n')

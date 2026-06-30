@@ -9,11 +9,15 @@ import Settings from "./Actions/Settings.vue";
 </script>
 
 <template>
-    <Redo />
-    <Undo />
-    <Save />
-    <OpenFile />
-    <AutoSave />
-    <OpenFromAutoSave />
-    <Settings />
+    <div class="actions-bar">
+        <OpenFromAutoSave />
+        <OpenFile />
+        <Save />
+        <span class="actions-divider" aria-hidden="true"></span>
+        <AutoSave />
+        <span class="actions-divider" aria-hidden="true"></span>
+        <Undo />
+        <Redo />
+        <Settings />
+    </div>
 </template>

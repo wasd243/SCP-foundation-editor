@@ -1,60 +1,48 @@
-.actions-button {
-    width: 28px;
-    height: 28px;
-    top: 12px;
-    color: #dbe8ff;
+/* --- The action bar: one right-anchored flex group in the blue top bar --- */
+.actions-bar {
+    position: absolute;
+    top: 0;
+    right: 12px;
+    height: var(--topbar-height);
 
     display: flex;
     align-items: center;
+    gap: 2px;
+}
+
+/* Hairline divider between clusters (file ops | state | history). */
+.actions-divider {
+    width: 1px;
+    height: 20px;
+    margin: 0 4px;
+    flex-shrink: 0;
+
+    background: rgba(255, 255, 255, 0.22);
+}
+
+/* --- Shared control: every action button looks the same --- */
+.actions-button {
+    height: 28px;
+    min-width: 28px;
+
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    gap: 6px;
+
+    padding: 0 8px;
 
     border: 1px solid transparent;
+    border-radius: 4px;
     background: transparent;
+    color: var(--color-text-on-blue);
 
-    font-size: 18px;
-    font-weight: bold;
+    font:
+        600 13px var(--font-ui),
+        sans-serif;
+    white-space: nowrap;
 
     cursor: pointer;
-
-    /* Positioning of toolbar buttons always absolute */
-    position: absolute;
-}
-
-.actions-button img {
-    max-width: 24px;
-    max-height: 24px;
-}
-
-.actions-button:hover {
-    background: var(--color-word-blue-dark);
-    border-color: var(--color-word-blue-light);
-}
-
-.actions-button.redo {
-    right: var(--actions-btn-right);
-}
-
-.actions-button.undo {
-    right: calc(var(--actions-btn-right) + 40px);
-}
-
-.actions-button.save {
-    width: 72px;
-    right: calc(var(--actions-btn-right) + 100px);
-}
-
-.actions-button.auto-save {
-    width: 116px;
-    right: calc(var(--actions-btn-right) + 280px);
-
-    gap: 8px;
-    padding: 0 10px;
-    border-radius: 4px;
-
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.1px;
-    white-space: nowrap;
 
     transition:
         background 0.12s ease,
@@ -62,7 +50,38 @@
         color 0.12s ease;
 }
 
-/* --- Status lamp (the heartbeat lives here) --- */
+/* Icon-only controls are square. */
+.actions-button.undo,
+.actions-button.redo,
+.actions-button.settings {
+    width: 28px;
+    padding: 0;
+}
+
+/* Flatten every icon (yellow folders, black save/arrows, teal gear) to white. */
+.actions-button img {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+}
+
+/* Hover/active match the Home/Insert tab wash for a single visual language. */
+.actions-button:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.actions-button:active {
+    background: rgba(255, 255, 255, 0.24);
+}
+
+/* --- Auto-save: shared chrome, plus the status lamp + heartbeat --- */
+.actions-button.auto-save {
+    transition:
+        background 0.12s ease,
+        border-color 0.12s ease,
+        color 0.12s ease;
+}
+
 .auto-save__lamp {
     position: relative;
     display: inline-flex;
@@ -115,18 +134,6 @@
     }
 }
 
-/* --- Enabled state: filled Word blue --- */
-.actions-button.auto-save.is-on {
-    background: var(--color-word-blue);
-    border-color: var(--color-word-blue-dark);
-    color: var(--color-text-on-blue);
-}
-
-.actions-button.auto-save.is-on:hover {
-    background: var(--color-word-blue-dark);
-    border-color: var(--color-word-blue-dark);
-}
-
 .actions-button.auto-save.has-error {
     color: #ffd7d7;
 }
@@ -136,26 +143,4 @@
         animation: none;
         display: none;
     }
-}
-
-.actions-button.open-file {
-    width: 72px;
-    right: calc(var(--actions-btn-right) + 180px);
-}
-
-.actions-button.settings {
-    right: calc(var(--actions-btn-right) + 608px);
-}
-
-.actions-button.open-auto-save {
-    width: 180px;
-    right: calc(var(--actions-btn-right) + 416px);
-
-    gap: 6px;
-    padding: 0 10px;
-    border-radius: 4px;
-
-    font-size: 13px;
-    font-weight: 600;
-    white-space: nowrap;
 }

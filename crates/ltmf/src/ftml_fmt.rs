@@ -5,8 +5,8 @@ mod fmt_newline;
 mod remove_trailing_break_force_newline;
 
 use crate::ftml_fmt::add_module_rate::add_module_rate;
-use crate::ftml_fmt::remove_trailing_break_force_newline::remove_trailing_break_force_newline;
 use crate::ftml_fmt::add_user_css::{add_user_css, remove_unused_module_css};
+use crate::ftml_fmt::remove_trailing_break_force_newline::remove_trailing_break_force_newline;
 use crate::ftml_fmt::{fmt_alignments::format_alignments, fmt_newline::format_newline};
 use crate::paths::temp_dir;
 use std::fs;
