@@ -86,8 +86,8 @@ jobs:
           # tauri-action only builds (no release) — see the upload step below.
           tagName: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
           releaseName: "SCP-WYSIWYG ${{ github.ref_name }}"
-          releaseDraft: true
-          prerelease: true
+          releaseDraft: false
+          prerelease: false
           args: ${{ matrix.args }}
 
       # Manual (workflow_dispatch) runs: no release is created, so expose the
@@ -103,41 +103,3 @@ jobs:
             target/release/bundle/**
             target/universal-apple-darwin/release/bundle/**
           if-no-files-found: error
-
-  # GitHub's `/releases/latest/` only resolves to non-prerelease releases, so a
-  # beta/rc would never be discovered there. Instead, publish the cross-platform
-  # `latest.json` (which tauri-action merged onto the release across the build
-  # matrix) into the Pages source `docs/page/`. Committing it triggers the
-  # "Deploy Pages" workflow, which serves it at the updater endpoint configured
-  # in tauri.conf.json — and that path includes prereleases.
-  publish-updater-manifest:
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: main
-
-      - name: Fetch latest.json from the release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release download "${{ github.ref_name }}" \
-            --repo "${{ github.repository }}" \
-            --pattern "latest.json" \
-            --dir docs/page --clobber
-
-      - name: Commit manifest to Pages source
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/page/latest.json
-          if git diff --cached --quiet; then
-            echo "latest.json unchanged — nothing to publish"
-          else
-            git commit -m "chore(updater): publish ${{ github.ref_name }} manifest"
-            git push origin main
-          fi
