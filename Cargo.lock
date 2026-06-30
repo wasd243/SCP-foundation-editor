@@ -2735,7 +2735,7 @@ checksum = "0ceec5bc11778974d1bcb055b18002eba7f4b3518b6a0081b3af5f21666da9ad"
 
 [[package]]
 name = "ltmf"
-version = "3.0.0-beta.1"
+version = "3.0.0-beta.2"
 dependencies = [
  "directories",
  "regex",
@@ -4283,7 +4283,7 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
 name = "scpeditor-bin"
-version = "3.0.0-beta.1"
+version = "3.0.0-beta.2"
 dependencies = [
  "directories",
  "env_logger",
@@ -5857,7 +5857,7 @@ dependencies = [
 
 [[package]]
 name = "w_parser"
-version = "3.0.0-beta.1"
+version = "3.0.0-beta.2"
 dependencies = [
  "directories",
  "ftml",
