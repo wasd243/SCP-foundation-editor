@@ -37,7 +37,7 @@
         "@tiptap/vue-3": "3.22.5",
         "codemirror": "^6.0.2",
         "lowlight": "3.3.0",
-        "pinia": "^3.0.4",
+        "pinia": "^4.0.2",
         "vue": "^3.4.0",
         "vue3-colorpicker": "^2.3.0",
         "vue3-moveable": "^0.28.0"
