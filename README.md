@@ -144,10 +144,6 @@ cargo tauri dev        # run in development
 cargo tauri build      # produce a release build
 ```
 
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
-
 ## Credits
 
 Theme assets and logos used in this project are credited in
@@ -302,10 +298,6 @@ npm install            # 先安装前端依赖
 cargo tauri dev        # 以开发模式运行
 cargo tauri build      # 产出发布构建
 ```
-
-## 参与贡献
-
-请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 致谢
 
